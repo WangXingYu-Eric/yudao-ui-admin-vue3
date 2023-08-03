@@ -1,155 +1,464 @@
 <template>
+  <!-- 搜索 -->
   <ContentWrap>
-    <!-- 列表 -->
-    <XTable @register="registerTable">
-      <template #toolbar_buttons>
-        <!-- 操作：新增 -->
-        <XButton
+    <el-form
+      class="-mb-15px"
+      :model="queryParams"
+      ref="queryFormRef"
+      :inline="true"
+      label-width="68px"
+    >
+      <el-form-item label="应用名" prop="name">
+        <el-input
+          v-model="queryParams.name"
+          placeholder="请输入应用名"
+          clearable
+          @keyup.enter="handleQuery"
+          class="!w-240px"
+        />
+      </el-form-item>
+      <el-form-item label="开启状态" prop="status">
+        <el-select
+          v-model="queryParams.status"
+          placeholder="请选择开启状态"
+          clearable
+          class="!w-240px"
+        >
+          <el-option
+            v-for="dict in getIntDictOptions(DICT_TYPE.COMMON_STATUS)"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="创建时间" prop="createTime">
+        <el-date-picker
+          v-model="queryParams.createTime"
+          value-format="YYYY-MM-DD HH:mm:ss"
+          type="daterange"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          :default-time="[new Date('1 00:00:00'), new Date('1 23:59:59')]"
+          class="!w-240px"
+        />
+      </el-form-item>
+      <el-form-item>
+        <el-button @click="handleQuery"> <Icon icon="ep:search" class="mr-5px" />搜索 </el-button>
+        <el-button @click="resetQuery"> <Icon icon="ep:refresh" class="mr-5px" />重置 </el-button>
+        <el-button
           type="primary"
-          preIcon="ep:zoom-in"
-          :title="t('action.add')"
-          v-hasPermi="['pay:app:create']"
-          @click="handleCreate()"
-        />
-        <!-- 操作：导出 -->
-        <XButton
-          type="warning"
-          preIcon="ep:download"
-          :title="t('action.export')"
-          v-hasPermi="['pay:app:export']"
-          @click="exportList('应用信息.xls')"
-        />
-      </template>
-      <template #actionbtns_default="{ row }">
-        <!-- 操作：修改 -->
-        <XTextButton
-          preIcon="ep:edit"
-          :title="t('action.edit')"
-          v-hasPermi="['pay:app:update']"
-          @click="handleUpdate(row.id)"
-        />
-        <!-- 操作：详情 -->
-        <XTextButton
-          preIcon="ep:view"
-          :title="t('action.detail')"
-          v-hasPermi="['pay:app:query']"
-          @click="handleDetail(row.id)"
-        />
-        <!-- 操作：删除 -->
-        <XTextButton
-          preIcon="ep:delete"
-          :title="t('action.del')"
-          v-hasPermi="['pay:app:delete']"
-          @click="deleteData(row.id)"
-        />
-      </template>
-    </XTable>
+          plain
+          @click="openForm('create')"
+          v-hasPermi="['system:tenant:create']"
+        >
+          <Icon icon="ep:plus" class="mr-5px" /> 新增
+        </el-button>
+        <el-button
+          type="success"
+          plain
+          @click="handleExport"
+          :loading="exportLoading"
+          v-hasPermi="['system:tenant:export']"
+        >
+          <Icon icon="ep:download" class="mr-5px" /> 导出
+        </el-button>
+      </el-form-item>
+    </el-form>
   </ContentWrap>
 
-  <XModal v-model="dialogVisible" :title="dialogTitle">
-    <!-- 对话框(添加 / 修改) -->
-    <Form
-      v-if="['create', 'update'].includes(actionType)"
-      :schema="allSchemas.formSchema"
-      :rules="rules"
-      ref="formRef"
+  <!-- 列表 -->
+  <ContentWrap>
+    <el-table v-loading="loading" :data="list">
+      <el-table-column label="应用编号" align="center" prop="id" />
+      <el-table-column label="应用名" align="center" prop="name" />
+      <el-table-column label="开启状态" align="center" prop="status">
+        <template #default="scope">
+          <el-switch
+            v-model="scope.row.status"
+            :active-value="0"
+            :inactive-value="1"
+            @change="handleStatusChange(scope.row)"
+          />
+        </template>
+      </el-table-column>
+      <el-table-column label="支付宝配置" align="center">
+        <el-table-column :label="PayChannelEnum.ALIPAY_APP.name" align="center">
+          <template #default="scope">
+            <el-button
+              type="success"
+              v-if="isChannelExists(scope.row.channelCodes, PayChannelEnum.ALIPAY_APP.code)"
+              @click="openChannelForm(scope.row, PayChannelEnum.ALIPAY_APP.code, PayType.ALIPAY)"
+              circle
+            >
+              <Icon icon="ep:check" />
+            </el-button>
+            <el-button
+              v-else
+              type="danger"
+              circle
+              @click="openChannelForm(scope.row, PayChannelEnum.ALIPAY_APP.code, PayType.ALIPAY)"
+            >
+              <Icon icon="ep:close" />
+            </el-button>
+          </template>
+        </el-table-column>
+        <el-table-column :label="PayChannelEnum.ALIPAY_PC.name" align="center">
+          <template #default="scope">
+            <el-button
+              type="success"
+              circle
+              v-if="isChannelExists(scope.row.channelCodes, PayChannelEnum.ALIPAY_PC.code)"
+              @click="openChannelForm(scope.row, PayChannelEnum.ALIPAY_PC.code, PayType.ALIPAY)"
+            >
+              <Icon icon="ep:check" />
+            </el-button>
+            <el-button
+              v-else
+              type="danger"
+              circle
+              @click="openChannelForm(scope.row, PayChannelEnum.ALIPAY_PC.code, PayType.ALIPAY)"
+            >
+              <Icon icon="ep:close" />
+            </el-button>
+          </template>
+        </el-table-column>
+        <el-table-column :label="PayChannelEnum.ALIPAY_WAP.name" align="center">
+          <template #default="scope">
+            <el-button
+              type="success"
+              circle
+              v-if="isChannelExists(scope.row.channelCodes, PayChannelEnum.ALIPAY_WAP.code)"
+              @click="openChannelForm(scope.row, PayChannelEnum.ALIPAY_WAP.code, PayType.ALIPAY)"
+            >
+              <Icon icon="ep:check" />
+            </el-button>
+            <el-button
+              v-else
+              type="danger"
+              circle
+              @click="openChannelForm(scope.row, PayChannelEnum.ALIPAY_WAP.code, PayType.ALIPAY)"
+            >
+              <Icon icon="ep:close" />
+            </el-button>
+          </template>
+        </el-table-column>
+        <el-table-column :label="PayChannelEnum.ALIPAY_QR.name" align="center">
+          <template #default="scope">
+            <el-button
+              type="success"
+              circle
+              v-if="isChannelExists(scope.row.channelCodes, PayChannelEnum.ALIPAY_QR.code)"
+              @click="openChannelForm(scope.row, PayChannelEnum.ALIPAY_QR.code, PayType.ALIPAY)"
+            >
+              <Icon icon="ep:check" />
+            </el-button>
+            <el-button
+              v-else
+              type="danger"
+              circle
+              @click="openChannelForm(scope.row, PayChannelEnum.ALIPAY_QR.code, PayType.ALIPAY)"
+            >
+              <Icon icon="ep:close" />
+            </el-button>
+          </template>
+        </el-table-column>
+        <el-table-column :label="PayChannelEnum.ALIPAY_BAR.name" align="center">
+          <template #default="scope">
+            <el-button
+              type="success"
+              circle
+              v-if="isChannelExists(scope.row.channelCodes, PayChannelEnum.ALIPAY_BAR.code)"
+              @click="openChannelForm(scope.row, PayChannelEnum.ALIPAY_BAR.code, PayType.ALIPAY)"
+            >
+              <Icon icon="ep:check" />
+            </el-button>
+            <el-button
+              v-else
+              type="danger"
+              circle
+              @click="openChannelForm(scope.row, PayChannelEnum.ALIPAY_BAR.code, PayType.ALIPAY)"
+            >
+              <Icon icon="ep:close" />
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table-column>
+      <el-table-column label="微信配置" align="center">
+        <el-table-column :label="PayChannelEnum.WX_LITE.name" align="center">
+          <template #default="scope">
+            <el-button
+              type="success"
+              circle
+              v-if="isChannelExists(scope.row.channelCodes, PayChannelEnum.WX_LITE.code)"
+              @click="openChannelForm(scope.row, PayChannelEnum.WX_LITE.code, PayType.WECHAT)"
+            >
+              <Icon icon="ep:check" />
+            </el-button>
+            <el-button
+              v-else
+              type="danger"
+              circle
+              @click="openChannelForm(scope.row, PayChannelEnum.WX_LITE.code, PayType.WECHAT)"
+            >
+              <Icon icon="ep:close" />
+            </el-button>
+          </template>
+        </el-table-column>
+        <el-table-column :label="PayChannelEnum.WX_PUB.name" align="center">
+          <template #default="scope">
+            <el-button
+              type="success"
+              circle
+              v-if="isChannelExists(scope.row.channelCodes, PayChannelEnum.WX_PUB.code)"
+              @click="openChannelForm(scope.row, PayChannelEnum.WX_PUB.code, PayType.WECHAT)"
+            >
+              <Icon icon="ep:check" />
+            </el-button>
+            <el-button
+              v-else
+              type="danger"
+              circle
+              @click="openChannelForm(scope.row, PayChannelEnum.WX_PUB.code, PayType.WECHAT)"
+            >
+              <Icon icon="ep:close" />
+            </el-button>
+          </template>
+        </el-table-column>
+        <el-table-column :label="PayChannelEnum.WX_APP.name" align="center">
+          <template #default="scope">
+            <el-button
+              type="success"
+              circle
+              v-if="isChannelExists(scope.row.channelCodes, PayChannelEnum.WX_APP.code)"
+              @click="openChannelForm(scope.row, PayChannelEnum.WX_APP.code, PayType.WECHAT)"
+            >
+              <Icon icon="ep:check" />
+            </el-button>
+            <el-button
+              v-else
+              type="danger"
+              circle
+              @click="openChannelForm(scope.row, PayChannelEnum.WX_APP.code, PayType.WECHAT)"
+            >
+              <Icon icon="ep:close" />
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table-column>
+      <el-table-column label="模拟支付配置" align="center">
+        <el-table-column :label="PayChannelEnum.MOCK.name" align="center">
+          <template #default="scope">
+            <el-button
+              type="success"
+              circle
+              v-if="isChannelExists(scope.row.channelCodes, PayChannelEnum.MOCK.code)"
+              @click="openChannelForm(scope.row, PayChannelEnum.MOCK.code)"
+              ><Icon icon="ep:check"
+            /></el-button>
+            <el-button
+              v-else
+              type="danger"
+              circle
+              @click="openChannelForm(scope.row, PayChannelEnum.MOCK.code)"
+              ><Icon icon="ep:close"
+            /></el-button>
+          </template>
+        </el-table-column>
+      </el-table-column>
+      <el-table-column label="操作" align="center" min-width="110" fixed="right">
+        <template #default="scope">
+          <el-button
+            link
+            type="primary"
+            @click="openForm('update', scope.row.id)"
+            v-hasPermi="['system:tenant:update']"
+          >
+            编辑
+          </el-button>
+          <el-button
+            link
+            type="danger"
+            @click="handleDelete(scope.row.id)"
+            v-hasPermi="['system:tenant:delete']"
+          >
+            删除
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <!-- 分页 -->
+    <Pagination
+      :total="total"
+      v-model:page="queryParams.pageNo"
+      v-model:limit="queryParams.pageSize"
+      @pagination="getList"
     />
-    <!-- 对话框(详情) -->
-    <Descriptions
-      v-if="actionType === 'detail'"
-      :schema="allSchemas.detailSchema"
-      :data="detailData"
-    />
-    <!-- 操作按钮 -->
-    <template #footer>
-      <!-- 按钮：保存 -->
-      <XButton
-        v-if="['create', 'update'].includes(actionType)"
-        type="primary"
-        :title="t('action.save')"
-        :loading="actionLoading"
-        @click="submitForm()"
-      />
-      <!-- 按钮：关闭 -->
-      <XButton :loading="actionLoading" :title="t('dialog.close')" @click="dialogVisible = false" />
-    </template>
-  </XModal>
+  </ContentWrap>
+
+  <!-- 表单弹窗：添加/修改 -->
+  <AppForm ref="formRef" @success="getList" />
+  <AlipayChannelForm ref="alipayFormRef" @success="getList" />
+  <WeixinChannelForm ref="weixinFormRef" @success="getList" />
+  <MockChannelForm ref="mockFormRef" @success="getList" />
 </template>
-<script setup lang="ts" name="PayApp">
-import type { FormExpose } from '@/components/Form'
-import { rules, allSchemas } from './app.data'
-import * as AppApi from '@/api/pay/app'
+<script lang="ts" setup>
+import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
+import download from '@/utils/download'
+import * as PayappApi from '@/api/pay/app'
+import AppForm from './components/AppForm.vue'
+import { PayChannelEnum, PayType } from '@/utils/constants'
+import AlipayChannelForm from './components/alipayChannelForm.vue'
+import WeixinChannelForm from './components/weixinChannelForm.vue'
+import MockChannelForm from './components/mockChannelForm.vue'
+import { CommonStatusEnum } from '@/utils/constants'
 
-const { t } = useI18n() // 国际化
+defineOptions({ name: 'PayApp' })
+
 const message = useMessage() // 消息弹窗
+const { t } = useI18n() // 国际化
 
-// 列表相关的变量
-const [registerTable, { reload, deleteData, exportList }] = useXTable({
-  allSchemas: allSchemas,
-  getListApi: AppApi.getAppPageApi,
-  deleteApi: AppApi.deleteAppApi,
-  exportListApi: AppApi.exportAppApi
+const alipayFormRef = ref()
+const weixinFormRef = ref()
+const mockFormRef = ref()
+
+const loading = ref(true) // 列表的加载中
+const total = ref(0) // 列表的总页数
+const list = ref([]) // 列表的数据
+const queryParams = reactive({
+  pageNo: 1,
+  pageSize: 10,
+  name: undefined,
+  status: undefined,
+  remark: undefined,
+  payNotifyUrl: undefined,
+  refundNotifyUrl: undefined,
+  merchantName: undefined,
+  createTime: []
 })
+const queryFormRef = ref() // 搜索的表单
+const exportLoading = ref(false) // 导出的加载中
+const channelParam = reactive({
+  loading: false,
+  appId: null, // 应用 ID
+  payCode: null, // 渠道编码
+  // 商户对象
+  payMerchant: {
+    id: null, // 编号
+    name: null // 名称
+  }
+}) // 微信组件传参参数
 
-// ========== CRUD 相关 ==========
-const actionLoading = ref(false) // 遮罩层
-const actionType = ref('') // 操作按钮的类型
-const dialogVisible = ref(false) // 是否显示弹出层
-const dialogTitle = ref('edit') // 弹出层标题
-const formRef = ref<FormExpose>() // 表单 Ref
-const detailData = ref() // 详情 Ref
-
-// 设置标题
-const setDialogTile = (type: string) => {
-  dialogTitle.value = t('action.' + type)
-  actionType.value = type
-  dialogVisible.value = true
+/** 查询列表 */
+const getList = async () => {
+  loading.value = true
+  try {
+    const data = await PayappApi.getAppPage(queryParams)
+    list.value = data.list
+    total.value = data.total
+  } finally {
+    loading.value = false
+  }
 }
 
-// 新增操作
-const handleCreate = () => {
-  setDialogTile('create')
+/** 搜索按钮操作 */
+const handleQuery = () => {
+  queryParams.pageNo = 1
+  getList()
 }
 
-// 修改操作
-const handleUpdate = async (rowId: number) => {
-  setDialogTile('update')
-  // 设置数据
-  const res = await AppApi.getAppApi(rowId)
-  unref(formRef)?.setValues(res)
+/** 重置按钮操作 */
+const resetQuery = () => {
+  queryFormRef.value.resetFields()
+  handleQuery()
 }
 
-// 详情操作
-const handleDetail = async (rowId: number) => {
-  setDialogTile('detail')
-  const res = await AppApi.getAppApi(rowId)
-  detailData.value = res
+// 用户状态修改
+const handleStatusChange = async (row: any) => {
+  let text = row.status === CommonStatusEnum.ENABLE ? '启用' : '停用'
+
+  try {
+    await message.confirm('确认要"' + text + '""' + row.name + '"应用吗?')
+    await PayappApi.changeAppStatus({ id: row.id, status: row.status })
+    message.success(text + '成功')
+  } catch {
+    row.status =
+      row.status === CommonStatusEnum.ENABLE ? CommonStatusEnum.DISABLE : CommonStatusEnum.ENABLE
+  }
 }
 
-// 提交按钮
-const submitForm = async () => {
-  const elForm = unref(formRef)?.getElFormRef()
-  if (!elForm) return
-  elForm.validate(async (valid) => {
-    if (valid) {
-      actionLoading.value = true
-      // 提交请求
-      try {
-        const data = unref(formRef)?.formModel as AppApi.AppVO
-        if (actionType.value === 'create') {
-          await AppApi.createAppApi(data)
-          message.success(t('common.createSuccess'))
-        } else {
-          await AppApi.updateAppApi(data)
-          message.success(t('common.updateSuccess'))
-        }
-        dialogVisible.value = false
-      } finally {
-        actionLoading.value = false
-        // 刷新列表
-        await reload()
-      }
-    }
-  })
+/** 添加/修改操作 */
+const formRef = ref()
+const openForm = (type: string, id?: number) => {
+  formRef.value.open(type, id)
 }
+
+/** 删除按钮操作 */
+const handleDelete = async (id: number) => {
+  try {
+    // 删除的二次确认
+    await message.delConfirm()
+    // 发起删除
+    await PayappApi.deleteApp(id)
+    message.success(t('common.delSuccess'))
+    // 刷新列表
+    await getList()
+  } catch {}
+}
+
+/** 导出按钮操作 */
+const handleExport = async () => {
+  try {
+    // 导出的二次确认
+    await message.exportConfirm()
+    // 发起导出
+    exportLoading.value = true
+    const data = await PayappApi.exportApp(queryParams)
+    download.excel(data, '支付应用信息.xls')
+  } finally {
+    exportLoading.value = false
+  }
+}
+
+/**
+ * 根据渠道编码判断渠道列表中是否存在
+ *
+ * @param channels 渠道列表
+ * @param channelCode 渠道编码
+ */
+const isChannelExists = (channels, channelCode) => {
+  if (!channels) {
+    return false
+  }
+  return channels.indexOf(channelCode) !== -1
+}
+
+/**
+ * 新增支付渠道信息
+ */
+const openChannelForm = async (row, payCode, type) => {
+  channelParam.loading = false
+  channelParam.appId = row.id
+  channelParam.payCode = payCode
+  channelParam.payMerchant = row.payMerchant
+
+  switch (type) {
+    case PayType.ALIPAY:
+      alipayFormRef.value.open(row.id, payCode)
+      break
+
+    case PayType.WECHAT:
+      weixinFormRef.value.open(row.id, payCode)
+      break
+
+    case PayType.MOCK:
+      mockFormRef.value.open(row.id, payCode)
+      break
+  }
+}
+
+/** 初始化 **/
+onMounted(async () => {
+  await getList()
+})
 </script>
