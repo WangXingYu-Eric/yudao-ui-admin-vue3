@@ -76,3 +76,9 @@ export const exportAppApi = (params: AppExportReqVO) => {
 export const getAppListByMerchantIdApi = (merchantId: number) => {
   return request.get({ url: '/pay/app/list-merchant-id', params: { merchantId: merchantId } })
 }
+
+export const getAppList = () => {
+  return request.get({
+    url: '/pay/app/list'
+  })
+}
