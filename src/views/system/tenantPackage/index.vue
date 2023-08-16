@@ -12,6 +12,8 @@
       </template>
       <template #actionbtns_default="{ row }">
         <XTextButton preIcon="ep:edit" :title="t('action.edit')" @click="handleUpdate(row.id)" />
+        <!-- 操作：详情 -->
+        <XTextButton preIcon="ep:view" :title="t('action.detail')" @click="handleDetail(row.id)" />
         <XTextButton preIcon="ep:delete" :title="t('action.del')" @click="deleteData(row.id)" />
       </template>
     </XTable>
@@ -48,6 +50,37 @@
           </el-card>
         </template>
       </Form>
+      <!-- 对话框(详情) -->
+      <Descriptions
+        v-if="actionType === 'detail'"
+        :schema="allSchemas.detailSchema"
+        :data="detailData"
+      >
+        <template #menuIds>
+          <el-card class="cardHeight">
+            <template #header>
+              <div class="card-header">
+                全选/全不选:
+                <el-switch
+                  v-model="treeNodeAll"
+                  inline-prompt
+                  active-text="是"
+                  inactive-text="否"
+                  disabled
+                />
+              </div>
+            </template>
+            <el-tree
+              ref="treeRefDetail"
+              node-key="id"
+              show-checkbox
+              :props="defaultProps"
+              :data="menuOptionsDetail"
+              empty-text="加载中，请稍候"
+            />
+          </el-card>
+        </template>
+      </Descriptions>
       <!-- 操作按钮 -->
       <template #footer>
         <!-- 按钮：保存 -->
@@ -77,9 +110,11 @@ const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 
 const menuOptions = ref<any[]>([]) // 树形结构
+const menuOptionsDetail = ref<any[]>([]) // 树形结构-详情
 const menuExpand = ref(false)
 const menuNodeAll = ref(false)
 const treeRef = ref<InstanceType<typeof ElTree>>()
+const treeRefDetail = ref<InstanceType<typeof ElTree>>()
 const treeNodeAll = ref(false)
 const formRef = ref<FormExpose>() // 表单 Ref
 const loading = ref(false) // 遮罩层
@@ -100,10 +135,21 @@ const validateCategory = (rule: any, value: any, callback: any) => {
   }
 }
 rules.menuIds = [{ required: true, validator: validateCategory, trigger: 'blur' }]
+const dealTreeData = (item) => {
+  for (var i = 0; i < item.length; i++) {
+    item[i].disabled = true
+    if (item[i].children) {
+      dealTreeData(item[i].children)
+    }
+  }
+  return item
+}
 
 const getTree = async () => {
   const res = await listSimpleMenusApi()
   menuOptions.value = handleTree(res)
+  let treeData = JSON.parse(JSON.stringify(handleTree(res)))
+  menuOptionsDetail.value = dealTreeData(treeData)
 }
 
 const [registerTable, { reload, deleteData }] = useXTable({
@@ -138,6 +184,19 @@ const handleUpdate = async (rowId: number) => {
   res.menuIds?.forEach((item: any) => {
     unref(treeRef)?.setChecked(item, true, false)
   })
+}
+
+// 详情操作
+let detailData = ref()
+const handleDetail = async (rowId: number) => {
+  setDialogTile('detail')
+  // 设置数据
+  const res = await TenantPackageApi.getTenantPackageApi(rowId)
+  // 设置选中
+  res.menuIds?.forEach((item: any) => {
+    unref(treeRefDetail)?.setChecked(item, true, false)
+  })
+  detailData.value = res
 }
 
 // 提交按钮

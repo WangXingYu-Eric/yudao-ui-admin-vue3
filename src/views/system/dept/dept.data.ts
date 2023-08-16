@@ -6,6 +6,7 @@ const { t } = useI18n() // 国际化
 export const rules = reactive({
   name: [required],
   sort: [required],
+  status: [required],
   // email: [required],
   email: [
     { required: true, message: t('profile.rules.mail'), trigger: 'blur' },

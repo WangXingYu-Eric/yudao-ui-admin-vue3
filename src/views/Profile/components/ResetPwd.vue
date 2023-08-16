@@ -1,12 +1,12 @@
 <template>
   <el-form ref="formRef" :model="password" :rules="rules" label-width="80px">
-    <el-form-item :label="t('profile.password.oldPassword')">
+    <el-form-item :label="t('profile.password.oldPassword')" prop="oldPassword">
       <InputPassword v-model="password.oldPassword" />
     </el-form-item>
-    <el-form-item :label="t('profile.password.newPassword')">
+    <el-form-item :label="t('profile.password.newPassword')" prop="newPassword">
       <InputPassword v-model="password.newPassword" strength />
     </el-form-item>
-    <el-form-item :label="t('profile.password.confirmPassword')">
+    <el-form-item :label="t('profile.password.confirmPassword')" prop="confirmPassword">
       <InputPassword v-model="password.confirmPassword" strength />
     </el-form-item>
     <el-form-item>
@@ -31,7 +31,7 @@ const password = reactive({
 })
 
 // 表单校验
-const equalToPassword = (value, callback) => {
+const equalToPassword = (rule, value, callback) => {
   if (password.newPassword !== value) {
     callback(new Error(t('profile.password.diffPwd')))
   } else {

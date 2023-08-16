@@ -38,7 +38,7 @@
     </XTable>
   </ContentWrap>
   <!-- 添加或修改菜单对话框 -->
-  <XModal id="menuModel" v-model="dialogVisible" :title="dialogTitle">
+  <XModal id="menuModel" height="70%" v-model="dialogVisible" :title="dialogTitle">
     <!-- 对话框(添加 / 修改) -->
     <el-form
       ref="formRef"

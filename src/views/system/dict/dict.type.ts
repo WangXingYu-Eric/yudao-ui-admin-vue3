@@ -4,7 +4,8 @@ const { t } = useI18n() // 国际化
 // 表单校验
 export const dictTypeRules = reactive({
   name: [required],
-  type: [required]
+  type: [required],
+  status: [required]
 })
 // 新增 + 修改
 const crudSchemas = reactive<VxeCrudSchema>({

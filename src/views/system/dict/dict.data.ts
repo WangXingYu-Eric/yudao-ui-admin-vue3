@@ -5,7 +5,8 @@ const { t } = useI18n()
 export const dictDataRules = reactive({
   label: [required],
   value: [required],
-  sort: [required]
+  sort: [required],
+  status: [required]
 })
 // crudSchemas
 export const crudSchemas = reactive<VxeCrudSchema>({
