@@ -163,7 +163,12 @@
       </template>
       <template #postIds="{ row }">
         <template v-if="row.postIds !== ''">
-          <el-tag v-for="(post, index) in row.postIds" :key="index" index="">
+          <el-tag
+            v-for="(post, index) in row.postIds"
+            :key="index"
+            index=""
+            :style="index !== row.postIds.length - 1 ? 'margin-right: 5px' : ''"
+          >
             <template v-for="postObj in postOptions">
               {{ post === postObj.id ? postObj.name : '' }}
             </template>

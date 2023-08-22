@@ -25,6 +25,8 @@
           v-hasPermi="['system:dept:update']"
           @click="handleUpdate(row.id)"
         />
+        <!-- 操作：详情 -->
+        <XTextButton preIcon="ep:view" :title="t('action.detail')" @click="handleDetail(row.id)" />
         <!-- 操作：删除 -->
         <XTextButton
           preIcon="ep:delete"
@@ -38,7 +40,12 @@
   <!-- 添加或修改菜单对话框 -->
   <XModal id="deptModel" v-model="dialogVisible" :title="dialogTitle">
     <!-- 对话框(添加 / 修改) -->
-    <Form ref="formRef" :schema="allSchemas.formSchema" :rules="rules">
+    <Form
+      v-if="['create', 'update'].includes(actionType)"
+      ref="formRef"
+      :schema="allSchemas.formSchema"
+      :rules="rules"
+    >
       <template #parentId="form">
         <el-tree-select
           node-key="id"
@@ -60,6 +67,26 @@
         </el-select>
       </template>
     </Form>
+    <!-- 对话框(详情) -->
+    <Descriptions
+      v-if="actionType === 'detail'"
+      :schema="allSchemas.detailSchema"
+      :data="detailData"
+      ref="formRefDetail"
+    >
+      <template #parentId="{ row }">
+        <el-tag>
+          {{ dataFormatter(row.parentId) }}
+        </el-tag>
+      </template>
+      <template #leaderUserId="{ row }">
+        <template v-if="row.leaderUserId !== null">
+          <el-tag>
+            {{ userNicknameFormat(row) }}
+          </el-tag>
+        </template>
+      </template>
+    </Descriptions>
     <template #footer>
       <!-- 按钮：保存 -->
       <XButton
@@ -80,6 +107,7 @@ import type { FormExpose } from '@/components/Form'
 import { allSchemas, rules } from './dept.data'
 import * as DeptApi from '@/api/system/dept'
 import { getListSimpleUsersApi, UserVO } from '@/api/system/user'
+import { treeFormatter } from '@/utils'
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
@@ -113,6 +141,11 @@ const getTree = async () => {
   dept.children = handleTree(res)
   deptOptions.value.push(dept)
 }
+
+const dataFormatter = (val) => {
+  return treeFormatter(deptOptions.value, val, 'id', 'name')
+}
+
 const [registerTable, { reload, deleteData }] = useXTable({
   allSchemas: allSchemas,
   treeConfig: treeConfig,
@@ -140,6 +173,14 @@ const handleUpdate = async (rowId: number) => {
   const res = await DeptApi.getDeptApi(rowId)
   await nextTick()
   unref(formRef)?.setValues(res)
+}
+
+const detailData = ref()
+const handleDetail = async (rowId: number) => {
+  setDialogTile('detail')
+  // 设置数据
+  const res = await DeptApi.getDeptApi(rowId)
+  detailData.value = res
 }
 
 // 提交新增/修改的表单
@@ -171,7 +212,7 @@ const submitForm = async () => {
 
 const userNicknameFormat = (row) => {
   if (!row || !row.leaderUserId) {
-    return '未设置'
+    return ''
   }
   for (const user of userOption.value) {
     if (row.leaderUserId === user.id) {
