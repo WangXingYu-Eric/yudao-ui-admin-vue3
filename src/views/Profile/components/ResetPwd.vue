@@ -41,7 +41,7 @@ const equalToPassword = (rule, value, callback) => {
 const rules = reactive<FormRules>({
   oldPassword: [
     { required: true, message: t('profile.password.oldPwdMsg'), trigger: 'blur' },
-    { min: 3, max: 5, message: t('profile.password.pwdRules'), trigger: 'blur' }
+    { min: 6, max: 20, message: t('profile.password.pwdRules'), trigger: 'blur' }
   ],
   newPassword: [
     { required: true, message: t('profile.password.newPwdMsg'), trigger: 'blur' },
