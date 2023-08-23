@@ -101,6 +101,7 @@
 import { dateFormatter } from '@/utils/formatTime'
 import * as PropertyApi from '@/api/mall/product/property'
 import PropertyForm from './PropertyForm.vue'
+
 const { push } = useRouter()
 
 const message = useMessage() // 消息弹窗
@@ -162,7 +163,7 @@ const handleDelete = async (id: number) => {
 
 /** 跳转商品属性列表 */
 const goValueList = (id: number) => {
-  push({ path: '/property/value/' + id })
+  push({ path: '/product/property/value/' + id })
 }
 
 /** 初始化 **/
