@@ -109,24 +109,15 @@
         :formatter="dateFormatter"
         width="180px"
       />
-      <el-table-column label="操作" align="center" width="140px" fixed="right">
+      <el-table-column label="操作" align="center">
         <template #default="scope">
           <el-button
             link
             type="primary"
-            @click="openForm('update', scope.row.id)"
+            @click="goMemberDetail(scope.row.id)"
             v-hasPermi="['member:user:update']"
           >
-            编辑
-          </el-button>
-          <!-- todo 放到更多菜单中 -->
-          <el-button
-            link
-            type="primary"
-            @click="updateLevelFormRef.open(scope.row.id)"
-            v-hasPermi="['member:user:update-level']"
-          >
-            修改等级
+            详情
           </el-button>
         </template>
       </el-table-column>
@@ -139,21 +130,14 @@
       @pagination="getList"
     />
   </ContentWrap>
-
-  <!-- 表单弹窗：添加/修改 -->
-  <UserForm ref="formRef" @success="getList" />
-  <!-- 修改用户等级弹窗 -->
-  <UpdateLevelForm ref="updateLevelFormRef" @success="getList" />
 </template>
 <script setup lang="ts">
 import { dateFormatter } from '@/utils/formatTime'
 import * as UserApi from '@/api/member/user'
-import UserForm from './UserForm.vue'
 import { DICT_TYPE } from '@/utils/dict'
 import MemberTagSelect from '@/views/member/tag/components/MemberTagSelect.vue'
 import MemberLevelSelect from '@/views/member/level/components/MemberLevelSelect.vue'
 import MemberGroupSelect from '@/views/member/group/components/MemberGroupSelect.vue'
-import UpdateLevelForm from '@/views/member/user/UpdateLevelForm.vue'
 
 defineOptions({ name: 'MemberUser' })
 
@@ -172,7 +156,6 @@ const queryParams = reactive({
   groupId: null
 })
 const queryFormRef = ref() // 搜索的表单
-const updateLevelFormRef = ref() // 修改会员等级表单
 
 /** 查询列表 */
 const getList = async () => {
@@ -198,10 +181,9 @@ const resetQuery = () => {
   handleQuery()
 }
 
-/** 添加/修改操作 */
-const formRef = ref()
-const openForm = (type: string, id?: number) => {
-  formRef.value.open(type, id)
+const { push } = useRouter()
+const goMemberDetail = (id: number) => {
+  push({ path: 'user/detail', query: { member_id: id } })
 }
 
 /** 初始化 **/
