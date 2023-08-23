@@ -27,6 +27,8 @@
           v-hasPermi="['system:menu:update']"
           @click="handleUpdate(row.id)"
         />
+        <!-- 操作：详情 -->
+        <XTextButton preIcon="ep:view" :title="t('action.detail')" @click="handleDetail(row.id)" />
         <!-- 操作：删除 -->
         <XTextButton
           preIcon="ep:delete"
@@ -46,6 +48,7 @@
       :rules="rules"
       label-width="100px"
       label-position="right"
+      v-if="['create', 'update'].includes(actionType)"
     >
       <el-form-item label="上级菜单">
         <el-tree-select
@@ -186,6 +189,21 @@
         </el-col>
       </template>
     </el-form>
+    <!-- 对话框(详情) -->
+    <Descriptions
+      v-if="actionType === 'detail'"
+      :schema="allSchemas.detailSchema"
+      :data="detailData"
+    >
+      <template #parentId="{ row }">
+        <template v-if="row.parentId !== ''">
+          <el-tag>
+            {{ dataFormatter(row.parentId) }}
+          </el-tag>
+        </template>
+        <template v-else> </template>
+      </template>
+    </Descriptions>
     <template #footer>
       <!-- 按钮：保存 -->
       <XButton
@@ -209,6 +227,7 @@ import { SystemMenuTypeEnum, CommonStatusEnum } from '@/utils/constants'
 import { handleTree, defaultProps } from '@/utils/tree'
 import * as MenuApi from '@/api/system/menu'
 import { allSchemas, rules } from './menu.data'
+import { treeFormatter } from '@/utils'
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
@@ -265,6 +284,10 @@ const getTree = async () => {
   menuOptions.value.push(menu)
 }
 
+const dataFormatter = (val) => {
+  return treeFormatter(menuOptions.value, val, 'id', 'name')
+}
+
 // ========== 新增/修改 ==========
 
 // 设置标题
@@ -308,6 +331,14 @@ const handleUpdate = async (rowId: number) => {
   // TODO 芋艿：这块要优化下，部分字段未重置，无法修改
   menuForm.value.componentName = res.componentName || ''
   menuForm.value.alwaysShow = res.alwaysShow !== undefined ? res.alwaysShow : true
+}
+
+let detailData = ref()
+const handleDetail = async (rowId: number) => {
+  await setDialogTile('detail')
+  // 设置数据
+  const res = await MenuApi.getMenuApi(rowId)
+  detailData.value = res
 }
 
 // 提交新增/修改的表单

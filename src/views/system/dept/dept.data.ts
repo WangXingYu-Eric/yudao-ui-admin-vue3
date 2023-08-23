@@ -9,7 +9,7 @@ export const rules = reactive({
   status: [required],
   // email: [required],
   email: [
-    { required: true, message: t('profile.rules.mail'), trigger: 'blur' },
+    { message: t('profile.rules.mail'), trigger: 'blur' },
     {
       type: 'email',
       message: t('profile.rules.truemail'),

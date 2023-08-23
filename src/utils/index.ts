@@ -209,3 +209,47 @@ export const yuanToFen = (amount: string | number): number => {
 export const fenToYuan = (amount: string | number): number => {
   return Number((Number(amount) / 100).toFixed(2))
 }
+
+export const treeFormatter = (ary: any, val: string, valueField = 'value', nameField = 'label') => {
+  let o = ''
+  if (ary != null) {
+    for (const v of ary) {
+      if (v[valueField] == val) {
+        o = v[nameField]
+        if (o) return o
+      } else if (v.children?.length) {
+        o = treeFormatter(v.children, val, valueField, nameField)
+        if (o) return o
+      }
+    }
+    return o
+  } else {
+    return val
+  }
+}
+
+/**
+ *
+ * @param ary 数组
+ * @param val 参数值
+ * @param name 对比字段
+ * @param returnVal 输出字段
+ * @returns
+ */
+export const commonFormatter = (ary: any, val: string, name: string, returnVal: string) => {
+  let o = ''
+  if (ary && val) {
+    for (const v of ary) {
+      if (v[name] == val) {
+        o = v[returnVal]
+        if (o) return o
+      } else if (v.children?.length) {
+        o = commonFormatter(v.children, val, name, returnVal)
+        if (o) return o
+      }
+    }
+    return o
+  } else {
+    return val
+  }
+}
