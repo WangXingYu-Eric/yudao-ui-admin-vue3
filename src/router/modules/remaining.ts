@@ -196,6 +196,23 @@ const remainingRouter: AppRouteRecordRaw[] = [
     }
   },
   {
+    path: '/trade/order',
+    component: Layout,
+    name: 'order',
+    meta: {
+      hidden: true
+    },
+    children: [
+      {
+        path: 'detail',
+        name: 'TradeOrderDetail',
+        // component: () => import('@/views/mall/trade/order/tradeOrderDetail.vue'),
+        component: () => import('@/views/mall/trade/detail/index.vue'),
+        meta: { title: '订单详情', hidden: true }
+      }
+    ]
+  },
+  {
     path: '/403',
     component: () => import('@/views/Error/403.vue'),
     name: 'NoAccess',
@@ -395,22 +412,16 @@ const remainingRouter: AppRouteRecordRaw[] = [
   {
     path: '/trade/order',
     component: Layout,
-    name: 'Order',
+    name: 'Detail',
     meta: {
       hidden: true
     },
     children: [
       {
-        path: 'orderDetail/:orderId(\\d+)',
+        path: 'detail/:orderId(\\d+)',
         component: () => import('@/views/mall/trade/order/detail/index.vue'),
-        name: 'TradeOrderDetail',
+        name: 'TradeOrderDetailForm',
         meta: { title: '订单详情', icon: '', activeMenu: '/trade/trade/order' }
-      },
-      {
-        path: 'afterSaleDetail/:orderId(\\d+)',
-        component: () => import('@/views/mall/trade/afterSale/detail/index.vue'),
-        name: 'TradeAfterSaleDetail',
-        meta: { title: '退款详情', icon: '', activeMenu: '/trade/trade/after-sale' }
       }
     ]
   },
