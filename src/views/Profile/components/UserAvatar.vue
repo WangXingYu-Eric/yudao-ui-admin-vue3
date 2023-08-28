@@ -4,7 +4,7 @@
       ref="cropperRef"
       :btnProps="{ preIcon: 'ant-design:cloud-upload-outlined' }"
       :showBtn="false"
-      :value="avatar"
+      :value="img"
       width="120px"
       @change="handelUpload"
     />
@@ -14,11 +14,10 @@
 import { propTypes } from '@/utils/propTypes'
 import { uploadAvatarApi } from '@/api/system/user/profile'
 
-const props = defineProps({
+defineOptions({ name: 'UserAvatar' })
+
+defineProps({
   img: propTypes.string.def('')
-})
-const avatar = computed(() => {
-  return props.img
 })
 
 const cropperRef = ref()
