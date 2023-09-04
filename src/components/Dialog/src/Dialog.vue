@@ -65,7 +65,6 @@ const dialogStyle = computed(() => {
     destroy-on-close
     lock-scroll
     draggable
-    top="0"
     class="com-dialog"
     :show-close="false"
   >
