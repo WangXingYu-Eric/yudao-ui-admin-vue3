@@ -152,6 +152,7 @@ export enum DICT_TYPE {
 
   // ========== MALL - 会员模块 ==========
   MEMBER_POINT_BIZ_TYPE = 'member_point_biz_type', // 积分的业务类型
+  MEMBER_EXPERIENCE_BIZ_TYPE = 'member_experience_biz_type', // 会员经验业务类型
   BROKERAGE_ENABLED_CONDITION = 'brokerage_enabled_condition', // 分佣模式
   BROKERAGE_BIND_MODE = 'brokerage_bind_mode', // 分销关系绑定模式
   BROKERAGE_BANK_NAME = 'brokerage_bank_name', // 佣金提现银行
