@@ -1,4 +1,5 @@
 import { Layout } from '@/utils/routerHelper'
+import ChatPage from '../../views/chat/ChatPage/Index.vue'
 
 const { t } = useI18n()
 /**
@@ -460,6 +461,12 @@ const remainingRouter: AppRouteRecordRaw[] = [
         component: () => import('@/views/pay/cashier/index.vue')
       }
     ]
+  },
+  {
+    path: '/chat',
+    component: ChatPage,
+    name: 'chat',
+    meta: { hidden: false }
   }
 ]
 

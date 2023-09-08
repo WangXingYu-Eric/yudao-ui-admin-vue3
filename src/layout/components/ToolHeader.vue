@@ -1,5 +1,6 @@
 <script lang="tsx">
 import { defineComponent, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { Message } from '@/layout/components//Message'
 import { Collapse } from '@/layout/components/Collapse'
 import { UserInfo } from '@/layout/components/UserInfo'
@@ -9,6 +10,7 @@ import { SizeDropdown } from '@/layout/components/SizeDropdown'
 import { LocaleDropdown } from '@/layout/components/LocaleDropdown'
 import { useAppStore } from '@/store/modules/app'
 import { useDesign } from '@/hooks/web/useDesign'
+import { Icon } from '@/components/Icon'
 
 const { getPrefixCls, variables } = useDesign()
 
@@ -37,6 +39,10 @@ const locale = computed(() => appStore.getLocale)
 // 消息图标
 const message = computed(() => appStore.getMessage)
 
+const goToChat = () => {
+  window.open(window.location.host + '/chat', '_blank')
+}
+
 export default defineComponent({
   name: 'ToolHeader',
   setup() {
@@ -58,6 +64,13 @@ export default defineComponent({
           </div>
         ) : undefined}
         <div class="h-full flex items-center">
+          <div onClick={goToChat}>
+            <Icon
+              icon="ep:chat-dot-round"
+              color="var(--top-header-text-color)"
+              class="custom-hover"
+            />
+          </div>
           {screenfull.value ? (
             <Screenfull class="custom-hover" color="var(--top-header-text-color)"></Screenfull>
           ) : undefined}
