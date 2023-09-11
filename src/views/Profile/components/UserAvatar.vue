@@ -14,8 +14,6 @@
 import { propTypes } from '@/utils/propTypes'
 import { uploadAvatarApi } from '@/api/system/user/profile'
 
-defineOptions({ name: 'UserAvatar' })
-
 defineProps({
   img: propTypes.string.def('')
 })
