@@ -58,29 +58,6 @@
         </el-card>
       </el-col>
     </el-row>
-    <el-row class="mt-3">
-      <el-col :span="24" class="card-box" shadow="hover">
-        <el-card>
-          <el-table
-            v-loading="keyListLoad"
-            :data="keyList"
-            row-key="id"
-            @row-click="openKeyTemplate"
-          >
-            <el-table-column prop="keyTemplate" label="Key 模板" width="200" />
-            <el-table-column prop="keyType" label="Key 类型" width="100" />
-            <el-table-column prop="valueType" label="Value 类型" />
-            <el-table-column prop="timeoutType" label="超时时间" width="200">
-              <template #default="{ row }">
-                <DictTag :type="DICT_TYPE.INFRA_REDIS_TIMEOUT_TYPE" :value="row?.timeoutType" />
-                <span v-if="row?.timeout > 0">({{ row?.timeout / 1000 }} 秒)</span>
-              </template>
-            </el-table-column>
-            <el-table-column prop="memo" label="备注" />
-          </el-table>
-        </el-card>
-      </el-col>
-    </el-row>
   </el-scrollbar>
   <XModal v-model="dialogVisible" :title="keyTemplate + ' 模板'">
     <el-row>
@@ -133,28 +110,14 @@ import { RedisKeyInfo, RedisMonitorInfoVO } from '@/api/infra/redis/types'
 import { DICT_TYPE } from '@/utils/dict'
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
-const keyListLoad = ref(true)
-const keyList = ref<RedisKeyInfo[]>([])
 const cache = ref<RedisMonitorInfoVO>()
 // 基本信息
 const readRedisInfo = async () => {
   const data = await RedisApi.getCacheApi()
   cache.value = data
   // loadEchartOptions(data.commandStats)
-  const redisKeysInfo = await RedisApi.getKeyDefineListApi()
-  keyList.value = redisKeysInfo
-  keyListLoad.value = false //加载完成
 }
 const dialogVisible = ref(false)
-const keyTemplate = ref('')
-const cacheKeys = ref()
-const cacheForm = ref<{
-  key: string
-  value: string
-}>({
-  key: '',
-  value: ''
-})
 // 内存使用情况
 const usedmemoryEchartChika = reactive<any>({
   title: {
@@ -347,23 +310,6 @@ onMounted(() => {
   // 加载数据
   getSummary()
 })
-const openKeyTemplate = async (row: RedisKeyInfo) => {
-  keyTemplate.value = row.keyTemplate
-  cacheKeys.value = await RedisApi.getKeyListApi(row.keyTemplate)
-  dialogVisible.value = true
-}
-const handleDeleteKey = async (row) => {
-  RedisApi.deleteKeyApi(row)
-  message.success(t('common.delSuccess'))
-}
-const handleDeleteKeys = async (row) => {
-  RedisApi.deleteKeysApi(row)
-  message.success(t('common.delSuccess'))
-}
-const handleKeyValue = async (row) => {
-  const res = await RedisApi.getKeyValueApi(row)
-  cacheForm.value = res
-}
 onBeforeMount(() => {
   readRedisInfo()
 })
