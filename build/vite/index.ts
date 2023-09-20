@@ -1,7 +1,6 @@
 import { resolve } from 'path'
 import Vue from '@vitejs/plugin-vue'
 import VueJsx from '@vitejs/plugin-vue-jsx'
-import WindiCSS from 'vite-plugin-windicss'
 import progress from 'vite-plugin-progress'
 import EslintPlugin from 'vite-plugin-eslint'
 import PurgeIcons from 'vite-plugin-purge-icons'
@@ -14,6 +13,7 @@ import viteCompression from 'vite-plugin-compression'
 import topLevelAwait from 'vite-plugin-top-level-await'
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+import UnoCSS from 'unocss/vite'
 
 export function createVitePlugins() {
   const root = process.cwd()
@@ -24,7 +24,7 @@ export function createVitePlugins() {
   return [
     Vue(),
     VueJsx(),
-    WindiCSS(),
+    UnoCSS(),
     progress(),
     PurgeIcons(),
     ElementPlus({}),

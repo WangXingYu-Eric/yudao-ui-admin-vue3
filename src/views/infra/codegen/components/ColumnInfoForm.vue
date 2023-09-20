@@ -132,7 +132,7 @@ const tableHeight = document.documentElement.scrollHeight - 350 + 'px'
 /** 查询字典下拉列表 */
 const dictOptions = ref<DictDataApi.DictTypeVO[]>()
 const getDictOptions = async () => {
-  dictOptions.value = await DictDataApi.getSimpleDictTypeList()
+  dictOptions.value = await DictDataApi.listSimpleDictTypeApi()
 }
 
 watch(

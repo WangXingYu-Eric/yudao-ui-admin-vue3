@@ -22,7 +22,9 @@
             :key="item.filePath"
           >
             <XTextButton style="float: right" :title="t('common.copy')" @click="copy(item.code)" />
-            <pre><code v-dompurify-html="highlightedCode(item)" class="hljs"></code></pre>
+            <el-scrollbar height="600px">
+              <pre><code v-dompurify-html="highlightedCode(item)" class="hljs"></code></pre>
+            </el-scrollbar>
           </el-tab-pane>
         </el-tabs>
       </el-card>

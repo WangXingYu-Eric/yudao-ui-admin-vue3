@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="formRef" :model="password" :rules="rules" label-width="80px">
+  <el-form ref="formRef" :model="password" :rules="rules" :label-width="200">
     <el-form-item :label="t('profile.password.oldPassword')" prop="oldPassword">
       <InputPassword v-model="password.oldPassword" />
     </el-form-item>
@@ -31,13 +31,14 @@ const password = reactive({
 })
 
 // 表单校验
-const equalToPassword = (rule, value, callback) => {
+const equalToPassword = (_rule, value, callback) => {
   if (password.newPassword !== value) {
     callback(new Error(t('profile.password.diffPwd')))
   } else {
     callback()
   }
 }
+
 const rules = reactive<FormRules>({
   oldPassword: [
     { required: true, message: t('profile.password.oldPwdMsg'), trigger: 'blur' },
@@ -52,6 +53,7 @@ const rules = reactive<FormRules>({
     { required: true, validator: equalToPassword, trigger: 'blur' }
   ]
 })
+
 const submit = (formEl: FormInstance | undefined) => {
   if (!formEl) return
   formEl.validate(async (valid) => {
@@ -61,6 +63,7 @@ const submit = (formEl: FormInstance | undefined) => {
     }
   })
 }
+
 const reset = (formEl: FormInstance | undefined) => {
   if (!formEl) return
   formEl.resetFields()

@@ -1,13 +1,6 @@
-import BasicInfoForm from './BasicInfoForm.vue'
-import DescriptionForm from './DescriptionForm.vue'
-import OtherSettingsForm from './OtherSettingsForm.vue'
-import ProductAttributes from './ProductAttributes.vue'
-import ProductPropertyAddForm from './ProductPropertyAddForm.vue'
 import SkuList from './SkuList.vue'
-
 import { Spu } from '@/api/mall/product/spu'
 
-// TODO @puhui999：Properties 改成 Property 更合适？Property 在 Spu 中已存在避免冲突 PropertyAndValues
 interface PropertyAndValues {
   id: number
   name: string
@@ -58,14 +51,4 @@ const getPropertyList = (spu: Spu): PropertyAndValues[] => {
   return properties
 }
 
-export {
-  BasicInfoForm,
-  DescriptionForm,
-  OtherSettingsForm,
-  ProductAttributes,
-  ProductPropertyAddForm,
-  SkuList,
-  getPropertyList,
-  PropertyAndValues,
-  RuleConfig
-}
+export { SkuList, getPropertyList, PropertyAndValues, RuleConfig }

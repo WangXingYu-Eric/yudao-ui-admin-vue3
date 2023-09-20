@@ -26,6 +26,7 @@
           :key="index"
           v-for="(tag, index) in row.tags"
           :index="index"
+          :style="{ 'margin-right': index !== row.tags.length - 1 ? '5px' : '' }"
         >
           {{ tag }}
         </el-tag>
@@ -82,6 +83,7 @@
           :key="index"
           v-for="(tag, index) in row.tags"
           :index="index"
+          :style="{ 'margin-right': index !== row.tags.length - 1 ? '5px' : '' }"
         >
           {{ tag }}
         </el-tag>

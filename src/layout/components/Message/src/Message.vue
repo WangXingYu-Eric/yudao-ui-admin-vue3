@@ -33,9 +33,12 @@ onMounted(() => {
   // 首次加载小红点
   getUnreadCount()
   // 轮询刷新小红点
-  timer = setInterval(() => {
-    getUnreadCount()
-  }, 1000 * 60 * 2)
+  timer = setInterval(
+    () => {
+      getUnreadCount()
+    },
+    1000 * 60 * 2
+  )
 })
 onUnmounted(() => {
   clearInterval(timer)
