@@ -23,5 +23,10 @@ export enum MessageType {
   SYSTEM = 4
 }
 
+export const enum MENU_LIST_ENUM {
+  CONVERSATION = 1,
+  FRIENDS = 2
+}
+
 export type MessageModelType = BaseMessage | TextMessage | ImageMessage
 export type ConversationModelType = BaseConversation | ChatConversation
