@@ -200,8 +200,8 @@ const close = () => {
 }
 .process-panel__container {
   position: absolute;
-  right: 0;
   top: 55px;
+  right: 0;
   height: calc(100vh - 84px);
 }
 </style>
