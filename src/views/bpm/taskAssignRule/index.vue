@@ -133,7 +133,7 @@
     </XModal>
   </ContentWrap>
 </template>
-<script setup lang="ts" name="BpmTaskAssignRule">
+<script lang="ts" setup>
 // 全局相关的 import
 import { FormInstance } from 'element-plus'
 // 业务相关的 import
@@ -146,6 +146,8 @@ import { listSimpleDeptApi } from '@/api/system/dept'
 import { DICT_TYPE, getDictOptions } from '@/utils/dict'
 import { handleTree, defaultProps } from '@/utils/tree'
 import { allSchemas, rules, idShowActionClick } from './taskAssignRule.data'
+
+defineOptions({ name: 'BpmTaskAssignRule' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗

@@ -1,6 +1,8 @@
-<script lang="ts" name="Message" setup>
+<script lang="ts" setup>
 import { formatDate } from '@/utils/formatTime'
 import * as NotifyMessageApi from '@/api/system/notify/message'
+
+defineOptions({ name: 'Message' })
 
 const { push } = useRouter()
 const activeName = ref('notice')
@@ -72,7 +74,7 @@ onUnmounted(() => {
         </ElTabPane>
       </ElTabs>
       <!-- 更多 -->
-      <div style="text-align: right; margin-top: 10px">
+      <div style="margin-top: 10px; text-align: right">
         <XButton preIcon="ep:view" title="查看全部" type="primary" @click="goMyList" />
       </div>
     </ElPopover>

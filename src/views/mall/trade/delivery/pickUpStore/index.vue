@@ -111,11 +111,13 @@
   <!-- 表单弹窗：添加/修改 -->
   <DeliveryPickUpStoreForm ref="formRef" @success="getList" />
 </template>
-<script lang="ts" name="DeliveryPickUpStore" setup>
+<script lang="ts" setup>
 import * as DeliveryPickUpStoreApi from '@/api/mall/trade/delivery/pickUpStore'
 import DeliveryPickUpStoreForm from './PickUpStoreForm.vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { dateFormatter } from '@/utils/formatTime'
+
+defineOptions({ name: 'DeliveryPickUpStore' })
 
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化

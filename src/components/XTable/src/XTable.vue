@@ -5,7 +5,7 @@
     </template>
   </VxeGrid>
 </template>
-<script setup lang="ts" name="XTable">
+<script lang="ts" setup>
 import { PropType } from 'vue'
 import { SizeType, VxeGridInstance } from 'vxe-table'
 import { useAppStore } from '@/store/modules/app'
@@ -14,6 +14,8 @@ import { XTableProps } from './type'
 import { isBoolean, isFunction } from '@/utils/is'
 import styleCss from './style/dark.scss?inline'
 import download from '@/utils/download'
+
+defineOptions({ name: 'XTable' })
 
 const { t } = useI18n()
 const message = useMessage() // 消息弹窗

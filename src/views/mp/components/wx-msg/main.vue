@@ -30,13 +30,15 @@
   </ContentWrap>
 </template>
 
-<script setup lang="ts" name="WxMsg">
+<script lang="ts" setup>
 import WxReplySelect, { Reply, ReplyType } from '@/views/mp/components/wx-reply'
 import MsgList from './components/MsgList.vue'
 import { getMessagePage, sendMessage } from '@/api/mp/message'
 import { getUser } from '@/api/mp/user'
 import profile from '@/assets/imgs/profile.jpg'
 import { User } from './types'
+
+defineOptions({ name: 'WxMsg' })
 
 const message = useMessage() // 消息弹窗
 
@@ -172,10 +174,10 @@ const scrollToBottom = async () => {
 <style lang="scss" scoped>
 .msg-div {
   height: 50vh;
+  margin-right: 10px;
+  margin-left: 10px;
   overflow: auto;
   background-color: #eaeaea;
-  margin-left: 10px;
-  margin-right: 10px;
 }
 
 .msg-send {

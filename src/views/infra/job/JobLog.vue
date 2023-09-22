@@ -47,12 +47,14 @@
     </template>
   </XModal>
 </template>
-<script setup lang="ts" name="InfraJobLog">
+<script lang="ts" setup>
 import dayjs from 'dayjs'
 
 import * as JobLogApi from '@/api/infra/jobLog'
 import { allSchemas } from './jobLog.data'
 import { useRoute } from 'vue-router'
+
+defineOptions({ name: 'InfraJobLog' })
 
 const { t } = useI18n() // 国际化
 

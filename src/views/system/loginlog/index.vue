@@ -27,10 +27,12 @@
     </template>
   </XModal>
 </template>
-<script setup lang="ts" name="SystemLoginLog">
+<script lang="ts" setup>
 // 业务相关的 import
 import { allSchemas } from './loginLog.data'
 import { getLoginLogPageApi, exportLoginLogApi, LoginLogVO } from '@/api/system/loginLog'
+
+defineOptions({ name: 'SystemLoginLog' })
 
 const { t } = useI18n() // 国际化
 // 列表相关的变量

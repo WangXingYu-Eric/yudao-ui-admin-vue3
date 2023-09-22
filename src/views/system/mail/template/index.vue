@@ -138,12 +138,14 @@
     </template>
   </XModal>
 </template>
-<script setup lang="ts" name="SystemMailTemplate">
+<script lang="ts" setup>
 import { FormExpose } from '@/components/Form'
 // 业务相关的 import
 import { rules, allSchemas } from './template.data'
 import * as MailTemplateApi from '@/api/system/mail/template'
 import * as MailAccountApi from '@/api/system/mail/account'
+
+defineOptions({ name: 'SystemMailTemplate' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗

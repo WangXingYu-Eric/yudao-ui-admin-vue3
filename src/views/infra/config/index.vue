@@ -82,11 +82,13 @@
     </template>
   </XModal>
 </template>
-<script setup lang="ts" name="InfraConfig">
+<script lang="ts" setup>
 import type { FormExpose } from '@/components/Form'
 // 业务相关的 import
 import * as ConfigApi from '@/api/infra/config'
 import { rules, allSchemas } from './config.data'
+
+defineOptions({ name: 'InfraConfig' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗

@@ -11,13 +11,15 @@
     />
   </ContentWrap>
 </template>
-<script setup lang="ts" name="BpmOALeaveCreate">
+<script lang="ts" setup>
 import { FormExpose } from '@/components/Form'
 // import XEUtils from 'xe-utils'
 
 // 业务相关的 import
 import * as LeaveApi from '@/api/bpm/leave'
 import { rules, allSchemas } from './leave.data'
+
+defineOptions({ name: 'BpmOALeaveCreate' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗

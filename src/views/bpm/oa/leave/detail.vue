@@ -6,11 +6,14 @@
   </ContentWrap>
 </template>
 
-<script setup lang="ts" name="BpmOALeaveDetail">
+<script lang="ts" setup>
 // 业务相关的 import
 import * as LeaveApi from '@/api/bpm/leave'
 import { allSchemas } from '@/views/bpm/oa/leave/leave.data'
 import { useRouter } from 'vue-router'
+
+defineOptions({ name: 'BpmOALeaveDetail' })
+
 const router = useRouter()
 const { query } = useRoute() // 查询参数
 const message = useMessage() // 消息弹窗

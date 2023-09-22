@@ -316,7 +316,7 @@
   </ContentWrap>
 </template>
 
-<script setup lang="ts" name="BpmModel">
+<script lang="ts" setup>
 // 全局相关的 import
 import { DICT_TYPE, getDictOptions } from '@/utils/dict'
 import { MyProcessViewer } from '@/components/bpmnProcessDesigner/package'
@@ -328,6 +328,8 @@ import * as FormApi from '@/api/bpm/form'
 import * as ModelApi from '@/api/bpm/model'
 import { allSchemas, rules } from './model.data'
 import { setConfAndFields2 } from '@/utils/formCreate'
+
+defineOptions({ name: 'BpmModel' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗

@@ -21,10 +21,12 @@
     </XTable>
   </ContentWrap>
 </template>
-<script setup lang="ts" name="MyNotifyMessage">
+<script lang="ts" setup>
 // 业务相关的 import
 import { allSchemas } from './my.data'
 import * as NotifyMessageApi from '@/api/system/notify/message'
+
+defineOptions({ name: 'MyNotifyMessage' })
 
 const message = useMessage() // 消息
 

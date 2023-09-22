@@ -157,7 +157,7 @@
     </template>
   </XModal>
 </template>
-<script setup lang="ts" name="SystemRole">
+<script lang="ts" setup>
 import type { ElTree } from 'element-plus'
 import type { FormExpose } from '@/components/Form'
 import { handleTree, defaultProps } from '@/utils/tree'
@@ -168,6 +168,8 @@ import * as RoleApi from '@/api/system/role'
 import { listSimpleMenusApi } from '@/api/system/menu'
 import { listSimpleDeptApi } from '@/api/system/dept'
 import * as PermissionApi from '@/api/system/permission'
+
+defineOptions({ name: 'SystemRole' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗

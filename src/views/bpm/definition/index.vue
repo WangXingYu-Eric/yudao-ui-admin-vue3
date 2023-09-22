@@ -59,7 +59,7 @@
     </XModal>
   </ContentWrap>
 </template>
-<script setup lang="ts" name="BpmProcessDefinition">
+<script lang="ts" setup>
 // 业务相关的 import
 import * as DefinitionApi from '@/api/bpm/definition'
 // import * as ModelApi from '@/api/bpm/model'
@@ -67,6 +67,8 @@ import { allSchemas } from './definition.data'
 import { setConfAndFields2 } from '@/utils/formCreate'
 import { DICT_TYPE } from '@/utils/dict'
 import { MyProcessViewer } from '@/components/bpmnProcessDesigner/package'
+
+defineOptions({ name: 'BpmProcessDefinition' })
 
 const bpmnXML = ref(null)
 const showBpmnOpen = ref(false)

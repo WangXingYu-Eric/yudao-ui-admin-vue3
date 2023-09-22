@@ -17,7 +17,7 @@
     </template>
   </Dialog>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 import * as TagApi from '@/api/member/tag'
 
 const { t } = useI18n() // 国际化

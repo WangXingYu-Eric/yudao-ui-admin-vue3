@@ -67,11 +67,13 @@
     </template>
   </XModal>
 </template>
-<script setup lang="ts" name="SystemSmsChannel">
+<script lang="ts" setup>
 import type { FormExpose } from '@/components/Form'
 // 业务相关的 import
 import * as SmsChannelApi from '@/api/system/sms/smsChannel'
 import { rules, allSchemas } from './sms.channel.data'
+
+defineOptions({ name: 'SystemSmsChannel' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗

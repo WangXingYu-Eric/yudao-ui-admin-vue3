@@ -12,10 +12,12 @@
     </XTable>
   </ContentWrap>
 </template>
-<script setup lang="ts" name="BpmDoneTask">
+<script lang="ts" setup>
 // 业务相关的 import
 import { allSchemas } from './done.data'
 import * as TaskApi from '@/api/bpm/task'
+
+defineOptions({ name: 'BpmDoneTask' })
 
 const { push } = useRouter() // 路由
 

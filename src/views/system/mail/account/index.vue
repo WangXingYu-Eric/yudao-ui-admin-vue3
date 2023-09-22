@@ -66,11 +66,13 @@
     </template>
   </XModal>
 </template>
-<script setup lang="ts" name="SystemMailAccount">
+<script lang="ts" setup>
 import { FormExpose } from '@/components/Form'
 // 业务相关的 import
 import { rules, allSchemas } from './account.data'
 import * as MailAccountApi from '@/api/system/mail/account'
+
+defineOptions({ name: 'SystemMailAccount' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗

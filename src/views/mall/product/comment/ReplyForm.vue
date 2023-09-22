@@ -18,7 +18,7 @@
   </Dialog>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import * as CommentApi from '@/api/mall/product/comment'
 import { ElInput } from 'element-plus'
 

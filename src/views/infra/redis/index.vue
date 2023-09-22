@@ -104,10 +104,13 @@
     </el-row>
   </XModal>
 </template>
-<script setup lang="ts" name="InfraRedis">
+<script lang="ts" setup>
 import * as RedisApi from '@/api/infra/redis'
 import { RedisKeyInfo, RedisMonitorInfoVO } from '@/api/infra/redis/types'
 import { DICT_TYPE } from '@/utils/dict'
+
+defineOptions({ name: 'InfraRedis' })
+
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 const cache = ref<RedisMonitorInfoVO>()

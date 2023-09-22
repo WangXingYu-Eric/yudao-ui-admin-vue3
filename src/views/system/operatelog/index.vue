@@ -41,10 +41,12 @@
     </template>
   </XModal>
 </template>
-<script setup lang="ts" name="SystemOperateLog">
+<script lang="ts" setup>
 // 业务相关的 import
 import * as OperateLogApi from '@/api/system/operatelog'
 import { allSchemas } from './operatelog.data'
+
+defineOptions({ name: 'SystemOperateLog' })
 
 const { t } = useI18n() // 国际化
 // 列表相关的变量

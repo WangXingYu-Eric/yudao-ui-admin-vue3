@@ -50,10 +50,13 @@
     </template>
   </Dialog>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { CommonStatusEnum } from '@/utils/constants'
 import * as ProductCategoryApi from '@/api/mall/product/category'
+
+defineOptions({ name: 'ProductCategoryForm' })
+
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 

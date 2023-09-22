@@ -54,7 +54,7 @@
   <SpuTableSelect ref="spuTableSelectRef" @change="handleSpuChange" />
   <SkuTableSelect ref="skuTableSelectRef" @change="handleSkuChange" :spu-id="spuData.id" />
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 import * as CommentApi from '@/api/mall/product/comment'
 import SpuTableSelect from '@/views/mall/product/spu/components/SpuTableSelect.vue'
 import * as ProductSpuApi from '@/api/mall/product/spu'

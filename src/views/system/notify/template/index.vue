@@ -114,12 +114,14 @@
     </template>
   </XModal>
 </template>
-<script setup lang="ts" name="SystemNotifyTemplate">
+<script lang="ts" setup>
 import { FormExpose } from '@/components/Form'
 // 业务相关的 import
 import { rules, allSchemas } from './template.data'
 import * as NotifyTemplateApi from '@/api/system/notify/template'
 import { getListSimpleUsersApi, UserVO } from '@/api/system/user'
+
+defineOptions({ name: 'SystemNotifyTemplate' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗

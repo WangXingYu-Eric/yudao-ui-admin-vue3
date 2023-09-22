@@ -2,4 +2,6 @@
   <div></div>
 </template>
 
-<script lang="ts" name="CombinationRecord" setup></script>
+<script lang="ts" setup>
+defineOptions({ name: 'CombinationRecord' })
+</script>

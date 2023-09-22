@@ -85,12 +85,14 @@
   </XModal>
 </template>
 
-<script setup lang="ts" name="BpmUserGroup">
+<script lang="ts" setup>
 // 业务相关的 import
 import * as UserGroupApi from '@/api/bpm/userGroup'
 import { getListSimpleUsersApi, UserVO } from '@/api/system/user'
 import { allSchemas, rules } from './group.data'
 import { FormExpose } from '@/components/Form'
+
+defineOptions({ name: 'BpmUserGroup' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗

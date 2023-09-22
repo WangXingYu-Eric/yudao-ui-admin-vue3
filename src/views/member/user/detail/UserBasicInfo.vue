@@ -68,7 +68,7 @@
     </el-row>
   </el-card>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 import { DICT_TYPE } from '@/utils/dict'
 import { formatDate } from '@/utils/formatTime'
 import * as UserApi from '@/api/member/user'

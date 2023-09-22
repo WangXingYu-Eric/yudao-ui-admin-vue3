@@ -264,6 +264,7 @@ import { PropertyAndValues } from './index'
 import { ElTable } from 'element-plus'
 
 defineOptions({ name: 'SkuList' })
+
 const message = useMessage() // 消息弹窗
 
 const props = defineProps({

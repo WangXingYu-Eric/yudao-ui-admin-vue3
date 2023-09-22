@@ -30,8 +30,11 @@
     </el-card>
   </div>
 </template>
-<script setup lang="ts" name="Profile">
+<script lang="ts" setup>
 import { BasicInfo, ProfileUser, ResetPwd, UserSocial } from './components/'
+
+defineOptions({ name: 'Profile' })
+
 const { t } = useI18n()
 
 const activeName = ref('basicInfo')
@@ -54,8 +57,8 @@ const activeName = ref('basicInfo')
 
 .profile-tabs > .el-tabs__content {
   padding: 32px;
-  color: #6b778c;
   font-weight: 600;
+  color: #6b778c;
 }
 
 .el-tabs--left .el-tabs__content {

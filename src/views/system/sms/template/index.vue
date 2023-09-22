@@ -108,11 +108,13 @@
     </template>
   </XModal>
 </template>
-<script setup lang="ts" name="SystemSmsTemplate">
+<script lang="ts" setup>
 import type { FormExpose } from '@/components/Form'
 // 业务相关的 import
 import * as SmsTemplateApi from '@/api/system/sms/smsTemplate'
 import { rules, allSchemas } from './sms.template.data'
+
+defineOptions({ name: 'SystemSmsTemplate' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗

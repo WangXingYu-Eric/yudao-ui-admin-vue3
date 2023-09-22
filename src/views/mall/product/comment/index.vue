@@ -154,7 +154,7 @@
   <ReplyForm ref="replyFormRef" @success="getList" />
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { dateFormatter } from '@/utils/formatTime'
 import * as CommentApi from '@/api/mall/product/comment'
 import CommentForm from './CommentForm.vue'

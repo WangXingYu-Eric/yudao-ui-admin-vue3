@@ -1,4 +1,4 @@
-<script lang="ts" name="TagsView" setup>
+<script lang="ts" setup>
 import type { RouteLocationNormalizedLoaded, RouterLinkProps } from 'vue-router'
 import { usePermissionStore } from '@/store/modules/permission'
 import { useTagsViewStore } from '@/store/modules/tagsView'
@@ -10,6 +10,8 @@ import { useDesign } from '@/hooks/web/useDesign'
 import { useTemplateRefsList } from '@vueuse/core'
 import { ElScrollbar } from 'element-plus'
 import { useScrollTo } from '@/hooks/event/useScrollTo'
+
+defineOptions({ name: 'TagsView' })
 
 const { getPrefixCls } = useDesign()
 

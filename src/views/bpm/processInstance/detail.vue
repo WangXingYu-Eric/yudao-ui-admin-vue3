@@ -32,7 +32,7 @@
             />
           </el-form-item>
         </el-form>
-        <div style="margin-left: 10%; margin-bottom: 20px; font-size: 14px">
+        <div style="margin-bottom: 20px; margin-left: 10%; font-size: 14px">
           <XButton
             pre-icon="ep:select"
             type="success"
@@ -106,24 +106,24 @@
             >
               <p style="font-weight: 700">任务：{{ item.name }}</p>
               <el-card :body-style="{ padding: '10px' }">
-                <label v-if="item.assigneeUser" style="font-weight: normal; margin-right: 30px">
+                <label v-if="item.assigneeUser" style="margin-right: 30px; font-weight: normal">
                   审批人：{{ item.assigneeUser.nickname }}
                   <el-tag type="info" size="small">{{ item.assigneeUser.deptName }}</el-tag>
                 </label>
                 <label style="font-weight: normal" v-if="item.createTime">创建时间：</label>
-                <label style="color: #8a909c; font-weight: normal">
+                <label style="font-weight: normal; color: #8a909c">
                   {{ dayjs(item?.createTime).format('YYYY-MM-DD HH:mm:ss') }}
                 </label>
                 <label v-if="item.endTime" style="margin-left: 30px; font-weight: normal">
                   审批时间：
                 </label>
-                <label v-if="item.endTime" style="color: #8a909c; font-weight: normal">
+                <label v-if="item.endTime" style="font-weight: normal; color: #8a909c">
                   {{ dayjs(item?.endTime).format('YYYY-MM-DD HH:mm:ss') }}
                 </label>
                 <label v-if="item.durationInMillis" style="margin-left: 30px; font-weight: normal">
                   耗时：
                 </label>
-                <label v-if="item.durationInMillis" style="color: #8a909c; font-weight: normal">
+                <label v-if="item.durationInMillis" style="font-weight: normal; color: #8a909c">
                   {{ formatPast2(item?.durationInMillis) }}
                 </label>
                 <p v-if="item.reason">
@@ -191,7 +191,7 @@
     </XModal>
   </ContentWrap>
 </template>
-<script setup lang="ts" name="BpmProcessInstanceDetail">
+<script lang="ts" setup>
 import dayjs from 'dayjs'
 import * as UserApi from '@/api/system/user'
 import * as ProcessInstanceApi from '@/api/bpm/processInstance'
@@ -204,6 +204,8 @@ import { setConfAndFields2 } from '@/utils/formCreate'
 import type { ApiAttrs } from '@form-create/element-ui/types/config'
 import { useUserStore } from '@/store/modules/user'
 import { MyProcessViewer } from '@/components/bpmnProcessDesigner/package'
+
+defineOptions({ name: 'BpmProcessInstanceDetail' })
 
 const { query } = useRoute() // 查询参数
 const message = useMessage() // 消息弹窗

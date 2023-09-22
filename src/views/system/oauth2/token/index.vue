@@ -24,9 +24,11 @@
     </template>
   </XModal>
 </template>
-<script setup lang="ts" name="SystemTokenClient">
+<script lang="ts" setup>
 import { allSchemas } from './token.data'
 import * as TokenApi from '@/api/system/oauth2/token'
+
+defineOptions({ name: 'SystemTokenClient' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗

@@ -51,10 +51,12 @@
     </template>
   </XModal>
 </template>
-<script setup lang="ts" name="InfraApiErrorLog">
+<script lang="ts" setup>
 import { allSchemas } from './apiErrorLog.data'
 import * as ApiErrorLogApi from '@/api/infra/apiErrorLog'
 import { InfraApiErrorLogProcessStatusEnum } from '@/utils/constants'
+
+defineOptions({ name: 'InfraApiErrorLog' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage()

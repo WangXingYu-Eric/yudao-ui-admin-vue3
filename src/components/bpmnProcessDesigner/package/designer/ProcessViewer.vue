@@ -6,11 +6,14 @@
   </div>
 </template>
 
-<script setup lang="ts" name="MyProcessViewer">
+<script lang="ts" setup>
 import BpmnViewer from 'bpmn-js/lib/Viewer'
 import DefaultEmptyXML from './plugins/defaultEmpty'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { formatDate } from '@/utils/formatTime'
+
+defineOptions({ name: 'MyProcessViewer' })
+
 const props = defineProps({
   value: {
     // BPMN XML 字符串
@@ -562,11 +565,11 @@ watch(
 }
 
 .element-overlays {
-  box-sizing: border-box;
+  width: 200px;
   padding: 8px;
+  color: #fafafa;
   background: rgb(0 0 0 / 60%);
   border-radius: 4px;
-  color: #fafafa;
-  width: 200px;
+  box-sizing: border-box;
 }
 </style>

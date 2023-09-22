@@ -17,7 +17,7 @@
           ref="canvas"
           :src="'data:image/png;base64,' + pointBackImgBase"
           alt=""
-          style="width: 100%; height: 100%; display: block"
+          style="display: block; width: 100%; height: 100%"
           @click="bindingClick ? canvasClick($event) : undefined"
         />
 
@@ -57,7 +57,7 @@
     </div>
   </div>
 </template>
-<script name="VerifyPoints" setup type="text/babel">
+<script type="text/babel" setup>
 /**
  * VerifyPoints
  * @description 点选
@@ -66,6 +66,8 @@ import { resetSize } from './../utils/util'
 import { aesEncrypt } from './../utils/ase'
 import { getCodeApi, reqCheckApi } from '@/api/login'
 import { getCurrentInstance, nextTick, onMounted, reactive, ref, toRefs } from 'vue'
+
+defineOptions({ name: 'VerifyPoints' })
 
 const props = defineProps({
   //弹出式pop，固定fixed

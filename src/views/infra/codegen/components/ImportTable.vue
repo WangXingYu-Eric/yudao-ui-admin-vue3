@@ -48,7 +48,7 @@
     </template>
   </XModal>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 import { VxeTableInstance } from 'vxe-table'
 import type { DatabaseTableVO } from '@/api/infra/codegen/types'
 import { getSchemaTableListApi, createCodegenListApi } from '@/api/infra/codegen'

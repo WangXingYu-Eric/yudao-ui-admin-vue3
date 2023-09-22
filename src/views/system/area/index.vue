@@ -37,11 +37,14 @@
   </div>
 </template>
 
-<script lang="ts" setup name="SystemArea">
+<script lang="ts" setup>
 import * as areaApi from '@/api/system/area'
 import type { FormInstance } from 'element-plus'
 // import { allSchemas } from './area.data'
 // import { getAreaByIp, getAreaTree } from '@/api/system/area'
+
+defineOptions({ name: 'SystemArea' })
+
 // 遮罩层
 const loading = ref(true)
 // 地区列表

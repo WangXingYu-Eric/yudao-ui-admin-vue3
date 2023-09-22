@@ -75,11 +75,13 @@
     </template>
   </XModal>
 </template>
-<script setup lang="ts" name="SystemPost">
+<script lang="ts" setup>
 import type { FormExpose } from '@/components/Form'
 // 业务相关的 import
 import * as PostApi from '@/api/system/post'
 import { rules, allSchemas } from './post.data'
+
+defineOptions({ name: 'SystemPost' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗

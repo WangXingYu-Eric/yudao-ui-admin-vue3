@@ -83,7 +83,7 @@
     </el-tabs>
   </ContentWrap>
 </template>
-<script lang="ts" setup name="MpMaterial">
+<script lang="ts" setup>
 import WxAccountSelect from '@/views/mp/components/wx-account-select'
 import ImageTable from './components/ImageTable.vue'
 import VoiceTable from './components/VoiceTable.vue'
@@ -92,6 +92,9 @@ import UploadFile from './components/UploadFile.vue'
 import UploadVideo from './components/UploadVideo.vue'
 import { UploadType } from './components/upload'
 import * as MpMaterialApi from '@/api/mp/material'
+
+defineOptions({ name: 'MpMaterial' })
+
 const message = useMessage() // 消息
 
 const type = ref<UploadType>(UploadType.Image) // 素材类型

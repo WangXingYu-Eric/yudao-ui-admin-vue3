@@ -9,7 +9,7 @@
         <img
           :src="'data:image/png;base64,' + backImgBase"
           alt=""
-          style="width: 100%; height: 100%; display: block"
+          style="display: block; width: 100%; height: 100%"
         />
         <div v-show="showRefresh" class="verify-refresh" @click="refresh">
           <i class="iconfont icon-refresh"></i>
@@ -63,7 +63,7 @@
             <img
               :src="'data:image/png;base64,' + blockBackImgBase"
               alt=""
-              style="width: 100%; height: 100%; display: block; -webkit-user-drag: none"
+              style="display: block; width: 100%; height: 100%; -webkit-user-drag: none"
             />
           </div>
         </div>
@@ -71,7 +71,7 @@
     </div>
   </div>
 </template>
-<script name="VerifySlide" setup type="text/babel">
+<script type="text/babel" setup>
 /**
  * VerifySlide
  * @description 滑块
@@ -79,6 +79,8 @@
 import { aesEncrypt } from './../utils/ase'
 import { resetSize } from './../utils/util'
 import { getCodeApi, reqCheckApi } from '@/api/login'
+
+defineOptions({ name: 'VerifySlide' })
 
 const props = defineProps({
   captchaType: {

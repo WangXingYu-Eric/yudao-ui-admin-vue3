@@ -49,12 +49,14 @@
     </template>
   </XModal>
 </template>
-<script setup lang="ts" name="SystemMailLog">
+<script lang="ts" setup>
 // 业务相关的 import
 import { DICT_TYPE } from '@/utils/dict'
 import { allSchemas } from './log.data'
 import * as MailLogApi from '@/api/system/mail/log'
 import * as MailAccountApi from '@/api/system/mail/account'
+
+defineOptions({ name: 'SystemMailLog' })
 
 const { t } = useI18n() // 国际化
 
