@@ -1,6 +1,8 @@
-<script lang="ts" name="Crontab" setup>
+<script lang="ts" setup>
 import { ElMessage } from 'element-plus'
 import { PropType } from 'vue'
+
+defineOptions({ name: 'Crontab' })
 
 interface shortcutsType {
   text: string

@@ -12,7 +12,7 @@
     <XButton :title="t('common.reset')" type="danger" @click="init()" />
   </div>
 </template>
-<script lang="ts" name="BasicInfo" setup>
+<script lang="ts" setup>
 import type { FormRules } from 'element-plus'
 import { ElMessage } from 'element-plus'
 
@@ -23,6 +23,8 @@ import {
   updateUserProfileApi,
   UserProfileUpdateReqVO
 } from '@/api/system/user/profile'
+
+defineOptions({ name: 'BasicInfo' })
 
 const { t } = useI18n()
 // 表单校验

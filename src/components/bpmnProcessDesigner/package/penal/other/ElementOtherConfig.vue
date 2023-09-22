@@ -16,7 +16,9 @@
   </div>
 </template>
 
-<script setup lang="ts" name="ElementOtherConfig">
+<script setup lang="ts">
+defineOptions({ name: 'ElementOtherConfig' })
+
 const props = defineProps({
   id: String
 })

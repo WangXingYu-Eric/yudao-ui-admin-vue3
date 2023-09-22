@@ -267,7 +267,7 @@
     </template>
   </XModal>
 </template>
-<script setup lang="ts" name="SystemUser">
+<script setup lang="ts">
 import type { ElTree, UploadRawFile, UploadInstance } from 'element-plus'
 import { handleTree, defaultProps } from '@/utils/tree'
 import download from '@/utils/download'
@@ -284,6 +284,8 @@ import {
   listUserRolesApi,
   PermissionAssignUserRoleReqVO
 } from '@/api/system/permission'
+
+defineOptions({ name: 'SystemUser' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗

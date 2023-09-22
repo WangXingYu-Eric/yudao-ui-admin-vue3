@@ -97,7 +97,7 @@
     </XModal>
   </ContentWrap>
 </template>
-<script setup lang="ts" name="SystemTenantPackage">
+<script setup lang="ts">
 import { handleTree, defaultProps } from '@/utils/tree'
 import type { FormExpose } from '@/components/Form'
 import type { ElTree } from 'element-plus'
@@ -105,6 +105,8 @@ import type { ElTree } from 'element-plus'
 import { rules, allSchemas } from './tenantPackage.data'
 import * as TenantPackageApi from '@/api/system/tenantPackage'
 import { listSimpleMenusApi } from '@/api/system/menu'
+
+defineOptions({ name: 'SystemTenantPackage' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗

@@ -101,13 +101,15 @@
     </template>
   </XModal>
 </template>
-<script setup lang="ts" name="SystemDept">
+<script setup lang="ts">
 import { handleTree, defaultProps } from '@/utils/tree'
 import type { FormExpose } from '@/components/Form'
 import { allSchemas, rules } from './dept.data'
 import * as DeptApi from '@/api/system/dept'
 import { getListSimpleUsersApi, UserVO } from '@/api/system/user'
 import { treeFormatter } from '@/utils'
+
+defineOptions({ name: 'SystemDept' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗

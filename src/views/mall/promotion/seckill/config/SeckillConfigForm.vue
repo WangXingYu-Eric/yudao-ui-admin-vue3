@@ -7,9 +7,11 @@
     </template>
   </Dialog>
 </template>
-<script lang="ts" name="SeckillConfigForm" setup>
+<script lang="ts" setup>
 import * as SeckillConfigApi from '@/api/mall/promotion/seckill/seckillConfig'
 import { allSchemas, rules } from './seckillConfig.data'
+
+defineOptions({ name: 'SeckillConfigForm' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗

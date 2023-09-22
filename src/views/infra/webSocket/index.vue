@@ -55,10 +55,12 @@
     </el-card>
   </div>
 </template>
-<script lang="ts" name="WebSocket" setup>
+<script lang="ts" setup>
 import { formatDate } from '@/utils/formatTime'
 import { useUserStore } from '@/store/modules/user'
 import { useWebSocket } from '@vueuse/core'
+
+defineOptions({ name: 'WebSocket' })
 
 const userStore = useUserStore()
 

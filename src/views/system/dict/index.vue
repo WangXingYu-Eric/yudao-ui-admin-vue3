@@ -121,7 +121,7 @@
     </XModal>
   </div>
 </template>
-<script setup lang="ts" name="SystemDictType">
+<script setup lang="ts">
 import { VxeTableEvents } from 'vxe-table'
 import type { FormExpose } from '@/components/Form'
 import * as DictTypeSchemas from './dict.type'
@@ -129,6 +129,8 @@ import * as DictDataSchemas from './dict.data'
 import * as DictTypeApi from '@/api/system/dict/dict.type'
 import * as DictDataApi from '@/api/system/dict/dict.data'
 import { DictDataVO, DictTypeVO } from '@/api/system/dict/types'
+
+defineOptions({ name: 'SystemDictType' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗

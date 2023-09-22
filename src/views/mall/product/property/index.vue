@@ -97,10 +97,12 @@
   <!-- 表单弹窗：添加/修改 -->
   <PropertyForm ref="formRef" @success="getList" />
 </template>
-<script lang="ts" name="ProductProperty" setup>
+<script lang="ts" setup>
 import { dateFormatter } from '@/utils/formatTime'
 import * as PropertyApi from '@/api/mall/product/property'
 import PropertyForm from './PropertyForm.vue'
+
+defineOptions({ name: 'ProductProperty' })
 
 const { push } = useRouter()
 

@@ -43,12 +43,14 @@
   </ContentWrap>
 </template>
 
-<script setup lang="ts" name="BpmForm">
+<script setup lang="ts">
 // 业务相关的 import
 import * as FormApi from '@/api/bpm/form'
 import { allSchemas } from './form.data'
 // 表单详情相关的变量和 import
 import { setConfAndFields2 } from '@/utils/formCreate'
+
+defineOptions({ name: 'BpmForm' })
 
 const { t } = useI18n() // 国际化
 const { push } = useRouter() // 路由

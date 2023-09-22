@@ -57,7 +57,7 @@
     </div>
   </div>
 </template>
-<script name="VerifyPoints" setup type="text/babel">
+<script setup type="text/babel">
 /**
  * VerifyPoints
  * @description 点选
@@ -66,6 +66,8 @@ import { resetSize } from './../utils/util'
 import { aesEncrypt } from './../utils/ase'
 import { getCodeApi, reqCheckApi } from '@/api/login'
 import { getCurrentInstance, nextTick, onMounted, reactive, ref, toRefs } from 'vue'
+
+defineOptions({ name: 'VerifyPoints' })
 
 const props = defineProps({
   //弹出式pop，固定fixed

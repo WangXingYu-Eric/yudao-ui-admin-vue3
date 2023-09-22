@@ -50,12 +50,14 @@
   </div>
 </template>
 
-<script setup lang="ts" name="UploadImg">
+<script setup lang="ts">
 import type { UploadProps } from 'element-plus'
 
 import { generateUUID } from '@/utils'
 import { propTypes } from '@/utils/propTypes'
 import { getAccessToken, getTenantId } from '@/utils/auth'
+
+defineOptions({ name: 'UploadImg' })
 
 type FileTypes =
   | 'image/apng'

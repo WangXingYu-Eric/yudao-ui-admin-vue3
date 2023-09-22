@@ -46,11 +46,13 @@
     </ul>
   </div>
 </template>
-<script lang="ts" name="ProfileUser" setup>
+<script lang="ts" setup>
 import { formatDate } from '@/utils/formatTime'
 import UserAvatar from './UserAvatar.vue'
 
 import { getUserProfileApi, ProfileVO } from '@/api/system/user/profile'
+
+defineOptions({ name: 'ProfileUser' })
 
 const { t } = useI18n()
 const userInfo = ref<ProfileVO>()

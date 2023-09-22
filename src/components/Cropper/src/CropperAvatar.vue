@@ -12,13 +12,15 @@
     />
   </div>
 </template>
-<script lang="ts" name="CropperAvatar" setup>
+<script lang="ts" setup>
 import { useDesign } from '@/hooks/web/useDesign'
 
 import { propTypes } from '@/utils/propTypes'
 import { useI18n } from 'vue-i18n'
 import CopperModal from './CopperModal.vue'
 import avatar from '@/assets/imgs/avatar.jpg'
+
+defineOptions({ name: 'CropperAvatar' })
 
 const props = defineProps({
   width: propTypes.string.def('200px'),

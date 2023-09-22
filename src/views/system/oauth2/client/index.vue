@@ -134,11 +134,13 @@
     </template>
   </XModal>
 </template>
-<script setup lang="ts" name="SystemOAuth2Client">
+<script setup lang="ts">
 import type { FormExpose } from '@/components/Form'
 // 业务相关的 import
 import * as ClientApi from '@/api/system/oauth2/client'
 import { rules, allSchemas } from './client.data'
+
+defineOptions({ name: 'SystemOAuth2Client' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗

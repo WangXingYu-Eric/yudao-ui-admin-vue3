@@ -191,7 +191,7 @@
     </XModal>
   </ContentWrap>
 </template>
-<script setup lang="ts" name="BpmProcessInstanceDetail">
+<script setup lang="ts">
 import dayjs from 'dayjs'
 import * as UserApi from '@/api/system/user'
 import * as ProcessInstanceApi from '@/api/bpm/processInstance'
@@ -204,6 +204,8 @@ import { setConfAndFields2 } from '@/utils/formCreate'
 import type { ApiAttrs } from '@form-create/element-ui/types/config'
 import { useUserStore } from '@/store/modules/user'
 import { MyProcessViewer } from '@/components/bpmnProcessDesigner/package'
+
+defineOptions({ name: 'BpmProcessInstanceDetail' })
 
 const { query } = useRoute() // 查询参数
 const message = useMessage() // 消息弹窗

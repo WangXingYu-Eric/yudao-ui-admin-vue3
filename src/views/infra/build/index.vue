@@ -27,7 +27,7 @@
     </div>
   </Dialog>
 </template>
-<script lang="ts" name="InfraBuild" setup>
+<script lang="ts" setup>
 import FcDesigner from '@form-create/designer'
 // import { useClipboard } from '@vueuse/core'
 import { isString } from '@/utils/is'
@@ -37,6 +37,8 @@ import 'highlight.js/styles/github.css' // 导入代码高亮样式
 import xml from 'highlight.js/lib/languages/java'
 import json from 'highlight.js/lib/languages/json'
 import formCreate from '@form-create/element-ui'
+
+defineOptions({ name: 'InfraBuild' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息

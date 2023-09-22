@@ -26,7 +26,7 @@
   </div>
 </template>
 
-<script setup lang="ts" name="BpmModelEditor">
+<script setup lang="ts">
 import { MyProcessDesigner, MyProcessPenal } from '@/components/bpmnProcessDesigner/package'
 // import { translations } from '@/components/bpmnProcessDesigner/src/translations'
 // 自定义元素选中时的弹出菜单（修改 默认任务 为 用户任务）
@@ -37,6 +37,8 @@ import CustomPaletteProvider from '@/components/bpmnProcessDesigner/package/desi
 // import myProcessDesigner from '@/components/bpmnProcessDesigner/package/designer/ProcessDesigner.vue'
 // import MyProcessPalette from '@/components/bpmnProcessDesigner/package/palette/ProcessPalette.vue'
 import { createModelApi, getModelApi, updateModelApi, ModelVO } from '@/api/bpm/model'
+
+defineOptions({ name: 'BpmModelEditor' })
 
 const router = useRouter()
 const message = useMessage()

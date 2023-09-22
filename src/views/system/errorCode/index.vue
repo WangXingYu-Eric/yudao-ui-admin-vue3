@@ -66,11 +66,13 @@
     </template>
   </XModal>
 </template>
-<script setup lang="ts" name="SystemErrorCode">
+<script setup lang="ts">
 import type { FormExpose } from '@/components/Form'
 // 业务相关的 import
 import { rules, allSchemas } from './errorCode.data'
 import * as ErrorCodeApi from '@/api/system/errorCode'
+
+defineOptions({ name: 'SystemErrorCode' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗

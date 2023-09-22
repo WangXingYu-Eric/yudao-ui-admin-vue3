@@ -128,11 +128,13 @@
     </template>
   </XModal>
 </template>
-<script setup lang="ts" name="InfraJob">
+<script setup lang="ts">
 import type { FormExpose } from '@/components/Form'
 import * as JobApi from '@/api/infra/job'
 import { rules, allSchemas } from './job.data'
 import { InfraJobStatusEnum } from '@/utils/constants'
+
+defineOptions({ name: 'InfraJob' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗

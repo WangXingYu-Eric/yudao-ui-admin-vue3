@@ -30,8 +30,11 @@
     </el-card>
   </div>
 </template>
-<script setup lang="ts" name="Profile">
+<script setup lang="ts">
 import { BasicInfo, ProfileUser, ResetPwd, UserSocial } from './components/'
+
+defineOptions({ name: 'Profile' })
+
 const { t } = useI18n()
 
 const activeName = ref('basicInfo')

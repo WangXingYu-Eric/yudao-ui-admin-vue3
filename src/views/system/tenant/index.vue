@@ -85,10 +85,12 @@
     </template>
   </XModal>
 </template>
-<script setup lang="ts" name="SystemTenant">
+<script setup lang="ts">
 import type { FormExpose } from '@/components/Form'
 import * as TenantApi from '@/api/system/tenant'
 import { rules, allSchemas, tenantPackageOption } from './tenant.data'
+
+defineOptions({ name: 'SystemTenant' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗

@@ -41,11 +41,13 @@
     </template>
   </Dialog>
 </template>
-<script lang="ts" name="BpmUserGroupForm" setup>
+<script lang="ts" setup>
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { CommonStatusEnum } from '@/utils/constants'
 import * as UserGroupApi from '@/api/bpm/userGroup'
 import * as UserApi from '@/api/system/user'
+
+defineOptions({ name: 'BpmUserGroupForm' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗

@@ -52,7 +52,7 @@
     </XModal>
   </ContentWrap>
 </template>
-<script setup lang="ts" name="BpmFormEditor">
+<script setup lang="ts">
 import { FormInstance } from 'element-plus'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { CommonStatusEnum } from '@/utils/constants'
@@ -60,6 +60,8 @@ import * as FormApi from '@/api/bpm/form'
 import FcDesigner from '@form-create/designer'
 import { encodeConf, encodeFields, setConfAndFields } from '@/utils/formCreate'
 // import { useClipboard } from '@vueuse/core'
+
+defineOptions({ name: 'BpmFormEditor' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息

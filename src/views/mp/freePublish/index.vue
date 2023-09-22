@@ -46,10 +46,13 @@
   </ContentWrap>
 </template>
 
-<script lang="ts" setup name="MpFreePublish">
+<script lang="ts" setup>
 import * as FreePublishApi from '@/api/mp/freePublish'
 import WxNews from '@/views/mp/components/wx-news'
 import WxAccountSelect from '@/views/mp/components/wx-account-select'
+
+defineOptions({ name: 'MpFreePublish' })
+
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
 

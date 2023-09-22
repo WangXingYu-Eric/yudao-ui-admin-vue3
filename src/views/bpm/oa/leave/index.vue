@@ -23,13 +23,15 @@
   </ContentWrap>
 </template>
 
-<script setup lang="ts" name="BpmOALeave">
+<script setup lang="ts">
 // 全局相关的 import
 import { ElMessageBox } from 'element-plus'
 // 业务相关的 import
 import { allSchemas } from './leave.data'
 import * as LeaveApi from '@/api/bpm/leave'
 import * as ProcessInstanceApi from '@/api/bpm/processInstance'
+
+defineOptions({ name: 'BpmOALeave' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗

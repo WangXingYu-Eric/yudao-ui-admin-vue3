@@ -71,7 +71,7 @@
     </div>
   </div>
 </template>
-<script name="VerifySlide" setup type="text/babel">
+<script setup type="text/babel">
 /**
  * VerifySlide
  * @description 滑块
@@ -79,6 +79,8 @@
 import { aesEncrypt } from './../utils/ase'
 import { resetSize } from './../utils/util'
 import { getCodeApi, reqCheckApi } from '@/api/login'
+
+defineOptions({ name: 'VerifySlide' })
 
 const props = defineProps({
   captchaType: {

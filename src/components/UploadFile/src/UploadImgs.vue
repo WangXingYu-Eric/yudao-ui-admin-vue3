@@ -45,13 +45,15 @@
     />
   </div>
 </template>
-<script lang="ts" name="UploadImgs" setup>
+<script lang="ts" setup>
 import { PropType } from 'vue'
 import type { UploadFile, UploadProps, UploadUserFile } from 'element-plus'
 import { ElNotification } from 'element-plus'
 
 import { propTypes } from '@/utils/propTypes'
 import { getAccessToken, getTenantId } from '@/utils/auth'
+
+defineOptions({ name: 'UploadImgs' })
 
 const message = useMessage() // 消息弹窗
 

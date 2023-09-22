@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { propTypes } from '@/utils/propTypes'
+
+defineOptions({ name: 'XModal' })
+
 const slots = useSlots()
 
 const props = defineProps({

@@ -1,9 +1,11 @@
-<script lang="ts" name="InputPassword" setup>
+<script lang="ts" setup>
 import { propTypes } from '@/utils/propTypes'
 import { useConfigGlobal } from '@/hooks/web/useConfigGlobal'
 import type { ZxcvbnResult } from '@zxcvbn-ts/core'
 import { zxcvbn } from '@zxcvbn-ts/core'
 import { useDesign } from '@/hooks/web/useDesign'
+
+defineOptions({ name: 'InputPassword' })
 
 const { getPrefixCls } = useDesign()
 

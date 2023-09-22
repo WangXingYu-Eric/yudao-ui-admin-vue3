@@ -52,8 +52,11 @@
   </div>
 </template>
 
-<script setup lang="ts" name="ElementProperties">
+<script setup lang="ts">
 import { ElMessageBox } from 'element-plus'
+
+defineOptions({ name: 'ElementProperties' })
+
 const props = defineProps({
   id: String,
   type: String

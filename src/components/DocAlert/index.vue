@@ -5,8 +5,10 @@
     </template>
   </el-alert>
 </template>
-<script setup lang="tsx" name="DocAlert">
+<script setup lang="tsx">
 import { propTypes } from '@/utils/propTypes'
+
+defineOptions({ name: 'DocAlert' })
 
 const props = defineProps({
   title: propTypes.string,

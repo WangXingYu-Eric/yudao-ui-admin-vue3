@@ -56,12 +56,14 @@
   <!-- 弹窗：预览代码 -->
   <Preview ref="previewRef" />
 </template>
-<script setup lang="ts" name="InfraCodegen">
+<script setup lang="ts">
 import download from '@/utils/download'
 import * as CodegenApi from '@/api/infra/codegen'
 import { CodegenTableVO } from '@/api/infra/codegen/types'
 import { allSchemas } from './codegen.data'
 import { ImportTable, Preview } from './components'
+
+defineOptions({ name: 'InfraCodegen' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗

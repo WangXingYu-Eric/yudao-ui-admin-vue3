@@ -78,13 +78,15 @@
     </template>
   </XModal>
 </template>
-<script setup lang="ts" name="InfraFile">
+<script setup lang="ts">
 import type { UploadInstance, UploadRawFile, UploadProps, UploadFile } from 'element-plus'
 // 业务相关的 import
 import { allSchemas } from './fileList.data'
 import * as FileApi from '@/api/infra/fileList'
 import { getAccessToken, getTenantId } from '@/utils/auth'
 // import { useClipboard } from '@vueuse/core'
+
+defineOptions({ name: 'InfraFile' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗

@@ -21,10 +21,12 @@
     </el-table-column>
   </el-table>
 </template>
-<script lang="ts" name="UserSocial" setup>
+<script lang="ts" setup>
 import { SystemUserSocialTypeEnum } from '@/utils/constants'
 import { getUserProfileApi, ProfileVO } from '@/api/system/user/profile'
 import { socialAuthRedirect, socialUnbind } from '@/api/system/user/socialUser'
+
+defineOptions({ name: 'UserSocial' })
 
 const message = useMessage()
 const socialUsers = ref<any[]>([])

@@ -35,9 +35,11 @@
     </template>
   </XModal>
 </template>
-<script setup lang="ts" name="InfraApiAccessLog">
+<script setup lang="ts">
 import { allSchemas } from './apiAccessLog.data'
 import * as ApiAccessLogApi from '@/api/infra/apiAccessLog'
+
+defineOptions({ name: 'InfraApiAccessLog' })
 
 const { t } = useI18n() // 国际化
 

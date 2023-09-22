@@ -53,7 +53,7 @@
     </div>
   </ContentWrap>
 </template>
-<script setup lang="ts" name="BpmProcessInstanceCreate">
+<script setup lang="ts">
 // 业务相关的 import
 import { allSchemas } from './process.create'
 import * as DefinitionApi from '@/api/bpm/definition'
@@ -61,6 +61,8 @@ import * as ProcessInstanceApi from '@/api/bpm/processInstance'
 import { setConfAndFields2 } from '@/utils/formCreate'
 import type { ApiAttrs } from '@form-create/element-ui/types/config'
 import { DICT_TYPE } from '@/utils/dict'
+
+defineOptions({ name: 'BpmProcessInstanceCreate' })
 
 const router = useRouter() // 路由
 const message = useMessage() // 消息

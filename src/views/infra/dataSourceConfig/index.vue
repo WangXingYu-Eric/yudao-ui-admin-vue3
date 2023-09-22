@@ -65,11 +65,13 @@
     </template>
   </XModal>
 </template>
-<script setup lang="ts" name="InfraDataSourceConfig">
+<script setup lang="ts">
 import type { FormExpose } from '@/components/Form'
 // 业务相关的 import
 import * as DataSourceConfiggApi from '@/api/infra/dataSourceConfig'
 import { rules, allSchemas } from './dataSourceConfig.data'
+
+defineOptions({ name: 'InfraDataSourceConfig' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗

@@ -1,6 +1,8 @@
-<script lang="ts" name="Dialog" setup>
+<script lang="ts" setup>
 import { propTypes } from '@/utils/propTypes'
 import { isNumber } from '@/utils/is'
+
+defineOptions({ name: 'Dialog' })
 
 const slots = useSlots()
 

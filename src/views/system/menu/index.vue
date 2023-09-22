@@ -218,7 +218,7 @@
     </template>
   </XModal>
 </template>
-<script setup lang="ts" name="SystemMenu">
+<script setup lang="ts">
 import { CACHE_KEY, useCache } from '@/hooks/web/useCache'
 import { FormInstance } from 'element-plus'
 // 业务相关的 import
@@ -228,6 +228,8 @@ import { handleTree, defaultProps } from '@/utils/tree'
 import * as MenuApi from '@/api/system/menu'
 import { allSchemas, rules } from './menu.data'
 import { treeFormatter } from '@/utils'
+
+defineOptions({ name: 'SystemMenu' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗

@@ -41,7 +41,7 @@
     </XTable>
   </ContentWrap>
 </template>
-<script setup lang="ts" name="BpmProcessInstance">
+<script setup lang="ts">
 // 全局相关的 import
 import { ElMessageBox } from 'element-plus'
 import { DICT_TYPE } from '@/utils/dict'
@@ -49,6 +49,8 @@ import { DICT_TYPE } from '@/utils/dict'
 // 业务相关的 import
 import * as ProcessInstanceApi from '@/api/bpm/processInstance'
 import { allSchemas } from './process.data'
+
+defineOptions({ name: 'BpmProcessInstance' })
 
 const router = useRouter() // 路由
 const message = useMessage() // 消息弹窗

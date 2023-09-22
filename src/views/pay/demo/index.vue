@@ -109,10 +109,12 @@
     </template>
   </Dialog>
 </template>
-<script lang="ts" setup name="PayDemoOrder">
+<script lang="ts" setup>
 import * as PayDemoApi from '@/api/pay/demo'
 import { dateFormatter, formatDate } from '@/utils/formatTime'
 import { DICT_TYPE } from '@/utils/dict'
+
+defineOptions({ name: 'PayDemoOrder' })
 
 const { t } = useI18n() // 国际化
 const router = useRouter() // 路由对象

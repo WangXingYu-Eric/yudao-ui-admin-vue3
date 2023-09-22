@@ -157,12 +157,14 @@
     </template>
   </XModal>
 </template>
-<script setup lang="ts" name="InfraFileConfig">
+<script setup lang="ts">
 import type { FormInstance } from 'element-plus'
 // 业务相关的 import
 import * as FileConfigApi from '@/api/infra/fileConfig'
 import { rules, allSchemas } from './fileConfig.data'
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
+
+defineOptions({ name: 'InfraFileConfig' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗

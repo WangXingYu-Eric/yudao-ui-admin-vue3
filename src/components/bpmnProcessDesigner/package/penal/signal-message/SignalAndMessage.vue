@@ -45,7 +45,9 @@
     </el-dialog>
   </div>
 </template>
-<script setup lang="ts" name="SignalAndMassage">
+<script setup lang="ts">
+defineOptions({ name: 'SignalAndMassage' })
+
 const message = useMessage()
 const signalList = ref<any[]>([])
 const messageList = ref<any[]>([])

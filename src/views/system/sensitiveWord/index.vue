@@ -104,10 +104,12 @@
     </template>
   </XModal>
 </template>
-<script setup lang="ts" name="SystemSensitiveWord">
+<script setup lang="ts">
 import type { FormExpose } from '@/components/Form'
 import * as SensitiveWordApi from '@/api/system/sensitiveWord'
 import { rules, allSchemas } from './sensitiveWord.data'
+
+defineOptions({ name: 'SystemSensitiveWord' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
