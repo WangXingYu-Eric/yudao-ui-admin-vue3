@@ -4,6 +4,7 @@ import Friend from '../model/Friend'
 
 interface FriendStoreModel {
   friendList: Array<Friend>
+  currentFriend: Friend | null
 }
 
 export const useFriendStore = defineStore('friendStore', {
@@ -25,7 +26,8 @@ export const useFriendStore = defineStore('friendStore', {
         description: 'hero',
         createTime: 1695201147622
       }
-    ]
+    ],
+    currentFriend: null
   }),
 
   getters: {
@@ -35,8 +37,11 @@ export const useFriendStore = defineStore('friendStore', {
   },
 
   actions: {
-    addSession(session: BaseConversation) {
+    addFriend(session: BaseConversation) {
       this.friendList.push(session)
+    },
+    setCurrentFriend(friend: Friend) {
+      this.currentFriend = friend
     }
   }
 })

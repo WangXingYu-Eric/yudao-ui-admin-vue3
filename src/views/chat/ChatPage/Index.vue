@@ -3,11 +3,12 @@
     <ToolSection @menuSelectChange="toolMenuSelectChange" />
     <Session v-if="bussinessType === MENU_LIST_ENUM.CONVERSATION" />
     <Friends v-if="bussinessType === MENU_LIST_ENUM.FRIENDS" />
-    <view class="flex w-full flex-col">
+    <view v-if="bussinessType === MENU_LIST_ENUM.CONVERSATION" class="flex w-full flex-col">
       <ChatHeader />
       <ChatMessage />
       <InputSection />
     </view>
+    <FriendDetail v-if="bussinessType === MENU_LIST_ENUM.FRIENDS" />
   </view>
 </template>
 
@@ -22,6 +23,7 @@ import Friends from '../components/Friends/Index.vue'
 import ChatHeader from '../components/ChatHeader/Index.vue'
 import ChatMessage from '../components/ChatMessage/Index.vue'
 import InputSection from '../components/InputSection/index.vue'
+import FriendDetail from '../components/FriendDetail/Index.vue'
 import { MENU_LIST_ENUM } from '../types/index.d.ts'
 
 defineOptions({ name: 'ChatPage' })

@@ -7,26 +7,22 @@
 
 <script lang="ts" setup>
 import { PropType } from 'vue'
-import { useChatStore } from '../../store/chatstore'
+import { useFriendStore } from '../../store/friendstore'
+
 import Friend from '../../model/Friend'
 
-defineOptions({ name: 'SessionItem' })
+defineOptions({ name: 'FriendItem' })
 
 const props = defineProps({
   friend: {
     type: Object as PropType<Friend>,
     default: () => {}
-  },
-  index: Number
+  }
 })
 
-const chatStore = useChatStore()
+const friendStore = useFriendStore()
 
 const bgColor = () => {
-  return props.index === chatStore.currentSessionIndex ? 'bg-blue' : 'bg-white'
-}
-
-const fontColor = () => {
-  return props.index === chatStore.currentSessionIndex ? 'text-white' : 'text-gray-f'
+  return props.friend.id === friendStore.currentFriend?.id ? 'bg-blue' : 'bg-white'
 }
 </script>
