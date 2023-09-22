@@ -316,7 +316,7 @@
   </ContentWrap>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 // 全局相关的 import
 import { DICT_TYPE, getDictOptions } from '@/utils/dict'
 import { MyProcessViewer } from '@/components/bpmnProcessDesigner/package'

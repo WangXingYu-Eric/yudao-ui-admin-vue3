@@ -11,7 +11,7 @@
     />
   </ContentWrap>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 import { FormExpose } from '@/components/Form'
 // import XEUtils from 'xe-utils'
 

@@ -85,7 +85,7 @@
   </XModal>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 // 业务相关的 import
 import * as UserGroupApi from '@/api/bpm/userGroup'
 import { getListSimpleUsersApi, UserVO } from '@/api/system/user'

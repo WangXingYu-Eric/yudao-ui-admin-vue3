@@ -104,7 +104,7 @@
     </template>
   </XModal>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 import type { FormExpose } from '@/components/Form'
 import * as SensitiveWordApi from '@/api/system/sensitiveWord'
 import { rules, allSchemas } from './sensitiveWord.data'

@@ -31,7 +31,7 @@
     </div>
   </XModal>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 // import { useClipboard } from '@vueuse/core'
 import { handleTree2 } from '@/utils/tree'
 import { previewCodegenApi } from '@/api/infra/codegen'

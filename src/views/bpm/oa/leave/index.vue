@@ -23,7 +23,7 @@
   </ContentWrap>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 // 全局相关的 import
 import { ElMessageBox } from 'element-plus'
 // 业务相关的 import

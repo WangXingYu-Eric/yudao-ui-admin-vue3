@@ -1,6 +1,6 @@
 <template>
   <div>index</div>
 </template>
-<script setup lang="ts">
-  defineOptions({ name: 'TestDome' })
+<script lang="ts" setup>
+defineOptions({ name: 'TestDome' })
 </script>

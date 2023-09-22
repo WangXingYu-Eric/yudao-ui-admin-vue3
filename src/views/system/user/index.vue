@@ -267,7 +267,7 @@
     </template>
   </XModal>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 import type { ElTree, UploadRawFile, UploadInstance } from 'element-plus'
 import { handleTree, defaultProps } from '@/utils/tree'
 import download from '@/utils/download'

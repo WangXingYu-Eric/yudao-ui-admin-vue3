@@ -30,7 +30,7 @@
     </template>
   </XModal>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 import { allSchemas } from './sms.log.data'
 import * as SmsLoglApi from '@/api/system/sms/smsLog'
 

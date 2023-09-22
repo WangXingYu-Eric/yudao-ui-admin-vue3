@@ -157,7 +157,7 @@
     </template>
   </XModal>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 import type { FormInstance } from 'element-plus'
 // 业务相关的 import
 import * as FileConfigApi from '@/api/infra/fileConfig'

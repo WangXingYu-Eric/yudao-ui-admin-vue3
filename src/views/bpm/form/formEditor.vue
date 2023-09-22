@@ -52,7 +52,7 @@
     </XModal>
   </ContentWrap>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 import { FormInstance } from 'element-plus'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { CommonStatusEnum } from '@/utils/constants'

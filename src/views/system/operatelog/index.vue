@@ -41,7 +41,7 @@
     </template>
   </XModal>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 // 业务相关的 import
 import * as OperateLogApi from '@/api/system/operatelog'
 import { allSchemas } from './operatelog.data'

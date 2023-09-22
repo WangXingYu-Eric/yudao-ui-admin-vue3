@@ -5,7 +5,7 @@
     </template>
   </VxeGrid>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 import { PropType } from 'vue'
 import { SizeType, VxeGridInstance } from 'vxe-table'
 import { useAppStore } from '@/store/modules/app'

@@ -5,7 +5,7 @@
     </template>
   </el-alert>
 </template>
-<script setup lang="tsx">
+<script lang="tsx" setup>
 import { propTypes } from '@/utils/propTypes'
 
 defineOptions({ name: 'DocAlert' })

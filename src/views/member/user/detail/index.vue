@@ -53,7 +53,7 @@
   <!-- 表单弹窗：添加/修改 -->
   <UserForm ref="formRef" @success="getUserData(id)" />
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 import * as UserApi from '@/api/member/user'
 import { useTagsViewStore } from '@/store/modules/tagsView'
 import UserBasicInfo from './UserBasicInfo.vue'

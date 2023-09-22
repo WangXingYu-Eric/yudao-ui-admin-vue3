@@ -97,7 +97,7 @@
     </XModal>
   </ContentWrap>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 import { handleTree, defaultProps } from '@/utils/tree'
 import type { FormExpose } from '@/components/Form'
 import type { ElTree } from 'element-plus'

@@ -31,7 +31,7 @@
     </template>
   </Dialog>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 import * as UserApi from '@/api/member/user'
 import MemberLevelSelect from '@/views/member/level/components/MemberLevelSelect.vue'
 

@@ -30,7 +30,7 @@
     </el-card>
   </div>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 import { BasicInfo, ProfileUser, ResetPwd, UserSocial } from './components/'
 
 defineOptions({ name: 'Profile' })

@@ -59,7 +59,7 @@
     </XModal>
   </ContentWrap>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 // 业务相关的 import
 import * as DefinitionApi from '@/api/bpm/definition'
 // import * as ModelApi from '@/api/bpm/model'

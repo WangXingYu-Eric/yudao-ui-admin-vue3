@@ -191,7 +191,7 @@
     </XModal>
   </ContentWrap>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 import dayjs from 'dayjs'
 import * as UserApi from '@/api/system/user'
 import * as ProcessInstanceApi from '@/api/bpm/processInstance'

@@ -35,7 +35,7 @@
     </template>
   </XModal>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 import { allSchemas } from './apiAccessLog.data'
 import * as ApiAccessLogApi from '@/api/infra/apiAccessLog'
 

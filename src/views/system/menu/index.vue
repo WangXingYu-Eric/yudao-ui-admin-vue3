@@ -218,7 +218,7 @@
     </template>
   </XModal>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 import { CACHE_KEY, useCache } from '@/hooks/web/useCache'
 import { FormInstance } from 'element-plus'
 // 业务相关的 import

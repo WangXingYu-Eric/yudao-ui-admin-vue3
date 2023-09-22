@@ -87,7 +87,7 @@ const makeTemplate = () => {
       @submit="onSubmit"
     ></form-create>
   </template>
-  <script setup lang=ts>
+  <script lang="ts" setup>
     import formCreate from "@form-create/element-ui";
     const faps = ref(null)
     const rule = ref('')

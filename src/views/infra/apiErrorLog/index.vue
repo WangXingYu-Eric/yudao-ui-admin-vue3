@@ -51,7 +51,7 @@
     </template>
   </XModal>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 import { allSchemas } from './apiErrorLog.data'
 import * as ApiErrorLogApi from '@/api/infra/apiErrorLog'
 import { InfraApiErrorLogProcessStatusEnum } from '@/utils/constants'

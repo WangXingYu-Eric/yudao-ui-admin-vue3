@@ -105,7 +105,7 @@
   </ContentWrap>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { deleteCoupon, getCouponPage } from '@/api/mall/promotion/coupon/coupon'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { dateFormatter } from '@/utils/formatTime'

@@ -45,7 +45,7 @@
     </el-descriptions-item>
   </el-descriptions>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 import { DescriptionsItemLabel } from '@/components/Descriptions'
 import * as UserApi from '@/api/member/user'
 const { user } = defineProps<{ user: UserApi.UserVO }>()

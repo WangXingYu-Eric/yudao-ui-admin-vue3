@@ -43,7 +43,7 @@
   </ContentWrap>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 // 业务相关的 import
 import * as FormApi from '@/api/bpm/form'
 import { allSchemas } from './form.data'
