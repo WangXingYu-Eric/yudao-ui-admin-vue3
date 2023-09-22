@@ -2,7 +2,6 @@
   <div></div>
 </template>
 <script setup lang="ts">
-
 defineOptions({ name: 'Redirect' })
 
 const { currentRoute, replace } = useRouter()

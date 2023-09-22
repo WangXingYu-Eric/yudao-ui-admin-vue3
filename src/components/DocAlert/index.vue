@@ -27,8 +27,8 @@ const getEnable = () => {
 </script>
 <style scoped>
 .el-alert--success.is-light {
-  border: 1px solid green;
   margin-bottom: 10px;
   cursor: pointer;
+  border: 1px solid green;
 }
 </style>

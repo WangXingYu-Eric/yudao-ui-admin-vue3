@@ -82,7 +82,7 @@ const props = defineProps({
   fileType: propTypes.array.def(['image/jpeg', 'image/png', 'image/gif']), // 图片类型限制 ==> 非必传（默认为 ["image/jpeg", "image/png", "image/gif"]）
   height: propTypes.string.def('150px'), // 组件高度 ==> 非必传（默认为 150px）
   width: propTypes.string.def('150px'), // 组件宽度 ==> 非必传（默认为 150px）
-  borderRadius: propTypes.string.def('8px') // 组件边框圆角 ==> 非必传（默认为 8px）
+  borderradius: propTypes.string.def('8px') // 组件边框圆角 ==> 非必传（默认为 8px）
 })
 
 const uploadHeaders = ref({
@@ -90,7 +90,7 @@ const uploadHeaders = ref({
   'tenant-id': getTenantId()
 })
 
-const fileList = ref<UploadUserFile[]>()
+const fileList = ref<UploadUserFile[]>([])
 // fix: 改为动态监听赋值解决图片回显问题
 watch(
   () => props.modelValue,
@@ -218,7 +218,7 @@ const handlePictureCardPreview: UploadProps['onPreview'] = (uploadFile) => {
       padding: 0;
       overflow: hidden;
       border: 1px dashed var(--el-border-color-darker);
-      border-radius: v-bind(borderRadius);
+      border-radius: v-bind(borderradius);
 
       &:hover {
         border: 1px dashed var(--el-color-primary);
@@ -235,7 +235,7 @@ const handlePictureCardPreview: UploadProps['onPreview'] = (uploadFile) => {
       width: v-bind(width);
       height: v-bind(height);
       background-color: transparent;
-      border-radius: v-bind(borderRadius);
+      border-radius: v-bind(borderradius);
     }
 
     .upload-image {

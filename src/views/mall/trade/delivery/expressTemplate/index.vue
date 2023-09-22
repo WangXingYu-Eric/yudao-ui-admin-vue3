@@ -92,7 +92,7 @@
   <!-- 表单弹窗：添加/修改 -->
   <ExpressTemplateForm ref="formRef" @success="getList" />
 </template>
-<script lang="ts" setup>
+<script setup lang="ts">
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { dateFormatter } from '@/utils/formatTime'
 import * as DeliveryExpressTemplateApi from '@/api/mall/trade/delivery/expressTemplate'
