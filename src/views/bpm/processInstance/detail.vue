@@ -189,6 +189,9 @@
         />
       </template>
     </XModal>
+
+    <!-- 弹窗，回退节点 -->
+    <TaskReturnDialog ref="taskReturnDialogRef" @success="getDetail" />
   </ContentWrap>
 </template>
 <script lang="ts" setup>
@@ -204,6 +207,7 @@ import { setConfAndFields2 } from '@/utils/formCreate'
 import type { ApiAttrs } from '@form-create/element-ui/types/config'
 import { useUserStore } from '@/store/modules/user'
 import { MyProcessViewer } from '@/components/bpmnProcessDesigner/package'
+import TaskReturnDialog from './detail/TaskReturnDialogForm.vue'
 
 defineOptions({ name: 'BpmProcessInstanceDetail' })
 
@@ -278,6 +282,9 @@ const getTimelineItemIcon = (item) => {
   if (item.result === 4) {
     return 'el-icon-remove-outline'
   }
+  if (item.result === 5) {
+    return 'el-icon-back'
+  }
   return ''
 }
 const getTimelineItemType = (item) => {
@@ -292,6 +299,9 @@ const getTimelineItemType = (item) => {
   }
   if (item.result === 4) {
     return 'info'
+  }
+  if (item.result === 5) {
+    return 'warning'
   }
   return ''
 }
@@ -354,19 +364,11 @@ const handleDelegate = async (task) => {
   console.log(task)
 }
 
+//回退弹框组件
+const taskReturnDialogRef = ref()
 /** 处理审批退回的操作 */
 const handleBack = async (task) => {
-  message.error('暂不支持【退回】功能！')
-  // 可参考 http://blog.wya1.com/article/636697030/details/7296
-  // const data = {
-  //   id: task.id,
-  //   assigneeUserId: 1
-  // }
-  // backTask(data).then(response => {
-  //   this.$modal.msgSuccess("回退成功！");
-  //   this.getDetail(); // 获得最新详情
-  // });
-  console.log(task)
+  taskReturnDialogRef.value.open(task.id)
 }
 
 // ========== 高亮流程图 ==========
