@@ -9,11 +9,18 @@
             :data="preview.fileTree"
             :expand-on-click-node="false"
             highlight-current
+            default-expand-all
             @node-click="handleNodeClick"
           />
         </el-scrollbar>
       </el-card>
-      <el-card class="w-3/4 ml-3" :gutter="12" shadow="hover">
+      <el-card
+        v-loading="loading"
+        :gutter="12"
+        class="ml-3 w-2/3"
+        element-loading-text="加载代码中..."
+        shadow="hover"
+      >
         <el-tabs v-model="preview.activeName">
           <el-tab-pane
             v-for="item in previewCodegen"
@@ -22,7 +29,7 @@
             :key="item.filePath"
           >
             <XTextButton style="float: right" :title="t('common.copy')" @click="copy(item.code)" />
-            <el-scrollbar height="600px">
+            <el-scrollbar height="745px">
               <pre><code v-dompurify-html="highlightedCode(item)" class="hljs"></code></pre>
             </el-scrollbar>
           </el-tab-pane>
