@@ -38,7 +38,7 @@
           </el-tab-pane>
           <el-tab-pane label="成长值" name="experience" lazy>
             <UserExperienceRecordList :user-id="id"
-          /></el-tab-pane>
+            /></el-tab-pane>
           <el-tab-pane label="余额" name="fourth">余额(WIP)</el-tab-pane>
           <el-tab-pane label="收货地址" name="address" lazy>
             <UserAddressList :user-id="id" />
@@ -69,6 +69,7 @@ import UserSignList from './UserSignList.vue'
 import UserExperienceRecordList from './UserExperienceRecordList.vue'
 import { CardTitle } from '@/components/Card/index'
 import UserOrderList from '@/views/member/user/detail/UserOrderList.vue'
+import { ElMessage } from 'element-plus'
 
 defineOptions({ name: 'MemberDetail' })
 
