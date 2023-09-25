@@ -191,7 +191,7 @@
     </XModal>
 
     <!-- 弹窗，回退节点 -->
-    <TaskRollbackDialog ref="taskRollbackRef" @success="getDetail" />
+    <TaskReturnDialog ref="taskReturnDialogRef" @success="getDetail" />
   </ContentWrap>
 </template>
 <script lang="ts" setup>
@@ -207,7 +207,7 @@ import { setConfAndFields2 } from '@/utils/formCreate'
 import type { ApiAttrs } from '@form-create/element-ui/types/config'
 import { useUserStore } from '@/store/modules/user'
 import { MyProcessViewer } from '@/components/bpmnProcessDesigner/package'
-import TaskRollbackDialog from './TaskRollbackDialogForm.vue'
+import TaskReturnDialog from './TaskReturnDialogForm.vue'
 
 defineOptions({ name: 'BpmProcessInstanceDetail' })
 
@@ -365,10 +365,10 @@ const handleDelegate = async (task) => {
 }
 
 //回退弹框组件
-const taskRollbackRef = ref()
+const taskReturnDialogRef = ref()
 /** 处理审批退回的操作 */
 const handleBack = async (task) => {
-  taskRollbackRef.value.open(task.id)
+  taskReturnDialogRef.value.open(task.id)
 }
 
 // ========== 高亮流程图 ==========
