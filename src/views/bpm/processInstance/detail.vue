@@ -207,7 +207,7 @@ import { setConfAndFields2 } from '@/utils/formCreate'
 import type { ApiAttrs } from '@form-create/element-ui/types/config'
 import { useUserStore } from '@/store/modules/user'
 import { MyProcessViewer } from '@/components/bpmnProcessDesigner/package'
-import TaskReturnDialog from './TaskReturnDialogForm.vue'
+import TaskReturnDialog from './detail/TaskReturnDialogForm.vue'
 
 defineOptions({ name: 'BpmProcessInstanceDetail' })
 
