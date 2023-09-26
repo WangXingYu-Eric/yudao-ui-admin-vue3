@@ -192,6 +192,8 @@
 
     <!-- 弹窗，回退节点 -->
     <TaskReturnDialog ref="taskReturnDialogRef" @success="getDetail" />
+    <!-- 委派，将任务委派给别人处理，处理完成后，会重新回到原审批人手中-->
+    <TaskDelegateForm ref="taskDelegateForm" @success="getDetail" />
   </ContentWrap>
 </template>
 <script lang="ts" setup>
@@ -208,6 +210,7 @@ import type { ApiAttrs } from '@form-create/element-ui/types/config'
 import { useUserStore } from '@/store/modules/user'
 import { MyProcessViewer } from '@/components/bpmnProcessDesigner/package'
 import TaskReturnDialog from './detail/TaskReturnDialogForm.vue'
+import TaskDelegateForm from './detail/taskDelegateForm.vue'
 
 defineOptions({ name: 'BpmProcessInstanceDetail' })
 
@@ -303,6 +306,9 @@ const getTimelineItemType = (item) => {
   if (item.result === 5) {
     return 'warning'
   }
+  if (item.result === 6) {
+    return 'default'
+  }
   return ''
 }
 
@@ -358,10 +364,10 @@ const resetUpdateAssigneeForm = () => {
   updateAssigneeFormRef.value?.resetFields()
 }
 
+const taskDelegateForm = ref()
 /** 处理审批退回的操作 */
 const handleDelegate = async (task) => {
-  message.error('暂不支持【委派】功能，可以使用【转派】替代！')
-  console.log(task)
+  taskDelegateForm.value.open(task.id)
 }
 
 //回退弹框组件
@@ -463,7 +469,7 @@ const getDetail = () => {
       // 需要审核的记录
       tasks.value.forEach((task) => {
         // 1.1 只有待处理才需要
-        if (task.result !== 1) {
+        if (task.result !== 1 && task.result !== 6) {
           return
         }
         // 1.2 自己不是处理人
