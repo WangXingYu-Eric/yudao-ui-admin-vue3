@@ -48,6 +48,13 @@ export const getReturnList = async (params) => {
 }
 
 // 回退
-export const returnTask = async (data) => {
-  return await request.put({ url: '/bpm/task/return', data })
+export const okRollback = async (data) => {
+  return await request.put({ url: '/bpm/task/rollback', data })
+}
+
+/**
+ * 委派
+ */
+export const delegateTask = async (data) => {
+  return await request.put({ url: '/bpm/task/delegate', data })
 }
