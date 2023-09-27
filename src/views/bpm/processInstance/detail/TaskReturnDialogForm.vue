@@ -30,7 +30,7 @@
 <script lang="ts" setup>
 import * as TaskApi from '@/api/bpm/task'
 
-defineOptions({ name: 'TaskReturnDialogForm' })
+defineOptions({ name: 'BpmTaskReturnDialogForm' })
 
 const message = useMessage() // 消息弹窗
 const dialogVisible = ref(false) // 弹窗的是否展示
