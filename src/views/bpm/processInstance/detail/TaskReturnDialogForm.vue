@@ -1,5 +1,5 @@
 <template>
-  <Dialog v-model="dialogVisible" title="回退" width="500">
+  <XModal v-model="dialogVisible" title="回退" width="500">
     <el-form
       ref="formRef"
       v-loading="formLoading"
@@ -25,10 +25,12 @@
       <el-button :disabled="formLoading" type="primary" @click="submitForm">确 定</el-button>
       <el-button @click="dialogVisible = false">取 消</el-button>
     </template>
-  </Dialog>
+  </XModal>
 </template>
-<script lang="ts" name="TaskRollbackDialogForm" setup>
+<script lang="ts" setup>
 import * as TaskApi from '@/api/bpm/task'
+
+defineOptions({ name: 'TaskReturnDialogForm.vue' })
 
 const message = useMessage() // 消息弹窗
 const dialogVisible = ref(false) // 弹窗的是否展示
