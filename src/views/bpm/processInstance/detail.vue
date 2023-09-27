@@ -191,7 +191,7 @@
     </XModal>
 
     <!-- 弹窗，回退节点 -->
-    <TaskReturnDialog ref="taskReturnDialogRef" @success="getDetail" />
+    <TaskReturnDialogForm ref="taskReturnDialogRef" @success="getDetail" />
     <!-- 委派，将任务委派给别人处理，处理完成后，会重新回到原审批人手中-->
     <TaskDelegateForm ref="taskDelegateForm" @success="getDetail" />
   </ContentWrap>
@@ -209,7 +209,7 @@ import { setConfAndFields2 } from '@/utils/formCreate'
 import type { ApiAttrs } from '@form-create/element-ui/types/config'
 import { useUserStore } from '@/store/modules/user'
 import { MyProcessViewer } from '@/components/bpmnProcessDesigner/package'
-import TaskReturnDialog from './detail/TaskReturnDialogForm.vue'
+import TaskReturnDialogForm from './detail/TaskReturnDialogForm.vue'
 import TaskDelegateForm from './detail/TaskDelegateForm.vue'
 
 defineOptions({ name: 'BpmProcessInstanceDetail' })
