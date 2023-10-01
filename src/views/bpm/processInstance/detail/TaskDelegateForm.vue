@@ -1,5 +1,5 @@
 <template>
-  <Dialog v-model="dialogVisible" title="委派任务" width="500">
+  <XModal v-model="dialogVisible" title="委派任务" width="500">
     <el-form
       ref="formRef"
       v-loading="formLoading"
@@ -25,7 +25,7 @@
       <el-button :disabled="formLoading" type="primary" @click="submitForm">确 定</el-button>
       <el-button @click="dialogVisible = false">取 消</el-button>
     </template>
-  </Dialog>
+  </XModal>
 </template>
 <script lang="ts" setup>
 import * as TaskApi from '@/api/bpm/task'
