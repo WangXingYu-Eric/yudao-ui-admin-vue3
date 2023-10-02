@@ -52,7 +52,7 @@ const open = async (id: string) => {
   resetForm()
   formData.value.id = id
   // 获得用户列表
-  userList.value = await UserApi.getSimpleUserList()
+  userList.value = await UserApi.getListSimpleUsersApi()
 }
 defineExpose({ open }) // 提供 openModal 方法，用于打开弹窗
 
