@@ -3,15 +3,13 @@
 </template>
 
 <script lang="ts" setup>
+defineOptions({ name: 'CardTitle' })
+
 const { title } = defineProps({
   title: {
     type: String,
     required: true,
   },
-})
-
-defineComponent({
-  name: 'CardTitle',
 })
 </script>
 
