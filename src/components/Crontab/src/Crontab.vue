@@ -52,7 +52,7 @@
                 </el-radio-button>
               </el-radio-group>
             </el-form-item>
-            <el-form-item v-if="cronValue.second.type == '1'" label="范围">
+            <el-form-item v-if="cronValue.second.type === '1'" label="范围">
               <el-input-number
                 v-model="cronValue.second.range.start"
                 :max="59"
@@ -67,7 +67,7 @@
                 controls-position="right"
               />
             </el-form-item>
-            <el-form-item v-if="cronValue.second.type == '2'" label="间隔">
+            <el-form-item v-if="cronValue.second.type === '2'" label="间隔">
               <el-input-number
                 v-model="cronValue.second.loop.start"
                 :max="59"
@@ -83,7 +83,7 @@
               />
               秒执行一次
             </el-form-item>
-            <el-form-item v-if="cronValue.second.type == '3'" label="指定">
+            <el-form-item v-if="cronValue.second.type === '3'" label="指定">
               <el-select v-model="cronValue.second.appoint" multiple style="width: 100%">
                 <el-option
                   v-for="(item, index) in data.second"
@@ -119,7 +119,7 @@
                 </el-radio-button>
               </el-radio-group>
             </el-form-item>
-            <el-form-item v-if="cronValue.minute.type == '1'" label="范围">
+            <el-form-item v-if="cronValue.minute.type === '1'" label="范围">
               <el-input-number
                 v-model="cronValue.minute.range.start"
                 :max="59"
@@ -134,7 +134,7 @@
                 controls-position="right"
               />
             </el-form-item>
-            <el-form-item v-if="cronValue.minute.type == '2'" label="间隔">
+            <el-form-item v-if="cronValue.minute.type === '2'" label="间隔">
               <el-input-number
                 v-model="cronValue.minute.loop.start"
                 :max="59"
@@ -150,7 +150,7 @@
               />
               分钟执行一次
             </el-form-item>
-            <el-form-item v-if="cronValue.minute.type == '3'" label="指定">
+            <el-form-item v-if="cronValue.minute.type === '3'" label="指定">
               <el-select v-model="cronValue.minute.appoint" multiple style="width: 100%">
                 <el-option
                   v-for="(item, index) in data.minute"
@@ -186,7 +186,7 @@
                 </el-radio-button>
               </el-radio-group>
             </el-form-item>
-            <el-form-item v-if="cronValue.hour.type == '1'" label="范围">
+            <el-form-item v-if="cronValue.hour.type === '1'" label="范围">
               <el-input-number
                 v-model="cronValue.hour.range.start"
                 :max="23"
@@ -201,7 +201,7 @@
                 controls-position="right"
               />
             </el-form-item>
-            <el-form-item v-if="cronValue.hour.type == '2'" label="间隔">
+            <el-form-item v-if="cronValue.hour.type === '2'" label="间隔">
               <el-input-number
                 v-model="cronValue.hour.loop.start"
                 :max="23"
@@ -217,7 +217,7 @@
               />
               小时执行一次
             </el-form-item>
-            <el-form-item v-if="cronValue.hour.type == '3'" label="指定">
+            <el-form-item v-if="cronValue.hour.type === '3'" label="指定">
               <el-select v-model="cronValue.hour.appoint" multiple style="width: 100%">
                 <el-option
                   v-for="(item, index) in data.hour"
@@ -259,7 +259,7 @@
                 </el-radio-button>
               </el-radio-group>
             </el-form-item>
-            <el-form-item v-if="cronValue.day.type == '1'" label="范围">
+            <el-form-item v-if="cronValue.day.type === '1'" label="范围">
               <el-input-number
                 v-model="cronValue.day.range.start"
                 :max="31"
@@ -274,7 +274,7 @@
                 controls-position="right"
               />
             </el-form-item>
-            <el-form-item v-if="cronValue.day.type == '2'" label="间隔">
+            <el-form-item v-if="cronValue.day.type === '2'" label="间隔">
               <el-input-number
                 v-model="cronValue.day.loop.start"
                 :max="31"
@@ -290,7 +290,7 @@
               />
               天执行一次
             </el-form-item>
-            <el-form-item v-if="cronValue.day.type == '3'" label="指定">
+            <el-form-item v-if="cronValue.day.type === '3'" label="指定">
               <el-select v-model="cronValue.day.appoint" multiple style="width: 100%">
                 <el-option
                   v-for="(item, index) in data.day"
@@ -326,7 +326,7 @@
                 </el-radio-button>
               </el-radio-group>
             </el-form-item>
-            <el-form-item v-if="cronValue.month.type == '1'" label="范围">
+            <el-form-item v-if="cronValue.month.type === '1'" label="范围">
               <el-input-number
                 v-model="cronValue.month.range.start"
                 :max="12"
@@ -341,7 +341,7 @@
                 controls-position="right"
               />
             </el-form-item>
-            <el-form-item v-if="cronValue.month.type == '2'" label="间隔">
+            <el-form-item v-if="cronValue.month.type === '2'" label="间隔">
               <el-input-number
                 v-model="cronValue.month.loop.start"
                 :max="12"
@@ -357,7 +357,7 @@
               />
               月执行一次
             </el-form-item>
-            <el-form-item v-if="cronValue.month.type == '3'" label="指定">
+            <el-form-item v-if="cronValue.month.type === '3'" label="指定">
               <el-select v-model="cronValue.month.appoint" multiple style="width: 100%">
                 <el-option
                   v-for="(item, index) in data.month"
@@ -400,7 +400,7 @@
                   </el-radio-button>
                 </el-radio-group>
               </el-form-item>
-              <el-form-item v-if="cronValue.week.type == '1'" label="范围">
+              <el-form-item v-if="cronValue.week.type === '1'" label="范围">
                 <el-select v-model="cronValue.week.range.start">
                   <el-option
                     v-for="(item, index) in data.week"
@@ -419,7 +419,7 @@
                   />
                 </el-select>
               </el-form-item>
-              <el-form-item v-if="cronValue.week.type == '2'" label="间隔">
+              <el-form-item v-if="cronValue.week.type === '2'" label="间隔">
                 第
                 <el-input-number
                   v-model="cronValue.week.loop.start"
@@ -438,7 +438,7 @@
                 </el-select>
                 执行一次
               </el-form-item>
-              <el-form-item v-if="cronValue.week.type == '3'" label="指定">
+              <el-form-item v-if="cronValue.week.type === '3'" label="指定">
                 <el-select v-model="cronValue.week.appoint" multiple style="width: 100%">
                   <el-option
                     v-for="(item, index) in data.week"
@@ -448,7 +448,7 @@
                   />
                 </el-select>
               </el-form-item>
-              <el-form-item v-if="cronValue.week.type == '4'" label="最后一周">
+              <el-form-item v-if="cronValue.week.type === '4'" label="最后一周">
                 <el-select v-model="cronValue.week.last">
                   <el-option
                     v-for="(item, index) in data.week"
@@ -488,12 +488,12 @@
                 </el-radio-button>
               </el-radio-group>
             </el-form-item>
-            <el-form-item v-if="cronValue.year.type == '1'" label="范围">
+            <el-form-item v-if="cronValue.year.type === '1'" label="范围">
               <el-input-number v-model="cronValue.year.range.start" controls-position="right" />
               <span style="padding: 0 15px">-</span>
               <el-input-number v-model="cronValue.year.range.end" controls-position="right" />
             </el-form-item>
-            <el-form-item v-if="cronValue.year.type == '2'" label="间隔">
+            <el-form-item v-if="cronValue.year.type === '2'" label="间隔">
               <el-input-number v-model="cronValue.year.loop.start" controls-position="right" />
               年开始，每
               <el-input-number
@@ -503,7 +503,7 @@
               />
               年执行一次
             </el-form-item>
-            <el-form-item v-if="cronValue.year.type == '3'" label="指定">
+            <el-form-item v-if="cronValue.year.type === '3'" label="指定">
               <el-select v-model="cronValue.year.appoint" multiple style="width: 100%">
                 <el-option
                   v-for="(item, index) in data.year"
@@ -745,101 +745,101 @@ const data = reactive({
 
 const value_second = computed(() => {
   const v = cronValue.second
-  if (v.type == '0')
+  if (v.type === '0')
     return '*'
-  else if (v.type == '1')
+  else if (v.type === '1')
     return `${v.range.start}-${v.range.end}`
-  else if (v.type == '2')
+  else if (v.type === '2')
     return `${v.loop.start}/${v.loop.end}`
-  else if (v.type == '3')
+  else if (v.type === '3')
     return v.appoint.length > 0 ? v.appoint.join(',') : '*'
   else
     return '*'
 })
 const value_minute = computed(() => {
   const v = cronValue.minute
-  if (v.type == '0')
+  if (v.type === '0')
     return '*'
-  else if (v.type == '1')
+  else if (v.type === '1')
     return `${v.range.start}-${v.range.end}`
-  else if (v.type == '2')
+  else if (v.type === '2')
     return `${v.loop.start}/${v.loop.end}`
-  else if (v.type == '3')
+  else if (v.type === '3')
     return v.appoint.length > 0 ? v.appoint.join(',') : '*'
   else
     return '*'
 })
 const value_hour = computed(() => {
   const v = cronValue.hour
-  if (v.type == '0')
+  if (v.type === '0')
     return '*'
-  else if (v.type == '1')
+  else if (v.type === '1')
     return `${v.range.start}-${v.range.end}`
-  else if (v.type == '2')
+  else if (v.type === '2')
     return `${v.loop.start}/${v.loop.end}`
-  else if (v.type == '3')
+  else if (v.type === '3')
     return v.appoint.length > 0 ? v.appoint.join(',') : '*'
   else
     return '*'
 })
 const value_day = computed(() => {
   const v = cronValue.day
-  if (v.type == '0')
+  if (v.type === '0')
     return '*'
-  else if (v.type == '1')
+  else if (v.type === '1')
     return `${v.range.start}-${v.range.end}`
-  else if (v.type == '2')
+  else if (v.type === '2')
     return `${v.loop.start}/${v.loop.end}`
-  else if (v.type == '3')
+  else if (v.type === '3')
     return v.appoint.length > 0 ? v.appoint.join(',') : '*'
-  else if (v.type == '4')
+  else if (v.type === '4')
     return 'L'
-  else if (v.type == '5')
+  else if (v.type === '5')
     return '?'
   else
     return '*'
 })
 const value_month = computed(() => {
   const v = cronValue.month
-  if (v.type == '0')
+  if (v.type === '0')
     return '*'
-  else if (v.type == '1')
+  else if (v.type === '1')
     return `${v.range.start}-${v.range.end}`
-  else if (v.type == '2')
+  else if (v.type === '2')
     return `${v.loop.start}/${v.loop.end}`
-  else if (v.type == '3')
+  else if (v.type === '3')
     return v.appoint.length > 0 ? v.appoint.join(',') : '*'
   else
     return '*'
 })
 const value_week = computed(() => {
   const v = cronValue.week
-  if (v.type == '0')
+  if (v.type === '0')
     return '*'
-  else if (v.type == '1')
+  else if (v.type === '1')
     return `${v.range.start}-${v.range.end}`
-  else if (v.type == '2')
+  else if (v.type === '2')
     return `${v.loop.end}#${v.loop.start}`
-  else if (v.type == '3')
+  else if (v.type === '3')
     return v.appoint.length > 0 ? v.appoint.join(',') : '*'
-  else if (v.type == '4')
+  else if (v.type === '4')
     return `${v.last}L`
-  else if (v.type == '5')
+  else if (v.type === '5')
     return '?'
   else
     return '*'
 })
 const value_year = computed(() => {
   const v = cronValue.year
-  if (v.type == '-1')
+  if (v.type === '-1')
     return ''
-  else if (v.type == '0')
+  else if (v.type === '0')
     return '*'
-  else if (v.type == '1')
+  else if (v.type === '1')
     return `${v.range.start}-${v.range.end}`
-  else if (v.type == '2')
+  else if (v.type === '2')
     return `${v.loop.start}/${v.loop.end}`
-  else if (v.type == '3')
+  else if (v.type === '3')
     return v.appoint.length > 0 ? v.appoint.join(',') : ''
   else
     return ''
@@ -847,14 +847,14 @@ const value_year = computed(() => {
 watch(
   () => cronValue.week.type,
   (val) => {
-    if (val != '5')
+    if (val !== '5')
       cronValue.day.type = '5'
   },
 )
 watch(
   () => cronValue.day.type,
   (val) => {
-    if (val != '5')
+    if (val !== '5')
       cronValue.week.type = '5'
   },
 )
@@ -871,7 +871,7 @@ const select = ref()
 watch(
   () => select.value,
   () => {
-    if (select.value == 'custom') {
+    if (select.value === 'custom') {
       open()
     }
     else {
@@ -894,7 +894,7 @@ const set = () => {
   }
 
   // 秒
-  if (arr[0] == '*') {
+  if (arr[0] === '*') {
     cronValue.second.type = '0'
   }
   else if (arr[0].includes('-')) {
@@ -912,7 +912,7 @@ const set = () => {
     cronValue.second.appoint = arr[0].split(',')
   }
   // 分
-  if (arr[1] == '*') {
+  if (arr[1] === '*') {
     cronValue.minute.type = '0'
   }
   else if (arr[1].includes('-')) {
@@ -930,7 +930,7 @@ const set = () => {
     cronValue.minute.appoint = arr[1].split(',')
   }
   // 小时
-  if (arr[2] == '*') {
+  if (arr[2] === '*') {
     cronValue.hour.type = '0'
   }
   else if (arr[2].includes('-')) {
@@ -948,13 +948,13 @@ const set = () => {
     cronValue.hour.appoint = arr[2].split(',')
   }
   // 日
-  if (arr[3] == '*') {
+  if (arr[3] === '*') {
     cronValue.day.type = '0'
   }
-  else if (arr[3] == 'L') {
+  else if (arr[3] === 'L') {
     cronValue.day.type = '4'
   }
-  else if (arr[3] == '?') {
+  else if (arr[3] === '?') {
     cronValue.day.type = '5'
   }
   else if (arr[3].includes('-')) {
@@ -972,7 +972,7 @@ const set = () => {
     cronValue.day.appoint = arr[3].split(',')
   }
   // 月
-  if (arr[4] == '*') {
+  if (arr[4] === '*') {
     cronValue.month.type = '0'
   }
   else if (arr[4].includes('-')) {
@@ -990,10 +990,10 @@ const set = () => {
     cronValue.month.appoint = arr[4].split(',')
   }
   // 周
-  if (arr[5] == '*') {
+  if (arr[5] === '*') {
     cronValue.week.type = '0'
   }
-  else if (arr[5] == '?') {
+  else if (arr[5] === '?') {
     cronValue.week.type = '5'
   }
   else if (arr[5].includes('-')) {
@@ -1018,7 +1018,7 @@ const set = () => {
   if (!arr[6]) {
     cronValue.year.type = '-1'
   }
-  else if (arr[6] == '*') {
+  else if (arr[6] === '*') {
     cronValue.year.type = '0'
   }
   else if (arr[6].includes('-')) {

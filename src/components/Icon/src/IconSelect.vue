@@ -128,7 +128,7 @@ const pageList = computed(() => {
   }
 })
 const iconCount = computed(() => {
-  return copyIconList[currentActiveType.value] == undefined
+  return copyIconList[currentActiveType.value] === undefined
     ? 0
     : copyIconList[currentActiveType.value].length
 })

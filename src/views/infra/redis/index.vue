@@ -11,7 +11,7 @@
               {{ cache?.info?.redis_version }}
             </el-descriptions-item>
             <el-descriptions-item label="运行模式 :">
-              {{ cache?.info?.redis_mode == 'standalone' ? '单机' : '集群' }}
+              {{ cache?.info?.redis_mode === 'standalone' ? '单机' : '集群' }}
             </el-descriptions-item>
             <el-descriptions-item label="端口 :">
               {{ cache?.info?.tcp_port }}
@@ -32,7 +32,7 @@
               {{ cache?.info?.maxmemory_human }}
             </el-descriptions-item>
             <el-descriptions-item label="AOF是否开启 :">
-              {{ cache?.info?.aof_enabled == '0' ? '否' : '是' }}
+              {{ cache?.info?.aof_enabled === '0' ? '否' : '是' }}
             </el-descriptions-item>
             <el-descriptions-item label="RDB是否成功 :">
               {{ cache?.info?.rdb_last_bgsave_status }}

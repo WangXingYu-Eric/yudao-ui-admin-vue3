@@ -5,10 +5,10 @@
 <script lang="ts" setup>
 import type { EChartsOption } from 'echarts'
 import { debounce } from 'lodash-es'
+import type { PropType } from 'vue'
 import echarts from '@/plugins/echarts'
 import 'echarts-wordcloud'
 import { propTypes } from '@/utils/propTypes'
-import type { PropType } from 'vue'
 import { useAppStore } from '@/store/modules/app'
 import { isString } from '@/utils/is'
 import { useDesign } from '@/hooks/web/useDesign'

@@ -335,7 +335,7 @@ const elementHover = (element) => {
       const optionData = getIntDictOptions(DICT_TYPE.BPM_PROCESS_INSTANCE_RESULT)
       let dataResult = ''
       optionData.forEach((element) => {
-        if (element.value == task.result)
+        if (element.value === task.result)
           dataResult = element.label
       })
       html = `<p>审批人：${task.assigneeUser.nickname}</p>
@@ -368,7 +368,7 @@ const elementHover = (element) => {
       const optionData = getIntDictOptions(DICT_TYPE.BPM_PROCESS_INSTANCE_RESULT)
       let dataResult = ''
       optionData.forEach((element) => {
-        if (element.value == processInstance.value.result)
+        if (element.value === processInstance.value.result)
           dataResult = element.label
       })
       html = `<p>结果：${dataResult}</p>`

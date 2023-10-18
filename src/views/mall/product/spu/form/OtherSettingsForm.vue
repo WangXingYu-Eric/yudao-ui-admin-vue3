@@ -119,7 +119,8 @@ const props = defineProps({
 }}
 }}
 */
-const emit = defineEmits(['update:activeName']); const message = useMessage() // 消息弹窗
+const emit = defineEmits(['update:activeName'])
+constmessage = useMessage() // 消息弹窗
 
 const { allSchemas } = useCrudSchemas(otherSettingsSchema)
 

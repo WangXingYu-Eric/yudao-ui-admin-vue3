@@ -151,7 +151,7 @@ onMounted(() => {
 const canvas = ref(null)
 const canvasClick = (e) => {
   checkPosArr.push(getMousePos(canvas, e))
-  if (num.value == checkNum.value) {
+  if (num.value === checkNum.value) {
     num.value = createPoint(getMousePos(canvas, e))
     // 按比例转换坐标值
     const arr = pointTransfrom(checkPosArr, setSize)
@@ -172,12 +172,12 @@ const canvasClick = (e) => {
         token: backToken.value,
       }
       reqCheck(data).then((res) => {
-        if (res.repCode == '0000') {
+        if (res.repCode === '0000') {
           barAreaColor.value = '#4cae4c'
           barAreaBorderColor.value = '#5cb85c'
           text.value = t('captcha.success')
           bindingClick.value = false
-          if (mode.value == 'pop') {
+          if (mode.value === 'pop') {
             setTimeout(() => {
               proxy.$parent.clickShow = false
               refresh()
@@ -229,7 +229,7 @@ const getPictrue = async () => {
     captchaType: captchaType.value,
   }
   const res = await getCode(data)
-  if (res.repCode == '0000') {
+  if (res.repCode === '0000') {
     pointBackImgBase.value = res.repData.originalImageBase64
     backToken.value = res.repData.token
     secretKey.value = res.repData.secretKey

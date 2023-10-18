@@ -178,8 +178,8 @@ const { t } = useI18n() // 国际化
 
 const loading = ref(true) // 列表的加载中
 const total = ref(0) // 列表的总页数
-const list = ref([]) // 列表的数据
-const queryParams = reactive({
+const list = ref<any[]>([]) // 列表的数据
+const queryParams = reactive<any>({
   pageNo: 1,
   pageSize: 10,
   name: '',

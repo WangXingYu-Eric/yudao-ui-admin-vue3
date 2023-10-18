@@ -18,7 +18,7 @@
           <CountTo :prefix="prefix" :end-val="value" :decimals="decimals" />
         </div>
         <span
-          v-if="percent != undefined"
+          v-if="percent !== undefined"
           :class="toNumber(percent) > 0 ? 'text-red-500' : 'text-green-500'"
         >
           <span class="text-sm">{{ Math.abs(toNumber(percent)) }}%</span>

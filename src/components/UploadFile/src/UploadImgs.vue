@@ -70,7 +70,9 @@ const props = defineProps({
   height: propTypes.string.def('150px'), // 组件高度 ==> 非必传（默认为 150px）
   width: propTypes.string.def('150px'), // 组件宽度 ==> 非必传（默认为 150px）
   borderradius: propTypes.string.def('8px'), // 组件边框圆角 ==> 非必传（默认为 8px）
-}); const emit = defineEmits<UploadEmits>(); const message = useMessage() // 消息弹窗
+})
+const emit = defineEmits<UploadEmits>()
+const message = useMessage() // 消息弹窗
 
 type FileTypes =
   | 'image/apng'

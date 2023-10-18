@@ -55,7 +55,8 @@ import download from '@/utils/download'
 defineOptions({ name: 'SystemUserImportForm' })
 
 /** 文件上传成功 */
-const emits = defineEmits(['success']); const message = useMessage() // 消息弹窗
+const emits = defineEmits(['success'])
+constmessage = useMessage() // 消息弹窗
 
 const dialogVisible = ref(false) // 弹窗的是否展示
 const formLoading = ref(false) // 表单的加载中
@@ -75,7 +76,7 @@ defineExpose({ open }) // 提供 open 方法，用于打开弹窗
 
 /** 提交表单 */
 const submitForm = async () => {
-  if (fileList.value.length == 0) {
+  if (fileList.value.length === 0) {
     message.error('请上传文件')
     return
   }

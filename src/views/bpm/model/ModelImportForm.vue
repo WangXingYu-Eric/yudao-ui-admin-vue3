@@ -62,7 +62,8 @@ import { getAccessToken, getTenantId } from '@/utils/auth'
 defineOptions({ name: 'ModelImportForm' })
 
 /** 文件上传成功 */
-const emit = defineEmits(['success']); const message = useMessage() // 消息弹窗
+const emit = defineEmits(['success'])
+const message = useMessage() // 消息弹窗
 
 const dialogVisible = ref(false) // 弹窗的是否展示
 const formLoading = ref(false) // 表单的加载中
@@ -96,7 +97,7 @@ const submitForm = async () => {
   const valid = await formRef.value.validate()
   if (!valid)
     return
-  if (fileList.value.length == 0) {
+  if (fileList.value.length === 0) {
     message.error('请上传文件')
     return
   }

@@ -244,7 +244,7 @@ const handleDelete = async (id: number) => {
 const configList = ref([]) // 时段配置精简列表
 const formatConfigNames = (configId) => {
   const config = configList.value.find(item => item.id === configId)
-  return config != null ? `${config.name}[${config.startTime} ~ ${config.endTime}]` : ''
+  return config !== null ? `${config.name}[${config.startTime} ~ ${config.endTime}]` : ''
 }
 
 const formatSeckillPrice = (products) => {

@@ -28,8 +28,8 @@
         >
           <template #trigger>
             <el-button size="small" type="primary">
-本地上传
-</el-button>
+              本地上传
+            </el-button>
           </template>
           <el-button
             size="small"
@@ -41,8 +41,8 @@
           </el-button>
           <template #tip>
             <div class="el-upload__tip">
-支持 bmp/png/jpeg/jpg/gif 格式，大小不超过 2M
-</div>
+              支持 bmp/png/jpeg/jpg/gif 格式，大小不超过 2M
+            </div>
           </template>
         </el-upload>
       </div>
@@ -65,10 +65,10 @@
 
 <script lang="ts" setup>
 import type { UploadFiles, UploadProps, UploadRawFile } from 'element-plus'
+import type { NewsItem } from './types'
 import WxMaterialSelect from '@/views/mp/components/wx-material-select'
 import { getAccessToken } from '@/utils/auth'
 import { UploadType, useBeforeUpload } from '@/views/mp/hooks/useUpload'
-import type { NewsItem } from './types'
 
 // 设置上传的请求头部
 
@@ -83,8 +83,9 @@ const emit = defineEmits<{
 
 const message = useMessage()
 
-const UPLOAD_URL = import.meta.env.VITE_BASE_URL + '/admin-api/mp/material/upload-permanent' // 上传永久素材的地址
-const HEADERS = { Authorization: 'Bearer ' + getAccessToken() }const newsItem = computed<NewsItem>({
+const UPLOAD_URL = `${import.meta.env.VITE_BASE_URL}/admin-api/mp/material/upload-permanent` // 上传永久素材的地址
+const HEADERS = { Authorization: `Bearer ${getAccessToken()}` }
+const newsItem = computed<NewsItem>({
   get() {
     return props.modelValue
   },
@@ -118,7 +119,7 @@ const onBeforeUpload: UploadProps['beforeUpload'] = (rawFile: UploadRawFile) =>
 
 const onUploadSuccess: UploadProps['onSuccess'] = (res: any) => {
   if (res.code !== 0) {
-    message.error(`上传出错：${  res.msg}`)
+    message.error(`上传出错：${res.msg}`)
     return false
   }
 
@@ -131,7 +132,7 @@ const onUploadSuccess: UploadProps['onSuccess'] = (res: any) => {
 }
 
 const onUploadError = (err: Error) => {
-  message.error(`上传失败: ${  err.message}`)
+  message.error(`上传失败: ${err.message}`)
 }
 </script>
 

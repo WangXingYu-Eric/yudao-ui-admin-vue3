@@ -5,7 +5,7 @@
         <el-row align="middle" justify="center" class="thumb-div">
           <el-col :span="24">
             <el-row align="middle" justify="center">
-              <img v-if="reply.thumbMediaUrl" style="width: 100px" :src="reply.thumbMediaUrl" >
+              <img v-if="reply.thumbMediaUrl" style="width: 100px" :src="reply.thumbMediaUrl">
               <icon v-else icon="ep:plus" />
             </el-row>
             <el-row align="middle" justify="center" style="margin-top: 2%">
@@ -22,12 +22,11 @@
                 >
                   <template #trigger>
                     <el-button type="primary" link>
-本地上传
-</el-button>
+                      本地上传
+                    </el-button>
                   </template>
-                  <el-button type="primary" link style="margin-left: 5px" @click="showDialog = true"
-                  >
-素材库选择
+                  <el-button type="primary" link style="margin-left: 5px" @click="showDialog = true">
+                    素材库选择
                   </el-button>
                 </el-upload>
               </div>
@@ -50,23 +49,23 @@
       </el-col>
       <el-col :span="18">
         <el-input v-model="reply.title" placeholder="请输入标题" />
-        <div style="margin: 20px 0"/>
+        <div style="margin: 20px 0" />
         <el-input v-model="reply.description" placeholder="请输入描述" />
       </el-col>
     </el-row>
-    <div style="margin: 20px 0"/>
+    <div style="margin: 20px 0" />
     <el-input v-model="reply.musicUrl" placeholder="请输入音乐链接" />
-    <div style="margin: 20px 0"/>
+    <div style="margin: 20px 0" />
     <el-input v-model="reply.hqMusicUrl" placeholder="请输入高质量音乐链接" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import type { UploadRawFile } from 'element-plus'
+import type { Reply } from './types'
 import WxMaterialSelect from '@/views/mp/components/wx-material-select'
 import { UploadType, useBeforeUpload } from '@/views/mp/hooks/useUpload'
 import { getAccessToken } from '@/utils/auth'
-import type { Reply } from './types'
 
 // 设置上传的请求头部
 
@@ -80,8 +79,9 @@ const emit = defineEmits<{
 
 const message = useMessage()
 
-const UPLOAD_URL = import.meta.env.VITE_API_BASEPATH + '/admin-api/mp/material/upload-temporary'
-const HEADERS = { Authorization: 'Bearer ' + getAccessToken() }const reply = computed<Reply>({
+const UPLOAD_URL = `${import.meta.env.VITE_API_BASEPATH}/admin-api/mp/material/upload-temporary`
+const HEADERS = { Authorization: `Bearer ${getAccessToken()}` }
+const reply = computed<Reply>({
   get: () => props.modelValue,
   set: val => emit('update:modelValue', val),
 })
@@ -99,7 +99,7 @@ const beforeImageUpload = (rawFile: UploadRawFile) => useBeforeUpload(UploadType
 
 const onUploadSuccess = (res: any) => {
   if (res.code !== 0) {
-    message.error(`上传出错：${  res.msg}`)
+    message.error(`上传出错：${res.msg}`)
     return false
   }
 

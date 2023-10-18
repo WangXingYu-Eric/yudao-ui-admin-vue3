@@ -36,7 +36,8 @@ import { isEmpty } from '@/utils/is'
 // 提供 openModal 方法，用于打开弹窗
 
 /** 提交表单 */
-const emit = defineEmits(['success']); const message = useMessage() // 消息弹窗
+const emit = defineEmits(['success'])
+const message = useMessage() // 消息弹窗
 const dialogVisible = ref(false) // 弹窗的是否展示
 const formLoading = ref(false) // 表单的加载中
 const formData = ref({

@@ -139,7 +139,8 @@ const props = defineProps({
 // 确认选择时的触发事件
 const emits = defineEmits<{
   (e: 'confirm', spuId: number, skuIds?: number[]): void
-}>(); const message = useMessage() // 消息弹窗
+}>()
+constmessage = useMessage() // 消息弹窗
 const total = ref(0) // 列表的总页数
 const list = ref<any[]>([]) // 列表的数据
 const loading = ref(false) // 列表的加载中

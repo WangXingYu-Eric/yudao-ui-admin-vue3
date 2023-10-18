@@ -207,4 +207,4 @@ const handleExport = async () => {
 onMounted(() => {
   getList()
 })
-</template>
+</script>

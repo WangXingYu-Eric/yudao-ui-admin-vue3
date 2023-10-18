@@ -86,7 +86,7 @@ export const generateRoute = (routes: AppCustomRouteRecordRaw[]): AppRouteRecord
       meta,
     }
     // 处理顶级非目录路由
-    if (!route.children && route.parentId == 0 && route.component) {
+    if (!route.children && route.parentId === 0 && route.component) {
       data.component = Layout
       data.meta = {}
       data.name = `${toCamelCase(route.path, true)}Parent`
@@ -140,7 +140,7 @@ export const generateRoute = (routes: AppCustomRouteRecordRaw[]): AppRouteRecord
   return res
 }
 export const getRedirect = (parentPath: string, children: AppCustomRouteRecordRaw[]) => {
-  if (!children || children.length == 0)
+  if (!children || children.length === 0)
     return parentPath
 
   const path = generateRoutePath(parentPath, children[0].path)

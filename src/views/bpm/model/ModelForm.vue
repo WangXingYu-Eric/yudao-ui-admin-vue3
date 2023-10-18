@@ -137,14 +137,15 @@ defineOptions({ name: 'ModelForm' })
 // 提供 open 方法，用于打开弹窗
 
 /** 提交表单 */
-const emit = defineEmits(['success']); const { t } = useI18n() // 国际化
+const emit = defineEmits(['success'])
+const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 
 const dialogVisible = ref(false) // 弹窗的是否展示
 const dialogTitle = ref('') // 弹窗的标题
 const formLoading = ref(false) // 表单的加载中：1）修改时的数据加载；2）提交的按钮禁用
 const formType = ref('') // 表单的类型：create - 新增；update - 修改
-const formData = ref({
+const formData = ref<any>({
   formType: 10,
   name: '',
   category: undefined,
@@ -161,7 +162,7 @@ const formRules = reactive({
   visible: [{ required: true, message: '是否可见不能为空', trigger: 'blur' }],
 })
 const formRef = ref() // 表单 Ref
-const formList = ref([]) // 流程表单的下拉框的数据
+const formList = ref<any>([]) // 流程表单的下拉框的数据
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {

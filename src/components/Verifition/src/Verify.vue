@@ -1,16 +1,16 @@
 <template>
-  <div v-show="showBox" :class="mode == 'pop' ? 'mask' : ''">
+  <div v-show="showBox" :class="mode === 'pop' ? 'mask' : ''">
     <div
-      :class="mode == 'pop' ? 'verifybox' : ''"
+      :class="mode === 'pop' ? 'verifybox' : ''"
       :style="{ 'max-width': `${parseInt(imgSize.width) + 20}px` }"
     >
-      <div v-if="mode == 'pop'" class="verifybox-top">
+      <div v-if="mode === 'pop'" class="verifybox-top">
         {{ t('captcha.verification') }}
         <span class="verifybox-close" @click="closeBox">
           <i class="iconfont icon-close" />
         </span>
       </div>
-      <div :style="{ padding: mode == 'pop' ? '10px' : '0' }" class="verifybox-bottom">
+      <div :style="{ padding: mode === 'pop' ? '10px' : '0' }" class="verifybox-bottom">
         <!-- 验证码容器 -->
         <component
           :is="componentType"
@@ -93,7 +93,7 @@ export default {
     const instance = ref({})
 
     const showBox = computed(() => {
-      if (mode.value == 'pop')
+      if (mode.value === 'pop')
         return clickShow.value
       else
         return true
@@ -111,7 +111,7 @@ export default {
       refresh()
     }
     const show = () => {
-      if (mode.value == 'pop')
+      if (mode.value === 'pop')
         clickShow.value = true
     }
     watchEffect(() => {

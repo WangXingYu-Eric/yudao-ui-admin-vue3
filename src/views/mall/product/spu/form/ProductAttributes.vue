@@ -56,7 +56,9 @@ const props = defineProps({
     type: Array,
     default: () => {}
   }
-}) ;const emit = defineEmits(['success']) ;const { t } = useI18n() // 国际化
+})
+const emit = defineEmits(['success'])
+const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 const inputValue = ref('') // 输入框值
 const attributeIndex = ref<number | null>(null) // 获取焦点时记录当前属性项的index

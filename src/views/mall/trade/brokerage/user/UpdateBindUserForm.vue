@@ -62,7 +62,8 @@ defineOptions({ name: 'UpdateBindUserForm' })
 // 提供 open 方法，用于打开弹窗
 
 /** 提交表单 */
-const emit = defineEmits(['success']); const { t } = useI18n() // 国际化
+const emit = defineEmits(['success'])
+const{ t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 
 const dialogVisible = ref(false) // 弹窗的是否展示
@@ -130,7 +131,7 @@ const resetForm = () => {
 /** 查询推广员 */
 const bindUser = ref<BrokerageUserApi.BrokerageUserVO>()
 const handleGetUser = async () => {
-  if (formData.value.bindUserId == formData.value.id) {
+  if (formData.value.bindUserId === formData.value.id) {
     message.error('不能绑定自己为推广人')
     return
   }

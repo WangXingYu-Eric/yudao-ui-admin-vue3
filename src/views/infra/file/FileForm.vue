@@ -43,7 +43,8 @@ import { getAccessToken, getTenantId } from '@/utils/auth'
 defineOptions({ name: 'InfraFileForm' })
 
 /** 文件上传成功处理 */
-const emit = defineEmits(['success']); const { t } = useI18n() // 国际化
+const emit = defineEmits(['success'])
+const{ t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 
 const dialogVisible = ref(false) // 弹窗的是否展示
@@ -68,7 +69,7 @@ const handleFileChange = (file) => {
 
 /** 提交表单 */
 const submitFileForm = () => {
-  if (fileList.value.length == 0) {
+  if (fileList.value.length === 0) {
     message.error('请上传文件')
     return
   }

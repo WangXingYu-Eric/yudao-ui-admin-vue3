@@ -57,8 +57,11 @@ const props = defineProps({
   autoUpload: propTypes.bool.def(true), // 自动上传
   drag: propTypes.bool.def(false), // 拖拽上传
   isShowTip: propTypes.bool.def(true), // 是否显示提示
-})// 消息弹窗
-const emit = defineEmits(['update:modelValue']); const message = useMessage()// ========== 上传相关 ==========
+})
+// 消息弹窗
+const emit = defineEmits(['update:modelValue'])
+const message = useMessage()
+// ========== 上传相关 ==========
 const valueRef = ref(props.modelValue)
 const uploadRef = ref<UploadInstance>()
 const uploadList = ref<UploadUserFile[]>([])
@@ -106,7 +109,7 @@ const handleFileSuccess: UploadProps['onSuccess'] = (res: any): void => {
   fileListNew.pop()
   fileList.value = fileListNew
   uploadList.value.push({ name: res.data, url: res.data })
-  if (uploadList.value.length == uploadNumber.value) {
+  if (uploadList.value.length === uploadNumber.value) {
     fileList.value = fileList.value.concat(uploadList.value)
     uploadList.value = []
     uploadNumber.value = 0
@@ -139,7 +142,7 @@ const listToString = (list: UploadUserFile[], separator?: string) => {
   for (const i in list)
     strs += list[i].url + separator
 
-  return strs != '' ? strs.substr(0, strs.length - 1) : ''
+  return strs !== '' ? strs.substr(0, strs.length - 1) : ''
 }
 </script>
 

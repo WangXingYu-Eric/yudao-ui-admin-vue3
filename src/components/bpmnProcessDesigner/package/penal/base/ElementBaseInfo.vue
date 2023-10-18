@@ -1,7 +1,7 @@
 <template>
   <div class="panel-tab__content">
     <el-form label-width="90px" :model="needProps" :rules="rules">
-      <div v-if="needProps.type == 'bpmn:Process'">
+      <div v-if="needProps.type === 'bpmn:Process'">
         <!-- 如果是 Process 信息的时候，使用自定义表单 -->
         <el-link
           href="https://doc.iocoder.cn/bpm/#_3-%E6%B5%81%E7%A8%8B%E5%9B%BE%E7%A4%BA%E4%BE%8B"

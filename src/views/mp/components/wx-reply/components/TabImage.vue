@@ -2,10 +2,10 @@
   <div>
     <!-- 情况一：已经选择好素材、或者上传好图片 -->
     <div v-if="reply.url" class="select-item">
-      <img class="material-img" :src="reply.url" >
+      <img class="material-img" :src="reply.url">
       <p v-if="reply.name" class="item-name">
-{{ reply.name }}
-</p>
+        {{ reply.name }}
+      </p>
       <el-row class="ope-row" justify="center">
         <el-button type="danger" circle @click="onDelete">
           <Icon icon="ep:delete" />
@@ -46,8 +46,8 @@
           :on-success="onUploadSuccess"
         >
           <el-button type="primary">
-上传图片
-</el-button>
+            上传图片
+          </el-button>
           <template #tip>
             <span>
               <div class="el-upload__tip">支持 bmp/png/jpeg/jpg/gif 格式，大小不超过 2M</div>
@@ -61,10 +61,10 @@
 
 <script lang="ts" setup>
 import type { UploadRawFile } from 'element-plus'
+import type { Reply } from './types'
 import WxMaterialSelect from '@/views/mp/components/wx-material-select'
 import { UploadType, useBeforeUpload } from '@/views/mp/hooks/useUpload'
 import { getAccessToken } from '@/utils/auth'
-import type { Reply } from './types'
 
 // 设置上传的请求头部
 
@@ -78,8 +78,9 @@ const emit = defineEmits<{
 
 const message = useMessage()
 
-const UPLOAD_URL = import.meta.env.VITE_API_BASEPATH + '/admin-api/mp/material/upload-temporary'
-const HEADERS = { Authorization: 'Bearer ' + getAccessToken() }const reply = computed<Reply>({
+const UPLOAD_URL = `${import.meta.env.VITE_API_BASEPATH}/admin-api/mp/material/upload-temporary`
+const HEADERS = { Authorization: `Bearer ${getAccessToken()}` }
+const reply = computed<Reply>({
   get: () => props.modelValue,
   set: val => emit('update:modelValue', val),
 })
@@ -97,7 +98,7 @@ const beforeImageUpload = (rawFile: UploadRawFile) => useBeforeUpload(UploadType
 
 const onUploadSuccess = (res: any) => {
   if (res.code !== 0) {
-    message.error(`上传出错：${  res.msg}`)
+    message.error(`上传出错：${res.msg}`)
     return false
   }
 

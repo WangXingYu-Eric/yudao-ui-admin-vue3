@@ -10,6 +10,8 @@ module.exports = antfu(
       'vue/block-order': ['error', {
         order: ['template', 'script', 'style'],
       }],
+      'no-use-before-define': 'off',
+      'ts/no-use-before-define': 'off',
     },
   },
   unocss.configs.flat,

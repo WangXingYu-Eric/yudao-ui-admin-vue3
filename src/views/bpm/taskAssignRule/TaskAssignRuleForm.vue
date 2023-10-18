@@ -117,12 +117,13 @@ defineOptions({ name: 'BpmTaskAssignRuleForm' })
 // 提供 open 方法，用于打开弹窗
 
 /** 提交表单 */
-const emit = defineEmits(['success']); const { t } = useI18n() // 国际化
+const emit = defineEmits(['success'])
+const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 
 const dialogVisible = ref(false) // 弹窗的是否展示
 const formLoading = ref(false) // 表单的加载中：1）修改时的数据加载；2）提交的按钮禁用
-const formData = ref({
+const formData = ref<any>({
   type: Number(undefined),
   modelId: '',
   options: [],

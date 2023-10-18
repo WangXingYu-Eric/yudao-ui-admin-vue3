@@ -301,7 +301,7 @@ const getConfig = async () => {
   formLoading.value = true
   try {
     const data = await ConfigApi.getTradeConfig()
-    if (data != null) {
+    if (data !== null) {
       data.brokeragePosterUrls = data.brokeragePosterUrls.map(url => ({ url }))
       formData.value = data
       // 金额缩小

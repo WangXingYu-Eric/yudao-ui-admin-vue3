@@ -95,7 +95,7 @@
     <MyProcessViewer
       key="designer"
       v-model="bpmnXML"
-      :value="bpmnXML as any"
+      :value="bpmnXML"
       v-bind="bpmnControlForm"
       :prefix="bpmnControlForm.prefix"
     />
@@ -153,7 +153,7 @@ const formDetailPreview = ref({
   option: {},
 })
 const handleFormDetail = async (row) => {
-  if (row.formType == 10) {
+  if (row.formType === 10) {
     // 设置表单
     setConfAndFields2(formDetailPreview, row.formConf, row.formFields)
     // 弹窗打开
@@ -168,7 +168,7 @@ const handleFormDetail = async (row) => {
 
 /** 流程图的详情按钮操作 */
 const bpmnDetailVisible = ref(false)
-const bpmnXML = ref(null)
+const bpmnXML = ref<any>(null)
 const bpmnControlForm = ref({
   prefix: 'flowable',
 })

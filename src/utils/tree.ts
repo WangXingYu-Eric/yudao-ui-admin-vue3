@@ -243,7 +243,7 @@ export const handleTree = (data: any[], id?: string, parentId?: string, children
 
   for (const d of data) {
     const parentId = d[config.parentId]
-    if (childrenListMap[parentId] == null)
+    if (childrenListMap[parentId] === null)
       childrenListMap[parentId] = []
 
     nodeIds[d[config.id]] = d
@@ -252,7 +252,7 @@ export const handleTree = (data: any[], id?: string, parentId?: string, children
 
   for (const d of data) {
     const parentId = d[config.parentId]
-    if (nodeIds[parentId] == null)
+    if (nodeIds[parentId] === null)
       tree.push(d)
   }
 

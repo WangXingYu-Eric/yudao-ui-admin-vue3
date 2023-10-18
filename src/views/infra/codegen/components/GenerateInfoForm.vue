@@ -166,7 +166,7 @@
               <el-dropdown>
                 <el-button type="primary">
                   最近路径快速选择
-                  <i class="el-icon-arrow-down el-icon--right"/>
+                  <i class="el-icon-arrow-down el-icon--right" />
                 </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
@@ -184,8 +184,8 @@
 
     <el-row v-show="formData.tplCategory === 'tree'">
       <h4 class="form-header">
-其他信息
-</h4>
+        其他信息
+      </h4>
       <el-col :span="12">
         <el-form-item>
           <template #label>
@@ -200,7 +200,7 @@
             <el-option
               v-for="(column, index) in formData.columns"
               :key="index"
-              :label="`${column.columnName  }：${  column.columnComment}`"
+              :label="`${column.columnName}：${column.columnComment}`"
               :value="column.columnName"
             />
           </el-select>
@@ -220,7 +220,7 @@
             <el-option
               v-for="(column, index) in formData.columns"
               :key="index"
-              :label="`${column.columnName  }：${  column.columnComment}`"
+              :label="`${column.columnName}：${column.columnComment}`"
               :value="column.columnName"
             />
           </el-select>
@@ -241,7 +241,7 @@
             <el-option
               v-for="(column, index) in formData.columns"
               :key="index"
-              :label="`${column.columnName  }：${  column.columnComment}`"
+              :label="`${column.columnName}：${column.columnComment}`"
               :value="column.columnName"
             />
           </el-select>
@@ -250,8 +250,8 @@
     </el-row>
     <el-row v-show="formData.tplCategory === 'sub'">
       <h4 class="form-header">
-关联信息
-</h4>
+        关联信息
+      </h4>
       <el-col :span="12">
         <el-form-item>
           <template #label>
@@ -266,7 +266,7 @@
             <el-option
               v-for="(table0, index) in tables"
               :key="index"
-              :label="`${table0.tableName  }：${  table0.tableComment}`"
+              :label="`${table0.tableName}：${table0.tableComment}`"
               :value="table0.tableName"
             />
           </el-select>
@@ -286,7 +286,7 @@
             <el-option
               v-for="(column, index) in subColumns"
               :key="index"
-              :label="`${column.columnName  }：${  column.columnComment}`"
+              :label="`${column.columnName}：${column.columnComment}`"
               :value="column.columnName"
             />
           </el-select>
@@ -297,10 +297,10 @@
 </template>
 
 <script lang="ts" setup>
-import { PropType } from 'vue'
+import type { PropType } from 'vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { handleTree } from '@/utils/tree'
-import * as CodegenApi from '@/api/infra/codegen'
+import type * as CodegenApi from '@/api/infra/codegen'
 import * as MenuApi from '@/api/system/menu'
 
 defineOptions({ name: 'InfraCodegenGenerateInfoForm' })
@@ -309,9 +309,11 @@ defineOptions({ name: 'InfraCodegenGenerateInfoForm' })
 const props = defineProps({
   table: {
     type: Object as PropType<Nullable<CodegenApi.CodegenTableVO>>,
-    default: () => null
-  }
-}) ;const message = useMessage()const formRef = ref()
+    default: () => null,
+  },
+})
+const message = useMessage()
+const formRef = ref()
 const formData = ref({
   templateType: null,
   frontType: null,
@@ -372,14 +374,14 @@ const tplSelectChange = (value) => {
 watch(
   () => props.table,
   (table) => {
-    if (!table) 
-return
+    if (!table)
+      return
     formData.value = table as any
   },
   {
     deep: true,
     immediate: true,
-  }
+  },
 )
 
 onMounted(async () => {
@@ -387,7 +389,7 @@ onMounted(async () => {
     const resp = await MenuApi.getSimpleMenusList()
     menus.value = handleTree(resp)
   }
- catch {}
+  catch {}
 })
 
 defineExpose({

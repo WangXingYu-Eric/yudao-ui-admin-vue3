@@ -38,7 +38,8 @@ defineOptions({ name: 'BpmTaskUpdateAssigneeForm' })
 // 提供 openModal 方法，用于打开弹窗
 
 /** 提交表单 */
-const emit = defineEmits(['success']); const dialogVisible = ref(false) // 弹窗的是否展示
+const emit = defineEmits(['success'])
+const dialogVisible = ref(false) // 弹窗的是否展示
 const formLoading = ref(false) // 表单的加载中
 const formData = ref({
   id: '',

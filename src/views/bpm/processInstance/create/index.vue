@@ -43,7 +43,7 @@
       </el-col>
     </el-card>
     <!-- 流程图预览 -->
-    <ProcessInstanceBpmnViewer :bpmn-xml="bpmnXML as any" />
+    <ProcessInstanceBpmnViewer :bpmn-xml="bpmnXML" />
   </ContentWrap>
 </template>
 
@@ -62,7 +62,7 @@ const message = useMessage() // 消息
 
 // ========== 列表相关 ==========
 const loading = ref(true) // 列表的加载中
-const list = ref([]) // 列表的数据
+const list = ref<any[]>([]) // 列表的数据
 const queryParams = reactive({
   suspensionState: 1,
 })
@@ -79,7 +79,7 @@ const getList = async () => {
 }
 
 // ========== 表单相关 ==========
-const bpmnXML = ref(null) // BPMN 数据
+const bpmnXML = ref<any>(null) // BPMN 数据
 const fApi = ref<ApiAttrs>()
 const detailForm = ref({
   // 流程表单详情
@@ -94,7 +94,7 @@ const handleSelect = async (row) => {
   selectProcessInstance.value = row
 
   // 情况一：流程表单
-  if (row.formType == 10) {
+  if (row.formType === 10) {
     // 设置表单
     setConfAndFields2(detailForm, row.formConf, row.formFields)
     // 加载流程图

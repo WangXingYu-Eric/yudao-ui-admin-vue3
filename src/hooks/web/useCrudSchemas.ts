@@ -291,7 +291,7 @@ const filterDescriptionsSchema = (crudSchema: CrudSchema[]): DescriptionsSchema[
       if (schemaItem.dictType)
         descriptionsSchemaItem.dictType = schemaItem.dictType
 
-      if (schemaItem.detail?.dateFormat || schemaItem.formatter == 'formatDate') {
+      if (schemaItem.detail?.dateFormat || schemaItem.formatter === 'formatDate') {
         // 优先使用 detail 下的配置，如果没有默认为 YYYY-MM-DD HH:mm:ss
         descriptionsSchemaItem.dateFormat = schemaItem?.detail?.dateFormat
           ? schemaItem?.detail?.dateFormat

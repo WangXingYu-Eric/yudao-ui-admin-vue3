@@ -142,29 +142,29 @@
           <!-- TODO @puhui999：小屏幕下，会有偏移，后续看看 -->
           <div class="flex items-center" style="width: 100%">
             <div class="ml-100px mr-200px">
-商品信息
-</div>
+              商品信息
+            </div>
             <div class="mr-60px">
-单价(元)/数量
-</div>
+              单价(元)/数量
+            </div>
             <div class="mr-60px">
-售后状态
-</div>
+              售后状态
+            </div>
             <div class="mr-60px">
-实付金额(元)
-</div>
+              实付金额(元)
+            </div>
             <div class="mr-60px">
-买家/收货人
-</div>
+              买家/收货人
+            </div>
             <div class="mr-60px">
-配送方式
-</div>
+              配送方式
+            </div>
             <div class="mr-60px">
-订单状态
-</div>
+              订单状态
+            </div>
             <div class="mr-60px">
-操作
-</div>
+              操作
+            </div>
           </div>
         </template>
         <template #default="scope">
@@ -197,8 +197,8 @@
                     class="mr-20px"
                   />
                   <v-else v-else class="mr-20px">
-未支付
-</v-else>
+                    未支付
+                  </v-else>
                   <span v-if="scope.row.payTime" class="mr-20px">
                     支付时间：{{ formatDate(scope.row.payTime) }}
                   </span>
@@ -239,7 +239,7 @@
             </el-table-column>
             <el-table-column align="center" label="实际支付" min-width="120" prop="payPrice">
               <template #default>
-                {{ `${floatToFixed2(scope.row.payPrice)  }元` }}
+                {{ `${floatToFixed2(scope.row.payPrice)}元` }}
               </template>
             </el-table-column>
             <el-table-column label="买家/收货人" min-width="160">
@@ -304,7 +304,7 @@
 </template>
 
 <script setup lang="ts">
-import { FormInstance, TableColumnCtx } from 'element-plus'
+import type { FormInstance, TableColumnCtx } from 'element-plus'
 import * as OrderApi from '@/api/mall/trade/order/index'
 import { DICT_TYPE, getIntDictOptions, getStrDictOptions } from '@/utils/dict'
 import { formatDate } from '@/utils/formatTime'
@@ -312,16 +312,18 @@ import { floatToFixed2 } from '@/utils'
 import * as PickUpStoreApi from '@/api/mall/trade/delivery/pickUpStore'
 import * as DeliveryExpressApi from '@/api/mall/trade/delivery/express'
 import { createImageViewer } from '@/components/ImageViewer'
-import * as TradeOrderApi from '@/api/mall/trade/order'
+import type * as TradeOrderApi from '@/api/mall/trade/order'
 
 // 路由跳转
 
 const { userId }: { userId: number } = defineProps({
   userId: {
     type: Number,
-    required: true
-  }
-}) ;const { push } = useRouter()const loading = ref(true) // 列表的加载中
+    required: true,
+  },
+})
+const { push } = useRouter()
+const loading = ref(true) // 列表的加载中
 const total = ref(0) // 列表的总页数
 const list = ref([]) // 列表的数据
 const pickUpStoreList = ref([]) // 自提门店精简列表
@@ -331,14 +333,14 @@ const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
   createDate: [],
-  userId: Number.NaN
+  userId: Number.NaN,
 })
 const headerStyle = ({ row, columnIndex }: any) => {
   // 表头第一行第一列占 8
   if (columnIndex === 0) {
     row[columnIndex].colSpan = 8
   }
- else {
+  else {
     // 其余的不要
     row[columnIndex].colSpan = 0
     return {
@@ -366,7 +368,7 @@ const getList = async () => {
     list.value = data.list
     total.value = data.total
   }
- finally {
+  finally {
     loading.value = false
   }
 }

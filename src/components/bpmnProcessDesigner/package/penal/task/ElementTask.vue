@@ -71,13 +71,13 @@ watch(
   () => props.type,
   () => {
     // witchTaskComponent.value = installedComponent.value[props.type]
-    if (props.type == installedComponent.value.UserTask)
+    if (props.type === installedComponent.value.UserTask)
       witchTaskComponent.value = UserTask
 
-    if (props.type == installedComponent.value.ScriptTask)
+    if (props.type === installedComponent.value.ScriptTask)
       witchTaskComponent.value = ScriptTask
 
-    if (props.type == installedComponent.value.ReceiveTask)
+    if (props.type === installedComponent.value.ReceiveTask)
       witchTaskComponent.value = ReceiveTask
   },
   { immediate: true },

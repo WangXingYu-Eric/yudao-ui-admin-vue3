@@ -9,15 +9,14 @@
   <ContentWrap>
     <div ref="msgDivRef" class="msg-div">
       <!-- 加载更多 -->
-      <div v-loading="loading"/>
+      <div v-loading="loading" />
       <div v-if="!loading">
         <div v-if="hasMore" class="el-table__empty-block" @click="loadMore">
-<span class="el-table__empty-text">点击加载更多</span>
-</div>
-        <div v-if="!hasMore" class="el-table__empty-block"
-        >
-<span class="el-table__empty-text">没有更多了</span>
-</div>
+          <span class="el-table__empty-text">点击加载更多</span>
+        </div>
+        <div v-if="!hasMore" class="el-table__empty-block">
+          <span class="el-table__empty-text">没有更多了</span>
+        </div>
       </div>
 
       <!-- 消息列表 -->
@@ -27,20 +26,20 @@
     <div v-loading="sendLoading" class="msg-send">
       <WxReplySelect ref="replySelectRef" v-model="reply" />
       <el-button type="success" class="send-but" @click="sendMsg">
-发送(S)
-</el-button>
+        发送(S)
+      </el-button>
     </div>
   </ContentWrap>
 </template>
 
 <script lang="ts" setup>
-import type { Reply} from '@/views/mp/components/wx-reply';
-import WxReplySelect, { ReplyType } from '@/views/mp/components/wx-reply'
 import MsgList from './components/MsgList.vue'
+import type { User } from './types'
+import type { Reply } from '@/views/mp/components/wx-reply'
+import WxReplySelect, { ReplyType } from '@/views/mp/components/wx-reply'
 import { getMessagePage, sendMessage } from '@/api/mp/message'
 import { getUser } from '@/api/mp/user'
 import profile from '@/assets/imgs/profile.jpg'
-import type { User } from './types'
 
 defineOptions({ name: 'WxMsg' })
 
@@ -49,23 +48,25 @@ defineOptions({ name: 'WxMsg' })
 const props = defineProps({
   userId: {
     type: Number,
-    required: true
-  }
-}) ;const message = useMessage()const accountId = ref(-1) // 公众号ID，需要通过userId初始化
+    required: true,
+  },
+})
+const message = useMessage()
+const accountId = ref(-1) // 公众号ID，需要通过userId初始化
 const loading = ref(false) // 消息列表是否正在加载中
 const hasMore = ref(true) // 是否可以加载更多
 const list = ref<any[]>([]) // 消息列表
 const queryParams = reactive({
   pageNo: 1, // 当前页数
   pageSize: 14, // 每页显示多少条
-  accountId
+  accountId,
 })
 
 // 由于微信不再提供昵称，直接使用“用户”展示
 const user: User = reactive({
   nickname: '用户',
   avatar: profile,
-  accountId // 公众号账号编号
+  accountId, // 公众号账号编号
 })
 
 // ========= 消息发送 =========
@@ -93,9 +94,9 @@ onMounted(async () => {
 
 // 执行发送
 const sendMsg = async () => {
-  if (!unref(reply)) 
+  if (!unref(reply))
     return
-  
+
   // 公众号限制：客服消息，公众号只允许发送一条
   if (
     reply.value.type === ReplyType.News
@@ -129,10 +130,10 @@ const getPage = async (page: any, params: any = null) => {
         pageNo: page.pageNo,
         pageSize: page.pageSize,
         userId: props.userId,
-        accountId: page.accountId
+        accountId: page.accountId,
       },
-      params
-    )
+      params,
+    ),
   )
 
   const scrollHeight = msgDivRef.value?.scrollHeight ?? 0
@@ -140,9 +141,9 @@ const getPage = async (page: any, params: any = null) => {
   const data = dataTemp.list.reverse()
   list.value = [...data, ...list.value]
   loading.value = false
-  if (data.length < queryParams.pageSize || data.length === 0) 
+  if (data.length < queryParams.pageSize || data.length === 0)
     hasMore.value = false
-  
+
   queryParams.pageNo = page.pageNo
   queryParams.pageSize = page.pageSize
   // 滚动到原来的位置
@@ -150,13 +151,12 @@ const getPage = async (page: any, params: any = null) => {
     // 定位到消息底部
     await scrollToBottom()
   }
- else if (data.length !== 0) {
+  else if (data.length !== 0) {
     // 定位滚动条
     await nextTick()
     if (scrollHeight !== 0) {
-      if (msgDivRef.value) 
+      if (msgDivRef.value)
         msgDivRef.value.scrollTop = msgDivRef.value.scrollHeight - scrollHeight - 100
-      
     }
   }
 }
@@ -168,9 +168,8 @@ const refreshChange = () => {
 /** 定位到消息底部 */
 const scrollToBottom = async () => {
   await nextTick()
-  if (msgDivRef.value) 
+  if (msgDivRef.value)
     msgDivRef.value.scrollTop = msgDivRef.value.scrollHeight
-  
 }
 </script>
 

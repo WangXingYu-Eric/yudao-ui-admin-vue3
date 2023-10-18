@@ -89,7 +89,8 @@ import MemberGroupSelect from '@/views/member/group/components/MemberGroupSelect
 // 提供 open 方法，用于打开弹窗
 
 /** 提交表单 */
-const emit = defineEmits(['success']); const { t } = useI18n() // 国际化
+const emit = defineEmits(['success'])
+const{ t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 
 const dialogVisible = ref(false) // 弹窗的是否展示

@@ -79,7 +79,8 @@ import * as DataSourceConfigApi from '@/api/infra/dataSourceConfig'
 
 defineOptions({ name: 'InfraCodegenImportTable' })
 
-const emit = defineEmits(['success']); const message = useMessage() // 消息弹窗
+const emit = defineEmits(['success'])
+const message = useMessage() // 消息弹窗
 
 const dialogVisible = ref(false) // 弹窗的是否展示
 const dbTableLoading = ref(true) // 数据源的加载中

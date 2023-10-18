@@ -39,6 +39,7 @@ defineOptions({ name: 'BpmModelEditor' })
 const router = useRouter() // 路由
 const { query } = useRoute() // 路由的查询
 const message = useMessage() // 国际化
+const processDesigner = ref()
 
 const xmlString = ref(undefined) // BPMN XML
 const modeler = ref(null) // BPMN Modeler

@@ -13,11 +13,11 @@
     </el-form>
     <template #footer>
       <el-button :disabled="formLoading" type="primary" @click="submitForm">
-确 定
-</el-button>
+        确 定
+      </el-button>
       <el-button @click="dialogVisible = false">
-取 消
-</el-button>
+        取 消
+      </el-button>
     </template>
   </Dialog>
 </template>
@@ -31,32 +31,33 @@ defineOptions({ name: 'ProductPropertyForm' })
 const props = defineProps({
   propertyList: {
     type: Array,
-    default: () => {}
-  }
-}) ;const { t } = useI18n() // 国际化
+    default: () => {},
+  },
+})
+const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 
 const dialogVisible = ref(false) // 弹窗的是否展示
 const dialogTitle = ref('添加商品属性') // 弹窗的标题
 const formLoading = ref(false) // 表单的加载中：1）修改时的数据加载；2）提交的按钮禁用
 const formData = ref({
-  name: ''
+  name: '',
 })
 const formRules = reactive({
-  name: [{ required: true, message: '名称不能为空', trigger: 'blur' }]
+  name: [{ required: true, message: '名称不能为空', trigger: 'blur' }],
 })
 const formRef = ref() // 表单 Ref
-const attributeList = ref([])watch(
+const attributeList = ref([])
+watch(
   () => props.propertyList,
   (data) => {
-    if (!data) 
-return
-    attributeList.value = data
+    if (!data)
+      return attributeList.value = data
   },
   {
     deep: true,
     immediate: true,
-  }
+  },
 )
 /** 打开弹窗 */
 const open = async () => {
@@ -68,11 +69,11 @@ defineExpose({ open }) // 提供 open 方法，用于打开弹窗
 /** 提交表单 */
 const submitForm = async () => {
   // 校验表单
-  if (!formRef) 
-return
+  if (!formRef)
+    return
   const valid = await formRef.value.validate()
-  if (!valid) 
-return
+  if (!valid)
+    return
   // 提交请求
   formLoading.value = true
   try {
@@ -83,10 +84,10 @@ return
       const propertyId = await PropertyApi.createProperty(data)
       attributeList.value.push({ id: propertyId, ...formData.value, values: [] })
     }
- else {
-      if (res[0].values === null) 
+    else {
+      if (res[0].values === null)
         res[0].values = []
-      
+
       // 不需要属性值
       res[0].values = []
       attributeList.value.push(res[0]) // 因为只用一个
@@ -94,7 +95,7 @@ return
     message.success(t('common.createSuccess'))
     dialogVisible.value = false
   }
- finally {
+  finally {
     formLoading.value = false
   }
 }
