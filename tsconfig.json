@@ -1,44 +1,38 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "useDefineForClassFields": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "strict": true,
+    "target": "ESNext",
     "jsx": "preserve",
-    "sourceMap": true,
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "lib": ["esnext", "dom"],
-    "baseUrl": "./",
-    "allowJs": true,
-    "forceConsistentCasingInFileNames": true,
-    "allowSyntheticDefaultImports": true,
-    "strictFunctionTypes": false,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "lib": ["ESNext", "DOM"],
+    "useDefineForClassFields": true,
     "experimentalDecorators": true,
-    "noImplicitAny": false,
-    "skipLibCheck": true,
+    "baseUrl": "./",
+    "module": "ESNext",
+    "moduleResolution": "node",
     "paths": {
       "@/*": ["src/*"]
     },
-    "types": [
-      "@intlify/unplugin-vue-i18n/types",
-      "vite/client",
-      "element-plus/global",
-      "@types/intro.js",
-      "@types/qrcode",
-      "vite-plugin-svg-icons/client"
-    ],
-    "outDir": "target", // 请保留这个属性，防止tsconfig.json文件报错
-    "typeRoots": ["./node_modules/@types/", "./types"]
+    "resolveJsonModule": true, // 请保留这个属性，防止tsconfig.json文件报错
+    "typeRoots": ["./node_modules/@types/", "./types"],
+    "types": ["vite/client"],
+    "allowJs": true,
+    "strict": true,
+    "strictFunctionTypes": false,
+    "noImplicitAny": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "outDir": "target",
+    "sourceMap": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true
   },
   "include": [
     "src",
     "types/**/*.d.ts",
     "src/types/auto-imports.d.ts",
-    "src/types/auto-components.d.ts"
+    "src/types/auto-components.d.ts",
+    "vite.config.ts"
   ],
   "exclude": ["dist", "target", "node_modules"]
 }

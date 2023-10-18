@@ -6,6 +6,10 @@ module.exports = antfu(
     rules: {
       'no-console': 'off',
       'vue/custom-event-name-casing': 'off',
+      'antfu/top-level-function': 'off',
+      'vue/block-order': ['error', {
+        order: ['template', 'script', 'style'],
+      }],
     },
   },
   unocss.configs.flat,
