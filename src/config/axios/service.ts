@@ -75,7 +75,7 @@ service.interceptors.request.use(
       let url = `${config.url}?`
       for (const propName of Object.keys(params)) {
         const value = params[propName]
-        if (value !== void 0 && value !== null && typeof value !== 'undefined') {
+        if (value !== undefined && value !== null && typeof value !== 'undefined') {
           if (typeof value === 'object') {
             for (const val of Object.keys(value)) {
               const params = `${propName}[${val}]`

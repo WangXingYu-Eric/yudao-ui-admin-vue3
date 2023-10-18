@@ -182,7 +182,7 @@ const filterTableSchema = (crudSchema: CrudSchema[]): TableColumn[] => {
 
   // 第一次过滤会有 undefined 所以需要二次过滤
   return filter<TableColumn>(tableColumns as TableColumn[], (data) => {
-    if (data.children === void 0)
+    if (data.children === undefined)
       delete data.children
 
     return !!data.field

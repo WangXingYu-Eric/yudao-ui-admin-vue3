@@ -12,7 +12,6 @@ export const registerComponent = (componentPath: string) => {
   for (const item in modules) {
     if (item.includes(componentPath)) {
       // 使用异步组件的方式来动态加载组件
-      // @ts-expect-error
       return defineAsyncComponent(modules[item])
     }
   }

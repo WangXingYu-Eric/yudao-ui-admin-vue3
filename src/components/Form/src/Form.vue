@@ -1,3 +1,4 @@
+<!-- eslint-disable no-case-declarations -->
 <script lang="tsx">
 import type { PropType } from 'vue'
 import { computed, defineComponent, onMounted, ref, unref, watch } from 'vue'
@@ -96,7 +97,7 @@ export default defineComponent({
 
     const addSchema = (formSchema: FormSchema, index?: number) => {
       const { schema } = unref(getProps)
-      if (index !== void 0) {
+      if (index !== undefined) {
         schema.splice(index, 0, formSchema)
         return
       }
