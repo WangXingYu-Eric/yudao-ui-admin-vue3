@@ -12,10 +12,11 @@
   </Dialog>
 </template>
 
-<script lang="ts" name="SeckillConfigForm" setup>
+<script lang="ts" setup>
 import { allSchemas, rules } from './seckillConfig.data'
 import * as SeckillConfigApi from '@/api/mall/promotion/seckill/seckillConfig'
 
+defineOptions({ name: 'SeckillConfigForm' })
 // 提供 open 方法，用于打开弹窗
 
 /** 提交表单 */

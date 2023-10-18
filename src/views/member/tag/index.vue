@@ -88,10 +88,12 @@
   <TagForm ref="formRef" @success="getList" />
 </template>
 
-<script setup lang="ts" name="MemberTag">
+<script setup lang="ts">
 import TagForm from './TagForm.vue'
 import { dateFormatter } from '@/utils/formatTime'
 import * as TagApi from '@/api/member/tag'
+
+defineOptions({ name: 'MemberTag' })
 
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化

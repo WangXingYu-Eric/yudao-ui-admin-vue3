@@ -92,7 +92,7 @@
   </ContentWrap>
 </template>
 
-<script lang="ts" setup name="MpMaterial">
+<script lang="ts" setup>
 import ImageTable from './components/ImageTable.vue'
 import VoiceTable from './components/VoiceTable.vue'
 import VideoTable from './components/VideoTable.vue'
@@ -101,6 +101,8 @@ import UploadVideo from './components/UploadVideo.vue'
 import { UploadType } from './components/upload'
 import WxAccountSelect from '@/views/mp/components/wx-account-select'
 import * as MpMaterialApi from '@/api/mp/material'
+
+defineOptions({ name: 'MpMaterial' })
 
 const message = useMessage() // 消息
 

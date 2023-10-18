@@ -73,12 +73,14 @@
   <SeckillConfigForm ref="formRef" @success="getList" />
 </template>
 
-<script lang="ts" name="PromotionSeckillConfig" setup>
+<script lang="ts" setup>
 import { allSchemas } from './seckillConfig.data'
 import SeckillConfigForm from './SeckillConfigForm.vue'
 import * as SeckillConfigApi from '@/api/mall/promotion/seckill/seckillConfig'
 import { createImageViewer } from '@/components/ImageViewer'
 import { CommonStatusEnum } from '@/utils/constants'
+
+defineOptions({ name: 'PromotionSeckillConfig' })
 
 const message = useMessage() // 消息弹窗
 // tableObject：表格的属性对象，可获得分页大小、条数等属性

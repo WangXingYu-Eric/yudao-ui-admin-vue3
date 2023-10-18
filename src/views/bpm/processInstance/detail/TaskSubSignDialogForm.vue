@@ -29,9 +29,11 @@
   </Dialog>
 </template>
 
-<script lang="ts" name="TaskRollbackDialogForm" setup>
+<script lang="ts" setup>
 import * as TaskApi from '@/api/bpm/task'
 import { isEmpty } from '@/utils/is'
+
+defineOptions({ name: 'TaskRollbackDialogForm' })
 
 // 提供 openModal 方法，用于打开弹窗
 
