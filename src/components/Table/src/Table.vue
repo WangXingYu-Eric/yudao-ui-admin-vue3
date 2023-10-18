@@ -176,14 +176,15 @@ export default defineComponent({
     const renderTableExpand = () => {
       const { align, headerAlign, expand } = unref(getProps)
       // 渲染展开行
-      return expand ? (
-        <ElTableColumn type="expand" align={align} headerAlign={headerAlign}>
-          {{
-            // @ts-expect-error
-            default: (data: TableSlotDefault) => getSlot(slots, 'expand', data),
-          }}
-        </ElTableColumn>
-      ) : undefined
+      return expand
+        ? (
+          <ElTableColumn type="expand" align={align} headerAlign={headerAlign}>
+            {{
+              default: (data: TableSlotDefault) => getSlot(slots, 'expand', data),
+            }}
+          </ElTableColumn>
+          )
+        : undefined
     }
 
     const rnderTreeTableColumn = (columnsChildren: TableColumn[]) => {
@@ -204,11 +205,9 @@ export default defineComponent({
               default: (data: TableSlotDefault) =>
                 v.children && v.children.length
                   ? rnderTableColumn(v.children)
-                  : // @ts-expect-error
-                  getSlot(slots, v.field, data)
+                  : getSlot(slots, v.field, data)
                     || v?.formatter?.(data.row, data.column, data.row[v.field], data.$index)
                     || data.row[v.field],
-              // @ts-expect-error
               header: getSlot(slots, `${v.field}-header`),
             }}
           </ElTableColumn>
@@ -262,11 +261,9 @@ export default defineComponent({
                   default: (data: TableSlotDefault) =>
                     v.children && v.children.length
                       ? rnderTreeTableColumn(v.children)
-                      : // @ts-expect-error
-                      getSlot(slots, v.field, data)
+                      : getSlot(slots, v.field, data)
                         || v?.formatter?.(data.row, data.column, data.row[v.field], data.$index)
                         || data.row[v.field],
-                  // @ts-expect-error
                   header: () => getSlot(slots, `${v.field}-header`) || v.label,
                 }}
               </ElTableColumn>
@@ -279,7 +276,6 @@ export default defineComponent({
     return () => (
       <div v-loading={unref(getProps).loading}>
         <ElTable
-          // @ts-expect-error
           ref={elTableRef}
           data={unref(getProps).data}
           onSelection-change={selectionChange}
@@ -287,7 +283,6 @@ export default defineComponent({
         >
           {{
             default: () => rnderTableColumn(),
-            // @ts-expect-error
             append: () => getSlot(slots, 'append'),
           }}
         </ElTable>

@@ -91,11 +91,11 @@
         <el-form-item label="商品规格" props="specType">
           <el-radio-group v-model="formData.specType" @change="onChangeSpec">
             <el-radio :label="false" class="radio">
-单规格
-</el-radio>
+              单规格
+            </el-radio>
             <el-radio :label="true">
-多规格
-</el-radio>
+              多规格
+            </el-radio>
           </el-radio-group>
         </el-form-item>
       </el-col>
@@ -103,11 +103,11 @@
         <el-form-item label="分销类型" props="subCommissionType">
           <el-radio-group v-model="formData.subCommissionType" @change="changeSubCommissionType">
             <el-radio :label="false">
-默认设置
-</el-radio>
+              默认设置
+            </el-radio>
             <el-radio :label="true" class="radio">
-单独设置
-</el-radio>
+              单独设置
+            </el-radio>
           </el-radio-group>
         </el-form-item>
       </el-col>
@@ -123,8 +123,8 @@
         </el-form-item>
         <el-form-item v-if="formData.specType" label="商品属性">
           <el-button class="mb-10px mr-15px" @click="attributesAddFormRef.open">
-添加属性
-</el-button>
+            添加属性
+          </el-button>
           <ProductAttributes :property-list="propertyList" @success="generateSkus" />
         </el-form-item>
         <template v-if="formData.specType && propertyList.length > 0">
@@ -147,8 +147,8 @@
   <!-- 情况二：详情 -->
   <Descriptions v-if="isDetail" :data="formData" :schema="allSchemas.detailSchema">
     <template #categoryId="{ row }">
-{{ formatCategoryName(row.categoryId) }}
-</template>
+      {{ formatCategoryName(row.categoryId) }}
+    </template>
     <template #brandId="{ row }">
       {{ brandList.find((item) => item.id === row.brandId)?.name }}
     </template>
@@ -190,15 +190,16 @@
 <script lang="ts" setup>
 import type { PropType } from 'vue'
 import ProductAttributes from './ProductAttributes.vue'
+import ProductPropertyAddForm from './ProductPropertyAddForm.vue'
+import { basicInfoSchema } from './spu.data'
 import { isArray } from '@/utils/is'
 import { copyValueToTarget } from '@/utils'
 import { propTypes } from '@/utils/propTypes'
-import { checkSelectedNode, defaultProps, handleTree, treeToString } from '@/utils/tree'
+import { defaultProps, handleTree, treeToString } from '@/utils/tree'
 import { createImageViewer } from '@/components/ImageViewer'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
-import { getPropertyList, RuleConfig, SkuList } from '@/views/mall/product/spu/components/index.ts'
-import ProductPropertyAddForm from './ProductPropertyAddForm.vue'
-import { basicInfoSchema } from './spu.data'
+import type { RuleConfig } from '@/views/mall/product/spu/components/index.ts'
+import { SkuList, getPropertyList } from '@/views/mall/product/spu/components'
 import type { Spu } from '@/api/mall/product/spu'
 import * as ProductCategoryApi from '@/api/mall/product/category'
 import * as ProductBrandApi from '@/api/mall/product/brand'
@@ -211,10 +212,10 @@ defineOptions({ name: 'ProductSpuBasicInfoForm' })
 const props = defineProps({
   propFormData: {
     type: Object as PropType<Spu>,
-    default: () => {}
+    default: () => {},
   },
   activeName: propTypes.string.def(''),
-  isDetail: propTypes.bool.def(false) // 是否作为详情组件
+  isDetail: propTypes.bool.def(false), // 是否作为详情组件
 })
 
 /**
@@ -226,24 +227,24 @@ const emit = defineEmits(['update:activeName'])
 const ruleConfig: RuleConfig[] = [
   {
     name: 'stock',
-    rule: (arg) => arg >= 1,
-    message: '商品库存必须大于等于 1 ！！！'
+    rule: arg => arg >= 1,
+    message: '商品库存必须大于等于 1 ！！！',
   },
   {
     name: 'price',
-    rule: (arg) => arg >= 0.01,
-    message: '商品销售价格必须大于等于 0.01 元！！！'
+    rule: arg => arg >= 0.01,
+    message: '商品销售价格必须大于等于 0.01 元！！！',
   },
   {
     name: 'marketPrice',
-    rule: (arg) => arg >= 0.01,
-    message: '商品市场价格必须大于等于 0.01 元！！！'
+    rule: arg => arg >= 0.01,
+    message: '商品市场价格必须大于等于 0.01 元！！！',
   },
   {
     name: 'costPrice',
-    rule: (arg) => arg >= 0.01,
-    message: '商品成本价格必须大于等于 0.01 元！！！'
-  }
+    rule: arg => arg >= 0.01,
+    message: '商品成本价格必须大于等于 0.01 元！！！',
+  },
 ]
 
 // ====== 商品详情相关操作 ======
@@ -255,21 +256,23 @@ const imagePreview = (args) => {
     args.forEach((item) => {
       urlList.push(item.url)
     })
-  } else {
+  }
+  else {
     urlList.push(args)
   }
   createImageViewer({
-    urlList
+    urlList,
   })
 }
 
 // ====== end ======
 
-const message = useMessage()const attributesAddFormRef = ref() // 添加商品属性表单
+const message = useMessage()
+const attributesAddFormRef = ref() // 添加商品属性表单
 const productSpuBasicInfoRef = ref() // 表单 Ref
 const propertyList = ref([]) // 商品属性列表
 const skuListRef = ref() // 商品属性列表Ref
-/** 调用 SkuList generateTableData 方法*/
+/** 调用 SkuList generateTableData 方法 */
 const generateSkus = (propertyList) => {
   skuListRef.value.generateTableData(propertyList)
 }
@@ -285,7 +288,7 @@ const formData = reactive<Spu>({
   brandId: null, // 商品品牌
   specType: false, // 商品规格
   subCommissionType: false, // 分销类型
-  skus: []
+  skus: [],
 })
 const rules = reactive({
   name: [required],
@@ -298,7 +301,7 @@ const rules = reactive({
   deliveryTemplateId: [required],
   brandId: [required],
   specType: [required],
-  subCommissionType: [required]
+  subCommissionType: [required],
 })
 
 /**
@@ -307,26 +310,26 @@ const rules = reactive({
 watch(
   () => props.propFormData,
   (data) => {
-    if (!data) {
+    if (!data)
       return
-    }
+
     copyValueToTarget(formData, data)
-    formData.sliderPicUrls = data['sliderPicUrls']?.map((item) => ({
-      url: item
+    formData.sliderPicUrls = data.sliderPicUrls?.map(item => ({
+      url: item,
     }))
     propertyList.value = getPropertyList(data)
   },
   {
-    immediate: true
-  }
+    immediate: true,
+  },
 )
 
 const validate = async () => {
   // 校验 sku
   skuListRef.value.validateSku()
   // 校验表单
-  if (!productSpuBasicInfoRef) 
-return
+  if (!productSpuBasicInfoRef)
+    return
   return await unref(productSpuBasicInfoRef).validate((valid) => {
     if (!valid) {
       message.warning('商品信息未完善！！')
@@ -334,7 +337,7 @@ return
       // 目的截断之后的校验
       throw new Error('商品信息未完善！！')
     }
- else {
+    else {
       // 校验通过更新数据
       Object.assign(props.propFormData, formData)
     }
@@ -368,7 +371,7 @@ const onChangeSpec = () => {
       volume: 0,
       firstBrokeragePrice: 0,
       secondBrokeragePrice: 0,
-    }
+    },
   ]
 }
 

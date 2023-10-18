@@ -36,7 +36,7 @@ defineOptions({ name: 'OrderUpdatePriceForm' })
 
 /** 提交表单 */
 const emit = defineEmits(['success'])
-const{ t } = useI18n() // 国际化
+const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 
 const dialogVisible = ref(false) // 弹窗的是否展示
@@ -51,7 +51,6 @@ watch(
   () => formData.value.adjustPrice,
   (data: number) => {
     const num = formData.value.payPrice!.replace('元', '')
-    // @ts-expect-error
     formData.value.newPayPrice = `${(num * 1 + data).toFixed(2)}元`
   },
 )

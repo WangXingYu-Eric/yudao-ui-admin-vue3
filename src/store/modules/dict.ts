@@ -1,8 +1,7 @@
 import { defineStore } from 'pinia'
 import { store } from '../index'
 
-// @ts-expect-error
-import type { DictDataVO } from '@/api/system/dict/types'
+import type { DictDataVO } from '@/api/system/dict/dict.data'
 import { CACHE_KEY, useCache } from '@/hooks/web/useCache'
 import { listSimpleDictData } from '@/api/system/dict/dict.data'
 

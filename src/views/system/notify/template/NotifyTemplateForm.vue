@@ -64,7 +64,7 @@ import { CommonStatusEnum } from '@/utils/constants'
 
 /** 提交表单 */
 const emit = defineEmits(['success'])
-constmessage = useMessage() // 消息弹窗
+const message = useMessage() // 消息弹窗
 
 const dialogVisible = ref(false) // 弹窗的是否展示
 const dialogTitle = ref('') // 弹窗的标题

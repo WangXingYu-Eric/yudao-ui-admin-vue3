@@ -15,7 +15,7 @@ export interface NotifyTemplateVO {
 export interface NotifySendReqVO {
   userId: number | null
   templateCode: string
-  templateParams: Map<string, Object>
+  templateParams: Map<string, object>
 }
 
 // 查询站内信模板列表

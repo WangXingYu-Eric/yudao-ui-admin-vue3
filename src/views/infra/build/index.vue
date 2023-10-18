@@ -39,15 +39,15 @@
 <script lang="ts" setup>
 import FcDesigner from '@form-create/designer'
 import { useClipboard } from '@vueuse/core'
-import { isString } from '@/utils/is'
 
 import hljs from 'highlight.js'
 
 // 导入代码高亮文件
 import 'highlight.js/styles/github.css' // 导入代码高亮样式
-import xml from 'highlight.js/lib/languages/java'
+import xml from 'highlight.js/lib/languages/xml'
 import json from 'highlight.js/lib/languages/json'
 import formCreate from '@form-create/element-ui'
+import { isString } from '@/utils/is'
 
 defineOptions({ name: 'InfraBuild' })
 

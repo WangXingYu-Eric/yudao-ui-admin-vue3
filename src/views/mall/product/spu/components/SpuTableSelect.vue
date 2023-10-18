@@ -126,7 +126,7 @@ const props = defineProps({
 const emits = defineEmits<{
   (e: 'change', spu: Spu | Spu[] | any): void
 }>()
-consttotal = ref(0) // 列表的总页数
+const total = ref(0) // 列表的总页数
 const list = ref<Spu[]>([]) // 列表的数据
 const loading = ref(false) // 列表的加载中
 const dialogVisible = ref(false) // 弹窗的是否展示

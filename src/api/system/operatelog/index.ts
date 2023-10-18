@@ -9,7 +9,7 @@ export interface OperateLogVO {
   name: string
   type: number
   content: string
-  exts: Map<string, Object>
+  exts: Map<string, object>
   requestMethod: string
   requestUrl: string
   userIp: string

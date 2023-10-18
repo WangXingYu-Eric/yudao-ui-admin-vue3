@@ -18,7 +18,7 @@ export interface SmsTemplateVO {
 export interface SendSmsReqVO {
   mobile: string
   templateCode: string
-  templateParams: Map<string, Object>
+  templateParams: Map<string, object>
 }
 
 // 查询短信模板列表

@@ -57,18 +57,17 @@
 
 <script lang="ts" setup>
 import { useClipboard } from '@vueuse/core'
-import { handleTree2 } from '@/utils/tree'
-import * as CodegenApi from '@/api/infra/codegen'
-
 import hljs from 'highlight.js'
 
 // 导入代码高亮文件
 import 'highlight.js/styles/github.css' // 导入代码高亮样式
 import java from 'highlight.js/lib/languages/java'
-import xml from 'highlight.js/lib/languages/java'
+import xml from 'highlight.js/lib/languages/xml'
 import javascript from 'highlight.js/lib/languages/javascript'
 import sql from 'highlight.js/lib/languages/sql'
 import typescript from 'highlight.js/lib/languages/typescript'
+import { handleTree2 } from '@/utils/tree'
+import * as CodegenApi from '@/api/infra/codegen'
 
 defineOptions({ name: 'InfraCodegenPreviewCode' })
 

@@ -4,6 +4,7 @@ import type { I18n, I18nOptions } from 'vue-i18n'
 import { setHtmlPageLang } from './helper'
 import { useLocaleStoreWithOut } from '@/store/modules/locale'
 
+// eslint-disable-next-line import/no-mutable-exports
 export let i18n: ReturnType<typeof createI18n>
 
 const createI18nOptions = async (): Promise<I18nOptions> => {

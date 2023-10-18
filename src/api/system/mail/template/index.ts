@@ -16,7 +16,7 @@ export interface MailTemplateVO {
 export interface MailSendReqVO {
   mail: string
   templateCode: string
-  templateParams: Map<string, Object>
+  templateParams: Map<string, object>
 }
 
 // 查询邮件模版列表

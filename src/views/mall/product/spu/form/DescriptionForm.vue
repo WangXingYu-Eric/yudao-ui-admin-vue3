@@ -44,15 +44,12 @@ const props = defineProps({
   },
   activeName: propTypes.string.def(''),
   isDetail: propTypes.bool.def(false), // 是否作为详情组件
-})/**
-}}}} * 表单校验
-}}}}
-}}
-}}
-}}
-*/
+})
+/**
+ * 表单校验
+ */
 const emit = defineEmits(['update:activeName'])
-constmessage = useMessage() // 消息弹窗
+const message = useMessage() // 消息弹窗
 
 const { allSchemas } = useCrudSchemas(descriptionSchema)
 const descriptionFormRef = ref() // 表单Ref

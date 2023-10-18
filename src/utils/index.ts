@@ -146,8 +146,7 @@ export const generateUUID = () => {
  * @param column 字段
  * @param cellValue 字段值
  */
-// @ts-expect-error
-export const fileSizeFormatter = (row, column, cellValue) => {
+export const fileSizeFormatter = (_row, _column, cellValue) => {
   const fileSize = cellValue
   const unitArr = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
   const srcSize = Number.parseFloat(fileSize)

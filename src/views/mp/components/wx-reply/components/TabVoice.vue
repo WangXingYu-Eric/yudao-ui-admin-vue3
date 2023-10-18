@@ -2,15 +2,15 @@
   <div>
     <div v-if="reply.url" class="select-item2">
       <p class="item-name">
-{{ reply.name }}
-</p>
+        {{ reply.name }}
+      </p>
       <el-row class="ope-row" justify="center">
         <WxVoicePlayer :url="reply.url" />
       </el-row>
       <el-row class="ope-row" justify="center">
         <el-button type="danger" circle @click="onDelete">
-<Icon icon="ep:delete" />
-</el-button>
+          <Icon icon="ep:delete" />
+        </el-button>
       </el-row>
     </div>
     <el-row v-else style="text-align: center">
@@ -46,8 +46,8 @@
           :on-success="onUploadSuccess"
         >
           <el-button type="primary">
-点击上传
-</el-button>
+            点击上传
+          </el-button>
           <template #tip>
             <div class="el-upload__tip">
               格式支持 mp3/wma/wav/amr，文件大小不超过 2M，播放长度不超过 60s
@@ -61,11 +61,11 @@
 
 <script lang="ts" setup>
 import type { UploadRawFile } from 'element-plus'
+import type { Reply } from './types'
 import WxMaterialSelect from '@/views/mp/components/wx-material-select'
 import WxVoicePlayer from '@/views/mp/components/wx-voice-play'
 import { UploadType, useBeforeUpload } from '@/views/mp/hooks/useUpload'
 import { getAccessToken } from '@/utils/auth'
-import type { Reply } from './types'
 
 // 设置上传的请求头部
 
@@ -79,8 +79,9 @@ const emit = defineEmits<{
 
 const message = useMessage()
 
-const UPLOAD_URL = import.meta.env.VITE_API_BASEPATH + '/admin-api/mp/material/upload-temporary'
-const HEADERS = { Authorization: 'Bearer ' + getAccessToken() }const reply = computed<Reply>({
+const UPLOAD_URL = `${import.meta.env.VITE_API_BASEPATH}/admin-api/mp/material/upload-temporary`
+const HEADERS = { Authorization: `Bearer ${getAccessToken()}` }
+const reply = computed<Reply>({
   get: () => props.modelValue,
   set: val => emit('update:modelValue', val),
 })
@@ -98,7 +99,7 @@ const beforeVoiceUpload = (rawFile: UploadRawFile) => useBeforeUpload(UploadType
 
 const onUploadSuccess = (res: any) => {
   if (res.code !== 0) {
-    message.error(`上传出错：${  res.msg}`)
+    message.error(`上传出错：${res.msg}`)
     return false
   }
 

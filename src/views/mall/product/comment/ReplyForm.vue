@@ -32,7 +32,7 @@ defineOptions({ name: 'ProductComment' })
 
 /** 提交表单 */
 const emit = defineEmits(['success'])
-constmessage = useMessage() // 消息弹窗
+const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
 
 const dialogVisible = ref(false) // 弹窗的是否展示

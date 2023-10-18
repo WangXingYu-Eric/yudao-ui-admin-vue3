@@ -148,7 +148,7 @@ import { fenToYuan, yuanToFen } from '@/utils'
 
 /** 提交表单 */
 const emit = defineEmits(['success'])
-const{ t } = useI18n() // 国际化
+const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 
 const defaultProps2 = {

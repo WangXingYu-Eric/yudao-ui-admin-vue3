@@ -118,8 +118,7 @@ const getConfig = async () => {
 
     formData.value = data
   }
-  finally {
-  }
+  finally { /* empty */ }
 }
 
 onMounted(() => {

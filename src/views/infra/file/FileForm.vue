@@ -44,7 +44,7 @@ defineOptions({ name: 'InfraFileForm' })
 
 /** 文件上传成功处理 */
 const emit = defineEmits(['success'])
-const{ t } = useI18n() // 国际化
+const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 
 const dialogVisible = ref(false) // 弹窗的是否展示

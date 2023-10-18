@@ -140,7 +140,7 @@ const props = defineProps({
 const emits = defineEmits<{
   (e: 'confirm', spuId: number, skuIds?: number[]): void
 }>()
-constmessage = useMessage() // 消息弹窗
+const message = useMessage() // 消息弹窗
 const total = ref(0) // 列表的总页数
 const list = ref<any[]>([]) // 列表的数据
 const loading = ref(false) // 列表的加载中

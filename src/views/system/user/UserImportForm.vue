@@ -56,7 +56,7 @@ defineOptions({ name: 'SystemUserImportForm' })
 
 /** 文件上传成功 */
 const emits = defineEmits(['success'])
-constmessage = useMessage() // 消息弹窗
+const message = useMessage() // 消息弹窗
 
 const dialogVisible = ref(false) // 弹窗的是否展示
 const formLoading = ref(false) // 表单的加载中

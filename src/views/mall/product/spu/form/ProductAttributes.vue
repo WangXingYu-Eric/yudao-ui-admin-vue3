@@ -2,16 +2,16 @@
   <el-col v-for="(item, index) in attributeList" :key="index">
     <div>
       <el-text class="mx-1">
-属性名：
-</el-text>
+        属性名：
+      </el-text>
       <el-tag class="mx-1" closable type="success" @close="handleCloseProperty(index)">
-{{ item.name }}
+        {{ item.name }}
       </el-tag>
     </div>
     <div>
       <el-text class="mx-1">
-属性值：
-</el-text>
+        属性值：
+      </el-text>
       <el-tag
         v-for="(value, valueIndex) in item.values"
         :key="value.id"
@@ -54,8 +54,8 @@ defineOptions({ name: 'ProductAttributes' })
 const props = defineProps({
   propertyList: {
     type: Array,
-    default: () => {}
-  }
+    default: () => {},
+  },
 })
 const emit = defineEmits(['success'])
 const { t } = useI18n() // 国际化
@@ -64,35 +64,38 @@ const inputValue = ref('') // 输入框值
 const attributeIndex = ref<number | null>(null) // 获取焦点时记录当前属性项的index
 // 输入框显隐控制
 const inputVisible = computed(() => (index) => {
-  if (attributeIndex.value === null) return false
-  if (attributeIndex.value === index) return true
+  if (attributeIndex.value === null)
+    return false
+  if (attributeIndex.value === index)
+    return true
 })
-const inputRef = ref([]) //标签输入框Ref
-/** 解决 ref 在 v-for 中的获取问题*/
+const inputRef = ref<any[]>([]) // 标签输入框Ref
+/** 解决 ref 在 v-for 中的获取问题 */
 const setInputRef = (el) => {
-  if (el === null || typeof el === 'undefined') return
+  if (el === null || typeof el === 'undefined')
+    return
   // 如果不存在id相同的元素才添加
-  if (!inputRef.value.some((item) => item.input?.attributes.id === el.input?.attributes.id)) {
+  if (!inputRef.value.some(item => item.input?.attributes.id === el.input?.attributes.id))
     inputRef.value.push(el)
-  }
 }
-const attributeList = ref([])watch(
+const attributeList = ref([])
+watch(
   () => props.propertyList,
   (data) => {
-    if (!data) return
-    attributeList.value = data
+    if (!data)
+      return attributeList.value = data
   },
   {
     deep: true,
-    immediate: true
-  }
+    immediate: true,
+  },
 )
 
-/** 删除属性值*/
+/** 删除属性值 */
 const handleCloseValue = (index, valueIndex) => {
   attributeList.value[index].values?.splice(valueIndex, 1)
 }
-/** 删除属性*/
+/** 删除属性 */
 const handleCloseProperty = (index) => {
   attributeList.value?.splice(index, 1)
 }
@@ -102,7 +105,7 @@ const showInput = async (index) => {
   inputRef.value[index].focus()
 }
 
- // 定义 success 事件，用于操作成功后的回调
+// 定义 success 事件，用于操作成功后的回调
 
 /** 输入框失去焦点或点击回车时触发 */
 const handleInputConfirm = async (index, propertyId) => {
@@ -114,7 +117,7 @@ const handleInputConfirm = async (index, propertyId) => {
       message.success(t('common.createSuccess'))
       emit('success', attributeList.value)
     }
- catch {
+    catch {
       message.error('添加失败，请重试') // TODO 缺少国际化
     }
   }
