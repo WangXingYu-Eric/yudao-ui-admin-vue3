@@ -33,16 +33,21 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button :disabled="formLoading" type="primary" @click="submitForm">确 定</el-button>
-      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button :disabled="formLoading" type="primary" @click="submitForm">
+        确 定
+      </el-button>
+      <el-button @click="dialogVisible = false">
+        取 消
+      </el-button>
     </template>
   </Dialog>
 </template>
+
 <script lang="ts" setup>
+import FcDesigner from '@form-create/designer'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { CommonStatusEnum } from '@/utils/constants'
 import * as FormApi from '@/api/bpm/form'
-import FcDesigner from '@form-create/designer'
 import { encodeConf, encodeFields, setConfAndFields } from '@/utils/formCreate'
 import { useTagsViewStore } from '@/store/modules/tagsView'
 
@@ -60,11 +65,11 @@ const formLoading = ref(false) // 表单的加载中：提交的按钮禁用
 const formData = ref({
   name: '',
   status: CommonStatusEnum.ENABLE,
-  remark: ''
+  remark: '',
 })
 const formRules = reactive({
   name: [{ required: true, message: '表单名不能为空', trigger: 'blur' }],
-  status: [{ required: true, message: '开启状态不能为空', trigger: 'blur' }]
+  status: [{ required: true, message: '开启状态不能为空', trigger: 'blur' }],
 })
 const formRef = ref() // 表单 Ref
 
@@ -76,9 +81,11 @@ const handleSave = () => {
 /** 提交表单 */
 const submitForm = async () => {
   // 校验表单
-  if (!formRef) return
+  if (!formRef)
+    return
   const valid = await formRef.value.validate()
-  if (!valid) return
+  if (!valid)
+    return
   // 提交请求
   formLoading.value = true
   try {
@@ -88,13 +95,15 @@ const submitForm = async () => {
     if (!data.id) {
       await FormApi.createForm(data)
       message.success(t('common.createSuccess'))
-    } else {
+    }
+    else {
       await FormApi.updateForm(data)
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
     close()
-  } finally {
+  }
+  finally {
     formLoading.value = false
   }
 }
@@ -104,13 +113,13 @@ const close = () => {
   push('/bpm/manager/form')
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(async () => {
   // 场景一：新增表单
   const id = query.id as unknown as number
-  if (!id) {
+  if (!id)
     return
-  }
+
   // 场景二：修改表单
   const data = await FormApi.getForm(id)
   formData.value = data

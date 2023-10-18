@@ -7,7 +7,7 @@
     </el-input>
   </div>
   <div class="head-container">
-    <el-tree
+    <ElTree
       ref="treeRef"
       :data="deptList"
       :expand-on-click-node="false"
@@ -28,6 +28,7 @@ import { defaultProps, handleTree } from '@/utils/tree'
 
 defineOptions({ name: 'SystemUserDeptTree' })
 
+const emits = defineEmits(['node-click'])
 const deptName = ref('')
 const deptList = ref<Tree[]>([]) // 树形结构
 const treeRef = ref<InstanceType<typeof ElTree>>()
@@ -41,7 +42,8 @@ const getTree = async () => {
 
 /** 基于名字过滤 */
 const filterNode = (name: string, data: Tree) => {
-  if (!name) return true
+  if (!name)
+    return true
   return data.name.includes(name)
 }
 
@@ -49,8 +51,6 @@ const filterNode = (name: string, data: Tree) => {
 const handleNodeClick = async (row: { [key: string]: any }) => {
   emits('node-click', row)
 }
-const emits = defineEmits(['node-click'])
-
 /** 监听deptName */
 watch(deptName, (val) => {
   treeRef.value!.filter(val)

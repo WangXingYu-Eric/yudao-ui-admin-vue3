@@ -24,7 +24,7 @@
         </el-card>
       </el-col>
       <!-- 下边：账户明细 -->
-      <!-- TODO 芋艿：【订单管理】【售后管理】【收藏记录】-->
+      <!-- TODO 芋艿：【订单管理】【售后管理】【收藏记录】 -->
       <el-card header="账户明细" style="width: 100%; margin-top: 20px" shadow="never">
         <template #header>
           <CardTitle title="账户明细" />
@@ -40,15 +40,21 @@
             <UserExperienceRecordList :user-id="id" />
           </el-tab-pane>
           <!-- TODO @jason：增加一个余额变化； -->
-          <el-tab-pane label="余额" lazy>余额(WIP)</el-tab-pane>
+          <el-tab-pane label="余额" lazy>
+            余额(WIP)
+          </el-tab-pane>
           <el-tab-pane label="收货地址" lazy>
             <UserAddressList :user-id="id" />
           </el-tab-pane>
           <el-tab-pane label="订单管理" lazy>
             <UserOrderList :user-id="id" />
           </el-tab-pane>
-          <el-tab-pane label="售后管理" lazy>售后管理(WIP)</el-tab-pane>
-          <el-tab-pane label="收藏记录" lazy>收藏记录(WIP)</el-tab-pane>
+          <el-tab-pane label="售后管理" lazy>
+            售后管理(WIP)
+          </el-tab-pane>
+          <el-tab-pane label="收藏记录" lazy>
+            收藏记录(WIP)
+          </el-tab-pane>
           <el-tab-pane label="优惠劵" lazy>
             <UserCouponList :user-id="id" />
           </el-tab-pane>
@@ -63,10 +69,9 @@
   <!-- 表单弹窗：添加/修改 -->
   <UserForm ref="formRef" @success="getUserData(id)" />
 </template>
+
 <script setup lang="ts">
-import * as UserApi from '@/api/member/user'
-import { useTagsViewStore } from '@/store/modules/tagsView'
-import UserForm from '@/views/member/user/UserForm.vue'
+import { ElMessage } from 'element-plus'
 import UserAccountInfo from './UserAccountInfo.vue'
 import UserAddressList from './UserAddressList.vue'
 import UserBasicInfo from './UserBasicInfo.vue'
@@ -76,8 +81,10 @@ import UserExperienceRecordList from './UserExperienceRecordList.vue'
 import UserOrderList from './UserOrderList.vue'
 import UserPointList from './UserPointList.vue'
 import UserSignList from './UserSignList.vue'
+import UserForm from '@/views/member/user/UserForm.vue'
+import { useTagsViewStore } from '@/store/modules/tagsView'
+import * as UserApi from '@/api/member/user'
 import { CardTitle } from '@/components/Card/index'
-import { ElMessage } from 'element-plus'
 
 defineOptions({ name: 'MemberDetail' })
 
@@ -95,7 +102,8 @@ const getUserData = async (id: number) => {
   loading.value = true
   try {
     user.value = await UserApi.getUser(id)
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -114,6 +122,7 @@ onMounted(() => {
   getUserData(id)
 })
 </script>
+
 <style scoped lang="css">
 .detail-info-item:first-child {
   padding-left: 0 !important;

@@ -8,15 +8,23 @@
         <dict-tag :type="DICT_TYPE.PAY_NOTIFY_STATUS" :value="detailData.status" />
       </el-descriptions-item>
 
-      <el-descriptions-item label="应用编号">{{ detailData.appId }}</el-descriptions-item>
-      <el-descriptions-item label="应用名称">{{ detailData.appName }}</el-descriptions-item>
+      <el-descriptions-item label="应用编号">
+        {{ detailData.appId }}
+      </el-descriptions-item>
+      <el-descriptions-item label="应用名称">
+        {{ detailData.appName }}
+      </el-descriptions-item>
 
-      <el-descriptions-item label="关联编号">{{ detailData.dataId }}</el-descriptions-item>
+      <el-descriptions-item label="关联编号">
+        {{ detailData.dataId }}
+      </el-descriptions-item>
       <el-descriptions-item label="通知类型">
         <dict-tag :type="DICT_TYPE.PAY_NOTIFY_TYPE" :value="detailData.type" />
       </el-descriptions-item>
 
-      <el-descriptions-item label="通知次数">{{ detailData.notifyTimes }}</el-descriptions-item>
+      <el-descriptions-item label="通知次数">
+        {{ detailData.notifyTimes }}
+      </el-descriptions-item>
       <el-descriptions-item label="最大通知次数">
         {{ detailData.maxNotifyTimes }}
       </el-descriptions-item>
@@ -60,6 +68,7 @@
     </el-descriptions>
   </Dialog>
 </template>
+
 <script lang="ts" setup>
 import { DICT_TYPE } from '@/utils/dict'
 import * as PayNotifyApi from '@/api/pay/notify'
@@ -78,7 +87,8 @@ const open = async (id: number) => {
   detailLoading.value = true
   try {
     detailData.value = await PayNotifyApi.getNotifyTaskDetail(id)
-  } finally {
+  }
+  finally {
     detailLoading.value = false
   }
 }

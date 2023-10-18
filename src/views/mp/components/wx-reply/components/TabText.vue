@@ -1,5 +1,5 @@
 <template>
-  <el-input type="textarea" :rows="5" placeholder="请输入内容" v-model="content" />
+  <el-input v-model="content" type="textarea" :rows="5" placeholder="请输入内容" />
 </template>
 
 <script lang="ts" setup>
@@ -17,6 +17,6 @@ const content = computed<string | null | undefined>({
   set: (val: string | null) => {
     emit('update:modelValue', val)
     emit('input', val)
-  }
+  },
 })
 </script>

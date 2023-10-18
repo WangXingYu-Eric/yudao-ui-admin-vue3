@@ -123,11 +123,12 @@
   <!-- 表单弹窗：添加/修改 -->
   <MenuForm ref="formRef" @success="getList" />
 </template>
+
 <script lang="ts" setup>
+import MenuForm from './MenuForm.vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { handleTree } from '@/utils/tree'
 import * as MenuApi from '@/api/system/menu'
-import MenuForm from './MenuForm.vue'
 import { CACHE_KEY, useCache } from '@/hooks/web/useCache'
 
 defineOptions({ name: 'SystemMenu' })
@@ -140,7 +141,7 @@ const loading = ref(true) // 列表的加载中
 const list = ref<any>([]) // 列表的数据
 const queryParams = reactive({
   name: undefined,
-  status: undefined
+  status: undefined,
 })
 const queryFormRef = ref() // 搜索的表单
 const isExpandAll = ref(false) // 是否展开，默认全部折叠
@@ -152,7 +153,8 @@ const getList = async () => {
   try {
     const data = await MenuApi.getMenuList(queryParams)
     list.value = handleTree(data)
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -192,7 +194,8 @@ const refreshMenu = async () => {
     wsCache.delete(CACHE_KEY.ROLE_ROUTERS)
     // 刷新浏览器
     location.reload()
-  } catch {}
+  }
+  catch {}
 }
 
 /** 删除按钮操作 */
@@ -205,10 +208,11 @@ const handleDelete = async (id: number) => {
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

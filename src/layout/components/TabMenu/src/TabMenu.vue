@@ -1,13 +1,13 @@
 <script lang="tsx">
+import { ElScrollbar } from 'element-plus'
+import { cloneDeep } from 'lodash-es'
+import { filterMenusPath, initTabMap, tabPathMap } from './helper'
 import { usePermissionStore } from '@/store/modules/permission'
 import { useAppStore } from '@/store/modules/app'
 
-import { ElScrollbar } from 'element-plus'
 import { Icon } from '@/components/Icon'
 import { Menu } from '@/layout/components/Menu'
 import { pathResolve } from '@/utils/routerHelper'
-import { cloneDeep } from 'lodash-es'
-import { filterMenusPath, initTabMap, tabPathMap } from './helper'
 import { useDesign } from '@/hooks/web/useDesign'
 import { isUrl } from '@/utils/is'
 
@@ -32,7 +32,7 @@ export default defineComponent({
 
     const routers = computed(() => permissionStore.getRouters)
 
-    const tabRouters = computed(() => unref(routers).filter((v) => !v?.meta?.hidden))
+    const tabRouters = computed(() => unref(routers).filter(v => !v?.meta?.hidden))
 
     const setCollapse = () => {
       appStore.setCollapse(!unref(collapse))
@@ -42,9 +42,9 @@ export default defineComponent({
       if (unref(fixedMenu)) {
         const path = `/${unref(currentRoute).path.split('/')[1]}`
         const children = unref(tabRouters).find(
-          (v) =>
-            (v.meta?.alwaysShow || (v?.children?.length && v?.children?.length > 1)) &&
-            v.path === path
+          v =>
+            (v.meta?.alwaysShow || (v?.children?.length && v?.children?.length > 1))
+            && v.path === path,
         )?.children
 
         tabActive.value = path
@@ -53,7 +53,7 @@ export default defineComponent({
             cloneDeep(children).map((v) => {
               v.path = pathResolve(unref(tabActive), v.path)
               return v
-            })
+            }),
           )
         }
       }
@@ -67,8 +67,8 @@ export default defineComponent({
       },
       {
         immediate: true,
-        deep: true
-      }
+        deep: true,
+      },
     )
 
     const showTitle = ref(true)
@@ -80,14 +80,15 @@ export default defineComponent({
           setTimeout(() => {
             showTitle.value = !collapse
           }, 200)
-        } else {
+        }
+        else {
           showTitle.value = !collapse
         }
-      }
+      },
     )
 
     // 是否显示菜单
-    const showMenu = ref(unref(fixedMenu) ? true : false)
+    const showMenu = ref(!!unref(fixedMenu))
 
     // tab高亮
     const tabActive = ref('')
@@ -102,18 +103,19 @@ export default defineComponent({
       const oldPath = unref(tabActive)
       tabActive.value = item.children ? item.path : item.path.split('/')[0]
       if (item.children) {
-        if (newPath === oldPath || !unref(showMenu)) {
+        if (newPath === oldPath || !unref(showMenu))
           showMenu.value = unref(fixedMenu) ? true : !unref(showMenu)
-        }
+
         if (unref(showMenu)) {
           permissionStore.setMenuTabRouters(
             cloneDeep(item.children).map((v) => {
               v.path = pathResolve(unref(tabActive), v.path)
               return v
-            })
+            }),
           )
         }
-      } else {
+      }
+      else {
         push(item.path)
         permissionStore.setMenuTabRouters([])
         showMenu.value = false
@@ -123,14 +125,15 @@ export default defineComponent({
     // 设置高亮
     const isActive = (currentPath: string) => {
       const { path } = unref(currentRoute)
-      if (tabPathMap[currentPath].includes(path)) {
+      if (tabPathMap[currentPath].includes(path))
         return true
-      }
+
       return false
     }
 
     const mouseleave = () => {
-      if (!unref(showMenu) || unref(fixedMenu)) return
+      if (!unref(showMenu) || unref(fixedMenu))
+        return
       showMenu.value = false
     }
 
@@ -142,8 +145,8 @@ export default defineComponent({
           'relative bg-[var(--left-menu-bg-color)] top-1px z-3000 layout-border__right',
           {
             'w-[var(--tab-menu-max-width)]': !unref(collapse),
-            'w-[var(--tab-menu-min-width)]': unref(collapse)
-          }
+            'w-[var(--tab-menu-min-width)]': unref(collapse),
+          },
         ]}
         onMouseleave={mouseleave}
       >
@@ -156,7 +159,7 @@ export default defineComponent({
                     ? v
                     : {
                         ...(v?.children && v?.children[0]),
-                        path: pathResolve(v.path, (v?.children && v?.children[0])?.path as string)
+                        path: pathResolve(v.path, (v?.children && v?.children[0])?.path as string),
                       }
                 ) as AppRouteRecordRaw
                 return (
@@ -165,8 +168,8 @@ export default defineComponent({
                       `${prefixCls}__item`,
                       'text-center text-12px relative py-12px cursor-pointer',
                       {
-                        'is-active': isActive(v.path)
-                      }
+                        'is-active': isActive(v.path),
+                      },
                     ]}
                     onClick={() => {
                       tabClick(item)
@@ -175,9 +178,11 @@ export default defineComponent({
                     <div>
                       <Icon icon={item?.meta?.icon}></Icon>
                     </div>
-                    {!unref(showTitle) ? undefined : (
-                      <p class="mt-5px break-words px-2px">{t(item.meta?.title)}</p>
-                    )}
+                    {!unref(showTitle)
+                      ? undefined
+                      : (
+                        <p class="mt-5px break-words px-2px">{t(item.meta?.title)}</p>
+                        )}
                   </div>
                 )
               })
@@ -187,7 +192,7 @@ export default defineComponent({
         <div
           class={[
             `${prefixCls}--collapse`,
-            'text-center h-[var(--tab-menu-collapse-height)] leading-[var(--tab-menu-collapse-height)] cursor-pointer'
+            'text-center h-[var(--tab-menu-collapse-height)] leading-[var(--tab-menu-collapse-height)] cursor-pointer',
           ]}
           onClick={setCollapse}
         >
@@ -200,14 +205,15 @@ export default defineComponent({
               '!left-[var(--tab-menu-min-width)]': unref(collapse),
               '!left-[var(--tab-menu-max-width)]': !unref(collapse),
               '!w-[calc(var(--left-menu-max-width)+1px)]': unref(showMenu) || unref(fixedMenu),
-              '!w-0': !unref(showMenu) && !unref(fixedMenu)
-            }
+              '!w-0': !unref(showMenu) && !unref(fixedMenu),
+            },
           ]}
           style="transition: width var(--transition-time-02), left var(--transition-time-02);"
-        ></Menu>
+        >
+        </Menu>
       </div>
     )
-  }
+  },
 })
 </script>
 

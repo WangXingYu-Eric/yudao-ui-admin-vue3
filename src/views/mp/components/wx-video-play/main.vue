@@ -15,12 +15,14 @@
     <!-- 提示 -->
     <div>
       <Icon icon="ep:video-play" :size="32" class="mr-5px" />
-      <p class="text-sm">点击播放视频</p>
+      <p class="text-sm">
+        点击播放视频
+      </p>
     </div>
 
     <!-- 弹窗播放 -->
     <el-dialog v-model="dialogVideo" title="视频播放" append-to-body>
-      <video-player
+      <VideoPlayer
         v-if="dialogVideo"
         class="video-player vjs-big-play-centered"
         :src="props.url"
@@ -33,17 +35,17 @@
         :playback-rates="[0.7, 1.0, 1.5, 2.0]"
       />
       <!--     事件，暫時沒用
-      @mounted="handleMounted"-->
-      <!--        @ready="handleEvent($event)"-->
-      <!--        @play="handleEvent($event)"-->
-      <!--        @pause="handleEvent($event)"-->
-      <!--        @ended="handleEvent($event)"-->
-      <!--        @loadeddata="handleEvent($event)"-->
-      <!--        @waiting="handleEvent($event)"-->
-      <!--        @playing="handleEvent($event)"-->
-      <!--        @canplay="handleEvent($event)"-->
-      <!--        @canplaythrough="handleEvent($event)"-->
-      <!--        @timeupdate="handleEvent(player?.currentTime())"-->
+      @mounted="handleMounted" -->
+      <!--        @ready="handleEvent($event)" -->
+      <!--        @play="handleEvent($event)" -->
+      <!--        @pause="handleEvent($event)" -->
+      <!--        @ended="handleEvent($event)" -->
+      <!--        @loadeddata="handleEvent($event)" -->
+      <!--        @waiting="handleEvent($event)" -->
+      <!--        @playing="handleEvent($event)" -->
+      <!--        @canplay="handleEvent($event)" -->
+      <!--        @canplaythrough="handleEvent($event)" -->
+      <!--        @timeupdate="handleEvent(player?.currentTime())" -->
     </el-dialog>
   </div>
 </template>
@@ -57,8 +59,8 @@ defineOptions({ name: 'WxVideoPlayer' })
 const props = defineProps({
   url: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 })
 
 const dialogVideo = ref(false)

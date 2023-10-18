@@ -1,10 +1,10 @@
 <template>
-  <Dialog v-model="dialogVisible" :appendToBody="true" title="选择规格" width="700">
-    <el-table v-loading="loading" :data="list" show-overflow-tooltip>
+  <Dialog v-model="dialogVisible" :append-to-body="true" title="选择规格" width="700">
+    <ElTable v-loading="loading" :data="list" show-overflow-tooltip>
       <el-table-column label="#" width="55">
         <template #default="{ row }">
-          <el-radio :label="row.id" v-model="selectedSkuId" @change="handleSelected(row)"
-            >&nbsp;
+          <el-radio v-model="selectedSkuId" :label="row.id" @change="handleSelected(row)">
+&nbsp;
           </el-radio>
         </template>
       </el-table-column>
@@ -28,7 +28,7 @@
           {{ fenToYuan(row.price) }}
         </template>
       </el-table-column>
-    </el-table>
+    </ElTable>
   </Dialog>
 </template>
 
@@ -41,10 +41,13 @@ import { fenToYuan } from '@/utils'
 defineOptions({ name: 'SkuTableSelect' })
 
 const props = defineProps({
-  spuId: propTypes.number.def(null)
+  spuId: propTypes.number.def(null),
 })
 
-const message = useMessage() // 消息弹窗
+// 确认选择时的触发事件
+const emits = defineEmits<{
+  (e: 'change', spu: ProductSpuApi.Sku): void
+}>(); const message = useMessage() // 消息弹窗
 const list = ref<any[]>([]) // 列表的数据
 const loading = ref(false) // 列表的加载中
 const dialogVisible = ref(false) // 弹窗的是否展示
@@ -59,11 +62,6 @@ const handleSelected = (row: ProductSpuApi.Sku) => {
   selectedSkuId.value = undefined
 }
 
-// 确认选择时的触发事件
-const emits = defineEmits<{
-  (e: 'change', spu: ProductSpuApi.Sku): void
-}>()
-
 /** 打开弹窗 */
 const open = () => {
   dialogVisible.value = true
@@ -76,20 +74,21 @@ const getSpuDetail = async () => {
   try {
     const spu = await ProductSpuApi.getSpu(props.spuId)
     list.value = spu.skus
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(async () => {})
 watch(
   () => props.spuId,
   () => {
-    if (!props.spuId) {
+    if (!props.spuId)
       return
-    }
+
     getSpuDetail()
-  }
+  },
 )
 </script>

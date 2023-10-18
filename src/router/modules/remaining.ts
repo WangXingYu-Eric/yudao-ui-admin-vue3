@@ -31,7 +31,7 @@ const { t } = useI18n()
 
  canTo: true               设置为true即使hidden为true，也依然可以进行路由跳转(默认 false)
  }
- **/
+ */
 const remainingRouter: AppRouteRecordRaw[] = [
   {
     path: '/redirect',
@@ -42,13 +42,13 @@ const remainingRouter: AppRouteRecordRaw[] = [
         path: '/redirect/:path(.*)',
         name: 'Redirect',
         component: () => import('@/views/Redirect/Redirect.vue'),
-        meta: {}
-      }
+        meta: {},
+      },
     ],
     meta: {
       hidden: true,
-      noTagsView: true
-    }
+      noTagsView: true,
+    },
   },
   {
     path: '/',
@@ -65,17 +65,17 @@ const remainingRouter: AppRouteRecordRaw[] = [
           title: t('router.home'),
           icon: 'ep:home-filled',
           noCache: false,
-          affix: true
-        }
-      }
-    ]
+          affix: true,
+        },
+      },
+    ],
   },
   {
     path: '/user',
     component: Layout,
     name: 'UserInfo',
     meta: {
-      hidden: true
+      hidden: true,
     },
     children: [
       {
@@ -87,8 +87,8 @@ const remainingRouter: AppRouteRecordRaw[] = [
           hidden: true,
           noTagsView: false,
           icon: 'ep:user',
-          title: t('common.profile')
-        }
+          title: t('common.profile'),
+        },
       },
       {
         path: 'notify-message',
@@ -99,10 +99,10 @@ const remainingRouter: AppRouteRecordRaw[] = [
           hidden: true,
           noTagsView: false,
           icon: 'ep:message',
-          title: '我的站内信'
-        }
-      }
-    ]
+          title: '我的站内信',
+        },
+      },
+    ],
   },
 
   {
@@ -110,7 +110,7 @@ const remainingRouter: AppRouteRecordRaw[] = [
     component: Layout,
     name: 'dict',
     meta: {
-      hidden: true
+      hidden: true,
     },
     children: [
       {
@@ -123,10 +123,10 @@ const remainingRouter: AppRouteRecordRaw[] = [
           hidden: true,
           canTo: true,
           icon: '',
-          activeMenu: '/system/dict'
-        }
-      }
-    ]
+          activeMenu: '/system/dict',
+        },
+      },
+    ],
   },
 
   {
@@ -134,7 +134,7 @@ const remainingRouter: AppRouteRecordRaw[] = [
     component: Layout,
     name: 'CodegenEdit',
     meta: {
-      hidden: true
+      hidden: true,
     },
     children: [
       {
@@ -147,17 +147,17 @@ const remainingRouter: AppRouteRecordRaw[] = [
           canTo: true,
           icon: 'ep:edit',
           title: '修改生成配置',
-          activeMenu: 'infra/codegen/index'
-        }
-      }
-    ]
+          activeMenu: 'infra/codegen/index',
+        },
+      },
+    ],
   },
   {
     path: '/job',
     component: Layout,
     name: 'JobL',
     meta: {
-      hidden: true
+      hidden: true,
     },
     children: [
       {
@@ -170,10 +170,10 @@ const remainingRouter: AppRouteRecordRaw[] = [
           canTo: true,
           icon: 'ep:edit',
           title: '调度日志',
-          activeMenu: 'infra/job/index'
-        }
-      }
-    ]
+          activeMenu: 'infra/job/index',
+        },
+      },
+    ],
   },
   {
     path: '/login',
@@ -182,8 +182,8 @@ const remainingRouter: AppRouteRecordRaw[] = [
     meta: {
       hidden: true,
       title: t('router.login'),
-      noTagsView: true
-    }
+      noTagsView: true,
+    },
   },
   {
     path: '/sso',
@@ -192,8 +192,8 @@ const remainingRouter: AppRouteRecordRaw[] = [
     meta: {
       hidden: true,
       title: t('router.login'),
-      noTagsView: true
-    }
+      noTagsView: true,
+    },
   },
   {
     path: '/social-login',
@@ -202,8 +202,8 @@ const remainingRouter: AppRouteRecordRaw[] = [
     meta: {
       hidden: true,
       title: t('router.socialLogin'),
-      noTagsView: true
-    }
+      noTagsView: true,
+    },
   },
   {
     path: '/403',
@@ -212,8 +212,8 @@ const remainingRouter: AppRouteRecordRaw[] = [
     meta: {
       hidden: true,
       title: '403',
-      noTagsView: true
-    }
+      noTagsView: true,
+    },
   },
   {
     path: '/404',
@@ -222,8 +222,8 @@ const remainingRouter: AppRouteRecordRaw[] = [
     meta: {
       hidden: true,
       title: '404',
-      noTagsView: true
-    }
+      noTagsView: true,
+    },
   },
   {
     path: '/500',
@@ -232,15 +232,15 @@ const remainingRouter: AppRouteRecordRaw[] = [
     meta: {
       hidden: true,
       title: '500',
-      noTagsView: true
-    }
+      noTagsView: true,
+    },
   },
   {
     path: '/bpm',
     component: Layout,
     name: 'bpm',
     meta: {
-      hidden: true
+      hidden: true,
     },
     children: [
       {
@@ -252,8 +252,8 @@ const remainingRouter: AppRouteRecordRaw[] = [
           hidden: true,
           canTo: true,
           title: '设计流程表单',
-          activeMenu: '/bpm/manager/form'
-        }
+          activeMenu: '/bpm/manager/form',
+        },
       },
       {
         path: '/manager/model/edit',
@@ -264,8 +264,8 @@ const remainingRouter: AppRouteRecordRaw[] = [
           hidden: true,
           canTo: true,
           title: '设计流程',
-          activeMenu: '/bpm/manager/model'
-        }
+          activeMenu: '/bpm/manager/model',
+        },
       },
       {
         path: '/manager/definition',
@@ -276,8 +276,8 @@ const remainingRouter: AppRouteRecordRaw[] = [
           hidden: true,
           canTo: true,
           title: '流程定义',
-          activeMenu: '/bpm/manager/model'
-        }
+          activeMenu: '/bpm/manager/model',
+        },
       },
       {
         path: '/manager/task-assign-rule',
@@ -287,8 +287,8 @@ const remainingRouter: AppRouteRecordRaw[] = [
           noCache: true,
           hidden: true,
           canTo: true,
-          title: '任务分配规则'
-        }
+          title: '任务分配规则',
+        },
       },
       {
         path: '/process-instance/create',
@@ -299,8 +299,8 @@ const remainingRouter: AppRouteRecordRaw[] = [
           hidden: true,
           canTo: true,
           title: '发起流程',
-          activeMenu: 'bpm/processInstance/create'
-        }
+          activeMenu: 'bpm/processInstance/create',
+        },
       },
       {
         path: '/process-instance/detail',
@@ -311,8 +311,8 @@ const remainingRouter: AppRouteRecordRaw[] = [
           hidden: true,
           canTo: true,
           title: '流程详情',
-          activeMenu: 'bpm/processInstance/detail'
-        }
+          activeMenu: 'bpm/processInstance/detail',
+        },
       },
       {
         path: '/bpm/oa/leave/create',
@@ -323,8 +323,8 @@ const remainingRouter: AppRouteRecordRaw[] = [
           hidden: true,
           canTo: true,
           title: '发起 OA 请假',
-          activeMenu: '/bpm/oa/leave'
-        }
+          activeMenu: '/bpm/oa/leave',
+        },
       },
       {
         path: '/bpm/oa/leave/detail',
@@ -335,17 +335,17 @@ const remainingRouter: AppRouteRecordRaw[] = [
           hidden: true,
           canTo: true,
           title: '查看 OA 请假',
-          activeMenu: '/bpm/oa/leave'
-        }
-      }
-    ]
+          activeMenu: '/bpm/oa/leave',
+        },
+      },
+    ],
   },
   {
     path: '/mall/product', // 商品中心
     component: Layout,
     name: 'ProductCenter',
     meta: {
-      hidden: true
+      hidden: true,
     },
     children: [
       {
@@ -358,8 +358,8 @@ const remainingRouter: AppRouteRecordRaw[] = [
           canTo: true,
           icon: 'ep:edit',
           title: '商品添加',
-          activeMenu: '/mall/product/spu'
-        }
+          activeMenu: '/mall/product/spu',
+        },
       },
       {
         path: 'spu/edit/:id(\\d+)',
@@ -371,8 +371,8 @@ const remainingRouter: AppRouteRecordRaw[] = [
           canTo: true,
           icon: 'ep:edit',
           title: '商品编辑',
-          activeMenu: '/mall/product/spu'
-        }
+          activeMenu: '/mall/product/spu',
+        },
       },
       {
         path: 'spu/detail/:id(\\d+)',
@@ -384,8 +384,8 @@ const remainingRouter: AppRouteRecordRaw[] = [
           canTo: true,
           icon: 'ep:view',
           title: '商品详情',
-          activeMenu: '/mall/product/spu'
-        }
+          activeMenu: '/mall/product/spu',
+        },
       },
       {
         path: 'property/value/:propertyId(\\d+)',
@@ -397,32 +397,32 @@ const remainingRouter: AppRouteRecordRaw[] = [
           canTo: true,
           icon: 'ep:view',
           title: '商品属性值',
-          activeMenu: '/product/property'
-        }
-      }
-    ]
+          activeMenu: '/product/property',
+        },
+      },
+    ],
   },
   {
     path: '/mall/trade', // 交易中心
     component: Layout,
     name: 'TradeCenter',
     meta: {
-      hidden: true
+      hidden: true,
     },
     children: [
       {
         path: 'order/detail/:id(\\d+)',
         component: () => import('@/views/mall/trade/order/detail/index.vue'),
         name: 'TradeOrderDetail',
-        meta: { title: '订单详情', icon: 'ep:view', activeMenu: '/mall/trade/order' }
+        meta: { title: '订单详情', icon: 'ep:view', activeMenu: '/mall/trade/order' },
       },
       {
         path: 'after-sale/detail/:id(\\d+)',
         component: () => import('@/views/mall/trade/afterSale/detail/index.vue'),
         name: 'TradeAfterSaleDetail',
-        meta: { title: '退款详情', icon: 'ep:view', activeMenu: '/mall/trade/after-sale' }
-      }
-    ]
+        meta: { title: '退款详情', icon: 'ep:view', activeMenu: '/mall/trade/after-sale' },
+      },
+    ],
   },
   {
     path: '/member',
@@ -436,11 +436,11 @@ const remainingRouter: AppRouteRecordRaw[] = [
         meta: {
           title: '会员详情',
           noCache: true,
-          hidden: true
+          hidden: true,
         },
-        component: () => import('@/views/member/user/detail/index.vue')
-      }
-    ]
+        component: () => import('@/views/member/user/detail/index.vue'),
+      },
+    ],
   },
   {
     path: '/pay',
@@ -454,12 +454,12 @@ const remainingRouter: AppRouteRecordRaw[] = [
         meta: {
           title: '收银台',
           noCache: true,
-          hidden: true
+          hidden: true,
         },
-        component: () => import('@/views/pay/cashier/index.vue')
-      }
-    ]
-  }
+        component: () => import('@/views/pay/cashier/index.vue'),
+      },
+    ],
+  },
 ]
 
 export default remainingRouter

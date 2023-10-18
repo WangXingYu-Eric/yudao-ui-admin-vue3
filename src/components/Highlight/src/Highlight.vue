@@ -1,5 +1,6 @@
 <script lang="tsx">
-import { defineComponent, PropType, computed, h, unref } from 'vue'
+import type { PropType } from 'vue'
+import { computed, defineComponent, h, unref } from 'vue'
 import { propTypes } from '@/utils/propTypes'
 
 export default defineComponent({
@@ -8,9 +9,9 @@ export default defineComponent({
     tag: propTypes.string.def('span'),
     keys: {
       type: Array as PropType<string[]>,
-      default: () => []
+      default: () => [],
     },
-    color: propTypes.string.def('var(--el-color-primary)')
+    color: propTypes.string.def('var(--el-color-primary)'),
   },
   emits: ['click'],
   setup(props, { emit, slots }) {
@@ -24,10 +25,10 @@ export default defineComponent({
             },
             style: {
               color: props.color,
-              cursor: 'pointer'
-            }
+              cursor: 'pointer',
+            },
           },
-          key
+          key,
         )
       })
     })
@@ -41,25 +42,25 @@ export default defineComponent({
     }
 
     const renderText = () => {
-      if (!slots?.default) return null
+      if (!slots?.default)
+        return null
       const node = slots?.default()[0].children
 
-      if (!node) {
+      if (!node)
         return slots?.default()[0]
-      }
 
       const textArray = parseText(node as string)
       const regexp = /^[0-9]*$/
       const nodes = textArray.map((t) => {
-        if (regexp.test(t)) {
+        if (regexp.test(t))
           return unref(keyNodes)[t] || t
-        }
+
         return t
       })
       return h(props.tag, nodes)
     }
 
     return () => renderText()
-  }
+  },
 })
 </script>

@@ -4,9 +4,9 @@
   <!-- 搜索工作栏 -->
   <ContentWrap>
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="68px"
     >
@@ -18,20 +18,20 @@
 
   <!-- 列表 -->
   <ContentWrap>
-    <div class="waterfall" v-loading="loading">
+    <div v-loading="loading" class="waterfall">
       <div
-        class="waterfall-item"
-        v-show="item.content && item.content.newsItem"
         v-for="item in list"
+        v-show="item.content && item.content.newsItem"
         :key="item.articleId"
+        class="waterfall-item"
       >
-        <wx-news :articles="item.content.newsItem" />
+        <WxNews :articles="item.content.newsItem" />
         <el-row justify="center" class="ope-row">
           <el-button
+            v-hasPermi="['mp:free-publish:delete']"
             type="danger"
             circle
             @click="handleDelete(item)"
-            v-hasPermi="['mp:free-publish:delete']"
           >
             <Icon icon="ep:delete" />
           </el-button>
@@ -40,9 +40,9 @@
     </div>
     <!-- 分页 -->
     <Pagination
-      :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
+      :total="total"
       @pagination="getList"
     />
   </ContentWrap>
@@ -65,10 +65,10 @@ const list = ref<any[]>([]) // 列表的数据
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
-  accountId: -1
+  accountId: -1,
 })
 
-/** 侦听公众号变化 **/
+/** 侦听公众号变化 */
 const onAccountChanged = (id: number) => {
   queryParams.accountId = id
   queryParams.pageNo = 1
@@ -82,7 +82,8 @@ const getList = async () => {
     const data = await FreePublishApi.getFreePublishPage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -97,9 +98,11 @@ const handleDelete = async (item: any) => {
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 </script>
+
 <style lang="scss" scoped>
 @media (width >= 992px) and (width <= 1300px) {
   .waterfall {

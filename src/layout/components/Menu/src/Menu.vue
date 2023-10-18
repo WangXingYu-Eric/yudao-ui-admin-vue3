@@ -1,12 +1,12 @@
 <script lang="tsx">
-import { PropType } from 'vue'
+import type { PropType } from 'vue'
 import { ElMenu, ElScrollbar } from 'element-plus'
+import { useRenderMenuItem } from './components/useRenderMenuItem'
 import { useAppStore } from '@/store/modules/app'
 import { usePermissionStore } from '@/store/modules/permission'
-import { useRenderMenuItem } from './components/useRenderMenuItem'
 import { isUrl } from '@/utils/is'
 import { useDesign } from '@/hooks/web/useDesign'
-import { LayoutType } from '@/types/layout'
+import type { LayoutType } from '@/types/layout'
 
 const { getPrefixCls } = useDesign()
 
@@ -18,8 +18,8 @@ export default defineComponent({
   props: {
     menuSelect: {
       type: Function as PropType<(index: string) => void>,
-      default: undefined
-    }
+      default: undefined,
+    },
   },
   setup(props) {
     const appStore = useAppStore()
@@ -34,15 +34,14 @@ export default defineComponent({
       // 竖
       const vertical: LayoutType[] = ['classic', 'topLeft', 'cutMenu']
 
-      if (vertical.includes(unref(layout))) {
+      if (vertical.includes(unref(layout)))
         return 'vertical'
-      } else {
+      else
         return 'horizontal'
-      }
     })
 
     const routers = computed(() =>
-      unref(layout) === 'cutMenu' ? permissionStore.getMenuTabRouters : permissionStore.getRouters
+      unref(layout) === 'cutMenu' ? permissionStore.getMenuTabRouters : permissionStore.getRouters,
     )
 
     const collapse = computed(() => appStore.getCollapse)
@@ -52,30 +51,28 @@ export default defineComponent({
     const activeMenu = computed(() => {
       const { meta, path } = unref(currentRoute)
       // if set path, the sidebar will highlight the path you set
-      if (meta.activeMenu) {
+      if (meta.activeMenu)
         return meta.activeMenu as string
-      }
+
       return path
     })
 
     const menuSelect = (index: string) => {
-      if (props.menuSelect) {
+      if (props.menuSelect)
         props.menuSelect(index)
-      }
+
       // 自定义事件
-      if (isUrl(index)) {
+      if (isUrl(index))
         window.open(index)
-      } else {
+      else
         push(index)
-      }
     }
 
     const renderMenuWrap = () => {
-      if (unref(layout) === 'top') {
+      if (unref(layout) === 'top')
         return renderMenu()
-      } else {
+      else
         return <ElScrollbar>{renderMenu()}</ElScrollbar>
-      }
     }
 
     const renderMenu = () => {
@@ -96,7 +93,7 @@ export default defineComponent({
             default: () => {
               const { renderMenuItem } = useRenderMenuItem(unref(menuMode))
               return renderMenuItem(unref(routers))
-            }
+            },
           }}
         </ElMenu>
       )
@@ -110,14 +107,14 @@ export default defineComponent({
           'h-[100%] overflow-hidden flex-col bg-[var(--left-menu-bg-color)]',
           {
             'w-[var(--left-menu-min-width)]': unref(collapse) && unref(layout) !== 'cutMenu',
-            'w-[var(--left-menu-max-width)]': !unref(collapse) && unref(layout) !== 'cutMenu'
-          }
+            'w-[var(--left-menu-max-width)]': !unref(collapse) && unref(layout) !== 'cutMenu',
+          },
         ]}
       >
         {renderMenuWrap()}
       </div>
     )
-  }
+  },
 })
 </script>
 

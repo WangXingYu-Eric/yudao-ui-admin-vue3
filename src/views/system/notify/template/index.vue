@@ -4,9 +4,9 @@
   <!-- 搜索工作栏 -->
   <ContentWrap>
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="68px"
     >
@@ -15,8 +15,8 @@
           v-model="queryParams.name"
           placeholder="请输入模板名称"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="模板编号" prop="code">
@@ -24,8 +24,8 @@
           v-model="queryParams.code"
           placeholder="请输入模版编码"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="状态" prop="status">
@@ -55,13 +55,17 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        <el-button @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" /> 搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon icon="ep:refresh" class="mr-5px" /> 重置
+        </el-button>
         <el-button
+          v-hasPermi="['system:notify-template:create']"
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['system:notify-template:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" />新增
         </el-button>
@@ -115,26 +119,26 @@
       <el-table-column label="操作" align="center" width="210" fixed="right">
         <template #default="scope">
           <el-button
+            v-hasPermi="['system:notify-template:update']"
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['system:notify-template:update']"
           >
             修改
           </el-button>
           <el-button
+            v-hasPermi="['system:notify-template:send-notify']"
             link
             type="primary"
             @click="openSendForm(scope.row)"
-            v-hasPermi="['system:notify-template:send-notify']"
           >
             测试
           </el-button>
           <el-button
+            v-hasPermi="['system:notify-template:delete']"
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
-            v-hasPermi="['system:notify-template:delete']"
           >
             删除
           </el-button>
@@ -143,9 +147,9 @@
     </el-table>
     <!-- 分页 -->
     <Pagination
-      :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
+      :total="total"
       @pagination="getList"
     />
   </ContentWrap>
@@ -155,12 +159,13 @@
   <!-- 表单弹窗：测试发送 -->
   <NotifyTemplateSendForm ref="sendFormRef" />
 </template>
+
 <script lang="ts" setup>
+import NotifyTemplateForm from './NotifyTemplateForm.vue'
+import NotifyTemplateSendForm from './NotifyTemplateSendForm.vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { dateFormatter } from '@/utils/formatTime'
 import * as NotifyTemplateApi from '@/api/system/notify/template'
-import NotifyTemplateForm from './NotifyTemplateForm.vue'
-import NotifyTemplateSendForm from './NotifyTemplateSendForm.vue'
 
 defineOptions({ name: 'NotifySmsTemplate' })
 
@@ -175,7 +180,7 @@ const queryParams = reactive({
   name: undefined,
   status: undefined,
   code: undefined,
-  createTime: []
+  createTime: [],
 })
 const queryFormRef = ref() // 搜索的表单
 
@@ -186,7 +191,8 @@ const getList = async () => {
     const data = await NotifyTemplateApi.getNotifyTemplatePage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -219,7 +225,8 @@ const handleDelete = async (id: number) => {
     message.success('删除成功')
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
 /** 发送站内信按钮 */
@@ -228,7 +235,7 @@ const openSendForm = (row: NotifyTemplateApi.NotifyTemplateVO) => {
   sendFormRef.value.open(row.id)
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

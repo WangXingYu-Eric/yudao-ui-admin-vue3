@@ -43,7 +43,7 @@ export interface OrderVO {
   couponPrice?: number | null // 优惠劵减免金额
   vipPrice?: number | null // VIP 减免金额
   pointPrice?: number | null // 积分抵扣的金额
-  receiverAreaName?: string //收件人地区名字
+  receiverAreaName?: string // 收件人地区名字
   items?: OrderItemRespVO[] // 订单项列表
   // 下单用户信息
   user?: {
@@ -74,28 +74,28 @@ export interface OrderItemRespVO {
   orderId?: number | null // 订单编号
   // ========== 商品基本信息 ==========
   spuId?: number | null // 商品 SPU 编号
-  spuName?: string //商品 SPU 名称
+  spuName?: string // 商品 SPU 名称
   skuId?: number | null // 商品 SKU 编号
-  picUrl?: string //商品图片
-  count?: number | null //购买数量
+  picUrl?: string // 商品图片
+  count?: number | null // 购买数量
   // ========== 价格 + 支付基本信息 ==========
-  originalPrice?: number | null //商品原价（总）
-  originalUnitPrice?: number | null //商品原价（单）
-  discountPrice?: number | null //商品优惠（总）
-  payPrice?: number | null //商品实付金额（总）
-  orderPartPrice?: number | null //子订单分摊金额（总）
-  orderDividePrice?: number | null //分摊后子订单实付金额（总）
+  originalPrice?: number | null // 商品原价（总）
+  originalUnitPrice?: number | null // 商品原价（单）
+  discountPrice?: number | null // 商品优惠（总）
+  payPrice?: number | null // 商品实付金额（总）
+  orderPartPrice?: number | null // 子订单分摊金额（总）
+  orderDividePrice?: number | null // 分摊后子订单实付金额（总）
   // ========== 营销基本信息 ==========
   // TODO 芋艿：在捉摸一下
   // ========== 售后基本信息 ==========
   afterSaleStatus?: number | null // 售后状态
-  properties?: ProductPropertiesVO[] //属性数组
+  properties?: ProductPropertiesVO[] // 属性数组
 }
 
 export interface ProductPropertiesVO {
   propertyId?: number | null // 属性的编号
   propertyName?: string // 属性的名称
-  valueId?: number | null //属性值的编号
+  valueId?: number | null // 属性值的编号
   valueName?: string // 属性值的名称
 }
 
@@ -106,12 +106,12 @@ export const getOrderPage = async (params) => {
 
 // 查询交易订单详情
 export const getOrder = async (id: number | null) => {
-  return await request.get({ url: `/trade/order/get-detail?id=` + id })
+  return await request.get({ url: `/trade/order/get-detail?id=${id}` })
 }
 
 // 查询交易订单物流详情
 export const getExpressTrackList = async (id: number | null) => {
-  return await request.get({ url: `/trade/order/get-express-track-list?id=` + id })
+  return await request.get({ url: `/trade/order/get-express-track-list?id=${id}` })
 }
 
 export interface DeliveryVO {

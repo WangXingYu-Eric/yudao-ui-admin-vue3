@@ -2,10 +2,10 @@
   <div class="upload-file">
     <el-upload
       ref="uploadRef"
-      :multiple="props.limit > 1"
-      name="file"
       v-model="valueRef"
       v-model:file-list="fileList"
+      :multiple="props.limit > 1"
+      name="file"
       :show-file-list="true"
       :auto-upload="autoUpload"
       :action="updateUrl"
@@ -20,7 +20,9 @@
       :on-preview="handlePreview"
       class="upload-file-uploader"
     >
-      <el-button type="primary"><Icon icon="ep:upload-filled" />选取文件</el-button>
+      <el-button type="primary">
+        <Icon icon="ep:upload-filled" />选取文件
+      </el-button>
       <template v-if="isShowTip" #tip>
         <div style="font-size: 8px">
           大小不超过 <b style="color: #f56c6c">{{ fileSize }}MB</b>
@@ -32,22 +34,20 @@
     </el-upload>
   </div>
 </template>
-<script lang="ts" setup>
-import { PropType } from 'vue'
 
+<script lang="ts" setup>
+import type { PropType } from 'vue'
+
+import type { UploadInstance, UploadProps, UploadRawFile, UploadUserFile } from 'element-plus'
 import { propTypes } from '@/utils/propTypes'
 import { getAccessToken, getTenantId } from '@/utils/auth'
-import type { UploadInstance, UploadUserFile, UploadProps, UploadRawFile } from 'element-plus'
 
 defineOptions({ name: 'UploadFile' })
-
-const message = useMessage() // 消息弹窗
-const emit = defineEmits(['update:modelValue'])
 
 const props = defineProps({
   modelValue: {
     type: Array as PropType<UploadUserFile[]>,
-    required: true
+    required: true,
   },
   title: propTypes.string.def('文件上传'),
   updateUrl: propTypes.string.def(import.meta.env.VITE_UPLOAD_URL),
@@ -56,17 +56,17 @@ const props = defineProps({
   limit: propTypes.number.def(5), // 数量限制
   autoUpload: propTypes.bool.def(true), // 自动上传
   drag: propTypes.bool.def(false), // 拖拽上传
-  isShowTip: propTypes.bool.def(true) // 是否显示提示
-})
-// ========== 上传相关 ==========
+  isShowTip: propTypes.bool.def(true), // 是否显示提示
+})// 消息弹窗
+const emit = defineEmits(['update:modelValue']); const message = useMessage()// ========== 上传相关 ==========
 const valueRef = ref(props.modelValue)
 const uploadRef = ref<UploadInstance>()
 const uploadList = ref<UploadUserFile[]>([])
 const fileList = ref<UploadUserFile[]>(props.modelValue)
 const uploadNumber = ref<number>(0)
 const uploadHeaders = ref({
-  Authorization: 'Bearer ' + getAccessToken(),
-  'tenant-id': getTenantId()
+  'Authorization': `Bearer ${getAccessToken()}`,
+  'tenant-id': getTenantId(),
 })
 // 文件上传之前判断
 const beforeUpload: UploadProps['beforeUpload'] = (file: UploadRawFile) => {
@@ -75,12 +75,13 @@ const beforeUpload: UploadProps['beforeUpload'] = (file: UploadRawFile) => {
     return false
   }
   let fileExtension = ''
-  if (file.name.lastIndexOf('.') > -1) {
+  if (file.name.lastIndexOf('.') > -1)
     fileExtension = file.name.slice(file.name.lastIndexOf('.') + 1)
-  }
+
   const isImg = props.fileType.some((type: string) => {
-    if (file.type.indexOf(type) > -1) return true
-    return !!(fileExtension && fileExtension.indexOf(type) > -1)
+    if (file.type.includes(type))
+      return true
+    return !!(fileExtension && fileExtension.includes(type))
   })
   const isLimit = file.size < props.fileSize * 1024 * 1024
   if (!isImg) {
@@ -122,7 +123,7 @@ const excelUploadError: UploadProps['onError'] = (): void => {
 }
 // 删除上传文件
 const handleRemove = (file) => {
-  const findex = fileList.value.map((f) => f.name).indexOf(file.name)
+  const findex = fileList.value.map(f => f.name).indexOf(file.name)
   if (findex > -1) {
     fileList.value.splice(findex, 1)
     emit('update:modelValue', listToString(fileList.value))
@@ -135,12 +136,13 @@ const handlePreview: UploadProps['onPreview'] = (uploadFile) => {
 const listToString = (list: UploadUserFile[], separator?: string) => {
   let strs = ''
   separator = separator || ','
-  for (let i in list) {
+  for (const i in list)
     strs += list[i].url + separator
-  }
+
   return strs != '' ? strs.substr(0, strs.length - 1) : ''
 }
 </script>
+
 <style scoped lang="scss">
 .upload-file-uploader {
   margin-bottom: 5px;

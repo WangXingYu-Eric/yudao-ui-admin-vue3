@@ -1,26 +1,27 @@
 <script lang="tsx">
-import { computed, defineComponent, onMounted, PropType, ref, unref, watch } from 'vue'
+import type { PropType } from 'vue'
+import { computed, defineComponent, onMounted, ref, unref, watch } from 'vue'
 import { ElCol, ElForm, ElFormItem, ElRow, ElTooltip } from 'element-plus'
+import { set } from 'lodash-es'
 import { componentMap } from './componentMap'
-import { propTypes } from '@/utils/propTypes'
-import { getSlot } from '@/utils/tsxHelper'
 import {
   initModel,
   setComponentProps,
   setFormItemSlots,
   setGridProp,
   setItemComponentSlots,
-  setTextPlaceholder
+  setTextPlaceholder,
 } from './helper'
 import { useRenderSelect } from './components/useRenderSelect'
 import { useRenderRadio } from './components/useRenderRadio'
 import { useRenderCheckbox } from './components/useRenderCheckbox'
+import type { FormProps } from './types'
 import { useDesign } from '@/hooks/web/useDesign'
 import { findIndex } from '@/utils'
-import { set } from 'lodash-es'
-import { FormProps } from './types'
+import { getSlot } from '@/utils/tsxHelper'
+import { propTypes } from '@/utils/propTypes'
 import { Icon } from '@/components/Icon'
-import { FormSchema, FormSetPropsType } from '@/types/form'
+import type { FormSchema, FormSetPropsType } from '@/types/form'
 
 const { getPrefixCls } = useDesign()
 
@@ -33,7 +34,7 @@ export default defineComponent({
     // 生成Form的布局结构数组
     schema: {
       type: Array as PropType<FormSchema[]>,
-      default: () => []
+      default: () => [],
     },
     // 是否需要栅格布局
     // update by 芋艿：将 true 改成 false，因为项目更常用这种方式
@@ -41,7 +42,7 @@ export default defineComponent({
     // 表单数据对象
     model: {
       type: Object as PropType<Recordable>,
-      default: () => ({})
+      default: () => ({}),
     },
     // 是否自动设置placeholder
     autoSetPlaceholder: propTypes.bool.def(true),
@@ -50,7 +51,7 @@ export default defineComponent({
     // 表单label宽度
     labelWidth: propTypes.oneOfType([String, Number]).def('auto'),
     // 是否 loading 数据中 add by 芋艿
-    vLoading: propTypes.bool.def(false)
+    vLoading: propTypes.bool.def(false),
   },
   emits: ['register'],
   setup(props, { slots, expose, emit }) {
@@ -89,9 +90,8 @@ export default defineComponent({
       const { schema } = unref(getProps)
 
       const index = findIndex(schema, (v: FormSchema) => v.field === field)
-      if (index > -1) {
+      if (index > -1)
         schema.splice(index, 1)
-      }
     }
 
     const addSchema = (formSchema: FormSchema, index?: number) => {
@@ -107,9 +107,8 @@ export default defineComponent({
       const { schema } = unref(getProps)
       for (const v of schema) {
         for (const item of schemaProps) {
-          if (v.field === item.field) {
+          if (v.field === item.field)
             set(v, item.path, item.value)
-          }
         }
       }
     }
@@ -125,7 +124,7 @@ export default defineComponent({
       delSchema,
       addSchema,
       setSchema,
-      getElFormRef
+      getElFormRef,
     })
 
     // 监听表单结构化数组，重新生成formModel
@@ -136,18 +135,20 @@ export default defineComponent({
       },
       {
         immediate: true,
-        deep: true
-      }
+        deep: true,
+      },
     )
 
     // 渲染包裹标签，是否使用栅格布局
     const renderWrap = () => {
       const { isCol } = unref(getProps)
-      const content = isCol ? (
-        <ElRow gutter={20}>{renderFormItemWrap()}</ElRow>
-      ) : (
-        renderFormItemWrap()
-      )
+      const content = isCol
+        ? (
+          <ElRow gutter={20}>{renderFormItemWrap()}</ElRow>
+          )
+        : (
+            renderFormItemWrap()
+          )
       return content
     }
 
@@ -157,11 +158,11 @@ export default defineComponent({
       const { schema = [], isCol } = unref(getProps)
 
       return schema
-        .filter((v) => !v.hidden)
+        .filter(v => !v.hidden)
         .map((item) => {
           // 如果是 Divider 组件，需要自己占用一行
           const isDivider = item.component === 'Divider'
-          const Com = componentMap['Divider'] as ReturnType<typeof defineComponent>
+          const Com = componentMap.Divider as ReturnType<typeof defineComponent>
           return isDivider ? (
             <Com {...{ contentPosition: 'left', ...item.componentProps }}>{item?.label}</Com>
           ) : isCol ? (
@@ -178,15 +179,14 @@ export default defineComponent({
       // 单独给只有options属性的组件做判断
       const notRenderOptions = ['SelectV2', 'Cascader', 'Transfer']
       const slotsMap: Recordable = {
-        ...setItemComponentSlots(slots, item?.componentProps?.slots, item.field)
+        ...setItemComponentSlots(slots, item?.componentProps?.slots, item.field),
       }
       if (
-        item?.component !== 'SelectV2' &&
-        item?.component !== 'Cascader' &&
-        item?.componentProps?.options
-      ) {
+        item?.component !== 'SelectV2'
+        && item?.component !== 'Cascader'
+        && item?.componentProps?.options
+      )
         slotsMap.default = () => renderOptions(item)
-      }
 
       const formItemSlots: Recordable = setFormItemSlots(slots, item.field)
       // 如果有 labelMessage，自动使用插槽渲染
@@ -204,8 +204,9 @@ export default defineComponent({
                       size={16}
                       color="var(--el-color-primary)"
                       class="relative top-1px ml-2px"
-                    ></Icon>
-                  )
+                    >
+                    </Icon>
+                  ),
                 }}
               </ElTooltip>
             </>
@@ -223,23 +224,25 @@ export default defineComponent({
 
               const { autoSetPlaceholder } = unref(getProps)
 
-              return slots[item.field] ? (
-                getSlot(slots, item.field, formModel.value)
-              ) : (
-                <Com
-                  vModel={formModel.value[item.field]}
-                  {...(autoSetPlaceholder && setTextPlaceholder(item))}
-                  {...setComponentProps(item)}
-                  style={item.componentProps?.style}
-                  {...(notRenderOptions.includes(item?.component as string) &&
-                  item?.componentProps?.options
-                    ? { options: item?.componentProps?.options || [] }
-                    : {})}
-                >
-                  {{ ...slotsMap }}
-                </Com>
-              )
-            }
+              return slots[item.field]
+                ? (
+                    getSlot(slots, item.field, formModel.value)
+                  )
+                : (
+                  <Com
+                    vModel={formModel.value[item.field]}
+                    {...(autoSetPlaceholder && setTextPlaceholder(item))}
+                    {...setComponentProps(item)}
+                    style={item.componentProps?.style}
+                    {...(notRenderOptions.includes(item?.component as string)
+                  && item?.componentProps?.options
+                      ? { options: item?.componentProps?.options || [] }
+                      : {})}
+                  >
+                    {{ ...slotsMap }}
+                  </Com>
+                  )
+            },
           }}
         </ElFormItem>
       )
@@ -271,9 +274,8 @@ export default defineComponent({
       const delKeys = ['schema', 'isCol', 'autoSetPlaceholder', 'isCustom', 'model']
       const props = { ...unref(getProps) }
       for (const key in props) {
-        if (delKeys.indexOf(key) !== -1) {
+        if (delKeys.includes(key))
           delete props[key]
-        }
       }
       return props
     }
@@ -291,11 +293,11 @@ export default defineComponent({
           default: () => {
             const { isCustom } = unref(getProps)
             return isCustom ? getSlot(slots, 'default') : renderWrap()
-          }
+          },
         }}
       </ElForm>
     )
-  }
+  },
 })
 </script>
 

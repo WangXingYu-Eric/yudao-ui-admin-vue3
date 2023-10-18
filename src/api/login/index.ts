@@ -1,6 +1,6 @@
+import type { UserLoginVO } from './types'
 import request from '@/config/axios'
 import { getRefreshToken } from '@/utils/auth'
-import type { UserLoginVO } from './types'
 
 export interface SmsCodeVO {
   mobile: string
@@ -19,12 +19,12 @@ export const login = (data: UserLoginVO) => {
 
 // 刷新访问令牌
 export const refreshToken = () => {
-  return request.post({ url: '/system/auth/refresh-token?refreshToken=' + getRefreshToken() })
+  return request.post({ url: `/system/auth/refresh-token?refreshToken=${getRefreshToken()}` })
 }
 
 // 使用租户名，获得租户编号
 export const getTenantIdByName = (name: string) => {
-  return request.get({ url: '/system/tenant/get-id-by-name?name=' + name })
+  return request.get({ url: `/system/tenant/get-id-by-name?name=${name}` })
 }
 
 // 登出
@@ -37,7 +37,7 @@ export const getInfo = () => {
   return request.get({ url: '/system/auth/get-permission-info' })
 }
 
-//获取登录验证码
+// 获取登录验证码
 export const sendSmsCode = (data: SmsCodeVO) => {
   return request.post({ url: '/system/auth/send-sms-code', data })
 }
@@ -54,15 +54,15 @@ export function socialLogin(type: string, code: string, state: string) {
     data: {
       type,
       code,
-      state
-    }
+      state,
+    },
   })
 }
 
 // 社交授权的跳转
 export const socialAuthRedirect = (type: number, redirectUri: string) => {
   return request.get({
-    url: '/system/auth/social-auth-redirect?type=' + type + '&redirectUri=' + redirectUri
+    url: `/system/auth/social-auth-redirect?type=${type}&redirectUri=${redirectUri}`,
   })
 }
 // 获取验证图片以及 token

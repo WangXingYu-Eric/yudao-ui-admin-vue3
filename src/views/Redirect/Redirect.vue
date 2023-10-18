@@ -1,6 +1,7 @@
 <template>
-  <div></div>
+  <div />
 </template>
+
 <script lang="ts" setup>
 defineOptions({ name: 'Redirect' })
 
@@ -17,12 +18,13 @@ if (_redirect_type === 'name') {
   replace({
     name: _path,
     query,
-    params
+    params,
   })
-} else {
+}
+else {
   replace({
-    path: _path.startsWith('/') ? _path : '/' + _path,
-    query
+    path: _path.startsWith('/') ? _path : `/${_path}`,
+    query,
   })
 }
 </script>

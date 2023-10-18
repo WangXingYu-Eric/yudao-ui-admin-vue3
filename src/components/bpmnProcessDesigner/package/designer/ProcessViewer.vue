@@ -1,7 +1,7 @@
 <template>
   <div class="my-process-designer">
     <div class="my-process-designer__container">
-      <div class="my-process-designer__canvas" style="height: 760px" ref="bpmnCanvas"></div>
+      <div ref="bpmnCanvas" class="my-process-designer__canvas" style="height: 760px" />
     </div>
   </div>
 </template>
@@ -19,33 +19,33 @@ const props = defineProps({
   value: {
     // BPMN XML 字符串
     type: String,
-    default: ''
+    default: '',
   },
   prefix: {
     // 使用哪个引擎
     type: String,
-    default: 'camunda'
+    default: 'camunda',
   },
   activityData: {
     // 活动的数据。传递时，可高亮流程
     type: Array,
-    default: () => []
+    default: () => [],
   },
   processInstanceData: {
     // 流程实例的数据。传递时，可展示流程发起人等信息
     type: Object,
-    default: () => {}
+    default: () => {},
   },
   taskData: {
     // 任务实例的数据。传递时，可展示 UserTask 审核相关的信息
     type: Array,
-    default: () => []
-  }
+    default: () => [],
+  },
 })
 
-provide('configGlobal', props)
-
 const emit = defineEmits(['destroy'])
+
+provide('configGlobal', props)
 
 let bpmnModeler
 
@@ -59,29 +59,31 @@ const elementOverlayIds = ref<any>(null)
 const overlays = ref<any>(null)
 
 const initBpmnModeler = () => {
-  if (bpmnModeler) return
+  if (bpmnModeler)
+    return
   bpmnModeler = new BpmnViewer({
     container: bpmnCanvas.value,
-    bpmnRenderer: {}
+    bpmnRenderer: {},
   })
 }
 
 /* 创建新的流程图 */
 const createNewDiagram = async (xml) => {
   // 将字符串转换成图显示出来
-  let newId = `Process_${new Date().getTime()}`
-  let newName = `业务流程_${new Date().getTime()}`
-  let xmlString = xml || DefaultEmptyXML(newId, newName, props.prefix)
+  const newId = `Process_${new Date().getTime()}`
+  const newName = `业务流程_${new Date().getTime()}`
+  const xmlString = xml || DefaultEmptyXML(newId, newName, props.prefix)
   try {
-    let { warnings } = await bpmnModeler.importXML(xmlString)
-    if (warnings && warnings.length) {
-      warnings.forEach((warn) => console.warn(warn))
-    }
+    const { warnings } = await bpmnModeler.importXML(xmlString)
+    if (warnings && warnings.length)
+      warnings.forEach(warn => console.warn(warn))
+
     // 高亮流程图
     await highlightDiagram()
     const canvas = bpmnModeler.get('canvas')
     canvas.zoom('fit-viewport', 'auto')
-  } catch (e) {
+  }
+  catch (e) {
     console.error(e)
     // console.error(`[Process Designer Warn]: ${e?.message || e}`);
   }
@@ -91,58 +93,60 @@ const createNewDiagram = async (xml) => {
 // TODO 芋艿：如果多个 endActivity 的话，目前的逻辑可能有一定的问题。https://www.jdon.com/workflow/multi-events.html
 const highlightDiagram = async () => {
   const activityList = activityLists.value
-  if (activityList.length === 0) {
+  if (activityList.length === 0)
     return
-  }
+
   // 参考自 https://gitee.com/tony2y/RuoYi-flowable/blob/master/ruoyi-ui/src/components/Process/index.vue#L222 实现
   // 再次基础上，增加不同审批结果的颜色等等
-  let canvas = bpmnModeler.get('canvas')
-  let todoActivity: any = activityList.find((m: any) => !m.endTime) // 找到待办的任务
-  let endActivity: any = activityList[activityList.length - 1] // 获得最后一个任务
-  let findProcessTask = false //是否已经高亮了进行中的任务
-  //进行中高亮之后的任务 key 集合，用于过滤掉 taskList 进行中后面的任务，避免进行中后面的数据 Hover 还有数据
-  let removeTaskDefinitionKeyList = []
+  const canvas = bpmnModeler.get('canvas')
+  const todoActivity: any = activityList.find((m: any) => !m.endTime) // 找到待办的任务
+  const endActivity: any = activityList[activityList.length - 1] // 获得最后一个任务
+  let findProcessTask = false // 是否已经高亮了进行中的任务
+  // 进行中高亮之后的任务 key 集合，用于过滤掉 taskList 进行中后面的任务，避免进行中后面的数据 Hover 还有数据
+  const removeTaskDefinitionKeyList = []
   // debugger
   bpmnModeler.getDefinitions().rootElements[0].flowElements?.forEach((n: any) => {
-    let activity: any = activityList.find((m: any) => m.key === n.id) // 找到对应的活动
-    if (!activity) {
+    const activity: any = activityList.find((m: any) => m.key === n.id) // 找到对应的活动
+    if (!activity)
       return
-    }
+
     if (n.$type === 'bpmn:UserTask') {
       // 用户任务
       // 处理用户任务的高亮
       const task: any = taskList.value.find((m: any) => m.id === activity.taskId) // 找到活动对应的 taskId
-      if (!task) {
+      if (!task)
         return
-      }
-      //进行中的任务已经高亮过了，则不高亮后面的任务了
+
+      // 进行中的任务已经高亮过了，则不高亮后面的任务了
       if (findProcessTask) {
         removeTaskDefinitionKeyList.push(n.id)
         return
       }
       // 高亮任务
       canvas.addMarker(n.id, getResultCss(task.result))
-      //标记是否高亮了进行中任务
-      if (task.result === 1) {
+      // 标记是否高亮了进行中任务
+      if (task.result === 1)
         findProcessTask = true
-      }
+
       // 如果非通过，就不走后面的线条了
-      if (task.result !== 2) {
+      if (task.result !== 2)
         return
-      }
+
       // 处理 outgoing 出线
       const outgoing = getActivityOutgoing(activity)
       outgoing?.forEach((nn: any) => {
         // debugger
-        let targetActivity: any = activityList.find((m: any) => m.key === nn.targetRef.id)
+        const targetActivity: any = activityList.find((m: any) => m.key === nn.targetRef.id)
         // 如果目标活动存在，则根据该活动是否结束，进行【bpmn:SequenceFlow】连线的高亮设置
         if (targetActivity) {
           canvas.addMarker(nn.id, targetActivity.endTime ? 'highlight' : 'highlight-todo')
-        } else if (nn.targetRef.$type === 'bpmn:ExclusiveGateway') {
+        }
+        else if (nn.targetRef.$type === 'bpmn:ExclusiveGateway') {
           // TODO 芋艿：这个流程，暂时没走到过
           canvas.addMarker(nn.id, activity.endTime ? 'highlight' : 'highlight-todo')
           canvas.addMarker(nn.targetRef.id, activity.endTime ? 'highlight' : 'highlight-todo')
-        } else if (nn.targetRef.$type === 'bpmn:EndEvent') {
+        }
+        else if (nn.targetRef.$type === 'bpmn:EndEvent') {
           // TODO 芋艿：这个流程，暂时没走到过
           if (!todoActivity && endActivity.key === n.id) {
             canvas.addMarker(nn.id, 'highlight')
@@ -154,18 +158,19 @@ const highlightDiagram = async () => {
           }
         }
       })
-    } else if (n.$type === 'bpmn:ExclusiveGateway') {
+    }
+    else if (n.$type === 'bpmn:ExclusiveGateway') {
       // 排它网关
       // 设置【bpmn:ExclusiveGateway】排它网关的高亮
       canvas.addMarker(n.id, getActivityHighlightCss(activity))
       // 查找需要高亮的连线
-      let matchNN: any = undefined
-      let matchActivity: any = undefined
+      let matchNN: any
+      let matchActivity: any
       n.outgoing?.forEach((nn: any) => {
-        let targetActivity = activityList.find((m: any) => m.key === nn.targetRef.id)
-        if (!targetActivity) {
+        const targetActivity = activityList.find((m: any) => m.key === nn.targetRef.id)
+        if (!targetActivity)
           return
-        }
+
         // 特殊判断 endEvent 类型的原因，ExclusiveGateway 可能后续连有 2 个路径：
         //  1. 一个是 UserTask => EndEvent
         //  2. 一个是 EndEvent
@@ -176,10 +181,10 @@ const highlightDiagram = async () => {
           matchActivity = targetActivity
         }
       })
-      if (matchNN && matchActivity) {
+      if (matchNN && matchActivity)
         canvas.addMarker(matchNN.id, getActivityHighlightCss(matchActivity))
-      }
-    } else if (n.$type === 'bpmn:ParallelGateway') {
+    }
+    else if (n.$type === 'bpmn:ParallelGateway') {
       // 并行网关
       // 设置【bpmn:ParallelGateway】并行网关的高亮
       canvas.addMarker(n.id, getActivityHighlightCss(activity))
@@ -192,27 +197,30 @@ const highlightDiagram = async () => {
           canvas.addMarker(nn.targetRef.id, getActivityHighlightCss(targetActivity))
         }
       })
-    } else if (n.$type === 'bpmn:StartEvent') {
+    }
+    else if (n.$type === 'bpmn:StartEvent') {
       // 开始节点
       n.outgoing?.forEach((nn) => {
         // outgoing 例如说【bpmn:SequenceFlow】连线
         // 获得连线是否有指向目标。如果有，则进行高亮
-        let targetActivity = activityList.find((m: any) => m.key === nn.targetRef.id)
+        const targetActivity = activityList.find((m: any) => m.key === nn.targetRef.id)
         if (targetActivity) {
           canvas.addMarker(nn.id, 'highlight') // 高亮【bpmn:SequenceFlow】连线
           canvas.addMarker(n.id, 'highlight') // 高亮【bpmn:StartEvent】开始节点（自己）
         }
       })
-    } else if (n.$type === 'bpmn:EndEvent') {
+    }
+    else if (n.$type === 'bpmn:EndEvent') {
       // 结束节点
-      if (!processInstance.value || processInstance.value.result === 1) {
+      if (!processInstance.value || processInstance.value.result === 1)
         return
-      }
+
       canvas.addMarker(n.id, getResultCss(processInstance.value.result))
-    } else if (n.$type === 'bpmn:ServiceTask') {
-      //服务任务
+    }
+    else if (n.$type === 'bpmn:ServiceTask') {
+      // 服务任务
       if (activity.startTime > 0 && activity.endTime === 0) {
-        //进入执行，标识进行色
+        // 进入执行，标识进行色
         canvas.addMarker(n.id, getResultCss(1))
       }
       if (activity.endTime > 0) {
@@ -227,7 +235,7 @@ const highlightDiagram = async () => {
   })
   if (!isEmpty(removeTaskDefinitionKeyList)) {
     taskList.value = taskList.value.filter(
-      (item) => !removeTaskDefinitionKeyList.includes(item.definitionKey)
+      item => !removeTaskDefinitionKeyList.includes(item.definitionKey),
     )
   }
 }
@@ -238,22 +246,28 @@ const getResultCss = (result) => {
   if (result === 1) {
     // 审批中
     return 'highlight-todo'
-  } else if (result === 2) {
+  }
+  else if (result === 2) {
     // 已通过
     return 'highlight'
-  } else if (result === 3) {
+  }
+  else if (result === 3) {
     // 不通过
     return 'highlight-reject'
-  } else if (result === 4) {
+  }
+  else if (result === 4) {
     // 已取消
     return 'highlight-cancel'
-  } else if (result === 5) {
+  }
+  else if (result === 5) {
     // 退回
     return 'highlight-return'
-  } else if (result === 6) {
+  }
+  else if (result === 6) {
     // 委派
     return 'highlight-return'
-  } else if (result === 7 || result === 8 || result === 9) {
+  }
+  else if (result === 7 || result === 8 || result === 9) {
     // 待后加签任务完成/待前加签任务完成/待前置任务完成
     return 'highlight-return'
   }
@@ -262,31 +276,30 @@ const getResultCss = (result) => {
 
 const getActivityOutgoing = (activity) => {
   // 如果有 outgoing，则直接使用它
-  if (activity.outgoing && activity.outgoing.length > 0) {
+  if (activity.outgoing && activity.outgoing.length > 0)
     return activity.outgoing
-  }
+
   // 如果没有，则遍历获得起点为它的【bpmn:SequenceFlow】节点们。原因是：bpmn-js 的 UserTask 拿不到 outgoing
   const flowElements = bpmnModeler.getDefinitions().rootElements[0].flowElements
   const outgoing: any[] = []
   flowElements.forEach((item: any) => {
-    if (item.$type !== 'bpmn:SequenceFlow') {
+    if (item.$type !== 'bpmn:SequenceFlow')
       return
-    }
-    if (item.sourceRef.id === activity.key) {
+
+    if (item.sourceRef.id === activity.key)
       outgoing.push(item)
-    }
   })
   return outgoing
 }
 const initModelListeners = () => {
   const EventBus = bpmnModeler.get('eventBus')
   // 注册需要的监听事件
-  EventBus.on('element.hover', function (eventObj) {
-    let element = eventObj ? eventObj.element : null
+  EventBus.on('element.hover', (eventObj) => {
+    const element = eventObj ? eventObj.element : null
     elementHover(element)
   })
-  EventBus.on('element.out', function (eventObj) {
-    let element = eventObj ? eventObj.element : null
+  EventBus.on('element.out', (eventObj) => {
+    const element = eventObj ? eventObj.element : null
     elementOut(element)
   })
 }
@@ -298,11 +311,11 @@ const elementHover = (element) => {
   // 展示信息
   console.log(activityLists.value, 'activityLists.value')
   console.log(element.value, 'element.value')
-  const activity = activityLists.value.find((m) => m.key === element.value.id)
+  const activity = activityLists.value.find(m => m.key === element.value.id)
   console.log(activity, 'activityactivityactivityactivity')
-  if (!activity) {
+  if (!activity)
     return
-  }
+
   if (!elementOverlayIds.value[element.value.id] && element.value.type !== 'bpmn:Process') {
     let html = `<div class="element-overlays">
             <p>Elemet id: ${element.value.id}</p>
@@ -312,18 +325,18 @@ const elementHover = (element) => {
       html = `<p>发起人：${processInstance.value.startUser.nickname}</p>
                   <p>部门：${processInstance.value.startUser.deptName}</p>
                   <p>创建时间：${formatDate(processInstance.value.createTime)}`
-    } else if (element.value.type === 'bpmn:UserTask') {
+    }
+    else if (element.value.type === 'bpmn:UserTask') {
       // debugger
-      let task = taskList.value.find((m) => m.id === activity.taskId) // 找到活动对应的 taskId
-      if (!task) {
+      const task = taskList.value.find(m => m.id === activity.taskId) // 找到活动对应的 taskId
+      if (!task)
         return
-      }
-      let optionData = getIntDictOptions(DICT_TYPE.BPM_PROCESS_INSTANCE_RESULT)
+
+      const optionData = getIntDictOptions(DICT_TYPE.BPM_PROCESS_INSTANCE_RESULT)
       let dataResult = ''
       optionData.forEach((element) => {
-        if (element.value == task.result) {
+        if (element.value == task.result)
           dataResult = element.label
-        }
       })
       html = `<p>审批人：${task.assigneeUser.nickname}</p>
                   <p>部门：${task.assigneeUser.deptName}</p>
@@ -336,41 +349,40 @@ const elementHover = (element) => {
       //               task.result
       //             )}</p>
       //             <p>创建时间：${formatDate(task.createTime)}</p>`
-      if (task.endTime) {
+      if (task.endTime)
         html += `<p>结束时间：${formatDate(task.endTime)}</p>`
-      }
-      if (task.reason) {
+
+      if (task.reason)
         html += `<p>审批建议：${task.reason}</p>`
-      }
-    } else if (element.value.type === 'bpmn:ServiceTask' && processInstance.value) {
-      if (activity.startTime > 0) {
+    }
+    else if (element.value.type === 'bpmn:ServiceTask' && processInstance.value) {
+      if (activity.startTime > 0)
         html = `<p>创建时间：${formatDate(activity.startTime)}</p>`
-      }
-      if (activity.endTime > 0) {
+
+      if (activity.endTime > 0)
         html += `<p>结束时间：${formatDate(activity.endTime)}</p>`
-      }
+
       console.log(html)
-    } else if (element.value.type === 'bpmn:EndEvent' && processInstance.value) {
-      let optionData = getIntDictOptions(DICT_TYPE.BPM_PROCESS_INSTANCE_RESULT)
+    }
+    else if (element.value.type === 'bpmn:EndEvent' && processInstance.value) {
+      const optionData = getIntDictOptions(DICT_TYPE.BPM_PROCESS_INSTANCE_RESULT)
       let dataResult = ''
       optionData.forEach((element) => {
-        if (element.value == processInstance.value.result) {
+        if (element.value == processInstance.value.result)
           dataResult = element.label
-        }
       })
       html = `<p>结果：${dataResult}</p>`
       // html = `<p>结果：${getIntDictOptions(
       //   DICT_TYPE.BPM_PROCESS_INSTANCE_RESULT,
       //   processInstance.value.result
       // )}</p>`
-      if (processInstance.value.endTime) {
+      if (processInstance.value.endTime)
         html += `<p>结束时间：${formatDate(processInstance.value.endTime)}</p>`
-      }
     }
     console.log(html, 'html111111111111111')
     elementOverlayIds.value[element.value.id] = toRaw(overlays.value)?.add(element.value, {
       position: { left: 0, bottom: 0 },
-      html: `<div class="element-overlays">${html}</div>`
+      html: `<div class="element-overlays">${html}</div>`,
     })
   }
 }
@@ -392,7 +404,8 @@ onMounted(() => {
 onBeforeUnmount(() => {
   // this.$once('hook:beforeDestroy', () => {
   // })
-  if (bpmnModeler) bpmnModeler.destroy()
+  if (bpmnModeler)
+    bpmnModeler.destroy()
   emit('destroy', bpmnModeler)
   bpmnModeler = null
 })
@@ -402,28 +415,28 @@ watch(
   (newValue) => {
     xml.value = newValue
     createNewDiagram(xml.value)
-  }
+  },
 )
 watch(
   () => props.activityData,
   (newActivityData) => {
     activityLists.value = newActivityData
     createNewDiagram(xml.value)
-  }
+  },
 )
 watch(
   () => props.processInstanceData,
   (newProcessInstanceData) => {
     processInstance.value = newProcessInstanceData
     createNewDiagram(xml.value)
-  }
+  },
 )
 watch(
   () => props.taskData,
   (newTaskListData) => {
     taskList.value = newTaskListData
     createNewDiagram(xml.value)
-  }
+  },
 )
 </script>
 

@@ -1,14 +1,14 @@
-import { ElSubMenu, ElMenuItem } from 'element-plus'
+import { ElMenuItem, ElSubMenu } from 'element-plus'
 import type { RouteMeta } from 'vue-router'
 import { hasOneShowingChild } from '../helper'
-import { isUrl } from '@/utils/is'
 import { useRenderMenuTitle } from './useRenderMenuTitle'
+import { isUrl } from '@/utils/is'
 import { useDesign } from '@/hooks/web/useDesign'
 import { pathResolve } from '@/utils/routerHelper'
 
 export const useRenderMenuItem = (
   // allRouters: AppRouteRecordRaw[] = [],
-  menuMode: 'vertical' | 'horizontal'
+  menuMode: 'vertical' | 'horizontal',
 ) => {
   const renderMenuItem = (routers: AppRouteRecordRaw[], parentPath = '/') => {
     return routers.map((v) => {
@@ -20,18 +20,19 @@ export const useRenderMenuItem = (
         const { renderMenuTitle } = useRenderMenuTitle()
 
         if (
-          oneShowingChild &&
-          (!onlyOneChild?.children || onlyOneChild?.noShowingChildren) &&
-          !meta?.alwaysShow
+          oneShowingChild
+          && (!onlyOneChild?.children || onlyOneChild?.noShowingChildren)
+          && !meta?.alwaysShow
         ) {
           return (
             <ElMenuItem index={onlyOneChild ? pathResolve(fullPath, onlyOneChild.path) : fullPath}>
               {{
-                default: () => renderMenuTitle(onlyOneChild ? onlyOneChild?.meta : meta)
+                default: () => renderMenuTitle(onlyOneChild ? onlyOneChild?.meta : meta),
               }}
             </ElMenuItem>
           )
-        } else {
+        }
+        else {
           const { getPrefixCls } = useDesign()
 
           const preFixCls = getPrefixCls('menu-popper')
@@ -44,7 +45,7 @@ export const useRenderMenuItem = (
             >
               {{
                 title: () => renderMenuTitle(meta),
-                default: () => renderMenuItem(v.children!, fullPath)
+                default: () => renderMenuItem(v.children!, fullPath),
               }}
             </ElSubMenu>
           )
@@ -54,6 +55,6 @@ export const useRenderMenuItem = (
   }
 
   return {
-    renderMenuItem
+    renderMenuItem,
   }
 }

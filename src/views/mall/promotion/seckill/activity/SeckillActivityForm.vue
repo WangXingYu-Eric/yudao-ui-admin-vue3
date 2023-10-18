@@ -3,13 +3,15 @@
     <Form
       ref="formRef"
       v-loading="formLoading"
-      :isCol="true"
+      :is-col="true"
       :rules="rules"
       :schema="allSchemas.formSchema"
     >
       <!-- 先选择 -->
       <template #spuId>
-        <el-button @click="spuSelectRef.open()">选择商品</el-button>
+        <el-button @click="spuSelectRef.open()">
+          选择商品
+        </el-button>
         <SpuAndSkuList
           ref="spuAndSkuListRef"
           :rule-config="ruleConfig"
@@ -36,26 +38,36 @@
       </template>
     </Form>
     <template #footer>
-      <el-button :disabled="formLoading" type="primary" @click="submitForm">确 定</el-button>
-      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button :disabled="formLoading" type="primary" @click="submitForm">
+        确 定
+      </el-button>
+      <el-button @click="dialogVisible = false">
+        取 消
+      </el-button>
     </template>
   </Dialog>
-  <SpuSelect ref="spuSelectRef" :isSelectSku="true" @confirm="selectSpu" />
+  <SpuSelect ref="spuSelectRef" :is-select-sku="true" @confirm="selectSpu" />
 </template>
+
 <script lang="ts" setup>
-import { SpuAndSkuList, SpuProperty, SpuSelect } from '../../components'
-import { allSchemas, rules } from './seckillActivity.data'
 import { cloneDeep } from 'lodash-es'
+import type { SpuProperty } from '../../components'
+import { SpuAndSkuList, SpuSelect } from '../../components'
+import { allSchemas, rules } from './seckillActivity.data'
 
 import * as SeckillActivityApi from '@/api/mall/promotion/seckill/seckillActivity'
-import { SeckillProductVO } from '@/api/mall/promotion/seckill/seckillActivity'
+import type { SeckillProductVO } from '@/api/mall/promotion/seckill/seckillActivity'
 import * as ProductSpuApi from '@/api/mall/product/spu'
-import { getPropertyList, RuleConfig } from '@/views/mall/product/spu/components'
+import type { RuleConfig } from '@/views/mall/product/spu/components'
+import { getPropertyList } from '@/views/mall/product/spu/components'
 import { convertToInteger, formatToFraction } from '@/utils'
 
 defineOptions({ name: 'PromotionSeckillActivityForm' })
 
-const { t } = useI18n() // 国际化
+// 提供 open 方法，用于打开弹窗
+
+/** 提交表单 */
+const emit = defineEmits(['success']); const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 
 const dialogVisible = ref(false) // 弹窗的是否展示
@@ -71,14 +83,14 @@ const spuAndSkuListRef = ref() // sku 秒杀配置组件Ref
 const ruleConfig: RuleConfig[] = [
   {
     name: 'productConfig.stock',
-    rule: (arg) => arg >= 1,
-    message: '商品秒杀库存必须大于等于 1 ！！！'
+    rule: arg => arg >= 1,
+    message: '商品秒杀库存必须大于等于 1 ！！！',
   },
   {
     name: 'productConfig.seckillPrice',
-    rule: (arg) => arg >= 0.01,
-    message: '商品秒杀价格必须大于等于 0.01 ！！！'
-  }
+    rule: arg => arg >= 0.01,
+    message: '商品秒杀价格必须大于等于 0.01 ！！！',
+  },
 ]
 const spuList = ref<SeckillActivityApi.SpuExtension[]>([]) // 选择的 spu
 const spuPropertyList = ref<SpuProperty<SeckillActivityApi.SpuExtension>[]>([])
@@ -92,29 +104,29 @@ const selectSpu = (spuId: number, skuIds: number[]) => {
 const getSpuDetails = async (
   spuId: number,
   skuIds: number[] | undefined,
-  products?: SeckillProductVO[]
+  products?: SeckillProductVO[],
 ) => {
   const spuProperties: SpuProperty<SeckillActivityApi.SpuExtension>[] = []
   const res = (await ProductSpuApi.getSpuDetailList([spuId])) as SeckillActivityApi.SpuExtension[]
-  if (res.length == 0) {
+  if (res.length == 0)
     return
-  }
+
   spuList.value = []
   // 因为只能选择一个
   const spu = res[0]
-  const selectSkus =
-    typeof skuIds === 'undefined' ? spu?.skus : spu?.skus?.filter((sku) => skuIds.includes(sku.id!))
+  const selectSkus
+    = typeof skuIds === 'undefined' ? spu?.skus : spu?.skus?.filter(sku => skuIds.includes(sku.id!))
   selectSkus?.forEach((sku) => {
     let config: SeckillActivityApi.SeckillProductVO = {
       skuId: sku.id!,
       stock: 0,
-      seckillPrice: 0
+      seckillPrice: 0,
     }
     if (typeof products !== 'undefined') {
-      const product = products.find((item) => item.skuId === sku.id)
-      if (product) {
+      const product = products.find(item => item.skuId === sku.id)
+      if (product)
         product.seckillPrice = formatToFraction(product.seckillPrice)
-      }
+
       config = product || config
     }
     sku.productConfig = config
@@ -123,7 +135,7 @@ const getSpuDetails = async (
   spuProperties.push({
     spuId: spu.id!,
     spuDetail: spu,
-    propertyList: getPropertyList(spu)
+    propertyList: getPropertyList(spu),
   })
   spuList.value.push(spu)
   spuPropertyList.value = spuProperties
@@ -134,7 +146,7 @@ const getSpuDetails = async (
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
   dialogVisible.value = true
-  dialogTitle.value = t('action.' + type)
+  dialogTitle.value = t(`action.${type}`)
   formType.value = type
   await resetForm()
   // 修改时，设置数据
@@ -142,24 +154,24 @@ const open = async (type: string, id?: number) => {
     formLoading.value = true
     try {
       const data = (await SeckillActivityApi.getSeckillActivity(
-        id
+        id,
       )) as SeckillActivityApi.SeckillActivityVO
-      await getSpuDetails(data.spuId!, data.products?.map((sku) => sku.skuId), data.products)
+      await getSpuDetails(data.spuId!, data.products?.map(sku => sku.skuId), data.products)
       formRef.value.setValues(data)
-    } finally {
+    }
+    finally {
       formLoading.value = false
     }
   }
 }
-defineExpose({ open }) // 提供 open 方法，用于打开弹窗
-
-/** 提交表单 */
-const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
+defineExpose({ open }) // 定义 success 事件，用于操作成功后的回调
 const submitForm = async () => {
   // 校验表单
-  if (!formRef) return
+  if (!formRef)
+    return
   const valid = await formRef.value.getElFormRef().validate()
-  if (!valid) return
+  if (!valid)
+    return
   // 提交请求
   formLoading.value = true
   try {
@@ -174,14 +186,16 @@ const submitForm = async () => {
     if (formType.value === 'create') {
       await SeckillActivityApi.createSeckillActivity(data)
       message.success(t('common.createSuccess'))
-    } else {
+    }
+    else {
       await SeckillActivityApi.updateSeckillActivity(data)
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
     // 发送操作成功的事件
     emit('success')
-  } finally {
+  }
+  finally {
     formLoading.value = false
   }
 }

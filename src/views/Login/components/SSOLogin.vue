@@ -32,17 +32,20 @@
             <span v-if="!formLoading">同意授权</span>
             <span v-else>授 权 中...</span>
           </el-button>
-          <el-button class="w-3/10" @click.prevent="handleAuthorize(false)">拒绝</el-button>
+          <el-button class="w-3/10" @click.prevent="handleAuthorize(false)">
+            拒绝
+          </el-button>
         </el-form-item>
       </el-form>
     </div>
   </div>
 </template>
+
 <script lang="ts" setup>
-import LoginFormTitle from './LoginFormTitle.vue'
-import * as OAuth2Api from '@/api/login/oauth2'
-import { LoginStateEnum, useLoginState } from './useLogin'
 import type { RouteLocationNormalizedLoaded } from 'vue-router'
+import LoginFormTitle from './LoginFormTitle.vue'
+import { LoginStateEnum, useLoginState } from './useLogin'
+import * as OAuth2Api from '@/api/login/oauth2'
 
 defineOptions({ name: 'SSOLogin' })
 
@@ -53,7 +56,7 @@ const { getLoginState, setLoginState } = useLoginState()
 const client = ref({
   // 客户端信息
   name: '',
-  logo: ''
+  logo: '',
 })
 interface queryType {
   responseType: string
@@ -68,21 +71,22 @@ const queryParams = reactive<queryType>({
   clientId: '',
   redirectUri: '',
   state: '',
-  scopes: [] // 优先从 query 参数获取；如果未传递，从后端获取
+  scopes: [], // 优先从 query 参数获取；如果未传递，从后端获取
 })
 const ssoVisible = computed(() => unref(getLoginState) === LoginStateEnum.SSO) // 是否展示 SSO 登录的表单
 interface formType {
   scopes: string[]
 }
 const formData = reactive<formType>({
-  scopes: [] // 已选中的 scope 数组
+  scopes: [], // 已选中的 scope 数组
 })
 const formLoading = ref(false) // 表单是否提交中
 
 /** 初始化授权信息 */
 const init = async () => {
   // 防止在没有登录的情况下循环弹窗
-  if (typeof route.query.client_id === 'undefined') return
+  if (typeof route.query.client_id === 'undefined')
+    return
   // 解析参数
   // 例如说【自动授权不通过】：client_id=default&redirect_uri=https%3A%2F%2Fwww.iocoder.cn&response_type=code&scope=user.read%20user.write
   // 例如说【自动授权通过】：client_id=default&redirect_uri=https%3A%2F%2Fwww.iocoder.cn&response_type=code&scope=user.read
@@ -90,9 +94,8 @@ const init = async () => {
   queryParams.clientId = route.query.client_id as string
   queryParams.redirectUri = route.query.redirect_uri as string
   queryParams.state = route.query.state as string
-  if (route.query.scope) {
+  if (route.query.scope)
     queryParams.scopes = (route.query.scope as string).split(' ')
-  }
 
   // 如果有 scope 参数，先执行一次自动授权，看看是否之前都授权过了。
   if (queryParams.scopes.length > 0) {
@@ -112,22 +115,20 @@ const init = async () => {
   if (queryParams.scopes.length > 0) {
     scopes = []
     for (const scope of data.scopes) {
-      if (queryParams.scopes.indexOf(scope.key) >= 0) {
+      if (queryParams.scopes.includes(scope.key))
         scopes.push(scope)
-      }
     }
     // 1.2 如果 params.scope 为空，则使用返回的 scopes 设置它
-  } else {
+  }
+  else {
     scopes = data.scopes
-    for (const scope of scopes) {
+    for (const scope of scopes)
       queryParams.scopes.push(scope.key)
-    }
   }
   // 生成已选中的 checkedScopes
   for (const scope of scopes) {
-    if (scope.value) {
+    if (scope.value)
       formData.scopes.push(scope.key)
-    }
   }
 }
 
@@ -139,8 +140,9 @@ const handleAuthorize = async (approved) => {
   if (approved) {
     // 同意授权，按照用户的选择
     checkedScopes = formData.scopes
-    uncheckedScopes = queryParams.scopes.filter((item) => checkedScopes.indexOf(item) === -1)
-  } else {
+    uncheckedScopes = queryParams.scopes.filter(item => !checkedScopes.includes(item))
+  }
+  else {
     // 拒绝，则都是取消
     checkedScopes = []
     uncheckedScopes = queryParams.scopes
@@ -149,11 +151,12 @@ const handleAuthorize = async (approved) => {
   formLoading.value = true
   try {
     const data = await doAuthorize(false, checkedScopes, uncheckedScopes)
-    if (!data) {
+    if (!data)
       return
-    }
+
     location.href = data
-  } finally {
+  }
+  finally {
     formLoading.value = false
   }
 }
@@ -167,7 +170,7 @@ const doAuthorize = (autoApprove, checkedScopes, uncheckedScopes) => {
     queryParams.state,
     autoApprove,
     checkedScopes,
-    uncheckedScopes
+    uncheckedScopes,
   )
 }
 
@@ -194,6 +197,6 @@ watch(
       init()
     }
   },
-  { immediate: true }
+  { immediate: true },
 )
 </script>

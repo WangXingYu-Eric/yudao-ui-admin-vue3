@@ -57,13 +57,19 @@
       />
       <el-table-column label="任务状态" prop="suspensionState">
         <template #default="scope">
-          <el-tag v-if="scope.row.suspensionState === 1" type="success">激活</el-tag>
-          <el-tag v-if="scope.row.suspensionState === 2" type="warning">挂起</el-tag>
+          <el-tag v-if="scope.row.suspensionState === 1" type="success">
+            激活
+          </el-tag>
+          <el-tag v-if="scope.row.suspensionState === 2" type="warning">
+            挂起
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作">
         <template #default="scope">
-          <el-button link type="primary" @click="handleAudit(scope.row)">审批进度</el-button>
+          <el-button link type="primary" @click="handleAudit(scope.row)">
+            审批进度
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -92,7 +98,7 @@ const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
   name: '',
-  createTime: []
+  createTime: [],
 })
 const queryFormRef = ref() // 搜索的表单
 
@@ -103,7 +109,8 @@ const getList = async () => {
     const data = await TaskApi.getTodoTaskPage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -125,12 +132,12 @@ const handleAudit = (row) => {
   push({
     name: 'BpmProcessInstanceDetail',
     query: {
-      id: row.processInstance.id
-    }
+      id: row.processInstance.id,
+    },
   })
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

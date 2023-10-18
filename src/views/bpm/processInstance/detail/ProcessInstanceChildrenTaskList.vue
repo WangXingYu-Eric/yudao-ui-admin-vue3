@@ -4,8 +4,8 @@
     <template #header>
       <h4>【{{ baseTask.name }} 】审批人：{{ baseTask.assigneeUser?.nickname }}</h4>
       <el-button
-        style="margin-left: 5px"
         v-if="isSubSignButtonVisible(baseTask)"
+        style="margin-left: 5px"
         type="danger"
         plain
         @click="handleSubSign(baseTask)"
@@ -53,11 +53,12 @@
     <TaskSubSignDialogForm ref="taskSubSignDialogForm" />
   </el-drawer>
 </template>
+
 <script lang="ts" setup>
+import TaskSubSignDialogForm from './TaskSubSignDialogForm.vue'
 import { isEmpty } from '@/utils/is'
 import { DICT_TYPE } from '@/utils/dict'
 import { dateFormatter } from '@/utils/formatTime'
-import TaskSubSignDialogForm from './TaskSubSignDialogForm.vue'
 
 defineOptions({ name: 'ProcessInstanceChildrenTaskList' })
 
@@ -88,7 +89,7 @@ const handleSubSign = (item) => {
 const isSubSignButtonVisible = (task: any) => {
   if (task && task.children && !isEmpty(task.children)) {
     // 有子任务，且子任务有任意一个是 待处理 和 待前置任务完成 则显示减签按钮
-    const subTask = task.children.find((item) => item.result === 1 || item.result === 9)
+    const subTask = task.children.find(item => item.result === 1 || item.result === 9)
     return !isEmpty(subTask)
   }
   return false

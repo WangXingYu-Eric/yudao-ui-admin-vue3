@@ -13,5 +13,5 @@ export const getFilePage = (params: FilePageReqVO) => {
 
 // 删除文件
 export const deleteFile = (id: number) => {
-  return request.delete({ url: '/infra/file/delete?id=' + id })
+  return request.delete({ url: `/infra/file/delete?id=${id}` })
 }

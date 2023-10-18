@@ -4,11 +4,11 @@
   </el-select>
   <el-button
     v-if="showAdd"
+    v-hasPermi="['member:tag:create']"
     type="primary"
     class="ml-2"
     link
     @click="openForm('create')"
-    v-hasPermi="['member:tag:create']"
   >
     新增标签
   </el-button>
@@ -24,20 +24,20 @@ import TagForm from '@/views/member/tag/TagForm.vue'
 defineOptions({ name: 'MemberTagSelect' })
 
 const props = defineProps({
-  /** 下拉框选中值 **/
+  /** 下拉框选中值 */
   modelValue: {
     type: Array,
-    default: undefined
+    default: undefined,
   },
-  /** 是否显示“新增标签”按钮 **/
+  /** 是否显示“新增标签”按钮 */
   showAdd: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 })
 const emit = defineEmits(['update:modelValue'])
 defineExpose({
-  showAdd: props.showAdd
+  showAdd: props.showAdd,
 })
 
 const tagIds = computed({
@@ -46,7 +46,7 @@ const tagIds = computed({
   },
   set(value: any) {
     emit('update:modelValue', value)
-  }
+  },
 })
 
 const tags = ref<TagApi.TagVO[]>([])

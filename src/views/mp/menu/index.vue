@@ -2,7 +2,7 @@
   <doc-alert title="公众号菜单" url="https://doc.iocoder.cn/mp/menu/" />
   <!-- 搜索工作栏 -->
   <ContentWrap>
-    <el-form class="-mb-15px" ref="queryFormRef" :inline="true" label-width="68px">
+    <el-form ref="queryFormRef" class="-mb-15px" :inline="true" label-width="68px">
       <el-form-item label="公众号" prop="accountId">
         <WxAccountSelect @change="onAccountChanged" />
       </el-form-item>
@@ -10,11 +10,13 @@
   </ContentWrap>
 
   <ContentWrap>
-    <div class="clearfix public-account-management" v-loading="loading">
-      <!--左边配置菜单-->
+    <div v-loading="loading" class="clearfix public-account-management">
+      <!-- 左边配置菜单 -->
       <div class="left">
         <div class="weixin-hd">
-          <div class="weixin-title">{{ accountName }}</div>
+          <div class="weixin-title">
+            {{ accountName }}
+          </div>
         </div>
         <div class="clearfix weixin-menu">
           <MenuPreviewer
@@ -27,24 +29,24 @@
           />
         </div>
         <div class="save_div">
-          <el-button class="save_btn" type="success" @click="onSave" v-hasPermi="['mp:menu:save']"
-            >保存并发布菜单</el-button
-          >
-          <el-button class="save_btn" type="danger" @click="onClear" v-hasPermi="['mp:menu:delete']"
-            >清空菜单</el-button
-          >
+          <el-button v-hasPermi="['mp:menu:save']" class="save_btn" type="success" @click="onSave">
+            保存并发布菜单
+          </el-button>
+          <el-button v-hasPermi="['mp:menu:delete']" class="save_btn" type="danger" @click="onClear">
+            清空菜单
+          </el-button>
         </div>
       </div>
-      <!--右边配置-->
-      <div class="right" v-if="showRightPanel">
+      <!-- 右边配置 -->
+      <div v-if="showRightPanel" class="right">
         <MenuEditor
+          v-model="activeMenu"
           :account-id="accountId"
           :is-parent="isParent"
-          v-model="activeMenu"
           @delete="onDeleteMenu"
         />
       </div>
-      <!-- 一进页面就显示的默认页面，当点击左边按钮的时候，就不显示了-->
+      <!-- 一进页面就显示的默认页面，当点击左边按钮的时候，就不显示了 -->
       <div v-else class="right">
         <p>请选择菜单配置</p>
       </div>
@@ -53,12 +55,12 @@
 </template>
 
 <script lang="ts" setup>
-import WxAccountSelect from '@/views/mp/components/wx-account-select'
 import MenuEditor from './components/MenuEditor.vue'
 import MenuPreviewer from './components/MenuPreviewer.vue'
+import type { Menu, RawMenu } from './components/types'
+import WxAccountSelect from '@/views/mp/components/wx-account-select'
 import * as MpMenuApi from '@/api/mp/menu'
 import * as UtilsTree from '@/utils/tree'
-import { RawMenu, Menu } from './components/types'
 
 defineOptions({ name: 'MpMenu' })
 
@@ -91,7 +93,7 @@ const activeMenu = ref<Menu>({}) // 选中菜单，MenuEditor的modelValue
 enum Level {
   Undefined = '0',
   Parent = '1',
-  Child = '2'
+  Child = '2',
 }
 const tempSelfObj = ref<{
   grand: Level
@@ -100,25 +102,26 @@ const tempSelfObj = ref<{
 }>({
   grand: Level.Undefined,
   x: 0,
-  y: 0
+  y: 0,
 })
 const dialogNewsVisible = ref(false) // 跳转图文时的素材选择弹窗
 
-/** 侦听公众号变化 **/
+/** 侦听公众号变化 */
 const onAccountChanged = (id: number, name: string) => {
   accountId.value = id
   accountName.value = name
   getList()
 }
 
-/** 查询并转换菜单 **/
+/** 查询并转换菜单 */
 const getList = async () => {
   loading.value = false
   try {
     const data = await MpMenuApi.getMenuList(accountId.value)
     const menuData = menuListToFrontend(data)
     menuList.value = UtilsTree.handleTree(menuData, 'id')
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -131,12 +134,13 @@ const handleQuery = () => {
 
 // 将后端返回的 menuList，转换成前端的 menuList
 const menuListToFrontend = (list: any[]) => {
-  if (!list) return []
+  if (!list)
+    return []
 
   const result: RawMenu[] = []
   list.forEach((item: RawMenu) => {
     const menu: any = {
-      ...item
+      ...item,
     }
     menu.reply = {
       type: item.replyMessageType,
@@ -150,7 +154,7 @@ const menuListToFrontend = (list: any[]) => {
       thumbMediaUrl: item.replyThumbMediaUrl,
       articles: item.replyArticles,
       musicUrl: item.replyMusicUrl,
-      hqMusicUrl: item.replyHqMusicUrl
+      hqMusicUrl: item.replyHqMusicUrl,
     }
     result.push(menu as RawMenu)
   })
@@ -206,7 +210,8 @@ const onDeleteMenu = async () => {
     if (tempSelfObj.value.grand === Level.Parent) {
       // 一级菜单的删除方法
       menuList.value.splice(tempSelfObj.value.x, 1)
-    } else if (tempSelfObj.value.grand === Level.Child) {
+    }
+    else if (tempSelfObj.value.grand === Level.Child) {
       // 二级菜单的删除方法
       menuList.value[tempSelfObj.value.x].children?.splice(tempSelfObj.value.y, 1)
     }
@@ -217,7 +222,8 @@ const onDeleteMenu = async () => {
     activeMenu.value = {}
     showRightPanel.value = false
     activeIndex.value = MENU_NOT_SELECTED
-  } catch {}
+  }
+  catch {}
 }
 
 // ======================== 菜单编辑 ========================
@@ -228,7 +234,8 @@ const onSave = async () => {
     await MpMenuApi.saveMenu(accountId.value, menuListToBackend())
     getList()
     message.notifySuccess('发布成功')
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -240,7 +247,8 @@ const onClear = async () => {
     await MpMenuApi.deleteMenu(accountId.value)
     handleQuery()
     message.notifySuccess('清空成功')
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -253,9 +261,9 @@ const menuListToBackend = () => {
     result.push(menu)
 
     // 处理子菜单
-    if (!item.children || item.children.length <= 0) {
+    if (!item.children || item.children.length <= 0)
       return
-    }
+
     menu.children = []
     item.children.forEach((subItem) => {
       menu.children.push(menuToBackend(subItem))
@@ -267,10 +275,10 @@ const menuListToBackend = () => {
 // 将前端的 menu，转换成后端接收的 menu
 // TODO: @芋艿，需要根据后台API删除不需要的字段
 const menuToBackend = (menu: any) => {
-  let result = {
+  const result = {
     ...menu,
     children: undefined, // 不处理子节点
-    reply: undefined // 稍后复制
+    reply: undefined, // 稍后复制
   }
   result.replyMessageType = menu.reply.type
   result.replyContent = menu.reply.content
@@ -288,7 +296,7 @@ const menuToBackend = (menu: any) => {
 }
 </script>
 
-<!--本组件样式-->
+<!-- 本组件样式 -->
 <style lang="scss" scoped="scoped">
 /* 公共颜色变量 */
 .clearfix {
@@ -372,7 +380,8 @@ div {
   }
 }
 </style>
-<!--素材样式-->
+
+<!-- 素材样式 -->
 <style lang="scss" scoped>
 .pagination {
   margin-right: 25px;

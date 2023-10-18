@@ -77,8 +77,12 @@
           <Tooltip message="选择隐藏时，路由将不会出现在侧边栏，但仍然可以访问" titel="显示状态" />
         </template>
         <el-radio-group v-model="formData.visible">
-          <el-radio key="true" :label="true" border>显示</el-radio>
-          <el-radio key="false" :label="false" border>隐藏</el-radio>
+          <el-radio key="true" :label="true" border>
+            显示
+          </el-radio>
+          <el-radio key="false" :label="false" border>
+            隐藏
+          </el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item v-if="formData.type !== 3" label="总是显示" prop="alwaysShow">
@@ -89,8 +93,12 @@
           />
         </template>
         <el-radio-group v-model="formData.alwaysShow">
-          <el-radio key="true" :label="true" border>总是</el-radio>
-          <el-radio key="false" :label="false" border>不是</el-radio>
+          <el-radio key="true" :label="true" border>
+            总是
+          </el-radio>
+          <el-radio key="false" :label="false" border>
+            不是
+          </el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item v-if="formData.type === 2" label="缓存状态" prop="keepAlive">
@@ -101,17 +109,26 @@
           />
         </template>
         <el-radio-group v-model="formData.keepAlive">
-          <el-radio key="true" :label="true" border>缓存</el-radio>
-          <el-radio key="false" :label="false" border>不缓存</el-radio>
+          <el-radio key="true" :label="true" border>
+            缓存
+          </el-radio>
+          <el-radio key="false" :label="false" border>
+            不缓存
+          </el-radio>
         </el-radio-group>
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button :disabled="formLoading" type="primary" @click="submitForm">确 定</el-button>
-      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button :disabled="formLoading" type="primary" @click="submitForm">
+        确 定
+      </el-button>
+      <el-button @click="dialogVisible = false">
+        取 消
+      </el-button>
     </template>
   </Dialog>
 </template>
+
 <script lang="ts" setup>
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import * as MenuApi from '@/api/system/menu'
@@ -121,6 +138,10 @@ import { defaultProps, handleTree } from '@/utils/tree'
 
 defineOptions({ name: 'SystemMenuForm' })
 
+// 提供 open 方法，用于打开弹窗
+
+/** 提交表单 */
+const emit = defineEmits(['success'])
 const { wsCache } = useCache()
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
@@ -143,58 +164,59 @@ const formData = ref({
   status: CommonStatusEnum.ENABLE,
   visible: true,
   keepAlive: true,
-  alwaysShow: true
+  alwaysShow: true,
 })
 const formRules = reactive({
   name: [{ required: true, message: '菜单名称不能为空', trigger: 'blur' }],
   sort: [{ required: true, message: '菜单顺序不能为空', trigger: 'blur' }],
   path: [{ required: true, message: '路由地址不能为空', trigger: 'blur' }],
-  status: [{ required: true, message: '状态不能为空', trigger: 'blur' }]
+  status: [{ required: true, message: '状态不能为空', trigger: 'blur' }],
 })
 const formRef = ref() // 表单 Ref
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number, parentId?: number) => {
   dialogVisible.value = true
-  dialogTitle.value = t('action.' + type)
+  dialogTitle.value = t(`action.${type}`)
   formType.value = type
   resetForm()
-  if (parentId) {
+  if (parentId)
     formData.value.parentId = parentId
-  }
+
   // 修改时，设置数据
   if (id) {
     formLoading.value = true
     try {
       formData.value = await MenuApi.getMenu(id)
-    } finally {
+    }
+    finally {
       formLoading.value = false
     }
   }
   // 获得菜单列表
   await getTree()
 }
-defineExpose({ open }) // 提供 open 方法，用于打开弹窗
-
-/** 提交表单 */
-const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
+defineExpose({ open }) // 定义 success 事件，用于操作成功后的回调
 const submitForm = async () => {
   // 校验表单
-  if (!formRef) return
+  if (!formRef)
+    return
   const valid = await formRef.value.validate()
-  if (!valid) return
+  if (!valid)
+    return
   // 提交请求
   formLoading.value = true
   try {
     if (
-      formData.value.type === SystemMenuTypeEnum.DIR ||
-      formData.value.type === SystemMenuTypeEnum.MENU
+      formData.value.type === SystemMenuTypeEnum.DIR
+      || formData.value.type === SystemMenuTypeEnum.MENU
     ) {
       if (!isExternal(formData.value.path)) {
         if (formData.value.parentId === 0 && formData.value.path.charAt(0) !== '/') {
           message.error('路径必须以 / 开头')
           return
-        } else if (formData.value.parentId !== 0 && formData.value.path.charAt(0) === '/') {
+        }
+        else if (formData.value.parentId !== 0 && formData.value.path.charAt(0) === '/') {
           message.error('路径不能以 / 开头')
           return
         }
@@ -204,14 +226,16 @@ const submitForm = async () => {
     if (formType.value === 'create') {
       await MenuApi.createMenu(data)
       message.success(t('common.createSuccess'))
-    } else {
+    }
+    else {
       await MenuApi.updateMenu(data)
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
     // 发送操作成功的事件
     emit('success')
-  } finally {
+  }
+  finally {
     formLoading.value = false
     // 清空，从而触发刷新
     wsCache.delete(CACHE_KEY.ROLE_ROUTERS)
@@ -223,7 +247,7 @@ const menuTree = ref<Tree[]>([]) // 树形结构
 const getTree = async () => {
   menuTree.value = []
   const res = await MenuApi.getSimpleMenusList()
-  let menu: Tree = { id: 0, name: '主类目', children: [] }
+  const menu: Tree = { id: 0, name: '主类目', children: [] }
   menu.children = handleTree(res)
   menuTree.value.push(menu)
 }
@@ -244,7 +268,7 @@ const resetForm = () => {
     status: CommonStatusEnum.ENABLE,
     visible: true,
     keepAlive: true,
-    alwaysShow: true
+    alwaysShow: true,
   }
   formRef.value?.resetFields()
 }

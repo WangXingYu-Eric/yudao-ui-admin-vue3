@@ -1,11 +1,9 @@
-import { resolve } from 'path'
+import { resolve } from 'node:path'
 import Vue from '@vitejs/plugin-vue'
 import VueJsx from '@vitejs/plugin-vue-jsx'
 import progress from 'vite-plugin-progress'
-import EslintPlugin from 'vite-plugin-eslint'
 import PurgeIcons from 'vite-plugin-purge-icons'
 import { ViteEjsPlugin } from 'vite-plugin-ejs'
-// @ts-ignore
 import ElementPlus from 'unplugin-element-plus/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
@@ -36,7 +34,7 @@ export function createVitePlugins() {
         /\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
         /\.vue$/,
         /\.vue\?vue/, // .vue
-        /\.md$/ // .md
+        /\.md$/, // .md
       ],
       imports: [
         'vue',
@@ -48,16 +46,16 @@ export function createVitePlugins() {
           '@/hooks/web/useTable': ['useTable'],
           '@/hooks/web/useCrudSchemas': ['useCrudSchemas'],
           '@/utils/formRules': ['required'],
-          '@/utils/dict': ['DICT_TYPE']
-        }
+          '@/utils/dict': ['DICT_TYPE'],
+        },
       ],
       dts: 'src/types/auto-imports.d.ts',
       resolvers: [ElementPlusResolver()],
       eslintrc: {
         enabled: false, // Default `false`
         filepath: './.eslintrc-auto-import.json', // Default `./.eslintrc-auto-import.json`
-        globalsPropValue: true // Default `true`, (true | false | 'readonly' | 'readable' | 'writable' | 'writeable')
-      }
+        globalsPropValue: true, // Default `true`, (true | false | 'readonly' | 'readable' | 'writable' | 'writeable')
+      },
     }),
     Components({
       // 要搜索组件的目录的相对路径
@@ -71,21 +69,17 @@ export function createVitePlugins() {
       dts: 'src/types/auto-components.d.ts',
       // 自定义组件的解析器
       resolvers: [ElementPlusResolver()],
-      exclude: [/[\\/]node_modules[\\/]/]
-    }),
-    EslintPlugin({
-      cache: false,
-      include: ['src/**/*.vue', 'src/**/*.ts', 'src/**/*.tsx'] // 检查的文件
+      exclude: [/[\\/]node_modules[\\/]/],
     }),
     VueI18nPlugin({
       runtimeOnly: true,
       compositionOnly: true,
-      include: [resolve(__dirname, 'src/locales/**')]
+      include: [resolve(__dirname, 'src/locales/**')],
     }),
     createSvgIconsPlugin({
       iconDirs: [pathResolve('src/assets/svgs')],
       symbolId: 'icon-[dir]-[name]',
-      svgoOptions: true
+      svgoOptions: true,
     }),
     viteCompression({
       verbose: true, // 是否在控制台输出压缩结果
@@ -93,7 +87,7 @@ export function createVitePlugins() {
       threshold: 10240, // 体积大于 threshold 才会被压缩,单位 b
       algorithm: 'gzip', // 压缩算法,可选 [ 'gzip' , 'brotliCompress' ,'deflate' , 'deflateRaw']
       ext: '.gz', // 生成的压缩包后缀
-      deleteOriginFile: false //压缩后是否删除源文件
+      deleteOriginFile: false, // 压缩后是否删除源文件
     }),
     ViteEjsPlugin(),
     topLevelAwait({
@@ -101,7 +95,7 @@ export function createVitePlugins() {
       // The export name of top-level await promise for each chunk module
       promiseExportName: '__tla',
       // The function to generate import names of top-level await promise in each chunk module
-      promiseImportName: (i) => `__tla_${i}`
-    })
+      promiseImportName: i => `__tla_${i}`,
+    }),
   ]
 }

@@ -1,6 +1,6 @@
 import request from '@/config/axios'
 
-export type TaskAssignVO = {
+export interface TaskAssignVO {
   id: number
   modelId: string
   processDefinitionId: string
@@ -17,13 +17,13 @@ export const getTaskAssignRuleList = async (params) => {
 export const createTaskAssignRule = async (data: TaskAssignVO) => {
   return await request.post({
     url: '/bpm/task-assign-rule/create',
-    data: data
+    data,
   })
 }
 
 export const updateTaskAssignRule = async (data: TaskAssignVO) => {
   return await request.put({
     url: '/bpm/task-assign-rule/update',
-    data: data
+    data,
   })
 }

@@ -1,3 +1,17 @@
+<template>
+  <ElSwitch
+    v-model="isDark"
+    :active-color="blackColor"
+    :active-icon="Sun"
+    :border-color="blackColor"
+    :class="prefixCls"
+    :inactive-color="blackColor"
+    :inactive-icon="CrescentMoon"
+    inline-prompt
+    @change="themeChange"
+  />
+</template>
+
 <script lang="ts" setup>
 import { useAppStore } from '@/store/modules/app'
 import { useIcon } from '@/hooks/web/useIcon'
@@ -26,19 +40,6 @@ const themeChange = (val: boolean) => {
 }
 </script>
 
-<template>
-  <ElSwitch
-    v-model="isDark"
-    :active-color="blackColor"
-    :active-icon="Sun"
-    :border-color="blackColor"
-    :class="prefixCls"
-    :inactive-color="blackColor"
-    :inactive-icon="CrescentMoon"
-    inline-prompt
-    @change="themeChange"
-  />
-</template>
 <style lang="scss" scoped>
 :deep(.el-switch__core .el-switch__inner .is-icon) {
   overflow: visible;

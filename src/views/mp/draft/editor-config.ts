@@ -1,4 +1,4 @@
-import { IEditorConfig } from '@wangeditor/editor'
+import type { IEditorConfig } from '@wangeditor/editor'
 import { getAccessToken, getTenantId } from '@/utils/auth'
 
 const message = useMessage()
@@ -7,11 +7,11 @@ type InsertFnType = (url: string, alt: string, href: string) => void
 
 export const createEditorConfig = (
   server: string,
-  accountId: number | undefined
+  accountId: number | undefined,
 ): Partial<IEditorConfig> => {
   return {
     MENU_CONF: {
-      ['uploadImage']: {
+      uploadImage: {
         server,
         // 单个文件的最大体积限制，默认为 2M
         maxFileSize: 5 * 1024 * 1024,
@@ -22,17 +22,17 @@ export const createEditorConfig = (
 
         // 自定义上传参数，例如传递验证的 token 等。参数会被添加到 formData 中，一起上传到服务端。
         meta: {
-          accountId: accountId,
-          type: 'image'
+          accountId,
+          type: 'image',
         },
         // 将 meta 拼接到 url 参数中，默认 false
         metaWithUrl: true,
 
         // 自定义增加 http  header
         headers: {
-          Accept: '*',
-          Authorization: 'Bearer ' + getAccessToken(),
-          'tenant-id': getTenantId()
+          'Accept': '*',
+          'Authorization': `Bearer ${getAccessToken()}`,
+          'tenant-id': getTenantId(),
         },
 
         // 跨域是否传递 cookie ，默认为 false
@@ -68,8 +68,8 @@ export const createEditorConfig = (
         // 自定义插入图片
         customInsert(res: any, insertFn: InsertFnType) {
           insertFn(res.data.url, 'image', res.data.url)
-        }
-      }
-    }
+        },
+      },
+    },
   }
 }

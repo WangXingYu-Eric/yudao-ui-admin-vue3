@@ -3,17 +3,23 @@
     <ContentWrap>
       <!-- 搜索工作栏 -->
       <el-form
+        ref="queryFormRef"
         class="-mb-15px"
         :model="queryParams"
-        ref="queryFormRef"
         :inline="true"
         label-width="85px"
       >
         <el-form-item label="用户类型" prop="level">
           <el-radio-group v-model="queryParams.level" @change="handleQuery">
-            <el-radio-button checked>全部</el-radio-button>
-            <el-radio-button label="1">一级推广人</el-radio-button>
-            <el-radio-button label="2">二级推广人</el-radio-button>
+            <el-radio-button checked>
+              全部
+            </el-radio-button>
+            <el-radio-button label="1">
+              一级推广人
+            </el-radio-button>
+            <el-radio-button label="2">
+              二级推广人
+            </el-radio-button>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="状态" prop="status">
@@ -43,8 +49,12 @@
           />
         </el-form-item>
         <el-form-item>
-          <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-          <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+          <el-button @click="handleQuery">
+            <Icon icon="ep:search" class="mr-5px" /> 搜索
+          </el-button>
+          <el-button @click="resetQuery">
+            <Icon icon="ep:refresh" class="mr-5px" /> 重置
+          </el-button>
         </el-form-item>
       </el-form>
     </ContentWrap>
@@ -82,9 +92,9 @@
       </el-table>
       <!-- 分页 -->
       <Pagination
-        :total="total"
         v-model:page="queryParams.pageNo"
         v-model:limit="queryParams.pageSize"
+        :total="total"
         @pagination="getList"
       />
     </ContentWrap>
@@ -113,7 +123,7 @@ const queryParams = reactive({
   bizType: BrokerageRecordBizTypeEnum.ORDER.type,
   level: '',
   createTime: [],
-  status: null
+  status: null,
 })
 const queryFormRef = ref() // 搜索的表单
 
@@ -133,7 +143,8 @@ const getList = async () => {
     const data = await BrokerageRecordApi.getBrokerageRecordPage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }

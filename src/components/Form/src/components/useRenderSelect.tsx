@@ -1,8 +1,8 @@
-import { FormSchema } from '@/types/form'
-import { ComponentOptions } from '@/types/components'
 import { ElOption, ElOptionGroup } from 'element-plus'
+import type { Slots } from 'vue'
+import type { FormSchema } from '@/types/form'
+import type { ComponentOptions } from '@/types/components'
 import { getSlot } from '@/utils/tsxHelper'
-import { Slots } from 'vue'
 
 export const useRenderSelect = (slots: Slots) => {
   // 渲染 select options
@@ -20,7 +20,8 @@ export const useRenderSelect = (slots: Slots) => {
             }}
           </ElOptionGroup>
         )
-      } else {
+      }
+      else {
         return renderSelectOptionItem(item, option)
       }
     })
@@ -45,13 +46,13 @@ export const useRenderSelect = (slots: Slots) => {
             // option 插槽名规则，{field}-option
             item?.componentProps?.optionsSlot
               ? getSlot(slots, `${item.field}-option`, { item: option })
-              : undefined
+              : undefined,
         }}
       </ElOption>
     )
   }
 
   return {
-    renderSelectOptions
+    renderSelectOptions,
   }
 }

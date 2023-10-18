@@ -112,9 +112,10 @@
     </el-table-column>
   </el-table>
 </template>
+
 <script lang="ts" setup>
-import { PropType } from 'vue'
-import * as CodegenApi from '@/api/infra/codegen'
+import type { PropType } from 'vue'
+import type * as CodegenApi from '@/api/infra/codegen'
 import * as DictDataApi from '@/api/system/dict/dict.type'
 
 defineOptions({ name: 'InfraCodegenColumInfoForm' })
@@ -122,12 +123,12 @@ defineOptions({ name: 'InfraCodegenColumInfoForm' })
 const props = defineProps({
   columns: {
     type: Array as unknown as PropType<CodegenApi.CodegenColumnVO[]>,
-    default: () => null
-  }
+    default: () => null,
+  },
 })
 
 const formData = ref<CodegenApi.CodegenColumnVO[]>([])
-const tableHeight = document.documentElement.scrollHeight - 350 + 'px'
+const tableHeight = `${document.documentElement.scrollHeight - 350}px`
 
 /** 查询字典下拉列表 */
 const dictOptions = ref<DictDataApi.DictTypeVO[]>()
@@ -138,13 +139,14 @@ const getDictOptions = async () => {
 watch(
   () => props.columns,
   (columns) => {
-    if (!columns) return
+    if (!columns)
+      return
     formData.value = columns
   },
   {
     deep: true,
-    immediate: true
-  }
+    immediate: true,
+  },
 )
 
 onMounted(async () => {

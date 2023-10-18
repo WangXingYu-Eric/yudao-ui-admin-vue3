@@ -2,21 +2,33 @@
   <Dialog v-model="dialogVisible" title="详情" width="700px">
     <el-descriptions :column="2" label-class-name="desc-label">
       <el-descriptions-item label="商户退款单号">
-        <el-tag size="small">{{ refundDetail.merchantRefundId }}</el-tag>
+        <el-tag size="small">
+          {{ refundDetail.merchantRefundId }}
+        </el-tag>
       </el-descriptions-item>
       <el-descriptions-item label="渠道退款单号">
-        <el-tag type="success" size="small" v-if="refundDetail.channelRefundNo">{{
-          refundDetail.channelRefundNo
-        }}</el-tag>
+        <el-tag v-if="refundDetail.channelRefundNo" type="success" size="small">
+          {{
+            refundDetail.channelRefundNo
+          }}
+        </el-tag>
       </el-descriptions-item>
       <el-descriptions-item label="商户支付单号">
-        <el-tag size="small">{{ refundDetail.merchantOrderId }}</el-tag>
+        <el-tag size="small">
+          {{ refundDetail.merchantOrderId }}
+        </el-tag>
       </el-descriptions-item>
       <el-descriptions-item label="渠道支付单号">
-        <el-tag type="success" size="small">{{ refundDetail.channelOrderNo }}</el-tag>
+        <el-tag type="success" size="small">
+          {{ refundDetail.channelOrderNo }}
+        </el-tag>
       </el-descriptions-item>
-      <el-descriptions-item label="应用编号">{{ refundDetail.appId }}</el-descriptions-item>
-      <el-descriptions-item label="应用名称">{{ refundDetail.appName }}</el-descriptions-item>
+      <el-descriptions-item label="应用编号">
+        {{ refundDetail.appId }}
+      </el-descriptions-item>
+      <el-descriptions-item label="应用名称">
+        {{ refundDetail.appName }}
+      </el-descriptions-item>
       <el-descriptions-item label="支付金额">
         <el-tag type="success" size="small">
           ￥{{ (refundDetail.payPrice / 100.0).toFixed(2) }}
@@ -46,9 +58,15 @@
       <el-descriptions-item label="退款渠道">
         <dict-tag :type="DICT_TYPE.PAY_CHANNEL_CODE" :value="refundDetail.channelCode" />
       </el-descriptions-item>
-      <el-descriptions-item label="退款原因">{{ refundDetail.reason }}</el-descriptions-item>
-      <el-descriptions-item label="退款 IP">{{ refundDetail.userIp }}</el-descriptions-item>
-      <el-descriptions-item label="通知 URL">{{ refundDetail.notifyUrl }}</el-descriptions-item>
+      <el-descriptions-item label="退款原因">
+        {{ refundDetail.reason }}
+      </el-descriptions-item>
+      <el-descriptions-item label="退款 IP">
+        {{ refundDetail.userIp }}
+      </el-descriptions-item>
+      <el-descriptions-item label="通知 URL">
+        {{ refundDetail.notifyUrl }}
+      </el-descriptions-item>
     </el-descriptions>
     <!-- 分割线 -->
     <el-divider />
@@ -67,6 +85,7 @@
     </el-descriptions>
   </Dialog>
 </template>
+
 <script lang="ts" setup>
 import { DICT_TYPE } from '@/utils/dict'
 import { formatDate } from '@/utils/formatTime'
@@ -85,7 +104,8 @@ const open = async (id: number) => {
   detailLoading.value = true
   try {
     refundDetail.value = await RefundApi.getRefund(id)
-  } finally {
+  }
+  finally {
     detailLoading.value = false
   }
 }

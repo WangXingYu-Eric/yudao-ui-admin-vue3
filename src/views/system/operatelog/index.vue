@@ -4,9 +4,9 @@
   <ContentWrap>
     <!-- 搜索工作栏 -->
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="68px"
     >
@@ -15,8 +15,8 @@
           v-model="queryParams.module"
           placeholder="请输入系统模块"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="操作人员" prop="userNickname">
@@ -24,8 +24,8 @@
           v-model="queryParams.userNickname"
           placeholder="请输入操作人员"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="操作类型" prop="type">
@@ -66,14 +66,18 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        <el-button @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" /> 搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon icon="ep:refresh" class="mr-5px" /> 重置
+        </el-button>
         <el-button
+          v-hasPermi="['infra:config:export']"
           type="success"
           plain
-          @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['infra:config:export']"
+          @click="handleExport"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
@@ -113,10 +117,10 @@
       <el-table-column label="操作" align="center">
         <template #default="scope">
           <el-button
+            v-hasPermi="['infra:config:query']"
             link
             type="primary"
             @click="openDetail(scope.row)"
-            v-hasPermi="['infra:config:query']"
           >
             详情
           </el-button>
@@ -125,9 +129,9 @@
     </el-table>
     <!-- 分页 -->
     <Pagination
-      :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
+      :total="total"
       @pagination="getList"
     />
   </ContentWrap>
@@ -135,12 +139,13 @@
   <!-- 表单弹窗：详情 -->
   <OperateLogDetail ref="detailRef" />
 </template>
+
 <script lang="ts" setup>
+import OperateLogDetail from './OperateLogDetail.vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
 import * as OperateLogApi from '@/api/system/operatelog'
-import OperateLogDetail from './OperateLogDetail.vue'
 
 defineOptions({ name: 'SystemOperateLog' })
 
@@ -156,7 +161,7 @@ const queryParams = reactive({
   userNickname: undefined,
   type: undefined,
   success: undefined,
-  startTime: []
+  startTime: [],
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
@@ -168,7 +173,8 @@ const getList = async () => {
     const data = await OperateLogApi.getOperateLogPage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -200,13 +206,15 @@ const handleExport = async () => {
     exportLoading.value = true
     const data = await OperateLogApi.exportOperateLog(queryParams)
     download.excel(data, '操作日志.xls')
-  } catch {
-  } finally {
+  }
+  catch {
+  }
+  finally {
     exportLoading.value = false
   }
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

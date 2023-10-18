@@ -9,13 +9,13 @@ interface HasOneShowingChild {
 }
 
 export const getAllParentPath = <T = Recordable>(treeData: T[], path: string) => {
-  const menuList = findPath(treeData, (n) => n.path === path) as AppRouteRecordRaw[]
-  return (menuList || []).map((item) => item.path)
+  const menuList = findPath(treeData, n => n.path === path) as AppRouteRecordRaw[]
+  return (menuList || []).map(item => item.path)
 }
 
 export const hasOneShowingChild = (
   children: AppRouteRecordRaw[] = [],
-  parent: AppRouteRecordRaw
+  parent: AppRouteRecordRaw,
 ): HasOneShowingChild => {
   const onlyOneChild = ref<OnlyOneChildType>()
 
@@ -23,7 +23,8 @@ export const hasOneShowingChild = (
     const meta = (v.meta ?? {}) as RouteMeta
     if (meta.hidden) {
       return false
-    } else {
+    }
+    else {
       // Temp set(will be used if only has one showing child)
       onlyOneChild.value = v
       return true
@@ -34,7 +35,7 @@ export const hasOneShowingChild = (
   if (showingChildren.length === 1) {
     return {
       oneShowingChild: true,
-      onlyOneChild: unref(onlyOneChild)
+      onlyOneChild: unref(onlyOneChild),
     }
   }
 
@@ -43,12 +44,12 @@ export const hasOneShowingChild = (
     onlyOneChild.value = { ...parent, path: '', noShowingChildren: true }
     return {
       oneShowingChild: true,
-      onlyOneChild: unref(onlyOneChild)
+      onlyOneChild: unref(onlyOneChild),
     }
   }
 
   return {
     oneShowingChild: false,
-    onlyOneChild: unref(onlyOneChild)
+    onlyOneChild: unref(onlyOneChild),
   }
 }

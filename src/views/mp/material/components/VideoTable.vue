@@ -1,5 +1,5 @@
 <template>
-  <el-table :data="props.list" stripe border v-loading="props.loading" style="margin-top: 10px">
+  <el-table v-loading="props.loading" :data="props.list" stripe border style="margin-top: 10px">
     <el-table-column label="编号" align="center" prop="mediaId" />
     <el-table-column label="文件名" align="center" prop="name" />
     <el-table-column label="标题" align="center" prop="title" />
@@ -26,10 +26,10 @@
           <Icon icon="ep:download" />下载
         </el-button>
         <el-button
+          v-hasPermi="['mp:material:delete']"
           type="primary"
           link
           @click="emit('delete', scope.row.id)"
-          v-hasPermi="['mp:material:delete']"
         >
           <Icon icon="ep:delete" />删除
         </el-button>

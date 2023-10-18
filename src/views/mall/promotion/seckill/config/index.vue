@@ -28,7 +28,7 @@
       :data="tableObject.tableList"
       :loading="tableObject.loading"
       :pagination="{
-        total: tableObject.total
+        total: tableObject.total,
       }"
     >
       <template #sliderPicUrls="{ row }">
@@ -72,10 +72,11 @@
   <!-- 表单弹窗：添加/修改 -->
   <SeckillConfigForm ref="formRef" @success="getList" />
 </template>
+
 <script lang="ts" name="PromotionSeckillConfig" setup>
 import { allSchemas } from './seckillConfig.data'
-import * as SeckillConfigApi from '@/api/mall/promotion/seckill/seckillConfig'
 import SeckillConfigForm from './SeckillConfigForm.vue'
+import * as SeckillConfigApi from '@/api/mall/promotion/seckill/seckillConfig'
 import { createImageViewer } from '@/components/ImageViewer'
 import { CommonStatusEnum } from '@/utils/constants'
 
@@ -85,7 +86,7 @@ const message = useMessage() // 消息弹窗
 // 详细可见：https://doc.iocoder.cn/vue3/crud-schema/
 const { tableObject, tableMethods } = useTable({
   getListApi: SeckillConfigApi.getSeckillConfigPage, // 分页接口
-  delListApi: SeckillConfigApi.deleteSeckillConfig // 删除接口
+  delListApi: SeckillConfigApi.deleteSeckillConfig, // 删除接口
 })
 // 获得表格的各种操作
 const { getList, setSearchParams } = tableMethods
@@ -106,26 +107,27 @@ const handleStatusChange = async (row: SeckillConfigApi.SeckillConfigVO) => {
   try {
     // 修改状态的二次确认
     const text = row.status === CommonStatusEnum.ENABLE ? '启用' : '停用'
-    await message.confirm('确认要"' + text + '""' + row.name + '?')
+    await message.confirm(`确认要"${text}""${row.name}?`)
     // 发起修改状态
     await SeckillConfigApi.updateSeckillConfigStatus(row.id, row.status)
     // 刷新列表
     await getList()
-  } catch {
+  }
+  catch {
     // 取消后，进行恢复按钮
-    row.status =
-      row.status === CommonStatusEnum.ENABLE ? CommonStatusEnum.DISABLE : CommonStatusEnum.ENABLE
+    row.status
+      = row.status === CommonStatusEnum.ENABLE ? CommonStatusEnum.DISABLE : CommonStatusEnum.ENABLE
   }
 }
 
 /** 轮播图预览预览 */
 const imagePreview = (args) => {
   createImageViewer({
-    urlList: args
+    urlList: args,
   })
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

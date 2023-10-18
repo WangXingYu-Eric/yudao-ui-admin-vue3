@@ -3,8 +3,10 @@
     <el-table-column fixed="left" title="序号" type="seq" width="60" />
     <el-table-column align="left" label="社交平台" width="120">
       <template #default="{ row }">
-        <img :src="row.img" alt="" class="h-5 align-middle" />
-        <p class="mr-5">{{ row.title }}</p>
+        <img :src="row.img" alt="" class="h-5 align-middle">
+        <p class="mr-5">
+          {{ row.title }}
+        </p>
       </template>
     </el-table-column>
     <el-table-column align="center" label="操作">
@@ -21,9 +23,11 @@
     </el-table-column>
   </el-table>
 </template>
+
 <script lang="ts" setup>
 import { SystemUserSocialTypeEnum } from '@/utils/constants'
-import { getUserProfile, ProfileVO } from '@/api/system/user/profile'
+import type { ProfileVO } from '@/api/system/user/profile'
+import { getUserProfile } from '@/api/system/user/profile'
 import { socialAuthRedirect, socialBind, socialUnbind } from '@/api/system/user/socialUser'
 
 defineOptions({ name: 'UserSocial' })
@@ -54,16 +58,16 @@ const bindSocial = () => {
   const type = route.query.type
   const code = route.query.code
   const state = route.query.state
-  if (!code) {
+  if (!code)
     return
-  }
+
   socialBind(type, code, state).then(() => {
     message.success('绑定成功')
     initSocial()
   })
 }
 const bind = (row) => {
-  const redirectUri = location.origin + '/user/profile?type=' + row.type
+  const redirectUri = `${location.origin}/user/profile?type=${row.type}`
   // 进行跳转
   socialAuthRedirect(row.type, encodeURIComponent(redirectUri)).then((res) => {
     window.location.href = res
@@ -71,9 +75,9 @@ const bind = (row) => {
 }
 const unbind = async (row) => {
   const res = await socialUnbind(row.type, row.openid)
-  if (res) {
+  if (res)
     row.openid = undefined
-  }
+
   message.success('解绑成功')
 }
 
@@ -88,7 +92,7 @@ watch(
     console.log(newRoute)
   },
   {
-    immediate: true
-  }
+    immediate: true,
+  },
 )
 </script>

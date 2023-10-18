@@ -6,17 +6,19 @@ export const useRenderMenuTitle = () => {
     const { t } = useI18n()
     const { title = 'Please set title', icon } = meta
 
-    return icon ? (
-      <>
-        <Icon icon={meta.icon}></Icon>
+    return icon
+      ? (
+        <>
+          <Icon icon={meta.icon}></Icon>
+          <span class="v-menu__title">{t(title as string)}</span>
+        </>
+        )
+      : (
         <span class="v-menu__title">{t(title as string)}</span>
-      </>
-    ) : (
-      <span class="v-menu__title">{t(title as string)}</span>
-    )
+        )
   }
 
   return {
-    renderMenuTitle
+    renderMenuTitle,
   }
 }

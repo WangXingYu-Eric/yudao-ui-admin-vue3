@@ -12,7 +12,7 @@
       </template>
       <el-col :offset="6" :span="16">
         <el-form
-          :ref="'form' + index"
+          :ref="`form${index}`"
           :model="auditForms[index]"
           :rules="auditRule"
           label-width="100px"
@@ -22,7 +22,9 @@
           </el-form-item>
           <el-form-item v-if="processInstance && processInstance.startUser" label="流程发起人">
             {{ processInstance.startUser.nickname }}
-            <el-tag size="small" type="info">{{ processInstance.startUser.deptName }}</el-tag>
+            <el-tag size="small" type="info">
+              {{ processInstance.startUser.deptName }}
+            </el-tag>
           </el-form-item>
           <el-form-item label="审批建议" prop="reason">
             <el-input
@@ -97,25 +99,26 @@
     <TaskUpdateAssigneeForm ref="taskUpdateAssigneeFormRef" @success="getDetail" />
     <!-- 弹窗，回退节点 -->
     <TaskReturnDialog ref="taskReturnDialogRef" @success="getDetail" />
-    <!-- 委派，将任务委派给别人处理，处理完成后，会重新回到原审批人手中-->
+    <!-- 委派，将任务委派给别人处理，处理完成后，会重新回到原审批人手中 -->
     <TaskDelegateForm ref="taskDelegateForm" @success="getDetail" />
     <!-- 加签，当前任务审批人为A，向前加签选了一个C，则需要C先审批，然后再是A审批，向后加签B，A审批完，需要B再审批完，才算完成这个任务节点 -->
     <TaskAddSignDialogForm ref="taskAddSignDialogForm" @success="getDetail" />
   </ContentWrap>
 </template>
+
 <script lang="ts" setup>
-import { useUserStore } from '@/store/modules/user'
-import { setConfAndFields2 } from '@/utils/formCreate'
 import type { ApiAttrs } from '@form-create/element-ui/types/config'
-import * as DefinitionApi from '@/api/bpm/definition'
-import * as ProcessInstanceApi from '@/api/bpm/processInstance'
-import * as TaskApi from '@/api/bpm/task'
 import TaskUpdateAssigneeForm from './TaskUpdateAssigneeForm.vue'
 import ProcessInstanceBpmnViewer from './ProcessInstanceBpmnViewer.vue'
 import ProcessInstanceTaskList from './ProcessInstanceTaskList.vue'
 import TaskReturnDialog from './TaskReturnDialogForm.vue'
 import TaskDelegateForm from './taskDelegateForm.vue'
 import TaskAddSignDialogForm from './TaskAddSignDialogForm.vue'
+import * as TaskApi from '@/api/bpm/task'
+import * as ProcessInstanceApi from '@/api/bpm/processInstance'
+import * as DefinitionApi from '@/api/bpm/definition'
+import { setConfAndFields2 } from '@/utils/formCreate'
+import { useUserStore } from '@/store/modules/user'
 import { registerComponent } from '@/utils/routerHelper'
 import { isEmpty } from '@/utils/is'
 
@@ -136,7 +139,7 @@ const tasks = ref<any[]>([]) // 任务列表
 const runningTasks = ref<any[]>([]) // 运行中的任务
 const auditForms = ref<any[]>([]) // 审批任务的表单
 const auditRule = reactive({
-  reason: [{ required: true, message: '审批建议不能为空', trigger: 'blur' }]
+  reason: [{ required: true, message: '审批建议不能为空', trigger: 'blur' }],
 })
 // ========== 申请信息 ==========
 const fApi = ref<ApiAttrs>() //
@@ -144,29 +147,32 @@ const detailForm = ref({
   // 流程表单详情
   rule: [],
   option: {},
-  value: {}
+  value: {},
 })
 
 /** 处理审批通过和不通过的操作 */
 const handleAudit = async (task, pass) => {
   // 1.1 获得对应表单
   const index = runningTasks.value.indexOf(task)
-  const auditFormRef = proxy.$refs['form' + index][0]
+  const auditFormRef = proxy.$refs[`form${index}`][0]
   // 1.2 校验表单
   const elForm = unref(auditFormRef)
-  if (!elForm) return
+  if (!elForm)
+    return
   const valid = await elForm.validate()
-  if (!valid) return
+  if (!valid)
+    return
 
   // 2.1 提交审批
   const data = {
     id: task.id,
-    reason: auditForms.value[index].reason
+    reason: auditForms.value[index].reason,
   }
   if (pass) {
     await TaskApi.approveTask(data)
     message.success('审批通过成功')
-  } else {
+  }
+  else {
     await TaskApi.rejectTask(data)
     message.success('审批不通过成功')
   }
@@ -186,7 +192,7 @@ const handleDelegate = async (task) => {
   taskDelegateForm.value.open(task.id)
 }
 
-//回退弹框组件
+// 回退弹框组件
 const taskReturnDialogRef = ref()
 /** 处理审批退回的操作 */
 const handleBack = async (task) => {
@@ -226,20 +232,22 @@ const getProcessInstance = async () => {
         detailForm,
         processDefinition.formConf,
         processDefinition.formFields,
-        data.formVariables
+        data.formVariables,
       )
       nextTick().then(() => {
         fApi.value?.fapi?.btn.show(false)
         fApi.value?.fapi?.resetBtn.show(false)
         fApi.value?.fapi?.disabled(true)
       })
-    } else {
+    }
+    else {
       BusinessFormComponent.value = registerComponent(data.processDefinition.formCustomViewPath)
     }
 
     // 加载流程图
     bpmnXML.value = await DefinitionApi.getProcessDefinitionBpmnXML(processDefinition.id as number)
-  } finally {
+  }
+  finally {
     processInstanceLoading.value = false
   }
 }
@@ -253,30 +261,29 @@ const getTaskList = async () => {
     tasks.value = []
     // 1.1 移除已取消的审批
     data.forEach((task) => {
-      if (task.result !== 4) {
+      if (task.result !== 4)
         tasks.value.push(task)
-      }
     })
     // 1.2 排序，将未完成的排在前面，已完成的排在后面；
     tasks.value.sort((a, b) => {
       // 有已完成的情况，按照完成时间倒序
-      if (a.endTime && b.endTime) {
+      if (a.endTime && b.endTime)
         return b.endTime - a.endTime
-      } else if (a.endTime) {
+      else if (a.endTime)
         return 1
-      } else if (b.endTime) {
+      else if (b.endTime)
         return -1
         // 都是未完成，按照创建时间倒序
-      } else {
+      else
         return b.createTime - a.createTime
-      }
     })
 
     // 获得需要自己审批的任务
     runningTasks.value = []
     auditForms.value = []
     loadRunningTask(tasks.value)
-  } finally {
+  }
+  finally {
     tasksLoad.value = false
   }
 }
@@ -286,21 +293,21 @@ const getTaskList = async () => {
  */
 const loadRunningTask = (tasks) => {
   tasks.forEach((task) => {
-    if (!isEmpty(task.children)) {
+    if (!isEmpty(task.children))
       loadRunningTask(task.children)
-    }
+
     // 2.1 只有待处理才需要
-    if (task.result !== 1 && task.result !== 6) {
+    if (task.result !== 1 && task.result !== 6)
       return
-    }
+
     // 2.2 自己不是处理人
-    if (!task.assigneeUser || task.assigneeUser.id !== userId) {
+    if (!task.assigneeUser || task.assigneeUser.id !== userId)
       return
-    }
+
     // 2.3 添加到处理任务
     runningTasks.value.push({ ...task })
     auditForms.value.push({
-      reason: ''
+      reason: '',
     })
   })
 }

@@ -1,20 +1,22 @@
 <script lang="tsx">
-import { defineComponent, PropType, ref } from 'vue'
-import { isHexColor } from '@/utils/color'
+import type { PropType } from 'vue'
+import { defineComponent, ref } from 'vue'
 import { ElTag } from 'element-plus'
-import { DictDataType, getDictOptions } from '@/utils/dict'
+import { isHexColor } from '@/utils/color'
+import type { DictDataType } from '@/utils/dict'
+import { getDictOptions } from '@/utils/dict'
 
 export default defineComponent({
   name: 'DictTag',
   props: {
     type: {
       type: String as PropType<string>,
-      required: true
+      required: true,
     },
     value: {
       type: [String, Number, Boolean] as PropType<string | number | boolean>,
-      required: true
-    }
+      required: true,
+    },
   },
   setup(props) {
     const dictData = ref<DictDataType>()
@@ -22,21 +24,21 @@ export default defineComponent({
       const dictOptions = getDictOptions(dictType)
       dictOptions.forEach((dict: DictDataType) => {
         if (dict.value === value) {
-          if (dict.colorType + '' === 'primary' || dict.colorType + '' === 'default') {
+          if (`${dict.colorType}` === 'primary' || `${dict.colorType}` === 'default')
             dict.colorType = ''
-          }
+
           dictData.value = dict
         }
       })
     }
     const rederDictTag = () => {
-      if (!props.type) {
+      if (!props.type)
         return null
-      }
+
       // 解决自定义字典标签值为零时标签不渲染的问题
-      if (props.value === undefined || props.value === null) {
+      if (props.value === undefined || props.value === null)
         return null
-      }
+
       getDictObj(props.type, props.value.toString())
       // 添加标签的文字颜色为白色，解决自定义背景颜色时标签文字看不清的问题
       return (
@@ -55,6 +57,6 @@ export default defineComponent({
       )
     }
     return () => rederDictTag()
-  }
+  },
 })
 </script>

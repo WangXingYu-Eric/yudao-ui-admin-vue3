@@ -1,13 +1,21 @@
+<template>
+  <ElIcon :class="prefixCls" :color="color" :size="size">
+    <svg v-if="isLocal" :class="getSvgClass" aria-hidden="true">
+      <use :xlink:href="symbolId" />
+    </svg>
+
+    <span v-else ref="elRef" :class="$attrs.class" :style="getIconifyStyle">
+      <span :class="getSvgClass" :data-icon="symbolId" />
+    </span>
+  </ElIcon>
+</template>
+
 <script lang="ts" setup>
-import { propTypes } from '@/utils/propTypes'
 import Iconify from '@purge-icons/generated'
+import { propTypes } from '@/utils/propTypes'
 import { useDesign } from '@/hooks/web/useDesign'
 
 defineOptions({ name: 'Icon' })
-
-const { getPrefixCls } = useDesign()
-
-const prefixCls = getPrefixCls('icon')
 
 const props = defineProps({
   // icon name
@@ -17,8 +25,12 @@ const props = defineProps({
   // icon size
   size: propTypes.number.def(16),
   // icon svg class
-  svgClass: propTypes.string.def('')
+  svgClass: propTypes.string.def(''),
 })
+
+const { getPrefixCls } = useDesign()
+
+const prefixCls = getPrefixCls('icon')
 
 const elRef = ref<ElRef>(null)
 
@@ -33,7 +45,7 @@ const getIconifyStyle = computed(() => {
   return {
     fontSize: `${size}px`,
     height: '1em',
-    color
+    color,
   }
 })
 
@@ -43,20 +55,24 @@ const getSvgClass = computed(() => {
 })
 
 const updateIcon = async (icon: string) => {
-  if (unref(isLocal)) return
+  if (unref(isLocal))
+    return
 
   const el = unref(elRef)
-  if (!el) return
+  if (!el)
+    return
 
   await nextTick()
 
-  if (!icon) return
+  if (!icon)
+    return
 
   const svg = Iconify.renderSVG(icon, {})
   if (svg) {
     el.textContent = ''
     el.appendChild(svg)
-  } else {
+  }
+  else {
     const span = document.createElement('span')
     span.className = 'iconify'
     span.dataset.icon = icon
@@ -69,18 +85,6 @@ watch(
   () => props.icon,
   (icon: string) => {
     updateIcon(icon)
-  }
+  },
 )
 </script>
-
-<template>
-  <ElIcon :class="prefixCls" :color="color" :size="size">
-    <svg v-if="isLocal" :class="getSvgClass" aria-hidden="true">
-      <use :xlink:href="symbolId" />
-    </svg>
-
-    <span v-else ref="elRef" :class="$attrs.class" :style="getIconifyStyle">
-      <span :class="getSvgClass" :data-icon="symbolId"></span>
-    </span>
-  </ElIcon>
-</template>

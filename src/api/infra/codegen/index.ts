@@ -1,6 +1,6 @@
 import request from '@/config/axios'
 
-export type CodegenTableVO = {
+export interface CodegenTableVO {
   id: number
   tableId: number
   isParentMenuIdValid: boolean
@@ -20,7 +20,7 @@ export type CodegenTableVO = {
   parentMenuId: number
 }
 
-export type CodegenColumnVO = {
+export interface CodegenColumnVO {
   id: number
   tableId: number
   columnName: string
@@ -42,27 +42,27 @@ export type CodegenColumnVO = {
   htmlType: string
 }
 
-export type DatabaseTableVO = {
+export interface DatabaseTableVO {
   name: string
   comment: string
 }
 
-export type CodegenDetailVO = {
+export interface CodegenDetailVO {
   table: CodegenTableVO
   columns: CodegenColumnVO[]
 }
 
-export type CodegenPreviewVO = {
+export interface CodegenPreviewVO {
   filePath: string
   code: string
 }
 
-export type CodegenUpdateReqVO = {
+export interface CodegenUpdateReqVO {
   table: CodegenTableVO | any
   columns: CodegenColumnVO[]
 }
 
-export type CodegenCreateListReqVO = {
+export interface CodegenCreateListReqVO {
   dataSourceConfigId: number
   tableNames: string[]
 }
@@ -74,7 +74,7 @@ export const getCodegenTablePage = (params: PageParam) => {
 
 // 查询详情代码生成表定义
 export const getCodegenTable = (id: number) => {
-  return request.get({ url: '/infra/codegen/detail?tableId=' + id })
+  return request.get({ url: `/infra/codegen/detail?tableId=${id}` })
 }
 
 // 新增代码生成表定义
@@ -89,22 +89,22 @@ export const updateCodegenTable = (data: CodegenUpdateReqVO) => {
 
 // 基于数据库的表结构，同步数据库的表和字段定义
 export const syncCodegenFromDB = (id: number) => {
-  return request.put({ url: '/infra/codegen/sync-from-db?tableId=' + id })
+  return request.put({ url: `/infra/codegen/sync-from-db?tableId=${id}` })
 }
 
 // 基于 SQL 建表语句，同步数据库的表和字段定义
 export const syncCodegenFromSQL = (id: number, sql: string) => {
-  return request.put({ url: '/infra/codegen/sync-from-sql?tableId=' + id + '&sql=' + sql })
+  return request.put({ url: `/infra/codegen/sync-from-sql?tableId=${id}&sql=${sql}` })
 }
 
 // 预览生成代码
 export const previewCodegen = (id: number) => {
-  return request.get({ url: '/infra/codegen/preview?tableId=' + id })
+  return request.get({ url: `/infra/codegen/preview?tableId=${id}` })
 }
 
 // 下载生成代码
 export const downloadCodegen = (id: number) => {
-  return request.download({ url: '/infra/codegen/download?tableId=' + id })
+  return request.download({ url: `/infra/codegen/download?tableId=${id}` })
 }
 
 // 获得表定义
@@ -119,5 +119,5 @@ export const createCodegenList = (data) => {
 
 // 删除代码生成表定义
 export const deleteCodegenTable = (id: number) => {
-  return request.delete({ url: '/infra/codegen/delete?tableId=' + id })
+  return request.delete({ url: `/infra/codegen/delete?tableId=${id}` })
 }

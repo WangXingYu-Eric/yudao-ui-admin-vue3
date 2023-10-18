@@ -68,7 +68,7 @@
       <el-table-column label="编号" min-width="80" prop="id" />
       <el-table-column label="门店 logo" min-width="100" prop="logo">
         <template #default="scope">
-          <img v-if="scope.row.logo" :src="scope.row.logo" alt="门店 logo" class="h-50px" />
+          <img v-if="scope.row.logo" :src="scope.row.logo" alt="门店 logo" class="h-50px">
         </template>
       </el-table-column>
       <el-table-column label="门店名称" min-width="150" prop="name" />
@@ -116,9 +116,10 @@
   <!-- 表单弹窗：添加/修改 -->
   <DeliveryPickUpStoreForm ref="formRef" @success="getList" />
 </template>
+
 <script lang="ts" name="DeliveryPickUpStore" setup>
-import * as DeliveryPickUpStoreApi from '@/api/mall/trade/delivery/pickUpStore'
 import DeliveryPickUpStoreForm from './PickUpStoreForm.vue'
+import * as DeliveryPickUpStoreApi from '@/api/mall/trade/delivery/pickUpStore'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { dateFormatter } from '@/utils/formatTime'
 
@@ -134,7 +135,7 @@ const queryParams = reactive({
   status: undefined,
   phone: undefined,
   name: undefined,
-  createTime: []
+  createTime: [],
 })
 const queryFormRef = ref() // 搜索的表单
 
@@ -154,7 +155,8 @@ const handleDelete = async (id: number) => {
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
 /** 查询列表 */
@@ -164,7 +166,8 @@ const getList = async () => {
     const data = await DeliveryPickUpStoreApi.getDeliveryPickUpStorePage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -181,7 +184,7 @@ const resetQuery = () => {
   handleQuery()
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

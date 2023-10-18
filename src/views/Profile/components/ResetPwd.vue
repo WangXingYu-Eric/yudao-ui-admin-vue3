@@ -15,6 +15,7 @@
     </el-form-item>
   </el-form>
 </template>
+
 <script lang="ts" setup>
 import type { FormInstance, FormRules } from 'element-plus'
 
@@ -29,35 +30,35 @@ const formRef = ref<FormInstance>()
 const password = reactive({
   oldPassword: '',
   newPassword: '',
-  confirmPassword: ''
+  confirmPassword: '',
 })
 
 // 表单校验
 const equalToPassword = (_rule, value, callback) => {
-  if (password.newPassword !== value) {
+  if (password.newPassword !== value)
     callback(new Error(t('profile.password.diffPwd')))
-  } else {
+  else
     callback()
-  }
 }
 
 const rules = reactive<FormRules>({
   oldPassword: [
     { required: true, message: t('profile.password.oldPwdMsg'), trigger: 'blur' },
-    { min: 6, max: 20, message: t('profile.password.pwdRules'), trigger: 'blur' }
+    { min: 6, max: 20, message: t('profile.password.pwdRules'), trigger: 'blur' },
   ],
   newPassword: [
     { required: true, message: t('profile.password.newPwdMsg'), trigger: 'blur' },
-    { min: 6, max: 20, message: t('profile.password.pwdRules'), trigger: 'blur' }
+    { min: 6, max: 20, message: t('profile.password.pwdRules'), trigger: 'blur' },
   ],
   confirmPassword: [
     { required: true, message: t('profile.password.cfPwdMsg'), trigger: 'blur' },
-    { required: true, validator: equalToPassword, trigger: 'blur' }
-  ]
+    { required: true, validator: equalToPassword, trigger: 'blur' },
+  ],
 })
 
 const submit = (formEl: FormInstance | undefined) => {
-  if (!formEl) return
+  if (!formEl)
+    return
   formEl.validate(async (valid) => {
     if (valid) {
       await updateUserPassword(password.oldPassword, password.newPassword)
@@ -67,7 +68,8 @@ const submit = (formEl: FormInstance | undefined) => {
 }
 
 const reset = (formEl: FormInstance | undefined) => {
-  if (!formEl) return
+  if (!formEl)
+    return
   formEl.resetFields()
 }
 </script>

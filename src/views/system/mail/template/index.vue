@@ -7,10 +7,10 @@
       <!-- 新增等操作按钮 -->
       <template #actionMore>
         <el-button
+          v-hasPermi="['system:mail-account:create']"
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['system:mail-account:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
@@ -21,36 +21,36 @@
   <!-- 列表 -->
   <ContentWrap>
     <Table
+      v-model:pageSize="tableObject.pageSize"
+      v-model:currentPage="tableObject.currentPage"
       :columns="allSchemas.tableColumns"
       :data="tableObject.tableList"
       :loading="tableObject.loading"
       :pagination="{
-        total: tableObject.total
+        total: tableObject.total,
       }"
-      v-model:pageSize="tableObject.pageSize"
-      v-model:currentPage="tableObject.currentPage"
     >
       <template #action="{ row }">
         <el-button
+          v-hasPermi="['system:mail-template:send-mail']"
           link
           type="primary"
           @click="openSendForm(row.id)"
-          v-hasPermi="['system:mail-template:send-mail']"
         >
           测试
         </el-button>
         <el-button
+          v-hasPermi="['system:mail-template:update']"
           link
           type="primary"
           @click="openForm('update', row.id)"
-          v-hasPermi="['system:mail-template:update']"
         >
           编辑
         </el-button>
         <el-button
+          v-hasPermi="['system:mail-template:delete']"
           link
           type="danger"
-          v-hasPermi="['system:mail-template:delete']"
           @click="handleDelete(row.id)"
         >
           删除
@@ -65,11 +65,12 @@
   <!-- 表单弹窗：发送测试 -->
   <MailTemplateSendForm ref="sendFormRef" />
 </template>
+
 <script lang="ts" setup>
 import { allSchemas } from './template.data'
-import * as MailTemplateApi from '@/api/system/mail/template'
 import MailTemplateForm from './MailTemplateForm.vue'
 import MailTemplateSendForm from './MailTemplateSendForm.vue'
+import * as MailTemplateApi from '@/api/system/mail/template'
 
 defineOptions({ name: 'SystemMailTemplate' })
 
@@ -78,7 +79,7 @@ defineOptions({ name: 'SystemMailTemplate' })
 // 详细可见：https://doc.iocoder.cn/vue3/crud-schema/
 const { tableObject, tableMethods } = useTable({
   getListApi: MailTemplateApi.getMailTemplatePage, // 分页接口
-  delListApi: MailTemplateApi.deleteMailTemplate // 删除接口
+  delListApi: MailTemplateApi.deleteMailTemplate, // 删除接口
 })
 // 获得表格的各种操作
 const { getList, setSearchParams } = tableMethods
@@ -100,7 +101,7 @@ const openSendForm = (id: number) => {
   sendFormRef.value.open(id)
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

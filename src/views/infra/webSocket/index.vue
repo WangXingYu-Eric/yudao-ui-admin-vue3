@@ -8,20 +8,26 @@
       </template>
       <div class="flex items-center">
         <span class="mr-4 text-lg font-medium"> 连接状态: </span>
-        <el-tag :color="getTagColor">{{ status }}</el-tag>
+        <el-tag :color="getTagColor">
+          {{ status }}
+        </el-tag>
       </div>
-      <hr class="my-4" />
+      <hr class="my-4">
 
       <div class="flex">
         <el-input v-model="server" disabled>
-          <template #prepend> 服务地址</template>
+          <template #prepend>
+            服务地址
+          </template>
         </el-input>
         <el-button :type="getIsOpen ? 'danger' : 'primary'" @click="toggle">
           {{ getIsOpen ? '关闭连接' : '开启连接' }}
         </el-button>
       </div>
-      <p class="mt-4 text-lg font-medium">设置</p>
-      <hr class="my-4" />
+      <p class="mt-4 text-lg font-medium">
+        设置
+      </p>
+      <hr class="my-4">
       <el-input
         v-model="sendValue"
         :autosize="{ minRows: 2, maxRows: 4 }"
@@ -55,10 +61,11 @@
     </el-card>
   </div>
 </template>
+
 <script lang="ts" setup>
+import { useWebSocket } from '@vueuse/core'
 import { formatDate } from '@/utils/formatTime'
 import { useUserStore } from '@/store/modules/user'
-import { useWebSocket } from '@vueuse/core'
 
 defineOptions({ name: 'InfraWebSocket' })
 
@@ -67,18 +74,18 @@ const userStore = useUserStore()
 const sendValue = ref('')
 
 const server = ref(
-  (import.meta.env.VITE_BASE_URL + '/websocket/message').replace('http', 'ws') +
-    '?userId=' +
-    userStore.getUser.id
+  `${(`${import.meta.env.VITE_BASE_URL}/websocket/message`).replace('http', 'ws')
+    }?userId=${
+    userStore.getUser.id}`,
 )
 
 const state = reactive({
-  recordList: [] as { id: number; time: number; res: string }[]
+  recordList: [] as { id: number; time: number; res: string }[],
 })
 
 const { status, data, send, close, open } = useWebSocket(server.value, {
   autoReconnect: false,
-  heartbeat: true
+  heartbeat: true,
 })
 
 watchEffect(() => {
@@ -86,11 +93,12 @@ watchEffect(() => {
     try {
       const res = JSON.parse(data.value)
       state.recordList.push(res)
-    } catch (error) {
+    }
+    catch (error) {
       state.recordList.push({
         res: data.value,
         id: Math.ceil(Math.random() * 1000),
-        time: new Date().getTime()
+        time: new Date().getTime(),
       })
     }
   }
@@ -109,10 +117,9 @@ function handlerSend() {
 }
 
 function toggle() {
-  if (getIsOpen.value) {
+  if (getIsOpen.value)
     close()
-  } else {
+  else
     open()
-  }
 }
 </script>

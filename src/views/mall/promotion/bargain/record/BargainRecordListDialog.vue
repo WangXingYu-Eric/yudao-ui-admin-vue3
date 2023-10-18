@@ -26,9 +26,9 @@
       </el-table>
       <!-- 分页 -->
       <Pagination
-        :total="total"
         v-model:page="queryParams.pageNo"
         v-model:limit="queryParams.pageSize"
+        :total="total"
         @pagination="getList"
       />
     </ContentWrap>
@@ -51,7 +51,7 @@ const list = ref([]) // 列表的数据
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
-  recordId: undefined
+  recordId: undefined,
 })
 const queryFormRef = ref() // 搜索的表单
 
@@ -71,7 +71,8 @@ const getList = async () => {
     const data = await BargainHelpApi.getBargainHelpPage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }

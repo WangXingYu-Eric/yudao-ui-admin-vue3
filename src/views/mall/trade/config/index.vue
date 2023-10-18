@@ -2,12 +2,12 @@
   <ContentWrap>
     <el-form
       ref="formRef"
+      v-loading="formLoading"
       :model="formData"
       :rules="formRules"
       label-width="120px"
-      v-loading="formLoading"
     >
-      <el-form-item label="hideId" v-show="false">
+      <el-form-item v-show="false" label="hideId">
         <el-input v-model="formData.id" />
       </el-form-item>
       <el-tabs>
@@ -50,7 +50,9 @@
         <el-tab-pane label="配送">
           <el-form-item label="启用包邮" prop="deliveryExpressFreeEnabled">
             <el-switch v-model="formData.deliveryExpressFreeEnabled" style="user-select: none" />
-            <el-text class="w-full" size="small" type="info"> 商城是否启用全场包邮 </el-text>
+            <el-text class="w-full" size="small" type="info">
+              商城是否启用全场包邮
+            </el-text>
           </el-form-item>
           <el-form-item label="满额包邮" prop="deliveryExpressFreePrice">
             <el-input-number
@@ -72,7 +74,9 @@
         <el-tab-pane label="分销">
           <el-form-item label="分佣启用" prop="brokerageEnabled">
             <el-switch v-model="formData.brokerageEnabled" style="user-select: none" />
-            <el-text class="w-full" size="small" type="info"> 商城是否开启分销模式 </el-text>
+            <el-text class="w-full" size="small" type="info">
+              商城是否开启分销模式
+            </el-text>
           </el-form-item>
           <el-form-item label="分佣模式" prop="brokerageEnabledCondition">
             <el-radio-group v-model="formData.brokerageEnabledCondition">
@@ -184,7 +188,9 @@
                 {{ dict.label }}
               </el-checkbox>
             </el-checkbox-group>
-            <el-text class="w-full" size="small" type="info"> 商城开通提现的付款方式 </el-text>
+            <el-text class="w-full" size="small" type="info">
+              商城开通提现的付款方式
+            </el-text>
           </el-form-item>
           <el-form-item label="提现银行" prop="brokerageBankNames">
             <el-select v-model="formData.brokerageBankNames" placeholder="请选择提现银行" multiple>
@@ -195,13 +201,17 @@
                 :value="dict.value"
               />
             </el-select>
-            <el-text class="w-full" size="small" type="info"> 商城开通提现的银行列表 </el-text>
+            <el-text class="w-full" size="small" type="info">
+              商城开通提现的银行列表
+            </el-text>
           </el-form-item>
         </el-tab-pane>
       </el-tabs>
       <!-- 保存 -->
       <el-form-item>
-        <el-button type="primary" @click="submitForm" :loading="formLoading"> 保存 </el-button>
+        <el-button type="primary" :loading="formLoading" @click="submitForm">
+          保存
+        </el-button>
       </el-form-item>
     </el-form>
   </ContentWrap>
@@ -234,7 +244,7 @@ const formData = ref({
   brokerageWithdrawFeePercent: 0,
   brokerageBankNames: [],
   brokerageFrozenDays: 0,
-  brokerageWithdrawTypes: []
+  brokerageWithdrawTypes: [],
 })
 const formRules = reactive({
   deliveryExpressFreePrice: [{ required: true, message: '满额包邮不能为空', trigger: 'blur' }],
@@ -243,7 +253,7 @@ const formRules = reactive({
   brokerageFirstPercent: [{ required: true, message: '一级返佣比例不能为空', trigger: 'blur' }],
   brokerageSecondPercent: [{ required: true, message: '二级返佣比例不能为空', trigger: 'blur' }],
   brokerageWithdrawMinPrice: [
-    { required: true, message: '用户提现最低金额不能为空', trigger: 'blur' }
+    { required: true, message: '用户提现最低金额不能为空', trigger: 'blur' },
   ],
   brokerageWithdrawFeePercent: [{ required: true, message: '提现手续费不能为空', trigger: 'blur' }],
   brokerageBankNames: [{ required: true, message: '提现银行不能为空', trigger: 'blur' }],
@@ -252,22 +262,25 @@ const formRules = reactive({
     {
       required: true,
       message: '提现方式不能为空',
-      trigger: 'change'
-    }
-  ]
+      trigger: 'change',
+    },
+  ],
 })
 
 const submitForm = async () => {
-  if (formLoading.value) return
+  if (formLoading.value)
+    return
   // 校验表单
-  if (!formRef) return
+  if (!formRef)
+    return
   const valid = await formRef.value.validate()
-  if (!valid) return
+  if (!valid)
+    return
   // 提交请求
   formLoading.value = true
   try {
     const data = {
-      ...formData.value
+      ...formData.value,
     } as unknown as ConfigApi.ConfigVO
     data.brokeragePosterUrls = formData.value.brokeragePosterUrls.map((item: any) => {
       return item?.url ? item.url : item
@@ -277,7 +290,8 @@ const submitForm = async () => {
     data.brokerageWithdrawMinPrice = data.brokerageWithdrawMinPrice * 100
     await ConfigApi.saveTradeConfig(data)
     message.success('保存成功')
-  } finally {
+  }
+  finally {
     formLoading.value = false
   }
 }
@@ -288,18 +302,19 @@ const getConfig = async () => {
   try {
     const data = await ConfigApi.getTradeConfig()
     if (data != null) {
-      data.brokeragePosterUrls = data.brokeragePosterUrls.map((url) => ({ url }))
+      data.brokeragePosterUrls = data.brokeragePosterUrls.map(url => ({ url }))
       formData.value = data
       // 金额缩小
       formData.value.deliveryExpressFreePrice = data.deliveryExpressFreePrice / 100
       formData.value.brokerageWithdrawMinPrice = data.brokerageWithdrawMinPrice / 100
     }
-  } finally {
+  }
+  finally {
     formLoading.value = false
   }
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getConfig()
 })

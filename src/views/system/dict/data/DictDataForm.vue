@@ -39,7 +39,7 @@
           <el-option
             v-for="item in colorTypeOptions"
             :key="item.value"
-            :label="item.label + '(' + item.value + ')'"
+            :label="`${item.label}(${item.value})`"
             :value="item.value"
           />
         </el-select>
@@ -52,11 +52,16 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button :disabled="formLoading" type="primary" @click="submitForm">确 定</el-button>
-      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button :disabled="formLoading" type="primary" @click="submitForm">
+        确 定
+      </el-button>
+      <el-button @click="dialogVisible = false">
+        取 消
+      </el-button>
     </template>
   </Dialog>
 </template>
+
 <script lang="ts" setup>
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import * as DictDataApi from '@/api/system/dict/dict.data'
@@ -64,7 +69,10 @@ import { CommonStatusEnum } from '@/utils/constants'
 
 defineOptions({ name: 'SystemDictDataForm' })
 
-const { t } = useI18n() // 国际化
+// 提供 open 方法，用于打开弹窗
+
+/** 提交表单 */
+const emit = defineEmits(['success']); const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 
 const dialogVisible = ref(false) // 弹窗的是否展示
@@ -80,13 +88,13 @@ const formData = ref({
   status: CommonStatusEnum.ENABLE,
   colorType: '',
   cssClass: '',
-  remark: ''
+  remark: '',
 })
 const formRules = reactive({
   label: [{ required: true, message: '数据标签不能为空', trigger: 'blur' }],
   value: [{ required: true, message: '数据键值不能为空', trigger: 'blur' }],
   sort: [{ required: true, message: '数据顺序不能为空', trigger: 'blur' }],
-  status: [{ required: true, message: '状态不能为空', trigger: 'change' }]
+  status: [{ required: true, message: '状态不能为空', trigger: 'change' }],
 })
 const formRef = ref() // 表单 Ref
 
@@ -94,58 +102,58 @@ const formRef = ref() // 表单 Ref
 const colorTypeOptions = readonly([
   {
     value: 'default',
-    label: '默认'
+    label: '默认',
   },
   {
     value: 'primary',
-    label: '主要'
+    label: '主要',
   },
   {
     value: 'success',
-    label: '成功'
+    label: '成功',
   },
   {
     value: 'info',
-    label: '信息'
+    label: '信息',
   },
   {
     value: 'warning',
-    label: '警告'
+    label: '警告',
   },
   {
     value: 'danger',
-    label: '危险'
-  }
+    label: '危险',
+  },
 ])
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number, dictType?: string) => {
   dialogVisible.value = true
-  dialogTitle.value = t('action.' + type)
+  dialogTitle.value = t(`action.${type}`)
   formType.value = type
   resetForm()
-  if (dictType) {
+  if (dictType)
     formData.value.dictType = dictType
-  }
+
   // 修改时，设置数据
   if (id) {
     formLoading.value = true
     try {
       formData.value = await DictDataApi.getDictData(id)
-    } finally {
+    }
+    finally {
       formLoading.value = false
     }
   }
 }
-defineExpose({ open }) // 提供 open 方法，用于打开弹窗
-
-/** 提交表单 */
-const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
+defineExpose({ open }) // 定义 success 事件，用于操作成功后的回调
 const submitForm = async () => {
   // 校验表单
-  if (!formRef) return
+  if (!formRef)
+    return
   const valid = await formRef.value.validate()
-  if (!valid) return
+  if (!valid)
+    return
   // 提交请求
   formLoading.value = true
   try {
@@ -153,14 +161,16 @@ const submitForm = async () => {
     if (formType.value === 'create') {
       await DictDataApi.createDictData(data)
       message.success(t('common.createSuccess'))
-    } else {
+    }
+    else {
       await DictDataApi.updateDictData(data)
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
     // 发送操作成功的事件
     emit('success')
-  } finally {
+  }
+  finally {
     formLoading.value = false
   }
 }
@@ -176,7 +186,7 @@ const resetForm = () => {
     status: CommonStatusEnum.ENABLE,
     colorType: '',
     cssClass: '',
-    remark: ''
+    remark: '',
   }
   formRef.value?.resetFields()
 }

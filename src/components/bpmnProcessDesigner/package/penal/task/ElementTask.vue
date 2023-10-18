@@ -9,8 +9,8 @@
         />
         <el-checkbox v-model="taskConfigForm.asyncAfter" label="异步后" @change="changeTaskAsync" />
         <el-checkbox
-          v-model="taskConfigForm.exclusive"
           v-if="taskConfigForm.asyncAfter || taskConfigForm.asyncBefore"
+          v-model="taskConfigForm.exclusive"
           label="排除"
           @change="changeTaskAsync"
         />
@@ -29,12 +29,12 @@ defineOptions({ name: 'ElementTaskConfig' })
 
 const props = defineProps({
   id: String,
-  type: String
+  type: String,
 })
 const taskConfigForm = ref({
   asyncAfter: false,
   asyncBefore: false,
-  exclusive: false
+  exclusive: false,
 })
 const witchTaskComponent = ref()
 const installedComponent = ref({
@@ -43,17 +43,17 @@ const installedComponent = ref({
   // 发送任务、服务任务、业务规则任务共用一个相同配置
   UserTask: 'UserTask', // 用户任务配置
   ScriptTask: 'ScriptTask', // 脚本任务配置
-  ReceiveTask: 'ReceiveTask' // 消息接收任务
+  ReceiveTask: 'ReceiveTask', // 消息接收任务
 })
 const bpmnElement = ref()
 
 const bpmnInstances = () => (window as any).bpmnInstances
 const changeTaskAsync = () => {
-  if (!taskConfigForm.value.asyncBefore && !taskConfigForm.value.asyncAfter) {
+  if (!taskConfigForm.value.asyncBefore && !taskConfigForm.value.asyncAfter)
     taskConfigForm.value.exclusive = false
-  }
+
   bpmnInstances().modeling.updateProperties(bpmnInstances().bpmnElement, {
-    ...taskConfigForm.value
+    ...taskConfigForm.value,
   })
 }
 
@@ -65,22 +65,21 @@ watch(
     taskConfigForm.value.asyncAfter = bpmnElement.value?.businessObject?.asyncAfter
     taskConfigForm.value.exclusive = bpmnElement.value?.businessObject?.exclusive
   },
-  { immediate: true }
+  { immediate: true },
 )
 watch(
   () => props.type,
   () => {
     // witchTaskComponent.value = installedComponent.value[props.type]
-    if (props.type == installedComponent.value.UserTask) {
+    if (props.type == installedComponent.value.UserTask)
       witchTaskComponent.value = UserTask
-    }
-    if (props.type == installedComponent.value.ScriptTask) {
+
+    if (props.type == installedComponent.value.ScriptTask)
       witchTaskComponent.value = ScriptTask
-    }
-    if (props.type == installedComponent.value.ReceiveTask) {
+
+    if (props.type == installedComponent.value.ReceiveTask)
       witchTaskComponent.value = ReceiveTask
-    }
   },
-  { immediate: true }
+  { immediate: true },
 )
 </script>

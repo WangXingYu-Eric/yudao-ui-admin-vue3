@@ -9,7 +9,9 @@
       class="mt-10px"
     >
       <template #spuId>
-        <el-button @click="spuSelectRef.open()">选择商品</el-button>
+        <el-button @click="spuSelectRef.open()">
+          选择商品
+        </el-button>
         <SpuAndSkuList
           ref="spuAndSkuListRef"
           :rule-config="ruleConfig"
@@ -31,25 +33,33 @@
       </template>
     </Form>
     <template #footer>
-      <el-button :disabled="formLoading" type="primary" @click="submitForm">确 定</el-button>
-      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button :disabled="formLoading" type="primary" @click="submitForm">
+        确 定
+      </el-button>
+      <el-button @click="dialogVisible = false">
+        取 消
+      </el-button>
     </template>
   </Dialog>
-  <SpuSelect ref="spuSelectRef" :isSelectSku="true" @confirm="selectSpu" />
+  <SpuSelect ref="spuSelectRef" :is-select-sku="true" @confirm="selectSpu" />
 </template>
+
 <script lang="ts" setup>
-import * as CombinationActivityApi from '@/api/mall/promotion/combination/combinationActivity'
-import { CombinationProductVO } from '@/api/mall/promotion/combination/combinationActivity'
+import { cloneDeep } from 'lodash-es'
 import { allSchemas, rules } from './combinationActivity.data'
-import { SpuAndSkuList, SpuProperty, SpuSelect } from '@/views/mall/promotion/components'
-import { getPropertyList, RuleConfig } from '@/views/mall/product/spu/components'
+import * as CombinationActivityApi from '@/api/mall/promotion/combination/combinationActivity'
+import type { CombinationProductVO } from '@/api/mall/promotion/combination/combinationActivity'
+import type { SpuProperty } from '@/views/mall/promotion/components'
+import { SpuAndSkuList, SpuSelect } from '@/views/mall/promotion/components'
+import type { RuleConfig } from '@/views/mall/product/spu/components'
+import { getPropertyList } from '@/views/mall/product/spu/components'
 import * as ProductSpuApi from '@/api/mall/product/spu'
 import { convertToInteger, formatToFraction } from '@/utils'
-import { cloneDeep } from 'lodash-es'
 
 defineOptions({ name: 'PromotionCombinationActivityForm' })
 
-const { t } = useI18n() // 国际化
+/** 提交表单 */
+const emit = defineEmits(['success']); const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 
 const dialogVisible = ref(false) // 弹窗的是否展示
@@ -67,9 +77,9 @@ const spuPropertyList = ref<SpuProperty<CombinationActivityApi.SpuExtension>[]>(
 const ruleConfig: RuleConfig[] = [
   {
     name: 'productConfig.combinationPrice',
-    rule: (arg) => arg >= 0.01,
-    message: '商品拼团价格不能小于0.01 ！！！'
-  }
+    rule: arg => arg >= 0.01,
+    message: '商品拼团价格不能小于0.01 ！！！',
+  },
 ]
 const selectSpu = (spuId: number, skuIds: number[]) => {
   formRef.value.setValues({ spuId })
@@ -81,31 +91,31 @@ const selectSpu = (spuId: number, skuIds: number[]) => {
 const getSpuDetails = async (
   spuId: number,
   skuIds: number[] | undefined,
-  products?: CombinationProductVO[]
+  products?: CombinationProductVO[],
 ) => {
   const spuProperties: SpuProperty<CombinationActivityApi.SpuExtension>[] = []
   const res = (await ProductSpuApi.getSpuDetailList([
-    spuId
+    spuId,
   ])) as CombinationActivityApi.SpuExtension[]
-  if (res.length == 0) {
+  if (res.length == 0)
     return
-  }
+
   spuList.value = []
   // 因为只能选择一个
   const spu = res[0]
-  const selectSkus =
-    typeof skuIds === 'undefined' ? spu?.skus : spu?.skus?.filter((sku) => skuIds.includes(sku.id!))
+  const selectSkus
+    = typeof skuIds === 'undefined' ? spu?.skus : spu?.skus?.filter(sku => skuIds.includes(sku.id!))
   selectSkus?.forEach((sku) => {
     let config: CombinationProductVO = {
       spuId: spu.id!,
       skuId: sku.id!,
-      combinationPrice: 0
+      combinationPrice: 0,
     }
     if (typeof products !== 'undefined') {
-      const product = products.find((item) => item.skuId === sku.id)
-      if (product) {
+      const product = products.find(item => item.skuId === sku.id)
+      if (product)
         product.combinationPrice = formatToFraction(product.combinationPrice)
-      }
+
       config = product || config
     }
     sku.productConfig = config
@@ -114,7 +124,7 @@ const getSpuDetails = async (
   spuProperties.push({
     spuId: spu.id!,
     spuDetail: spu,
-    propertyList: getPropertyList(spu)
+    propertyList: getPropertyList(spu),
   })
   spuList.value.push(spu)
   spuPropertyList.value = spuProperties
@@ -125,7 +135,7 @@ const getSpuDetails = async (
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
   dialogVisible.value = true
-  dialogTitle.value = t('action.' + type)
+  dialogTitle.value = t(`action.${type}`)
   formType.value = type
   await resetForm()
   // 修改时，设置数据
@@ -133,11 +143,12 @@ const open = async (type: string, id?: number) => {
     formLoading.value = true
     try {
       const data = (await CombinationActivityApi.getCombinationActivity(
-        id
+        id,
       )) as CombinationActivityApi.CombinationActivityVO
-      await getSpuDetails(data.spuId!, data.products?.map((sku) => sku.skuId), data.products)
+      await getSpuDetails(data.spuId!, data.products?.map(sku => sku.skuId), data.products)
       formRef.value.setValues(data)
-    } finally {
+    }
+    finally {
       formLoading.value = false
     }
   }
@@ -152,13 +163,14 @@ const resetForm = async () => {
   formRef.value.getElFormRef().resetFields()
 }
 
-/** 提交表单 */
-const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
+// 定义 success 事件，用于操作成功后的回调
 const submitForm = async () => {
   // 校验表单
-  if (!formRef) return
+  if (!formRef)
+    return
   const valid = await formRef.value.getElFormRef().validate()
-  if (!valid) return
+  if (!valid)
+    return
   // 提交请求
   formLoading.value = true
   try {
@@ -173,14 +185,16 @@ const submitForm = async () => {
     if (formType.value === 'create') {
       await CombinationActivityApi.createCombinationActivity(data)
       message.success(t('common.createSuccess'))
-    } else {
+    }
+    else {
       await CombinationActivityApi.updateCombinationActivity(data)
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
     // 发送操作成功的事件
     emit('success')
-  } finally {
+  }
+  finally {
     formLoading.value = false
   }
 }

@@ -1,6 +1,6 @@
 import request from '@/config/axios'
 
-export type TaskVO = {
+export interface TaskVO {
   id: number
 }
 
@@ -33,7 +33,7 @@ export const updateTaskAssignee = async (data) => {
 
 export const getTaskListByProcessInstanceId = async (processInstanceId) => {
   return await request.get({
-    url: '/bpm/task/list-by-process-instance-id?processInstanceId=' + processInstanceId
+    url: `/bpm/task/list-by-process-instance-id?processInstanceId=${processInstanceId}`,
   })
 }
 
@@ -70,7 +70,7 @@ export const taskAddSign = async (data) => {
  * 获取减签任务列表
  */
 export const getChildrenTaskList = async (id: string) => {
-  return await request.get({ url: '/bpm/task/get-children-task-list?taskId=' + id })
+  return await request.get({ url: `/bpm/task/get-children-task-list?taskId=${id}` })
 }
 
 /**

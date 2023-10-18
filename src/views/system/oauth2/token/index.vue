@@ -4,9 +4,9 @@
   <ContentWrap>
     <!-- 搜索工作栏 -->
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="90px"
     >
@@ -15,8 +15,8 @@
           v-model="queryParams.userId"
           placeholder="请输入用户编号"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="用户类型" prop="userType">
@@ -39,13 +39,17 @@
           v-model="queryParams.clientId"
           placeholder="请输入客户端编号"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        <el-button @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" /> 搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon icon="ep:refresh" class="mr-5px" /> 重置
+        </el-button>
       </el-form-item>
     </el-form>
   </ContentWrap>
@@ -78,10 +82,10 @@
       <el-table-column label="操作" align="center">
         <template #default="scope">
           <el-button
+            v-hasPermi="['system:oauth2-token:delete']"
             link
             type="danger"
             @click="handleForceLogout(scope.row.accessToken)"
-            v-hasPermi="['system:oauth2-token:delete']"
           >
             强退
           </el-button>
@@ -90,9 +94,9 @@
     </el-table>
     <!-- 分页 -->
     <Pagination
-      :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
+      :total="total"
       @pagination="getList"
     />
   </ContentWrap>
@@ -116,7 +120,7 @@ const queryParams = reactive({
   pageSize: 10,
   userId: null,
   userType: null,
-  clientId: null
+  clientId: null,
 })
 const queryFormRef = ref() // 搜索的表单
 
@@ -127,7 +131,8 @@ const getList = async () => {
     const data = await OAuth2AccessTokenApi.getAccessTokenPage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -154,10 +159,11 @@ const handleForceLogout = async (accessToken: string) => {
     message.success(t('common.success'))
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

@@ -3,9 +3,10 @@
     <Descriptions :data="detailData" :schema="allSchemas.detailSchema" />
   </Dialog>
 </template>
+
 <script lang="ts" setup>
-import * as MailAccountApi from '@/api/system/mail/account'
 import { allSchemas } from './account.data'
+import * as MailAccountApi from '@/api/system/mail/account'
 
 defineOptions({ name: 'SystemMailAccountDetail' })
 
@@ -20,7 +21,8 @@ const open = async (id: number) => {
   detailLoading.value = true
   try {
     detailData.value = await MailAccountApi.getMailAccount(id)
-  } finally {
+  }
+  finally {
     detailLoading.value = false
   }
 }

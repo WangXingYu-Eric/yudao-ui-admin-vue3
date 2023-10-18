@@ -3,9 +3,9 @@
   <!-- 搜索 -->
   <ContentWrap>
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="68px"
     >
@@ -36,8 +36,12 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        <el-button @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" /> 搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon icon="ep:refresh" class="mr-5px" /> 重置
+        </el-button>
         <el-button type="primary" plain @click="openForm">
           <Icon icon="ep:upload" class="mr-5px" /> 上传文件
         </el-button>
@@ -69,10 +73,10 @@
       <el-table-column label="操作" align="center">
         <template #default="scope">
           <el-button
+            v-hasPermi="['infra:config:delete']"
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
-            v-hasPermi="['infra:config:delete']"
           >
             删除
           </el-button>
@@ -81,9 +85,9 @@
     </el-table>
     <!-- 分页 -->
     <Pagination
-      :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
+      :total="total"
       @pagination="getList"
     />
   </ContentWrap>
@@ -91,11 +95,12 @@
   <!-- 表单弹窗：添加/修改 -->
   <FileForm ref="formRef" @success="getList" />
 </template>
+
 <script lang="ts" setup>
+import FileForm from './FileForm.vue'
 import { fileSizeFormatter } from '@/utils'
 import { dateFormatter } from '@/utils/formatTime'
 import * as FileApi from '@/api/infra/file'
-import FileForm from './FileForm.vue'
 
 defineOptions({ name: 'InfraFile' })
 
@@ -110,7 +115,7 @@ const queryParams = reactive({
   pageSize: 10,
   name: undefined,
   type: undefined,
-  createTime: []
+  createTime: [],
 })
 const queryFormRef = ref() // 搜索的表单
 
@@ -121,7 +126,8 @@ const getList = async () => {
     const data = await FileApi.getFilePage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -154,10 +160,11 @@ const handleDelete = async (id: number) => {
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

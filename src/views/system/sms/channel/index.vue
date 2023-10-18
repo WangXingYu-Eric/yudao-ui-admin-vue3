@@ -3,9 +3,9 @@
 
   <ContentWrap>
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="68px"
     >
@@ -38,16 +38,20 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        <el-button @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" /> 搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon icon="ep:refresh" class="mr-5px" /> 重置
+        </el-button>
         <el-button
+          v-hasPermi="['system:sms-channel:create']"
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['system:sms-channel:create']"
         >
-          <Icon icon="ep:plus" class="mr-5px" /> 新增</el-button
-        >
+          <Icon icon="ep:plus" class="mr-5px" /> 新增
+        </el-button>
       </el-form-item>
     </el-form>
   </ContentWrap>
@@ -99,18 +103,18 @@
       <el-table-column label="操作" align="center">
         <template #default="scope">
           <el-button
+            v-hasPermi="['system:sms-channel:update']"
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['system:sms-channel:update']"
           >
             编辑
           </el-button>
           <el-button
+            v-hasPermi="['system:sms-channel:delete']"
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
-            v-hasPermi="['system:sms-channel:delete']"
           >
             删除
           </el-button>
@@ -119,9 +123,9 @@
     </el-table>
     <!-- 分页 -->
     <Pagination
-      :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
+      :total="total"
       @pagination="getList"
     />
   </ContentWrap>
@@ -129,11 +133,12 @@
   <!-- 表单弹窗：添加/修改 -->
   <SmsChannelForm ref="formRef" @success="getList" />
 </template>
+
 <script lang="ts" setup>
+import SmsChannelForm from './SmsChannelForm.vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { dateFormatter } from '@/utils/formatTime'
 import * as SmsChannelApi from '@/api/system/sms/smsChannel'
-import SmsChannelForm from './SmsChannelForm.vue'
 
 defineOptions({ name: 'SystemSmsChannel' })
 
@@ -149,7 +154,7 @@ const queryParams = reactive({
   pageSize: 10,
   signature: undefined,
   status: undefined,
-  createTime: []
+  createTime: [],
 })
 
 /** 查询列表 */
@@ -159,7 +164,8 @@ const getList = async () => {
     const data = await SmsChannelApi.getSmsChannelPage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -192,10 +198,11 @@ const handleDelete = async (id: number) => {
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

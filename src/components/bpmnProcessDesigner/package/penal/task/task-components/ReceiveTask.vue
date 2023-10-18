@@ -12,14 +12,14 @@
         <el-select v-model="bindMessageId" @change="updateTaskMessage">
           <el-option
             v-for="key in Object.keys(messageMap)"
+            :key="key"
             :value="key"
             :label="messageMap[key]"
-            :key="key"
           />
         </el-select>
         <XButton
           type="primary"
-          preIcon="ep:plus"
+          pre-icon="ep:plus"
           style="margin-left: 8px"
           @click="openMessageModel"
         />
@@ -42,7 +42,9 @@
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button size="small" type="primary" @click="createNewMessage">确 认</el-button>
+        <el-button size="small" type="primary" @click="createNewMessage">
+          确 认
+        </el-button>
       </template>
     </el-dialog>
   </div>
@@ -52,7 +54,7 @@
 defineOptions({ name: 'ReceiveTask' })
 const props = defineProps({
   id: String,
-  type: String
+  type: String,
 })
 
 const message = useMessage()
@@ -88,11 +90,12 @@ const createNewMessage = () => {
 const updateTaskMessage = (messageId) => {
   if (messageId === '-1') {
     bpmnInstances().modeling.updateProperties(toRaw(bpmnElement.value), {
-      messageRef: null
+      messageRef: null,
     })
-  } else {
+  }
+  else {
     bpmnInstances().modeling.updateProperties(toRaw(bpmnElement.value), {
-      messageRef: bpmnMessageRefsMap.value[messageId]
+      messageRef: bpmnMessageRefsMap.value[messageId],
     })
   }
 }
@@ -101,7 +104,7 @@ onMounted(() => {
   bpmnMessageRefsMap.value = Object.create(null)
   bpmnRootElements.value = bpmnInstances().modeler.getDefinitions().rootElements
   bpmnRootElements.value
-    .filter((el) => el.$type === 'bpmn:Message')
+    .filter(el => el.$type === 'bpmn:Message')
     .forEach((m) => {
       bpmnMessageRefsMap.value[m.id] = m
       messageMap.value[m.id] = m.name
@@ -120,6 +123,6 @@ watch(
       getBindMessage()
     })
   },
-  { immediate: true }
+  { immediate: true },
 )
 </script>

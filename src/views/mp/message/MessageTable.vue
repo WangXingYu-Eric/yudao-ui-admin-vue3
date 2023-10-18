@@ -11,8 +11,12 @@
       <el-table-column label="消息类型" align="center" prop="type" width="80" />
       <el-table-column label="发送方" align="center" prop="sendFrom" width="80">
         <template #default="scope">
-          <el-tag v-if="scope.row.sendFrom === 1" type="success">粉丝</el-tag>
-          <el-tag v-else type="info">公众号</el-tag>
+          <el-tag v-if="scope.row.sendFrom === 1" type="success">
+            粉丝
+          </el-tag>
+          <el-tag v-else type="info">
+            公众号
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column label="用户标识" align="center" prop="openid" width="300" />
@@ -20,10 +24,14 @@
         <template #default="scope">
           <!-- 【事件】区域 -->
           <div v-if="scope.row.type === MsgType.Event && scope.row.event === 'subscribe'">
-            <el-tag type="success">关注</el-tag>
+            <el-tag type="success">
+              关注
+            </el-tag>
           </div>
           <div v-else-if="scope.row.type === MsgType.Event && scope.row.event === 'unsubscribe'">
-            <el-tag type="danger">取消关注</el-tag>
+            <el-tag type="danger">
+              取消关注
+            </el-tag>
           </div>
           <div v-else-if="scope.row.type === MsgType.Event && scope.row.event === 'CLICK'">
             <el-tag>点击菜单</el-tag>
@@ -60,20 +68,24 @@
             <el-tag>选择地理位置</el-tag>
           </div>
           <div v-else-if="scope.row.type === MsgType.Event">
-            <el-tag type="danger">未知事件类型</el-tag>
+            <el-tag type="danger">
+              未知事件类型
+            </el-tag>
           </div>
           <!-- 【消息】区域 -->
-          <div v-else-if="scope.row.type === MsgType.Text">{{ scope.row.content }}</div>
+          <div v-else-if="scope.row.type === MsgType.Text">
+            {{ scope.row.content }}
+          </div>
           <div v-else-if="scope.row.type === MsgType.Voice">
-            <wx-voice-player :url="scope.row.mediaUrl" :content="scope.row.recognition" />
+            <WxVoicePlayer :url="scope.row.mediaUrl" :content="scope.row.recognition" />
           </div>
           <div v-else-if="scope.row.type === MsgType.Image">
             <a target="_blank" :href="scope.row.mediaUrl">
-              <img :src="scope.row.mediaUrl" style="width: 100px" />
+              <img :src="scope.row.mediaUrl" style="width: 100px">
             </a>
           </div>
           <div v-else-if="scope.row.type === MsgType.Video || scope.row.type === 'shortvideo'">
-            <wx-video-player :url="scope.row.mediaUrl" style="margin-top: 10px" />
+            <WxVideoPlayer :url="scope.row.mediaUrl" style="margin-top: 10px" />
           </div>
           <div v-else-if="scope.row.type === MsgType.Link">
             <el-tag>链接</el-tag>
@@ -100,17 +112,19 @@
             <WxNews :articles="scope.row.articles" />
           </div>
           <div v-else>
-            <el-tag type="danger">未知消息类型</el-tag>
+            <el-tag type="danger">
+              未知消息类型
+            </el-tag>
           </div>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button
+            v-hasPermi="['mp:message:send']"
             link
             type="primary"
             @click="emit('send', scope.row.userId)"
-            v-hasPermi="['mp:message:send']"
           >
             消息
           </el-button>
@@ -133,12 +147,12 @@ import { MsgType } from '@/views/mp/components/wx-msg/types'
 const props = defineProps({
   list: {
     type: Array,
-    required: true
+    required: true,
   },
   loading: {
     type: Boolean,
-    required: true
-  }
+    required: true,
+  },
 })
 
 const emit = defineEmits<{ (e: 'send', v: number) }>()

@@ -4,10 +4,10 @@
     <el-form class="-mb-15px" :inline="true">
       <el-form-item>
         <el-button
+          v-hasPermi="['infra:data-source-config:create']"
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['infra:data-source-config:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
@@ -32,20 +32,20 @@
       <el-table-column label="操作" align="center">
         <template #default="scope">
           <el-button
+            v-hasPermi="['infra:data-source-config:update']"
             link
             type="primary"
-            @click="openForm('update', scope.row.id)"
-            v-hasPermi="['infra:data-source-config:update']"
             :disabled="scope.row.id === 0"
+            @click="openForm('update', scope.row.id)"
           >
             编辑
           </el-button>
           <el-button
+            v-hasPermi="['infra:data-source-config:delete']"
             link
             type="danger"
-            @click="handleDelete(scope.row.id)"
-            v-hasPermi="['infra:data-source-config:delete']"
             :disabled="scope.row.id === 0"
+            @click="handleDelete(scope.row.id)"
           >
             删除
           </el-button>
@@ -57,10 +57,11 @@
   <!-- 表单弹窗：添加/修改 -->
   <DataSourceConfigForm ref="formRef" @success="getList" />
 </template>
+
 <script lang="ts" setup>
+import DataSourceConfigForm from './DataSourceConfigForm.vue'
 import { dateFormatter } from '@/utils/formatTime'
 import * as DataSourceConfigApi from '@/api/infra/dataSourceConfig'
-import DataSourceConfigForm from './DataSourceConfigForm.vue'
 
 defineOptions({ name: 'InfraDataSourceConfig' })
 
@@ -75,7 +76,8 @@ const getList = async () => {
   loading.value = true
   try {
     list.value = await DataSourceConfigApi.getDataSourceConfigList()
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -96,10 +98,11 @@ const handleDelete = async (id: number) => {
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

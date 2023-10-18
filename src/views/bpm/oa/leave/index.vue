@@ -2,9 +2,9 @@
   <ContentWrap>
     <!-- 搜索工作栏 -->
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="68px"
     >
@@ -49,13 +49,17 @@
           v-model="queryParams.reason"
           placeholder="请输入原因"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        <el-button @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" /> 搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon icon="ep:refresh" class="mr-5px" /> 重置
+        </el-button>
         <el-button type="primary" plain @click="handleCreate()">
           <Icon icon="ep:plus" class="mr-5px" /> 发起请假
         </el-button>
@@ -102,27 +106,27 @@
       <el-table-column label="操作" align="center" width="200">
         <template #default="scope">
           <el-button
+            v-hasPermi="['bpm:oa-leave:query']"
             link
             type="primary"
             @click="handleDetail(scope.row)"
-            v-hasPermi="['bpm:oa-leave:query']"
           >
             详情
           </el-button>
           <el-button
+            v-hasPermi="['bpm:oa-leave:query']"
             link
             type="primary"
             @click="handleProcessDetail(scope.row)"
-            v-hasPermi="['bpm:oa-leave:query']"
           >
             进度
           </el-button>
           <el-button
+            v-if="scope.row.result === 1"
+            v-hasPermi="['bpm:oa-leave:create']"
             link
             type="danger"
             @click="cancelLeave(scope.row)"
-            v-hasPermi="['bpm:oa-leave:create']"
-            v-if="scope.row.result === 1"
           >
             取消
           </el-button>
@@ -131,13 +135,14 @@
     </el-table>
     <!-- 分页 -->
     <Pagination
-      :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
+      :total="total"
       @pagination="getList"
     />
   </ContentWrap>
 </template>
+
 <script lang="ts" setup>
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { dateFormatter } from '@/utils/formatTime'
@@ -159,7 +164,7 @@ const queryParams = reactive({
   type: undefined,
   result: undefined,
   reason: undefined,
-  createTime: []
+  createTime: [],
 })
 const queryFormRef = ref() // 搜索的表单
 
@@ -170,7 +175,8 @@ const getList = async () => {
     const data = await LeaveApi.getLeavePage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -197,8 +203,8 @@ const handleDetail = (row: LeaveApi.LeaveVO) => {
   router.push({
     name: 'OALeaveDetail',
     query: {
-      id: row.id
-    }
+      id: row.id,
+    },
   })
 }
 
@@ -209,7 +215,7 @@ const cancelLeave = async (row) => {
     confirmButtonText: t('common.ok'),
     cancelButtonText: t('common.cancel'),
     inputPattern: /^[\s\S]*.*\S[\s\S]*$/, // 判断非空，且非空格
-    inputErrorMessage: '取消原因不能为空'
+    inputErrorMessage: '取消原因不能为空',
   })
   // 发起取消
   await ProcessInstanceApi.cancelProcessInstance(row.id, value)
@@ -223,12 +229,12 @@ const handleProcessDetail = (row) => {
   router.push({
     name: 'BpmProcessInstanceDetail',
     query: {
-      id: row.processInstanceId
-    }
+      id: row.processInstanceId,
+    },
   })
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

@@ -2,7 +2,7 @@
   <div>
     <el-row>
       <el-input v-model="reply.title" class="input-margin-bottom" placeholder="请输入标题" />
-      <el-input class="input-margin-bottom" v-model="reply.description" placeholder="请输入描述" />
+      <el-input v-model="reply.description" class="input-margin-bottom" placeholder="请输入描述" />
       <el-row class="ope-row" justify="center">
         <WxVideoPlayer v-if="reply.url" :url="reply.url" />
       </el-row>
@@ -14,8 +14,8 @@
               素材库选择 <Icon icon="ep:circle-check" />
             </el-button>
             <el-dialog
-              title="选择视频"
               v-model="showDialog"
+              title="选择视频"
               width="90%"
               append-to-body
               destroy-on-close
@@ -39,7 +39,9 @@
               :before-upload="beforeVideoUpload"
               :on-success="onUploadSuccess"
             >
-              <el-button type="primary">新建视频 <Icon icon="ep:upload" /></el-button>
+              <el-button type="primary">
+                新建视频 <Icon icon="ep:upload" />
+              </el-button>
             </el-upload>
           </el-col>
         </el-row>
@@ -49,27 +51,29 @@
 </template>
 
 <script lang="ts" setup>
+import type { UploadRawFile } from 'element-plus'
+import type { Reply } from './types'
 import WxVideoPlayer from '@/views/mp/components/wx-video-play'
 import WxMaterialSelect from '@/views/mp/components/wx-material-select'
-import type { UploadRawFile } from 'element-plus'
 import { UploadType, useBeforeUpload } from '@/views/mp/hooks/useUpload'
 import { getAccessToken } from '@/utils/auth'
-import { Reply } from './types'
-
-const message = useMessage()
-
-const UPLOAD_URL = import.meta.env.VITE_API_BASEPATH + '/admin-api/mp/material/upload-temporary'
-const HEADERS = { Authorization: 'Bearer ' + getAccessToken() }
 
 const props = defineProps<{
   modelValue: Reply
 }>()
+
 const emit = defineEmits<{
   (e: 'update:modelValue', v: Reply)
 }>()
+
+const message = useMessage()
+
+const UPLOAD_URL = `${import.meta.env.VITE_API_BASEPATH}/admin-api/mp/material/upload-temporary`
+const HEADERS = { Authorization: `Bearer ${getAccessToken()}` }
+
 const reply = computed<Reply>({
   get: () => props.modelValue,
-  set: (val) => emit('update:modelValue', val)
+  set: val => emit('update:modelValue', val),
 })
 
 const showDialog = ref(false)
@@ -78,14 +82,14 @@ const uploadData = reactive({
   accountId: reply.value.accountId,
   type: 'video',
   title: '',
-  introduction: ''
+  introduction: '',
 })
 
 const beforeVideoUpload = (rawFile: UploadRawFile) => useBeforeUpload(UploadType.Video, 10)(rawFile)
 
 const onUploadSuccess = (res: any) => {
   if (res.code !== 0) {
-    message.error('上传出错：' + res.msg)
+    message.error(`上传出错：${res.msg}`)
     return false
   }
 
@@ -106,12 +110,11 @@ const selectMaterial = (item: any) => {
   reply.value.name = item.name
 
   // title、introduction：从 item 到 tempObjItem，因为素材里有 title、introduction
-  if (item.title) {
+  if (item.title)
     reply.value.title = item.title || ''
-  }
-  if (item.introduction) {
+
+  if (item.introduction)
     reply.value.description = item.introduction || ''
-  }
 }
 </script>
 

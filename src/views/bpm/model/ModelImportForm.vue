@@ -18,7 +18,9 @@
         name="bpmnFile"
       >
         <Icon class="el-icon--upload" icon="ep:upload-filled" />
-        <div class="el-upload__text"> 将文件拖到此处，或 <em>点击上传</em></div>
+        <div class="el-upload__text">
+          将文件拖到此处，或 <em>点击上传</em>
+        </div>
         <template #tip>
           <div class="el-upload__tip" style="color: red">
             提示：仅允许导入“bpm”或“xml”格式文件！
@@ -44,32 +46,38 @@
       </el-upload>
     </div>
     <template #footer>
-      <el-button :disabled="formLoading" type="primary" @click="submitForm">确 定</el-button>
-      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button :disabled="formLoading" type="primary" @click="submitForm">
+        确 定
+      </el-button>
+      <el-button @click="dialogVisible = false">
+        取 消
+      </el-button>
     </template>
   </Dialog>
 </template>
+
 <script lang="ts" setup>
 import { getAccessToken, getTenantId } from '@/utils/auth'
 
 defineOptions({ name: 'ModelImportForm' })
 
-const message = useMessage() // 消息弹窗
+/** 文件上传成功 */
+const emit = defineEmits(['success']); const message = useMessage() // 消息弹窗
 
 const dialogVisible = ref(false) // 弹窗的是否展示
 const formLoading = ref(false) // 表单的加载中
 const formData = ref({
   key: '',
   name: '',
-  description: ''
+  description: '',
 })
 const formRules = reactive({
   key: [{ required: true, message: '流程标识不能为空', trigger: 'blur' }],
-  name: [{ required: true, message: '流程名称不能为空', trigger: 'blur' }]
+  name: [{ required: true, message: '流程名称不能为空', trigger: 'blur' }],
 })
 const formRef = ref() // 表单 Ref
 const uploadRef = ref() // 上传 Ref
-const importUrl = import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_URL + '/bpm/model/import'
+const importUrl = `${import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_URL}/bpm/model/import`
 const uploadHeaders = ref() // 上传 Header 头
 const fileList = ref([]) // 文件列表
 
@@ -83,24 +91,25 @@ defineExpose({ open }) // 提供 open 方法，用于打开弹窗
 /** 提交表单 */
 const submitForm = async () => {
   // 校验表单
-  if (!formRef) return
+  if (!formRef)
+    return
   const valid = await formRef.value.validate()
-  if (!valid) return
+  if (!valid)
+    return
   if (fileList.value.length == 0) {
     message.error('请上传文件')
     return
   }
   // 提交请求
   uploadHeaders.value = {
-    Authorization: 'Bearer ' + getAccessToken(),
-    'tenant-id': getTenantId()
+    'Authorization': `Bearer ${getAccessToken()}`,
+    'tenant-id': getTenantId(),
   }
   formLoading.value = true
   uploadRef.value!.submit()
 }
 
-/** 文件上传成功 */
-const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
+// 定义 success 事件，用于操作成功后的回调
 const submitFormSuccess = async (response: any) => {
   if (response.code !== 0) {
     message.error(response.msg)
@@ -128,7 +137,7 @@ const resetForm = () => {
   formData.value = {
     key: '',
     name: '',
-    description: ''
+    description: '',
   }
   formRef.value?.resetFields()
 }

@@ -9,7 +9,7 @@
           :percent="
             calculateRelativeRate(
               summary?.value?.yesterdayOrderCount,
-              summary?.reference?.yesterdayOrderCount
+              summary?.reference?.yesterdayOrderCount,
             )
           "
         />
@@ -22,7 +22,7 @@
           :percent="
             calculateRelativeRate(
               summary?.value?.monthOrderCount,
-              summary?.reference?.monthOrderCount
+              summary?.reference?.monthOrderCount,
             )
           "
         />
@@ -37,7 +37,7 @@
           :percent="
             calculateRelativeRate(
               summary?.value?.yesterdayPayPrice,
-              summary?.reference?.yesterdayPayPrice
+              summary?.reference?.yesterdayPayPrice,
             )
           "
         />
@@ -63,9 +63,15 @@
           <!-- 查询条件 -->
           <div class="flex flex-row items-center gap-2">
             <el-radio-group v-model="shortcutDays" @change="handleDateTypeChange">
-              <el-radio-button :label="1">昨天</el-radio-button>
-              <el-radio-button :label="7">最近7天</el-radio-button>
-              <el-radio-button :label="30">最近30天</el-radio-button>
+              <el-radio-button :label="1">
+                昨天
+              </el-radio-button>
+              <el-radio-button :label="7">
+                最近7天
+              </el-radio-button>
+              <el-radio-button :label="30">
+                最近30天
+              </el-radio-button>
             </el-radio-group>
             <el-date-picker
               v-model="queryParams.times"
@@ -79,10 +85,10 @@
               @change="getTradeTrendData"
             />
             <el-button
-              class="ml-4"
-              @click="handleExport"
-              :loading="exportLoading"
               v-hasPermi="['statistics:trade:export']"
+              class="ml-4"
+              :loading="exportLoading"
+              @click="handleExport"
             >
               <Icon icon="ep:download" class="mr-1" />导出
             </el-button>
@@ -104,7 +110,7 @@
             :percent="
               calculateRelativeRate(
                 trendSummary?.value?.turnover,
-                trendSummary?.reference?.turnover
+                trendSummary?.reference?.turnover,
               )
             "
           />
@@ -122,7 +128,7 @@
             :percent="
               calculateRelativeRate(
                 trendSummary?.value?.orderPayPrice,
-                trendSummary?.reference?.orderPayPrice
+                trendSummary?.reference?.orderPayPrice,
               )
             "
           />
@@ -140,7 +146,7 @@
             :percent="
               calculateRelativeRate(
                 trendSummary?.value?.rechargePrice,
-                trendSummary?.reference?.rechargePrice
+                trendSummary?.reference?.rechargePrice,
               )
             "
           />
@@ -158,7 +164,7 @@
             :percent="
               calculateRelativeRate(
                 trendSummary?.value?.expensePrice,
-                trendSummary?.reference?.expensePrice
+                trendSummary?.reference?.expensePrice,
               )
             "
           />
@@ -176,7 +182,7 @@
             :percent="
               calculateRelativeRate(
                 trendSummary?.value?.balancePrice,
-                trendSummary?.reference?.balancePrice
+                trendSummary?.reference?.balancePrice,
               )
             "
           />
@@ -194,7 +200,7 @@
             :percent="
               calculateRelativeRate(
                 trendSummary?.value?.brokerageSettlementPrice,
-                trendSummary?.reference?.brokerageSettlementPrice
+                trendSummary?.reference?.brokerageSettlementPrice,
               )
             "
           />
@@ -212,7 +218,7 @@
             :percent="
               calculateRelativeRate(
                 trendSummary?.value?.orderRefundPrice,
-                trendSummary?.reference?.orderRefundPrice
+                trendSummary?.reference?.orderRefundPrice,
               )
             "
           />
@@ -225,18 +231,19 @@
     </el-card>
   </div>
 </template>
+
 <script lang="ts" setup>
-import * as TradeStatisticsApi from '@/api/mall/statistics/trade'
+import type { EChartsOption } from 'echarts'
+import dayjs from 'dayjs'
 import TradeStatisticValue from './components/TradeStatisticValue.vue'
 import TradeTrendValue from './components/TradeTrendValue.vue'
-import { EChartsOption } from 'echarts'
-import {
+import * as TradeStatisticsApi from '@/api/mall/statistics/trade'
+import type {
   TradeStatisticsComparisonRespVO,
   TradeSummaryRespVO,
   TradeTrendReqVO,
-  TradeTrendSummaryRespVO
+  TradeTrendSummaryRespVO,
 } from '@/api/mall/statistics/trade'
-import dayjs from 'dayjs'
 import { fenToYuan } from '@/utils'
 import * as DateUtil from '@/utils/formatTime'
 import download from '@/utils/download'
@@ -258,85 +265,86 @@ const trendSummary = ref<TradeStatisticsComparisonRespVO<TradeTrendSummaryRespVO
 const shortcuts = [
   {
     text: '昨天',
-    value: () => DateUtil.getDayRange(new Date(), -1)
+    value: () => DateUtil.getDayRange(new Date(), -1),
   },
   {
     text: '最近7天',
-    value: () => DateUtil.getLast7Days()
+    value: () => DateUtil.getLast7Days(),
   },
   {
     text: '本月',
-    value: () => [dayjs().startOf('M'), dayjs().subtract(1, 'd')]
+    value: () => [dayjs().startOf('M'), dayjs().subtract(1, 'd')],
   },
   {
     text: '最近30天',
-    value: () => DateUtil.getLast30Days()
+    value: () => DateUtil.getLast30Days(),
   },
   {
     text: '最近1年',
-    value: () => DateUtil.getLast1Year()
-  }
+    value: () => DateUtil.getLast1Year(),
+  },
 ]
 
 /** 折线图配置 */
 const lineChartOptions = reactive<EChartsOption>({
   dataset: {
     dimensions: ['date', 'turnover', 'orderPayPrice', 'rechargePrice', 'expensePrice'],
-    source: []
+    source: [],
   },
   grid: {
     left: 20,
     right: 20,
     bottom: 20,
     top: 80,
-    containLabel: true
+    containLabel: true,
   },
   legend: {
-    top: 50
+    top: 50,
   },
   series: [
     { name: '营业额', type: 'line', smooth: true },
     { name: '商品支付金额', type: 'line', smooth: true },
     { name: '充值金额', type: 'line', smooth: true },
-    { name: '支出金额', type: 'line', smooth: true }
+    { name: '支出金额', type: 'line', smooth: true },
   ],
   toolbox: {
     feature: {
       // 数据区域缩放
       dataZoom: {
-        yAxisIndex: false // Y轴不缩放
+        yAxisIndex: false, // Y轴不缩放
       },
       brush: {
-        type: ['lineX', 'clear'] // 区域缩放按钮、还原按钮
+        type: ['lineX', 'clear'], // 区域缩放按钮、还原按钮
       },
-      saveAsImage: { show: true, name: '交易状况' } // 保存为图片
-    }
+      saveAsImage: { show: true, name: '交易状况' }, // 保存为图片
+    },
   },
   tooltip: {
     trigger: 'axis',
     axisPointer: {
-      type: 'cross'
+      type: 'cross',
     },
-    padding: [5, 10]
+    padding: [5, 10],
   },
   xAxis: {
     type: 'category',
     boundaryGap: false,
     axisTick: {
-      show: false
-    }
+      show: false,
+    },
   },
   yAxis: {
     axisTick: {
-      show: false
-    }
-  }
+      show: false,
+    },
+  },
 }) as EChartsOption
 
 /** 计算环比 */
 const calculateRelativeRate = (value?: number, reference?: number) => {
   // 防止除0
-  if (!reference) return 0
+  if (!reference)
+    return 0
 
   return ((100 * ((value || 0) - reference)) / reference).toFixed(0)
 }
@@ -386,16 +394,15 @@ const getTradeTrendList = async () => {
   // 查询数据
   const list = await TradeStatisticsApi.getTradeTrendList({ times })
   // 处理数据
-  for (let item of list) {
+  for (const item of list) {
     item.turnover = fenToYuan(item.turnover)
     item.orderPayPrice = fenToYuan(item.orderPayPrice)
     item.rechargePrice = fenToYuan(item.rechargePrice)
     item.expensePrice = fenToYuan(item.expensePrice)
   }
   // 更新 Echarts 数据
-  if (lineChartOptions.dataset && lineChartOptions.dataset['source']) {
-    lineChartOptions.dataset['source'] = list
-  }
+  if (lineChartOptions.dataset && lineChartOptions.dataset.source)
+    lineChartOptions.dataset.source = list
 }
 
 /** 导出按钮操作 */
@@ -407,18 +414,21 @@ const handleExport = async () => {
     exportLoading.value = true
     const data = await TradeStatisticsApi.exportTradeTrend(queryParams)
     download.excel(data, '交易状况.xls')
-  } catch {
-  } finally {
+  }
+  catch {
+  }
+  finally {
     exportLoading.value = false
   }
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(async () => {
   await getTradeStatisticsSummary()
   await handleDateTypeChange()
 })
 </script>
+
 <style lang="scss" scoped>
 .summary {
   .el-col {

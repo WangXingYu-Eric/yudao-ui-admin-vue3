@@ -25,10 +25,11 @@
     </el-descriptions>
   </Dialog>
 </template>
+
 <script lang="ts" setup>
 import { DICT_TYPE } from '@/utils/dict'
 import { formatDate } from '@/utils/formatTime'
-import * as TaskApi from '@/api/bpm/task'
+import type * as TaskApi from '@/api/bpm/task'
 
 defineOptions({ name: 'BpmTaskDetail' })
 
@@ -43,7 +44,8 @@ const open = async (data: TaskApi.TaskVO) => {
   detailLoading.value = true
   try {
     detailData.value = data
-  } finally {
+  }
+  finally {
     detailLoading.value = false
   }
 }

@@ -12,8 +12,8 @@
           v-model="formData.parentId"
           :data="deptTree"
           :props="defaultProps"
-          check-strictly
-          default-expand-all
+
+          default-expand-all check-strictly
           placeholder="请选择上级部门"
           value-key="deptId"
         />
@@ -52,11 +52,16 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button type="primary" @click="submitForm">确 定</el-button>
-      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button type="primary" @click="submitForm">
+        确 定
+      </el-button>
+      <el-button @click="dialogVisible = false">
+        取 消
+      </el-button>
     </template>
   </Dialog>
 </template>
+
 <script lang="ts" setup>
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { defaultProps, handleTree } from '@/utils/tree'
@@ -66,7 +71,10 @@ import { CommonStatusEnum } from '@/utils/constants'
 
 defineOptions({ name: 'SystemDeptForm' })
 
-const { t } = useI18n() // 国际化
+// 提供 open 方法，用于打开弹窗
+
+/** 提交表单 */
+const emit = defineEmits(['success']); const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 
 const dialogVisible = ref(false) // 弹窗的是否展示
@@ -82,7 +90,7 @@ const formData = ref({
   leaderUserId: undefined,
   phone: undefined,
   email: undefined,
-  status: CommonStatusEnum.ENABLE
+  status: CommonStatusEnum.ENABLE,
 })
 const formRules = reactive({
   parentId: [{ required: true, message: '上级部门不能为空', trigger: 'blur' }],
@@ -90,9 +98,9 @@ const formRules = reactive({
   sort: [{ required: true, message: '显示排序不能为空', trigger: 'blur' }],
   email: [{ type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }],
   phone: [
-    { pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/, message: '请输入正确的手机号码', trigger: 'blur' }
+    { pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/, message: '请输入正确的手机号码', trigger: 'blur' },
   ],
-  status: [{ required: true, message: '状态不能为空', trigger: 'blur' }]
+  status: [{ required: true, message: '状态不能为空', trigger: 'blur' }],
 })
 const formRef = ref() // 表单 Ref
 const deptTree = ref() // 树形结构
@@ -101,7 +109,7 @@ const userList = ref<UserApi.UserVO[]>([]) // 用户列表
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
   dialogVisible.value = true
-  dialogTitle.value = t('action.' + type)
+  dialogTitle.value = t(`action.${type}`)
   formType.value = type
   resetForm()
   // 修改时，设置数据
@@ -109,7 +117,8 @@ const open = async (type: string, id?: number) => {
     formLoading.value = true
     try {
       formData.value = await DeptApi.getDept(id)
-    } finally {
+    }
+    finally {
       formLoading.value = false
     }
   }
@@ -118,15 +127,14 @@ const open = async (type: string, id?: number) => {
   // 获得部门树
   await getTree()
 }
-defineExpose({ open }) // 提供 open 方法，用于打开弹窗
-
-/** 提交表单 */
-const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
+defineExpose({ open }) // 定义 success 事件，用于操作成功后的回调
 const submitForm = async () => {
   // 校验表单
-  if (!formRef) return
+  if (!formRef)
+    return
   const valid = await formRef.value.validate()
-  if (!valid) return
+  if (!valid)
+    return
   // 提交请求
   formLoading.value = true
   try {
@@ -134,14 +142,16 @@ const submitForm = async () => {
     if (formType.value === 'create') {
       await DeptApi.createDept(data)
       message.success(t('common.createSuccess'))
-    } else {
+    }
+    else {
       await DeptApi.updateDept(data)
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
     // 发送操作成功的事件
     emit('success')
-  } finally {
+  }
+  finally {
     formLoading.value = false
   }
 }
@@ -157,7 +167,7 @@ const resetForm = () => {
     leaderUserId: undefined,
     phone: undefined,
     email: undefined,
-    status: CommonStatusEnum.ENABLE
+    status: CommonStatusEnum.ENABLE,
   }
   formRef.value?.resetFields()
 }
@@ -166,7 +176,7 @@ const resetForm = () => {
 const getTree = async () => {
   deptTree.value = []
   const data = await DeptApi.getSimpleDeptList()
-  let dept: Tree = { id: 0, name: '顶级部门', children: [] }
+  const dept: Tree = { id: 0, name: '顶级部门', children: [] }
   dept.children = handleTree(data)
   deptTree.value.push(dept)
 }

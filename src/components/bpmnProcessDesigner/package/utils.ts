@@ -1,4 +1,5 @@
 import { toRaw } from 'vue'
+
 const bpmnInstances = () => (window as any)?.bpmnInstances
 // 创建监听器实例
 export function createListenerObject(options, isTask, prefix) {
@@ -27,17 +28,17 @@ export function createListenerObject(options, isTask, prefix) {
   // 任务监听器的 定时器 设置
   if (isTask && options.event === 'timeout' && !!options.eventDefinitionType) {
     const timeDefinition = bpmnInstances().moddle.create('bpmn:FormalExpression', {
-      body: options.eventTimeDefinitions
+      body: options.eventTimeDefinitions,
     })
     const TimerEventDefinition = bpmnInstances().moddle.create('bpmn:TimerEventDefinition', {
       id: `TimerEventDefinition_${uuid(8)}`,
-      [`time${options.eventDefinitionType.replace(/^\S/, (s) => s.toUpperCase())}`]: timeDefinition
+      [`time${options.eventDefinitionType.replace(/^\S/, s => s.toUpperCase())}`]: timeDefinition,
     })
     listenerObj.eventDefinitions = [TimerEventDefinition]
   }
   return bpmnInstances().moddle.create(
     `${prefix}:${isTask ? 'TaskListener' : 'ExecutionListener'}`,
-    listenerObj
+    listenerObj,
   )
 }
 
@@ -51,18 +52,18 @@ export function createFieldObject(option, prefix) {
 // 创建脚本实例
 export function createScriptObject(options, prefix) {
   const { scriptType, scriptFormat, value, resource } = options
-  const scriptConfig =
-    scriptType === 'inlineScript' ? { scriptFormat, value } : { scriptFormat, resource }
+  const scriptConfig
+    = scriptType === 'inlineScript' ? { scriptFormat, value } : { scriptFormat, resource }
   return bpmnInstances().moddle.create(`${prefix}:Script`, scriptConfig)
 }
 
 // 更新元素扩展属性
 export function updateElementExtensions(element, extensionList) {
   const extensions = bpmnInstances().moddle.create('bpmn:ExtensionElements', {
-    values: extensionList
+    values: extensionList,
   })
   bpmnInstances().modeling.updateProperties(toRaw(element), {
-    extensionElements: extensions
+    extensionElements: extensions,
   })
 }
 
@@ -70,8 +71,8 @@ export function updateElementExtensions(element, extensionList) {
 export function uuid(length = 8, chars?) {
   let result = ''
   const charsString = chars || '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-  for (let i = length; i > 0; --i) {
+  for (let i = length; i > 0; --i)
     result += charsString[Math.floor(Math.random() * charsString.length)]
-  }
+
   return result
 }

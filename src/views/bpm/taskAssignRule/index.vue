@@ -10,7 +10,7 @@
       </el-table-column>
       <el-table-column label="规则范围" align="center" prop="options">
         <template #default="scope">
-          <el-tag class="mr-5px" :key="option" v-for="option in scope.row.options">
+          <el-tag v-for="option in scope.row.options" :key="option" class="mr-5px">
             {{ getAssignRuleOptionName(scope.row.type, option) }}
           </el-tag>
         </template>
@@ -18,10 +18,10 @@
       <el-table-column v-if="queryParams.modelId" label="操作" align="center">
         <template #default="scope">
           <el-button
+            v-hasPermi="['bpm:task-assign-rule:update']"
             link
             type="primary"
             @click="openForm(scope.row)"
-            v-hasPermi="['bpm:task-assign-rule:update']"
           >
             修改
           </el-button>
@@ -32,7 +32,9 @@
   <!-- 添加/修改弹窗 -->
   <TaskAssignRuleForm ref="formRef" @success="getList" />
 </template>
+
 <script lang="ts" setup>
+import TaskAssignRuleForm from './TaskAssignRuleForm.vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import * as TaskAssignRuleApi from '@/api/bpm/taskAssignRule'
 import * as RoleApi from '@/api/system/role'
@@ -40,7 +42,6 @@ import * as DeptApi from '@/api/system/dept'
 import * as PostApi from '@/api/system/post'
 import * as UserApi from '@/api/system/user'
 import * as UserGroupApi from '@/api/bpm/userGroup'
-import TaskAssignRuleForm from './TaskAssignRuleForm.vue'
 
 defineOptions({ name: 'BpmTaskAssignRule' })
 
@@ -50,7 +51,7 @@ const loading = ref(true) // 列表的加载中
 const list = ref([]) // 列表的数据
 const queryParams = reactive({
   modelId: query.modelId, // 流程模型的编号。如果 modelId 非空，则用于流程模型的查看与配置
-  processDefinitionId: query.processDefinitionId // 流程定义的编号。如果 processDefinitionId 非空，则用于流程定义的查看，不支持配置
+  processDefinitionId: query.processDefinitionId, // 流程定义的编号。如果 processDefinitionId 非空，则用于流程定义的查看，不支持配置
 })
 const roleOptions = ref<RoleApi.RoleVO[]>([]) // 角色列表
 const deptOptions = ref<DeptApi.DeptVO[]>([]) // 部门列表
@@ -64,7 +65,8 @@ const getList = async () => {
   loading.value = true
   try {
     list.value = await TaskAssignRuleApi.getTaskAssignRuleList(queryParams)
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -74,43 +76,42 @@ const getList = async () => {
 const getAssignRuleOptionName = (type, option) => {
   if (type === 10) {
     for (const roleOption of roleOptions.value) {
-      if (roleOption.id === option) {
+      if (roleOption.id === option)
         return roleOption.name
-      }
-    }
-  } else if (type === 20 || type === 21) {
-    for (const deptOption of deptOptions.value) {
-      if (deptOption.id === option) {
-        return deptOption.name
-      }
-    }
-  } else if (type === 22) {
-    for (const postOption of postOptions.value) {
-      if (postOption.id === option) {
-        return postOption.name
-      }
-    }
-  } else if (type === 30 || type === 31 || type === 32) {
-    for (const userOption of userOptions.value) {
-      if (userOption.id === option) {
-        return userOption.nickname
-      }
-    }
-  } else if (type === 40) {
-    for (const userGroupOption of userGroupOptions.value) {
-      if (userGroupOption.id === option) {
-        return userGroupOption.name
-      }
-    }
-  } else if (type === 50) {
-    option = option + '' // 转换成 string
-    for (const dictData of taskAssignScriptDictDatas) {
-      if (dictData.value === option) {
-        return dictData.label
-      }
     }
   }
-  return '未知(' + option + ')'
+  else if (type === 20 || type === 21) {
+    for (const deptOption of deptOptions.value) {
+      if (deptOption.id === option)
+        return deptOption.name
+    }
+  }
+  else if (type === 22) {
+    for (const postOption of postOptions.value) {
+      if (postOption.id === option)
+        return postOption.name
+    }
+  }
+  else if (type === 30 || type === 31 || type === 32) {
+    for (const userOption of userOptions.value) {
+      if (userOption.id === option)
+        return userOption.nickname
+    }
+  }
+  else if (type === 40) {
+    for (const userGroupOption of userGroupOptions.value) {
+      if (userGroupOption.id === option)
+        return userGroupOption.name
+    }
+  }
+  else if (type === 50) {
+    option = `${option}` // 转换成 string
+    for (const dictData of taskAssignScriptDictDatas) {
+      if (dictData.value === option)
+        return dictData.label
+    }
+  }
+  return `未知(${option})`
 }
 
 /** 添加/修改操作 */

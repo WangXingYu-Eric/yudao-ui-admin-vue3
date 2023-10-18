@@ -24,7 +24,7 @@ export const getUserPage = (params: PageParam) => {
 
 // 查询用户详情
 export const getUser = (id: number) => {
-  return request.get({ url: '/system/user/get?id=' + id })
+  return request.get({ url: `/system/user/get?id=${id}` })
 }
 
 // 新增用户
@@ -39,7 +39,7 @@ export const updateUser = (data: UserVO) => {
 
 // 删除用户
 export const deleteUser = (id: number) => {
-  return request.delete({ url: '/system/user/delete?id=' + id })
+  return request.delete({ url: `/system/user/delete?id=${id}` })
 }
 
 // 导出用户
@@ -56,18 +56,18 @@ export const importUserTemplate = () => {
 export const resetUserPwd = (id: number, password: string) => {
   const data = {
     id,
-    password
+    password,
   }
-  return request.put({ url: '/system/user/update-password', data: data })
+  return request.put({ url: '/system/user/update-password', data })
 }
 
 // 用户状态修改
 export const updateUserStatus = (id: number, status: number) => {
   const data = {
     id,
-    status
+    status,
   }
-  return request.put({ url: '/system/user/update-status', data: data })
+  return request.put({ url: '/system/user/update-status', data })
 }
 
 // 获取用户精简信息列表

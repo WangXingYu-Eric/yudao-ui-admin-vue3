@@ -3,5 +3,5 @@
 export enum MsgType {
   Follow = 1,
   Message = 2,
-  Keyword = 3
+  Keyword = 3,
 }

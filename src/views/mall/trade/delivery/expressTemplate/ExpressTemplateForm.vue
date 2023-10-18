@@ -1,11 +1,11 @@
 <template>
-  <Dialog :title="dialogTitle" v-model="dialogVisible" width="1300px">
+  <Dialog v-model="dialogVisible" :title="dialogTitle" width="1300px">
     <el-form
       ref="formRef"
+      v-loading="formLoading"
       :model="formData"
       :rules="formRules"
       label-width="80px"
-      v-loading="formLoading"
     >
       <el-form-item label="模板名称" prop="name">
         <el-input v-model="formData.name" placeholder="请输入模板名称" />
@@ -109,7 +109,9 @@
           </el-table-column>
           <el-table-column label="操作" align="center">
             <template #default="scope">
-              <el-button link type="danger" @click="deleteFreeArea(scope.$index)"> 删除 </el-button>
+              <el-button link type="danger" @click="deleteFreeArea(scope.$index)">
+                删除
+              </el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -124,24 +126,33 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button @click="submitForm" type="primary" :disabled="formLoading">确 定</el-button>
-      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button type="primary" :disabled="formLoading" @click="submitForm">
+        确 定
+      </el-button>
+      <el-button @click="dialogVisible = false">
+        取 消
+      </el-button>
     </template>
   </Dialog>
 </template>
+
 <script lang="ts" setup>
+import { cloneDeep } from 'lodash-es'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import * as DeliveryExpressTemplateApi from '@/api/mall/trade/delivery/expressTemplate'
 import * as AreaApi from '@/api/system/area'
 import { defaultProps } from '@/utils/tree'
-import { yuanToFen, fenToYuan } from '@/utils'
-import { cloneDeep } from 'lodash-es'
-const { t } = useI18n() // 国际化
+import { fenToYuan, yuanToFen } from '@/utils'
+
+// 提供 open 方法，用于打开弹窗
+
+/** 提交表单 */
+const emit = defineEmits(['success']); const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 
 const defaultProps2 = {
   ...defaultProps,
-  multiple: true
+  multiple: true,
 }
 
 const dialogVisible = ref(false) // 弹窗的是否展示
@@ -154,25 +165,25 @@ const formData = ref({
   chargeMode: 1,
   sort: 0,
   charges: [],
-  frees: []
+  frees: [],
 })
 const columnTitleMap = new Map()
 const columnTitle = ref({
   startCountTitle: '首件',
   extraCountTitle: '续件',
-  freeCountTitle: '包邮件数'
+  freeCountTitle: '包邮件数',
 })
 const formRules = reactive({
   name: [{ required: true, message: '模板名称不能为空', trigger: 'blur' }],
   chargeMode: [{ required: true, message: '配送计费方式不能为空', trigger: 'blur' }],
-  sort: [{ required: true, message: '分类排序不能为空', trigger: 'blur' }]
+  sort: [{ required: true, message: '分类排序不能为空', trigger: 'blur' }],
 })
 const formRef = ref() // 表单 Ref
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
   dialogVisible.value = true
-  dialogTitle.value = t('action.' + type)
+  dialogTitle.value = t(`action.${type}`)
   formType.value = type
   resetForm()
   try {
@@ -190,19 +201,19 @@ const open = async (type: string, id?: number) => {
         item.freePrice = fenToYuan(item.freePrice)
       })
     }
-  } finally {
+  }
+  finally {
     formLoading.value = false
   }
 }
-defineExpose({ open }) // 提供 open 方法，用于打开弹窗
-
-/** 提交表单 */
-const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
+defineExpose({ open }) // 定义 success 事件，用于操作成功后的回调
 const submitForm = async () => {
   // 校验表单
-  if (!formRef) return
+  if (!formRef)
+    return
   const valid = await formRef.value.validate()
-  if (!valid) return
+  if (!valid)
+    return
   // 提交请求
   formLoading.value = true
   try {
@@ -218,14 +229,16 @@ const submitForm = async () => {
     if (formType.value === 'create') {
       await DeliveryExpressTemplateApi.createDeliveryExpressTemplate(data)
       message.success(t('common.createSuccess'))
-    } else {
+    }
+    else {
       await DeliveryExpressTemplateApi.updateDeliveryExpressTemplate(data)
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
     // 发送操作成功的事件
     emit('success')
-  } finally {
+  }
+  finally {
     formLoading.value = false
   }
 }
@@ -242,11 +255,11 @@ const resetForm = () => {
         startCount: 2,
         startPrice: 5,
         extraCount: 5,
-        extraPrice: 10
-      }
+        extraPrice: 10,
+      },
     ],
     frees: [],
-    sort: 0
+    sort: 0,
   }
   columnTitle.value = columnTitleMap.get(1)
   formRef.value?.resetFields()
@@ -264,17 +277,17 @@ const initData = async () => {
   columnTitleMap.set(1, {
     startCountTitle: '首件',
     extraCountTitle: '续件',
-    freeCountTitle: '包邮件数'
+    freeCountTitle: '包邮件数',
   })
   columnTitleMap.set(2, {
     startCountTitle: '首件重量(kg)',
     extraCountTitle: '续件重量(kg)',
-    freeCountTitle: '包邮重量(kg)'
+    freeCountTitle: '包邮重量(kg)',
   })
   columnTitleMap.set(3, {
     startCountTitle: '首件体积(m³)',
     extraCountTitle: '续件体积(m³)',
-    freeCountTitle: '包邮体积(m³)'
+    freeCountTitle: '包邮体积(m³)',
   })
   // 加载区域数据
   areaTree.value = await AreaApi.getAreaTree()
@@ -288,7 +301,7 @@ const addChargeArea = () => {
     startCount: 1,
     startPrice: 1,
     extraCount: 1,
-    extraPrice: 1
+    extraPrice: 1,
   })
 }
 
@@ -304,7 +317,7 @@ const addFreeArea = () => {
   data.frees.push({
     areaIds: [],
     freeCount: 1,
-    freePrice: 1
+    freePrice: 1,
   })
 }
 
@@ -314,7 +327,7 @@ const deleteFreeArea = (index) => {
   data.frees.splice(index, 1)
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   initData()
 })

@@ -1,11 +1,11 @@
 <template>
-  <Dialog title="修改用户积分" v-model="dialogVisible" width="600">
+  <Dialog v-model="dialogVisible" title="修改用户积分" width="600">
     <el-form
       ref="formRef"
+      v-loading="formLoading"
       :model="formData"
       :rules="formRules"
       label-width="100px"
-      v-loading="formLoading"
     >
       <el-form-item label="用户编号" prop="id">
         <el-input v-model="formData.id" class="!w-240px" disabled />
@@ -18,8 +18,12 @@
       </el-form-item>
       <el-form-item label="变动类型" prop="changeType">
         <el-radio-group v-model="formData.changeType">
-          <el-radio :label="1">增加</el-radio>
-          <el-radio :label="-1">减少</el-radio>
+          <el-radio :label="1">
+            增加
+          </el-radio>
+          <el-radio :label="-1">
+            减少
+          </el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="变动积分" prop="changePoint">
@@ -30,18 +34,26 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button @click="submitForm" type="primary" :disabled="formLoading">确 定</el-button>
-      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button type="primary" :disabled="formLoading" @click="submitForm">
+        确 定
+      </el-button>
+      <el-button @click="dialogVisible = false">
+        取 消
+      </el-button>
     </template>
   </Dialog>
 </template>
+
 <script setup lang="ts">
 import * as UserApi from '@/api/member/user'
 
 /** 修改用户积分表单 */
 defineOptions({ name: 'UpdatePointForm' })
 
-const { t } = useI18n() // 国际化
+// 提供 open 方法，用于打开弹窗
+
+/** 提交表单 */
+const emit = defineEmits(['success']); const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 
 const dialogVisible = ref(false) // 弹窗的是否展示
@@ -51,10 +63,10 @@ const formData = ref({
   nickname: undefined,
   point: 0,
   changePoint: 0,
-  changeType: 1
+  changeType: 1,
 })
 const formRules = reactive({
-  changePoint: [{ required: true, message: '变动积分不能为空', trigger: 'blur' }]
+  changePoint: [{ required: true, message: '变动积分不能为空', trigger: 'blur' }],
 })
 const formRef = ref() // 表单 Ref
 
@@ -69,20 +81,20 @@ const open = async (id?: number) => {
       formData.value = await UserApi.getUser(id)
       formData.value.changeType = 1 // 默认增加积分
       formData.value.changePoint = 0 // 变动积分默认0
-    } finally {
+    }
+    finally {
       formLoading.value = false
     }
   }
 }
-defineExpose({ open }) // 提供 open 方法，用于打开弹窗
-
-/** 提交表单 */
-const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
+defineExpose({ open }) // 定义 success 事件，用于操作成功后的回调
 const submitForm = async () => {
   // 校验表单
-  if (!formRef) return
+  if (!formRef)
+    return
   const valid = await formRef.value.validate()
-  if (!valid) return
+  if (!valid)
+    return
 
   if (formData.value.changePoint < 1) {
     message.error('变动积分不能小于 1')
@@ -98,14 +110,15 @@ const submitForm = async () => {
   try {
     await UserApi.updateUserPoint({
       id: formData.value.id,
-      point: formData.value.changePoint * formData.value.changeType
+      point: formData.value.changePoint * formData.value.changeType,
     })
 
     message.success(t('common.updateSuccess'))
     dialogVisible.value = false
     // 发送操作成功的事件
     emit('success')
-  } finally {
+  }
+  finally {
     formLoading.value = false
   }
 }
@@ -116,13 +129,13 @@ const resetForm = () => {
     id: undefined,
     nickname: undefined,
     levelId: undefined,
-    reason: undefined
+    reason: undefined,
   }
   formRef.value?.resetFields()
 }
 
 /** 变动后的积分 */
 const pointResult = computed(
-  () => formData.value.point + formData.value.changePoint * formData.value.changeType
+  () => formData.value.point + formData.value.changePoint * formData.value.changeType,
 )
 </script>

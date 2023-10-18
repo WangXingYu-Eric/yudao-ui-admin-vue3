@@ -54,17 +54,17 @@ export default {
     updateTime: 'Update Time',
     copy: 'Copy',
     copySuccess: 'Copy Success',
-    copyError: 'Copy Error'
+    copyError: 'Copy Error',
   },
   error: {
     noPermission: `Sorry, you don't have permission to access this page.`,
     pageError: 'Sorry, the page you visited does not exist.',
     networkError: 'Sorry, the server reported an error.',
-    returnToHome: 'Return to home'
+    returnToHome: 'Return to home',
   },
   permission: {
     hasPermission: `Please set the operation permission label value`,
-    hasRole: `Please set the role permission tag value`
+    hasRole: `Please set the role permission tag value`,
   },
   setting: {
     projectSetting: 'Project setting',
@@ -95,12 +95,12 @@ export default {
     uniqueOpened: 'Unique opened',
     tagsViewIcon: 'Tags view icon',
     reExperienced: 'Please exit the login experience again',
-    fixedMenu: 'Fixed menu'
+    fixedMenu: 'Fixed menu',
   },
   size: {
     default: 'Default',
     large: 'Large',
-    small: 'Small'
+    small: 'Small',
   },
   login: {
     welcome: 'Welcome to the system',
@@ -130,20 +130,20 @@ export default {
     btnQRCode: 'QR code sign in',
     qrcode: 'Scan the QR code to log in',
     btnRegister: 'Sign up',
-    SmsSendMsg: 'code has been sent'
+    SmsSendMsg: 'code has been sent',
   },
   captcha: {
     verification: 'Please complete security verification',
     slide: 'Swipe right to complete verification',
     point: 'Please click',
     success: 'Verification succeeded',
-    fail: 'verification failed'
+    fail: 'verification failed',
   },
   router: {
     login: 'Login',
     home: 'Home',
     analysis: 'Analysis',
-    workplace: 'Workplace'
+    workplace: 'Workplace',
   },
   analysis: {
     newUser: 'New user',
@@ -179,7 +179,7 @@ export default {
     thursday: 'Thursday',
     friday: 'Friday',
     saturday: 'Saturday',
-    sunday: 'Sunday'
+    sunday: 'Sunday',
   },
   workplace: {
     welcome: 'Hello',
@@ -201,7 +201,7 @@ export default {
     yield: 'Yield',
     dynamic: 'Dynamic',
     push: 'push',
-    follow: 'Follow'
+    follow: 'Follow',
   },
   form: {
     input: 'Input',
@@ -256,10 +256,10 @@ export default {
     subitem: 'Subitem',
     formValidation: 'Form validation',
     verifyReset: 'Verify reset',
-    remark: 'Remark'
+    remark: 'Remark',
   },
   watermark: {
-    watermark: 'Watermark'
+    watermark: 'Watermark',
   },
   table: {
     table: 'Table',
@@ -275,7 +275,7 @@ export default {
     hiddenSelections: 'Restore selections',
     showExpandedRows: 'Show expanded rows',
     hiddenExpandedRows: 'Hidden expanded rows',
-    header: 'Header'
+    header: 'Header',
   },
   action: {
     create: 'Create',
@@ -298,12 +298,12 @@ export default {
     typeUpdate: 'Dict Type Eidt',
     dataCreate: 'Dict Data Create',
     dataUpdate: 'Dict Data Eidt',
-    fileUpload: 'File Upload'
+    fileUpload: 'File Upload',
   },
   dialog: {
     dialog: 'Dialog',
     open: 'Open',
-    close: 'Close'
+    close: 'Close',
   },
   sys: {
     api: {
@@ -328,30 +328,30 @@ export default {
       errMsg503: 'The service is unavailable, the server is temporarily overloaded or maintained!',
       errMsg504: 'Network timeout!',
       errMsg505: 'The http version does not support the request!',
-      errMsg901: 'Demo mode, no write operations are possible!'
+      errMsg901: 'Demo mode, no write operations are possible!',
     },
     app: {
       logoutTip: 'Reminder',
       logoutMessage: 'Confirm to exit the system?',
-      menuLoading: 'Menu loading...'
+      menuLoading: 'Menu loading...',
     },
     exception: {
       backLogin: 'Back Login',
       backHome: 'Back Home',
-      subTitle403: "Sorry, you don't have access to this page.",
+      subTitle403: 'Sorry, you don\'t have access to this page.',
       subTitle404: 'Sorry, the page you visited does not exist.',
       subTitle500: 'Sorry, the server is reporting an error.',
       noDataTitle: 'No data on the current page.',
       networkErrorTitle: 'Network Error',
       networkErrorSubTitle:
-        'Sorry, Your network connection has been disconnected, please check your network!'
+        'Sorry, Your network connection has been disconnected, please check your network!',
     },
     lock: {
       unlock: 'Click to unlock',
       alert: 'Lock screen password error',
       backToLogin: 'Back to login',
       entry: 'Enter the system',
-      placeholder: 'Please enter the lock screen password or user password'
+      placeholder: 'Please enter the lock screen password or user password',
     },
     login: {
       backSignIn: 'Back sign in',
@@ -389,8 +389,8 @@ export default {
       confirmPassword: 'Confirm Password',
       email: 'Email',
       smsCode: 'SMS code',
-      mobile: 'Mobile'
-    }
+      mobile: 'Mobile',
+    },
   },
   profile: {
     user: {
@@ -405,20 +405,20 @@ export default {
       sex: 'Sex',
       man: 'Man',
       woman: 'Woman',
-      createTime: 'Created Date'
+      createTime: 'Created Date',
     },
     info: {
       title: 'Basic Information',
       basicInfo: 'Basic Information',
       resetPwd: 'Reset Password',
-      userSocial: 'Social Information'
+      userSocial: 'Social Information',
     },
     rules: {
       nickname: 'Please Enter User Nickname',
       mail: 'Please Input The Email Address',
       truemail: 'Please Input The Correct Email Address',
       phone: 'Please Enter The Phone Number',
-      truephone: 'Please Enter The Correct Phone Number'
+      truephone: 'Please Enter The Correct Phone Number',
     },
     password: {
       oldPassword: 'Old PassWord',
@@ -427,8 +427,8 @@ export default {
       oldPwdMsg: 'Please Enter Old Password',
       newPwdMsg: 'Please Enter New Password',
       cfPwdMsg: 'Please Enter Confirm Password',
-      diffPwd: 'The Passwords Entered Twice No Match'
-    }
+      diffPwd: 'The Passwords Entered Twice No Match',
+    },
   },
   cropper: {
     selectImage: 'Select Image',
@@ -442,6 +442,6 @@ export default {
     btn_scale_y: 'Flip vertical',
     btn_zoom_in: 'Zoom in',
     btn_zoom_out: 'Zoom out',
-    preview: 'Preivew'
-  }
+    preview: 'Preivew',
+  },
 }

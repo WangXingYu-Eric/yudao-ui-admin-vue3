@@ -1,21 +1,32 @@
+<template>
+  <ElConfigProvider
+    :locale="currentLocale.elLocale"
+    :message="{ max: 1 }"
+    :namespace="variables.elNamespace"
+    :size="size"
+  >
+    <slot />
+  </ElConfigProvider>
+</template>
+
 <script lang="ts" setup>
+import { useWindowSize } from '@vueuse/core'
 import { propTypes } from '@/utils/propTypes'
 import { useLocaleStore } from '@/store/modules/locale'
 import { useAppStore } from '@/store/modules/app'
 import { setCssVar } from '@/utils'
 import { useDesign } from '@/hooks/web/useDesign'
-import { ElementPlusSize } from '@/types/elementPlus'
-import { useWindowSize } from '@vueuse/core'
+import type { ElementPlusSize } from '@/types/elementPlus'
 
 defineOptions({ name: 'ConfigGlobal' })
+
+const props = defineProps({
+  size: propTypes.oneOf<ElementPlusSize>(['default', 'small', 'large']).def('default'),
+})
 
 const { variables } = useDesign()
 
 const appStore = useAppStore()
-
-const props = defineProps({
-  size: propTypes.oneOf<ElementPlusSize>(['default', 'small', 'large']).def('default')
-})
 
 provide('configGlobal', props)
 
@@ -35,14 +46,15 @@ watch(
       setCssVar('--left-menu-min-width', '0')
       appStore.setCollapse(true)
       appStore.getLayout !== 'classic' ? appStore.setLayout('classic') : undefined
-    } else {
+    }
+    else {
       appStore.getMobile ? appStore.setMobile(false) : undefined
       setCssVar('--left-menu-min-width', '64px')
     }
   },
   {
-    immediate: true
-  }
+    immediate: true,
+  },
 )
 
 // 多语言相关
@@ -50,14 +62,3 @@ const localeStore = useLocaleStore()
 
 const currentLocale = computed(() => localeStore.currentLocale)
 </script>
-
-<template>
-  <ElConfigProvider
-    :locale="currentLocale.elLocale"
-    :message="{ max: 1 }"
-    :namespace="variables.elNamespace"
-    :size="size"
-  >
-    <slot></slot>
-  </ElConfigProvider>
-</template>

@@ -1,6 +1,6 @@
 import request from '@/config/axios'
 
-export type UserGroupVO = {
+export interface UserGroupVO {
   id: number
   name: string
   description: string
@@ -14,7 +14,7 @@ export type UserGroupVO = {
 export const createUserGroup = async (data: UserGroupVO) => {
   return await request.post({
     url: '/bpm/user-group/create',
-    data: data
+    data,
   })
 }
 
@@ -22,18 +22,18 @@ export const createUserGroup = async (data: UserGroupVO) => {
 export const updateUserGroup = async (data: UserGroupVO) => {
   return await request.put({
     url: '/bpm/user-group/update',
-    data: data
+    data,
   })
 }
 
 // 删除用户组
 export const deleteUserGroup = async (id: number) => {
-  return await request.delete({ url: '/bpm/user-group/delete?id=' + id })
+  return await request.delete({ url: `/bpm/user-group/delete?id=${id}` })
 }
 
 // 获得用户组
 export const getUserGroup = async (id: number) => {
-  return await request.get({ url: '/bpm/user-group/get?id=' + id })
+  return await request.get({ url: `/bpm/user-group/get?id=${id}` })
 }
 
 // 获得用户组分页

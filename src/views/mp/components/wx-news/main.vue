@@ -29,7 +29,7 @@
           <div class="news-content-item">
             <div class="news-content-item-title">{{ article.title }}</div>
             <div class="news-content-item-img">
-              <img :src="article.picUrl" class="material-img" height="100%" />
+              <img :src="article.picUrl" class="material-img" height="100%">
             </div>
           </div>
         </div>
@@ -46,12 +46,12 @@ const props = withDefaults(
     articles: any[] | null
   }>(),
   {
-    articles: null
-  }
+    articles: null,
+  },
 )
 
 defineExpose({
-  articles: props.articles
+  articles: props.articles,
 })
 </script>
 

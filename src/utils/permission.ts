@@ -5,10 +5,10 @@ const { t } = useI18n() // 国际化
 /**
  * 字符权限校验
  * @param {Array} value 校验值
- * @returns {Boolean}
+ * @returns {boolean}
  */
 export function checkPermi(value: string[]) {
-  if (value && value instanceof Array && value.length > 0) {
+  if (value && Array.isArray(value) && value.length > 0) {
     const { wsCache } = useCache()
     const permissionDatas = value
     const all_permission = '*:*:*'
@@ -17,7 +17,8 @@ export function checkPermi(value: string[]) {
       return all_permission === permission || permissionDatas.includes(permission)
     })
     return !!hasPermission
-  } else {
+  }
+  else {
     console.error(t('permission.hasPermission'))
     return false
   }
@@ -26,10 +27,10 @@ export function checkPermi(value: string[]) {
 /**
  * 角色权限校验
  * @param {string[]} value 校验值
- * @returns {Boolean}
+ * @returns {boolean}
  */
 export function checkRole(value: string[]) {
-  if (value && value instanceof Array && value.length > 0) {
+  if (value && Array.isArray(value) && value.length > 0) {
     const { wsCache } = useCache()
     const permissionRoles = value
     const super_admin = 'admin'
@@ -38,7 +39,8 @@ export function checkRole(value: string[]) {
       return super_admin === role || permissionRoles.includes(role)
     })
     return !!hasRole
-  } else {
+  }
+  else {
     console.error(t('permission.hasRole'))
     return false
   }

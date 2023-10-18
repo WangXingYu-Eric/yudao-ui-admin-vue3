@@ -1,14 +1,48 @@
+<template>
+  <div class="z-99 border-1 border-[var(--el-border-color)] border-solid">
+    <!-- 工具栏 -->
+    <Toolbar
+      :editor="editorRef"
+      :editor-id="editorId"
+      class="border-0 b-b-1 border-[var(--el-border-color)] border-solid"
+    />
+    <!-- 编辑器 -->
+    <Editor
+      v-model="valueHtml"
+      :default-config="editorConfig"
+      :editor-id="editorId"
+      :style="editorStyle"
+      @on-change="handleChange"
+      @on-created="handleCreated"
+    />
+  </div>
+</template>
+
 <script lang="ts" setup>
-import { PropType } from 'vue'
+import type { PropType } from 'vue'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
-import { i18nChangeLanguage, IDomEditor, IEditorConfig } from '@wangeditor/editor'
+import type { IDomEditor, IEditorConfig } from '@wangeditor/editor'
+import { i18nChangeLanguage } from '@wangeditor/editor'
+import { ElMessage } from 'element-plus'
 import { propTypes } from '@/utils/propTypes'
 import { isNumber } from '@/utils/is'
-import { ElMessage } from 'element-plus'
 import { useLocaleStore } from '@/store/modules/locale'
 import { getAccessToken, getTenantId } from '@/utils/auth'
 
 defineOptions({ name: 'Editor' })
+
+const props = defineProps({
+  editorId: propTypes.string.def('wangeEditor-1'),
+  height: propTypes.oneOfType([Number, String]).def('500px'),
+  editorConfig: {
+    type: Object as PropType<Partial<IEditorConfig>>,
+    default: () => undefined,
+  },
+  readonly: propTypes.bool.def(false),
+  modelValue: propTypes.string.def(''),
+})
+
+const emit = defineEmits(['change', 'update:modelValue'])
 
 type InsertFnType = (url: string, alt: string, href: string) => void
 
@@ -18,19 +52,6 @@ const currentLocale = computed(() => localeStore.getCurrentLocale)
 
 i18nChangeLanguage(unref(currentLocale).lang)
 
-const props = defineProps({
-  editorId: propTypes.string.def('wangeEditor-1'),
-  height: propTypes.oneOfType([Number, String]).def('500px'),
-  editorConfig: {
-    type: Object as PropType<Partial<IEditorConfig>>,
-    default: () => undefined
-  },
-  readonly: propTypes.bool.def(false),
-  modelValue: propTypes.string.def('')
-})
-
-const emit = defineEmits(['change', 'update:modelValue'])
-
 // 编辑器实例，必须用 shallowRef
 const editorRef = shallowRef<IDomEditor>()
 
@@ -39,12 +60,13 @@ const valueHtml = ref('')
 watch(
   () => props.modelValue,
   (val: string) => {
-    if (val === unref(valueHtml)) return
+    if (val === unref(valueHtml))
+      return
     valueHtml.value = val
   },
   {
-    immediate: true
-  }
+    immediate: true,
+  },
 )
 
 // 监听
@@ -52,7 +74,7 @@ watch(
   () => valueHtml.value,
   (val: string) => {
     emit('update:modelValue', val)
-  }
+  },
 )
 
 const handleCreated = (editor: IDomEditor) => {
@@ -87,7 +109,7 @@ const editorConfig = computed((): IEditorConfig => {
       autoFocus: false,
       scroll: true,
       MENU_CONF: {
-        ['uploadImage']: {
+        uploadImage: {
           server: import.meta.env.VITE_UPLOAD_URL,
           // 单个文件的最大体积限制，默认为 2M
           maxFileSize: 5 * 1024 * 1024,
@@ -103,9 +125,9 @@ const editorConfig = computed((): IEditorConfig => {
 
           // 自定义增加 http  header
           headers: {
-            Accept: '*',
-            Authorization: 'Bearer ' + getAccessToken(),
-            'tenant-id': getTenantId()
+            'Accept': '*',
+            'Authorization': `Bearer ${getAccessToken()}`,
+            'tenant-id': getTenantId(),
           },
 
           // 跨域是否传递 cookie ，默认为 false
@@ -141,18 +163,18 @@ const editorConfig = computed((): IEditorConfig => {
           // 自定义插入图片
           customInsert(res: any, insertFn: InsertFnType) {
             insertFn(res.data, 'image', res.data)
-          }
-        }
+          },
+        },
       },
-      uploadImgShowBase64: true
+      uploadImgShowBase64: true,
     },
-    props.editorConfig || {}
+    props.editorConfig || {},
   )
 })
 
 const editorStyle = computed(() => {
   return {
-    height: isNumber(props.height) ? `${props.height}px` : props.height
+    height: isNumber(props.height) ? `${props.height}px` : props.height,
   }
 })
 
@@ -175,28 +197,8 @@ const getEditorRef = async (): Promise<IDomEditor> => {
 }
 
 defineExpose({
-  getEditorRef
+  getEditorRef,
 })
 </script>
-
-<template>
-  <div class="z-99 border-1 border-[var(--el-border-color)] border-solid">
-    <!-- 工具栏 -->
-    <Toolbar
-      :editor="editorRef"
-      :editorId="editorId"
-      class="border-0 b-b-1 border-[var(--el-border-color)] border-solid"
-    />
-    <!-- 编辑器 -->
-    <Editor
-      v-model="valueHtml"
-      :defaultConfig="editorConfig"
-      :editorId="editorId"
-      :style="editorStyle"
-      @on-change="handleChange"
-      @on-created="handleCreated"
-    />
-  </div>
-</template>
 
 <style src="@wangeditor/editor/dist/css/style.css"></style>

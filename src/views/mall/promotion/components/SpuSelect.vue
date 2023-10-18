@@ -1,5 +1,5 @@
 <template>
-  <Dialog v-model="dialogVisible" :appendToBody="true" :title="dialogTitle" width="70%">
+  <Dialog v-model="dialogVisible" :append-to-body="true" :title="dialogTitle" width="70%">
     <ContentWrap>
       <el-row :gutter="20" class="mb-10px">
         <el-col :span="6">
@@ -44,7 +44,7 @@
           </el-button>
         </el-col>
       </el-row>
-      <el-table
+      <ElTable
         ref="spuListRef"
         v-loading="loading"
         :data="list"
@@ -58,8 +58,8 @@
             <SkuList
               v-if="isExpand"
               ref="skuListRef"
-              :isComponent="true"
-              :isDetail="true"
+              :is-component="true"
+              :is-detail="true"
               :prop-form-data="spuData"
               :property-list="propertyList"
               @selection-change="selectSku"
@@ -94,7 +94,7 @@
           prop="createTime"
           width="180"
         />
-      </el-table>
+      </ElTable>
       <!-- 分页 -->
       <Pagination
         v-model:limit="queryParams.pageSize"
@@ -104,15 +104,20 @@
       />
     </ContentWrap>
     <template #footer>
-      <el-button type="primary" @click="confirm">确 定</el-button>
-      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button type="primary" @click="confirm">
+        确 定
+      </el-button>
+      <el-button @click="dialogVisible = false">
+        取 消
+      </el-button>
     </template>
   </Dialog>
 </template>
 
 <script lang="ts" setup>
-import { getPropertyList, PropertyAndValues, SkuList } from '@/views/mall/product/spu/components'
 import { ElTable } from 'element-plus'
+import type { PropertyAndValues } from '@/views/mall/product/spu/components'
+import { SkuList, getPropertyList } from '@/views/mall/product/spu/components'
 import { dateFormatter } from '@/utils/formatTime'
 import { createImageViewer } from '@/components/ImageViewer'
 import { formatToFraction } from '@/utils'
@@ -128,10 +133,13 @@ const props = defineProps({
   // 默认不需要（不需要的情况下只返回 spu，需要的情况下返回 选中的 spu 和 sku 列表）
   // 其它活动需要选择商品和商品属性导入此组件即可，需添加组件属性 :isSelectSku='true'
   isSelectSku: propTypes.bool.def(false), // 是否需要选择 sku 属性
-  radio: propTypes.bool.def(false) // 是否单选 sku
+  radio: propTypes.bool.def(false), // 是否单选 sku
 })
 
-const message = useMessage() // 消息弹窗
+// 确认选择时的触发事件
+const emits = defineEmits<{
+  (e: 'confirm', spuId: number, skuIds?: number[]): void
+}>(); const message = useMessage() // 消息弹窗
 const total = ref(0) // 列表的总页数
 const list = ref<any[]>([]) // 列表的数据
 const loading = ref(false) // 列表的加载中
@@ -143,7 +151,7 @@ const queryParams = ref({
   tabType: 0, // 默认获取上架的商品
   name: '',
   categoryId: null,
-  createTime: []
+  createTime: [],
 }) // 查询参数
 const propertyList = ref<PropertyAndValues[]>([]) // 商品属性列表
 const spuListRef = ref<InstanceType<typeof ElTable>>()
@@ -152,7 +160,7 @@ const spuData = ref<ProductSpuApi.Spu>() // 商品详情
 const isExpand = ref(false) // 控制 SKU 列表显示
 const expandRowKeys = ref<number[]>() // 控制展开行需要设置 row-key 属性才能使用，该属性为展开行的 keys 数组。
 
-//============ 商品选择相关 ============
+// ============ 商品选择相关 ============
 const selectedSpuId = ref<number>(0) // 选中的商品 spuId
 const selectedSkuIds = ref<number[]>([]) // 选中的商品 skuIds
 const selectSku = (val: ProductSpuApi.Sku[]) => {
@@ -168,17 +176,17 @@ const selectSku = (val: ProductSpuApi.Sku[]) => {
   }
   if (props.radio) {
     // 只选择一个
-    selectedSkuIds.value = [val.map((sku) => sku.id!)[0]]
+    selectedSkuIds.value = [val.map(sku => sku.id!)[0]]
     // 如果大于1个
     if (val.length > 1) {
       // 清空选择
       skuTable?.clearSelection()
       // 变更为最后一次选择的
       skuTable?.toggleRowSelection(val.pop(), true)
-      return
     }
-  } else {
-    selectedSkuIds.value = val.map((sku) => sku.id!)
+  }
+  else {
+    selectedSkuIds.value = val.map(sku => sku.id!)
   }
 }
 const selectSpu = (val: ProductSpuApi.Spu[]) => {
@@ -187,11 +195,11 @@ const selectSpu = (val: ProductSpuApi.Spu[]) => {
     return
   }
   // 只选择一个
-  selectedSpuId.value = val.map((spu) => spu.id!)[0]
+  selectedSpuId.value = val.map(spu => spu.id!)[0]
   // 切换选择 spu 如果有选择的 sku 则清空,确保选择的 sku 是对应的 spu 下面的
-  if (selectedSkuIds.value.length > 0) {
+  if (selectedSkuIds.value.length > 0)
     selectedSkuIds.value = []
-  }
+
   // 如果大于1个
   if (val.length > 1) {
     // 清空选择
@@ -214,9 +222,8 @@ const expandChange = async (row: ProductSpuApi.Spu, expandedRows?: ProductSpuApi
       return
     }
     // 如果已展开 skuList 则选择此对应的 spu 不需要重新获取渲染 skuList
-    if (isExpand.value && spuData.value?.id === row.id) {
+    if (isExpand.value && spuData.value?.id === row.id)
       return
-    }
   }
   spuData.value = {}
   propertyList.value = []
@@ -234,10 +241,6 @@ const expandChange = async (row: ProductSpuApi.Spu, expandedRows?: ProductSpuApi
   expandRowKeys.value = [row.id!]
 }
 
-// 确认选择时的触发事件
-const emits = defineEmits<{
-  (e: 'confirm', spuId: number, skuIds?: number[]): void
-}>()
 /**
  * 确认选择返回选中的 spu 和 sku (如果需要选择sku的话)
  */
@@ -274,7 +277,8 @@ const getList = async () => {
     const data = await ProductSpuApi.getSpuPage(queryParams.value)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -292,7 +296,7 @@ const resetQuery = () => {
     tabType: 0, // 默认获取上架的商品
     name: '',
     categoryId: null,
-    createTime: []
+    createTime: [],
   }
   getList()
 }
@@ -301,13 +305,13 @@ const resetQuery = () => {
 const imagePreview = (imgUrl: string) => {
   createImageViewer({
     zIndex: 99999999,
-    urlList: [imgUrl]
+    urlList: [imgUrl],
   })
 }
 
 const categoryList = ref() // 分类树
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(async () => {
   await getList()
   // 获得分类树

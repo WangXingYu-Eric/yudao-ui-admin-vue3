@@ -1,4 +1,4 @@
-import { Ref } from 'vue'
+import type { Ref } from 'vue'
 
 export enum LoginStateEnum {
   LOGIN,
@@ -6,7 +6,7 @@ export enum LoginStateEnum {
   RESET_PASSWORD,
   MOBILE,
   QR_CODE,
-  SSO
+  SSO,
 }
 
 const currentState = ref(LoginStateEnum.LOGIN)
@@ -24,19 +24,20 @@ export function useLoginState() {
   return {
     setLoginState,
     getLoginState,
-    handleBackLogin
+    handleBackLogin,
   }
 }
 
 export function useFormValid<T extends Object = any>(formRef: Ref<any>) {
   async function validForm() {
     const form = unref(formRef)
-    if (!form) return
+    if (!form)
+      return
     const data = await form.validate()
     return data as T
   }
 
   return {
-    validForm
+    validForm,
   }
 }

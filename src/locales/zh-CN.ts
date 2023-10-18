@@ -54,17 +54,17 @@ export default {
     updateTime: '更新时间',
     copy: '复制',
     copySuccess: '复制成功',
-    copyError: '复制失败'
+    copyError: '复制失败',
   },
   error: {
     noPermission: `抱歉，您无权访问此页面。`,
     pageError: '抱歉，您访问的页面不存在。',
     networkError: '抱歉，服务器报告错误。',
-    returnToHome: '返回首页'
+    returnToHome: '返回首页',
   },
   permission: {
     hasPermission: `请设置操作权限标签值`,
-    hasRole: `请设置角色权限标签值`
+    hasRole: `请设置角色权限标签值`,
   },
   setting: {
     projectSetting: '项目配置',
@@ -95,12 +95,12 @@ export default {
     uniqueOpened: '菜单手风琴',
     tagsViewIcon: '标签页图标',
     reExperienced: '请重新退出登录体验',
-    fixedMenu: '固定菜单'
+    fixedMenu: '固定菜单',
   },
   size: {
     default: '默认',
     large: '大',
-    small: '小'
+    small: '小',
   },
   login: {
     welcome: '欢迎使用本系统',
@@ -130,21 +130,21 @@ export default {
     btnQRCode: '二维码登录',
     qrcode: '扫描二维码登录',
     btnRegister: '注册',
-    SmsSendMsg: '验证码已发送'
+    SmsSendMsg: '验证码已发送',
   },
   captcha: {
     verification: '请完成安全验证',
     slide: '向右滑动完成验证',
     point: '请依次点击',
     success: '验证成功',
-    fail: '验证失败'
+    fail: '验证失败',
   },
   router: {
     login: '登录',
     socialLogin: '社交登录',
     home: '首页',
     analysis: '分析页',
-    workplace: '工作台'
+    workplace: '工作台',
   },
   analysis: {
     newUser: '新增用户',
@@ -180,7 +180,7 @@ export default {
     thursday: '周四',
     friday: '周五',
     saturday: '周六',
-    sunday: '周日'
+    sunday: '周日',
   },
   workplace: {
     welcome: '你好',
@@ -202,7 +202,7 @@ export default {
     yield: '产量',
     dynamic: '动态',
     push: '推送',
-    follow: '关注'
+    follow: '关注',
   },
   form: {
     input: '输入框',
@@ -257,10 +257,10 @@ export default {
     subitem: '子项',
     formValidation: '表单验证',
     verifyReset: '验证重置',
-    remark: '备注'
+    remark: '备注',
   },
   watermark: {
-    watermark: '水印'
+    watermark: '水印',
   },
   table: {
     table: '表格',
@@ -276,7 +276,7 @@ export default {
     hiddenSelections: '隐藏多选',
     showExpandedRows: '显示展开行',
     hiddenExpandedRows: '隐藏展开行',
-    header: '头部'
+    header: '头部',
   },
   action: {
     create: '新增',
@@ -298,12 +298,12 @@ export default {
     typeCreate: '字典类型新增',
     typeUpdate: '字典类型编辑',
     dataCreate: '字典数据新增',
-    dataUpdate: '字典数据编辑'
+    dataUpdate: '字典数据编辑',
   },
   dialog: {
     dialog: '弹窗',
     open: '打开',
-    close: '关闭'
+    close: '关闭',
   },
   sys: {
     api: {
@@ -326,12 +326,12 @@ export default {
       errMsg503: '服务不可用，服务器暂时过载或维护!',
       errMsg504: '网络超时!',
       errMsg505: 'http版本不支持该请求!',
-      errMsg901: '演示模式，无法进行写操作!'
+      errMsg901: '演示模式，无法进行写操作!',
     },
     app: {
       logoutTip: '温馨提醒',
       logoutMessage: '是否确认退出系统?',
-      menuLoading: '菜单加载中...'
+      menuLoading: '菜单加载中...',
     },
     exception: {
       backLogin: '返回登录',
@@ -341,14 +341,14 @@ export default {
       subTitle500: '抱歉，服务器报告错误。',
       noDataTitle: '当前页无数据',
       networkErrorTitle: '网络错误',
-      networkErrorSubTitle: '抱歉，您的网络连接已断开，请检查您的网络！'
+      networkErrorSubTitle: '抱歉，您的网络连接已断开，请检查您的网络！',
     },
     lock: {
       unlock: '点击解锁',
       alert: '锁屏密码错误',
       backToLogin: '返回登录',
       entry: '进入系统',
-      placeholder: '请输入锁屏密码或者用户密码'
+      placeholder: '请输入锁屏密码或者用户密码',
     },
     login: {
       backSignIn: '返回',
@@ -382,8 +382,8 @@ export default {
       confirmPassword: '确认密码',
       email: '邮箱',
       smsCode: '短信验证码',
-      mobile: '手机号码'
-    }
+      mobile: '手机号码',
+    },
   },
   profile: {
     user: {
@@ -398,20 +398,20 @@ export default {
       sex: '性别',
       man: '男',
       woman: '女',
-      createTime: '创建日期'
+      createTime: '创建日期',
     },
     info: {
       title: '基本信息',
       basicInfo: '基本资料',
       resetPwd: '修改密码',
-      userSocial: '社交信息'
+      userSocial: '社交信息',
     },
     rules: {
       nickname: '请输入用户昵称',
       mail: '请输入邮箱地址',
       truemail: '请输入正确的邮箱地址',
       phone: '请输入正确的手机号码',
-      truephone: '请输入正确的手机号码'
+      truephone: '请输入正确的手机号码',
     },
     password: {
       oldPassword: '旧密码',
@@ -421,8 +421,8 @@ export default {
       newPwdMsg: '请输入新密码',
       cfPwdMsg: '请输入确认密码',
       pwdRules: '长度在 6 到 20 个字符',
-      diffPwd: '两次输入密码不一致'
-    }
+      diffPwd: '两次输入密码不一致',
+    },
   },
   cropper: {
     selectImage: '选择图片',
@@ -436,6 +436,6 @@ export default {
     btn_scale_y: '垂直翻转',
     btn_zoom_in: '放大',
     btn_zoom_out: '缩小',
-    preview: '预览'
-  }
+    preview: '预览',
+  },
 }

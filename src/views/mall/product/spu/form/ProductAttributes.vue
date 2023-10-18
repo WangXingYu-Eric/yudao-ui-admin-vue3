@@ -1,13 +1,17 @@
 <template>
   <el-col v-for="(item, index) in attributeList" :key="index">
     <div>
-      <el-text class="mx-1">属性名：</el-text>
-      <el-tag class="mx-1" closable type="success" @close="handleCloseProperty(index)"
-        >{{ item.name }}
+      <el-text class="mx-1">
+属性名：
+</el-text>
+      <el-tag class="mx-1" closable type="success" @close="handleCloseProperty(index)">
+{{ item.name }}
       </el-tag>
     </div>
     <div>
-      <el-text class="mx-1">属性值：</el-text>
+      <el-text class="mx-1">
+属性值：
+</el-text>
       <el-tag
         v-for="(value, valueIndex) in item.values"
         :key="value.id"
@@ -17,7 +21,7 @@
       >
         {{ value.name }}
       </el-tag>
-      <el-input
+      <ElInput
         v-show="inputVisible(index)"
         :id="`input${index}`"
         :ref="setInputRef"
@@ -46,7 +50,13 @@ import * as PropertyApi from '@/api/mall/product/property'
 
 defineOptions({ name: 'ProductAttributes' })
 
-const { t } = useI18n() // 国际化
+// 商品属性列表
+const props = defineProps({
+  propertyList: {
+    type: Array,
+    default: () => {}
+  }
+}) ;const emit = defineEmits(['success']) ;const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 const inputValue = ref('') // 输入框值
 const attributeIndex = ref<number | null>(null) // 获取焦点时记录当前属性项的index
@@ -64,15 +74,7 @@ const setInputRef = (el) => {
     inputRef.value.push(el)
   }
 }
-const attributeList = ref([]) // 商品属性列表
-const props = defineProps({
-  propertyList: {
-    type: Array,
-    default: () => {}
-  }
-})
-
-watch(
+const attributeList = ref([])watch(
   () => props.propertyList,
   (data) => {
     if (!data) return
@@ -98,7 +100,7 @@ const showInput = async (index) => {
   inputRef.value[index].focus()
 }
 
-const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
+ // 定义 success 事件，用于操作成功后的回调
 
 /** 输入框失去焦点或点击回车时触发 */
 const handleInputConfirm = async (index, propertyId) => {
@@ -109,7 +111,8 @@ const handleInputConfirm = async (index, propertyId) => {
       attributeList.value[index].values.push({ id, name: inputValue.value })
       message.success(t('common.createSuccess'))
       emit('success', attributeList.value)
-    } catch {
+    }
+ catch {
       message.error('添加失败，请重试') // TODO 缺少国际化
     }
   }

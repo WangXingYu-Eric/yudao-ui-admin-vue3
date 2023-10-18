@@ -47,7 +47,7 @@
     </el-form>
     <!-- 列表 -->
     <el-row>
-      <el-table
+      <ElTable
         ref="tableRef"
         v-loading="dbTableLoading"
         :data="dbTableList"
@@ -58,25 +58,28 @@
         <el-table-column type="selection" width="55" />
         <el-table-column :show-overflow-tooltip="true" label="表名称" prop="name" />
         <el-table-column :show-overflow-tooltip="true" label="表描述" prop="comment" />
-      </el-table>
+      </ElTable>
     </el-row>
     <!-- 操作 -->
     <template #footer>
       <el-button :disabled="tableList.length === 0" type="primary" @click="handleImportTable">
         导入
       </el-button>
-      <el-button @click="close">关闭</el-button>
+      <el-button @click="close">
+        关闭
+      </el-button>
     </template>
   </Dialog>
 </template>
+
 <script lang="ts" setup>
+import { ElTable } from 'element-plus'
 import * as CodegenApi from '@/api/infra/codegen'
 import * as DataSourceConfigApi from '@/api/infra/dataSourceConfig'
-import { ElTable } from 'element-plus'
 
 defineOptions({ name: 'InfraCodegenImportTable' })
 
-const message = useMessage() // 消息弹窗
+const emit = defineEmits(['success']); const message = useMessage() // 消息弹窗
 
 const dialogVisible = ref(false) // 弹窗的是否展示
 const dbTableLoading = ref(true) // 数据源的加载中
@@ -84,7 +87,7 @@ const dbTableList = ref<CodegenApi.DatabaseTableVO[]>([]) // 表的列表
 const queryParams = reactive({
   name: undefined,
   comment: undefined,
-  dataSourceConfigId: 0
+  dataSourceConfigId: 0,
 })
 const queryFormRef = ref() // 搜索的表单
 const dataSourceConfigList = ref<DataSourceConfigApi.DataSourceConfigVO[]>([]) // 数据源列表
@@ -94,7 +97,8 @@ const getList = async () => {
   dbTableLoading.value = true
   try {
     dbTableList.value = await CodegenApi.getSchemaTableList(queryParams)
-  } finally {
+  }
+  finally {
     dbTableLoading.value = false
   }
 }
@@ -134,18 +138,17 @@ const handleRowClick = (row) => {
 
 /** 多选框选中数据 */
 const handleSelectionChange = (selection) => {
-  tableList.value = selection.map((item) => item.name)
+  tableList.value = selection.map(item => item.name)
 }
 
 /** 导入按钮操作 */
 const handleImportTable = async () => {
   await CodegenApi.createCodegenList({
     dataSourceConfigId: queryParams.dataSourceConfigId,
-    tableNames: tableList.value
+    tableNames: tableList.value,
   })
   message.success('导入成功')
   emit('success')
   close()
 }
-const emit = defineEmits(['success'])
 </script>

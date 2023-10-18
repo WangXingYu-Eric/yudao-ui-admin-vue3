@@ -4,16 +4,18 @@
       <div class="select-item">
         <div v-for="(news, index) in newsList" :key="index">
           <div
-            class="news-main father"
             v-if="index === 0"
+            class="news-main father"
             :class="{ activeAddNews: activeNewsIndex === index }"
             @click="activeNewsIndex = index"
           >
             <div class="news-content">
-              <img class="material-img" :src="news.thumbUrl" />
-              <div class="news-content-title">{{ news.title }}</div>
+              <img class="material-img" :src="news.thumbUrl">
+              <div class="news-content-title">
+                {{ news.title }}
+              </div>
             </div>
-            <div class="child" v-if="newsList.length > 1">
+            <div v-if="newsList.length > 1" class="child">
               <el-button type="info" circle size="small" @click="() => moveDownNews(index)">
                 <Icon icon="ep:arrow-down-bold" />
               </el-button>
@@ -29,15 +31,17 @@
             </div>
           </div>
           <div
-            class="news-main-item father"
             v-if="index > 0"
+            class="news-main-item father"
             :class="{ activeAddNews: activeNewsIndex === index }"
             @click="activeNewsIndex = index"
           >
             <div class="news-content-item">
-              <div class="news-content-item-title">{{ news.title }}</div>
+              <div class="news-content-item-title">
+                {{ news.title }}
+              </div>
               <div class="news-content-item-img">
-                <img class="material-img" :src="news.thumbUrl" width="100%" />
+                <img class="material-img" :src="news.thumbUrl" width="100%">
               </div>
             </div>
             <div class="child">
@@ -73,10 +77,10 @@
         </div>
         <el-row justify="center" class="ope-row">
           <el-button
+            v-if="newsList.length < 8 && isCreating"
             type="primary"
             circle
             @click="plusNews"
-            v-if="newsList.length < 8 && isCreating"
           >
             <Icon icon="ep:plus" />
           </el-button>
@@ -107,16 +111,16 @@
           <el-col :span="12">
             <p>摘要:</p>
             <el-input
+              v-model="activeNewsItem.digest"
               :rows="8"
               type="textarea"
-              v-model="activeNewsItem.digest"
               placeholder="请输入摘要"
               class="digest"
               maxlength="120"
             />
           </el-col>
         </el-row>
-        <!--富文本编辑器组件-->
+        <!-- 富文本编辑器组件 -->
         <el-row>
           <Editor v-model="activeNewsItem.content" :editor-config="editorConfig" />
         </el-row>
@@ -126,37 +130,38 @@
 </template>
 
 <script lang="ts" setup>
-import { Editor } from '@/components/Editor'
 import { createEditorConfig } from '../editor-config'
 import CoverSelect from './CoverSelect.vue'
 import { type NewsItem, createEmptyNewsItem } from './types'
+import { Editor } from '@/components/Editor'
 
 defineOptions({ name: 'NewsForm' })
-
-const message = useMessage()
 
 const props = defineProps<{
   isCreating: boolean
   modelValue: NewsItem[] | null
 }>()
 
-const accountId = inject<number>('accountId')
-
-// ========== 文件上传 ==========
-const UPLOAD_URL = import.meta.env.VITE_BASE_URL + '/admin-api/mp/material/upload-permanent' // 上传永久素材的地址
-const editorConfig = createEditorConfig(UPLOAD_URL, accountId)
-
 // v-model=newsList
 const emit = defineEmits<{
   (e: 'update:modelValue', v: NewsItem[])
 }>()
+
+const message = useMessage()
+
+const accountId = inject<number>('accountId')
+
+// ========== 文件上传 ==========
+const UPLOAD_URL = `${import.meta.env.VITE_BASE_URL}/admin-api/mp/material/upload-permanent` // 上传永久素材的地址
+const editorConfig = createEditorConfig(UPLOAD_URL, accountId)
+
 const newsList = computed<NewsItem[]>({
   get() {
     return props.modelValue === null ? [createEmptyNewsItem()] : props.modelValue
   },
   set(val) {
     emit('update:modelValue', val)
-  }
+  },
 })
 
 const activeNewsIndex = ref(0)
@@ -183,10 +188,10 @@ const removeNews = async (index: number) => {
   try {
     await message.confirm('确定删除该图文吗?')
     newsList.value.splice(index, 1)
-    if (activeNewsIndex.value === index) {
+    if (activeNewsIndex.value === index)
       activeNewsIndex.value = 0
-    }
-  } catch {}
+  }
+  catch {}
 }
 
 // 添加一个图文

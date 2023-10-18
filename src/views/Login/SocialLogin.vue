@@ -9,7 +9,7 @@
       >
         <!-- 左上角的 logo + 系统标题 -->
         <div class="relative flex items-center text-white">
-          <img alt="" class="mr-10px h-48px w-48px" src="@/assets/imgs/logo.png" />
+          <img alt="" class="mr-10px h-48px w-48px" src="@/assets/imgs/logo.png">
           <span class="text-20px font-bold">{{ underlineToHump(appStore.getTitle) }}</span>
         </div>
         <!-- 左边的背景图 + 欢迎语 -->
@@ -19,8 +19,10 @@
             enter-active-class="animate__animated animate__bounceInLeft"
             tag="div"
           >
-            <img key="1" alt="" class="w-350px" src="@/assets/svgs/login-box-bg.svg" />
-            <div key="2" class="text-3xl text-white">{{ t('login.welcome') }}</div>
+            <img key="1" alt="" class="w-350px" src="@/assets/svgs/login-box-bg.svg">
+            <div key="2" class="text-3xl text-white">
+              {{ t('login.welcome') }}
+            </div>
             <div key="3" class="mt-5 text-14px font-normal text-white">
               {{ t('login.message') }}
             </div>
@@ -33,7 +35,7 @@
           class="flex items-center justify-between text-white at-2xl:justify-end at-xl:justify-end"
         >
           <div class="flex items-center at-2xl:hidden at-xl:hidden">
-            <img alt="" class="mr-10px h-48px w-48px" src="@/assets/imgs/logo.png" />
+            <img alt="" class="mr-10px h-48px w-48px" src="@/assets/imgs/logo.png">
             <span class="text-20px font-bold">{{ underlineToHump(appStore.getTitle) }}</span>
           </div>
           <div class="flex items-center justify-end space-x-10px">
@@ -112,9 +114,11 @@
                         </el-checkbox>
                       </el-col>
                       <el-col :offset="6" :span="12">
-                        <el-link style="float: right" type="primary">{{
-                          t('login.forgetPassword')
-                        }}</el-link>
+                        <el-link style="float: right" type="primary">
+                          {{
+                            t('login.forgetPassword')
+                          }}
+                        </el-link>
                       </el-col>
                     </el-row>
                   </el-form-item>
@@ -132,8 +136,8 @@
                 </el-col>
                 <Verify
                   ref="verify"
-                  :captchaType="captchaType"
-                  :imgSize="{ width: '400px', height: '200px' }"
+                  :captcha-type="captchaType"
+                  :img-size="{ width: '400px', height: '200px' }"
                   mode="pop"
                   @success="handleLogin"
                 />
@@ -147,9 +151,10 @@
 </template>
 
 <script lang="ts" setup>
-import { underlineToHump } from '@/utils'
-
 import { ElLoading } from 'element-plus'
+import { LoginStateEnum, useFormValid, useLoginState } from './components/useLogin'
+import LoginFormTitle from './components/LoginFormTitle.vue'
+import { underlineToHump } from '@/utils'
 
 import { useDesign } from '@/hooks/web/useDesign'
 import { useAppStore } from '@/store/modules/app'
@@ -160,8 +165,6 @@ import * as LoginApi from '@/api/login'
 import * as authUtil from '@/utils/auth'
 import { ThemeSwitch } from '@/layout/components/ThemeSwitch'
 import { LocaleDropdown } from '@/layout/components/LocaleDropdown'
-import { LoginStateEnum, useFormValid, useLoginState } from './components/useLogin'
-import LoginFormTitle from './components/LoginFormTitle.vue'
 import router from '@/router'
 
 defineOptions({ name: 'SocialLogin' })
@@ -189,7 +192,7 @@ const getShow = computed(() => unref(getLoginState) === LoginStateEnum.LOGIN)
 const LoginRules = {
   tenantName: [required],
   username: [required],
-  password: [required]
+  password: [required],
 }
 const loginData = reactive({
   isShowPassword: false,
@@ -200,8 +203,8 @@ const loginData = reactive({
     username: 'admin',
     password: 'admin123',
     captchaVerification: '',
-    rememberMe: false
-  }
+    rememberMe: false,
+  },
 })
 
 // 获取验证码
@@ -209,13 +212,14 @@ const getCode = async () => {
   // 情况一，未开启：则直接登录
   if (loginData.captchaEnable === 'false') {
     await handleLogin({})
-  } else {
+  }
+  else {
     // 情况二，已开启：则展示验证码；只有完成验证码的情况，才进行登录
     // 弹出验证码
     verify.value.show()
   }
 }
-//获取租户ID
+// 获取租户ID
 const getTenantId = async () => {
   if (loginData.tenantEnable === 'true') {
     const res = await LoginApi.getTenantIdByName(loginData.loginForm.tenantName)
@@ -230,8 +234,8 @@ const getCookie = () => {
       ...loginData.loginForm,
       username: loginForm.username ? loginForm.username : loginData.loginForm.username,
       password: loginForm.password ? loginForm.password : loginData.loginForm.password,
-      rememberMe: loginForm.rememberMe ? true : false,
-      tenantName: loginForm.tenantName ? loginForm.tenantName : loginData.loginForm.tenantName
+      rememberMe: !!loginForm.rememberMe,
+      tenantName: loginForm.tenantName ? loginForm.tenantName : loginData.loginForm.tenantName,
     }
   }
 }
@@ -255,7 +259,8 @@ const tryLogin = async () => {
     authUtil.setToken(res)
 
     router.push({ path: redirect || '/' })
-  } catch (err) {}
+  }
+  catch (err) {}
 }
 
 // 登录
@@ -264,9 +269,8 @@ const handleLogin = async (params) => {
   try {
     await getTenantId()
     const data = await validForm()
-    if (!data) {
+    if (!data)
       return
-    }
 
     let redirect = getUrlValue('redirect')
 
@@ -282,32 +286,32 @@ const handleLogin = async (params) => {
       // 社交登录
       socialCode: code,
       socialState: state,
-      socialType: type
+      socialType: type,
     })
-    if (!res) {
+    if (!res)
       return
-    }
+
     loading.value = ElLoading.service({
       lock: true,
       text: '正在加载系统中...',
-      background: 'rgba(0, 0, 0, 0.7)'
+      background: 'rgba(0, 0, 0, 0.7)',
     })
-    if (loginData.loginForm.rememberMe) {
+    if (loginData.loginForm.rememberMe)
       authUtil.setLoginForm(loginData.loginForm)
-    } else {
+    else
       authUtil.removeLoginForm()
-    }
+
     authUtil.setToken(res)
-    if (!redirect) {
+    if (!redirect)
       redirect = '/'
-    }
+
     // 判断是否为SSO登录
-    if (redirect.indexOf('sso') !== -1) {
+    if (redirect.includes('sso'))
       window.location.href = window.location.href.replace('/login?redirect=', '')
-    } else {
+    else
       push({ path: redirect || permissionStore.addRouters[0].path })
-    }
-  } finally {
+  }
+  finally {
     loginLoading.value = false
     loading.value.close()
   }

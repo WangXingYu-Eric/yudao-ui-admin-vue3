@@ -1,10 +1,10 @@
-export type WorkplaceTotal = {
+export interface WorkplaceTotal {
   project: number
   access: number
   todo: number
 }
 
-export type Project = {
+export interface Project {
   name: string
   icon: string
   message: string
@@ -12,43 +12,43 @@ export type Project = {
   time: Date | number | string
 }
 
-export type Notice = {
+export interface Notice {
   title: string
   type: string
   keys: string[]
   date: Date | number | string
 }
 
-export type Shortcut = {
+export interface Shortcut {
   name: string
   icon: string
   url: string
 }
 
-export type RadarData = {
+export interface RadarData {
   personal: number
   team: number
   max: number
   name: string
 }
-export type AnalysisTotalTypes = {
+export interface AnalysisTotalTypes {
   users: number
   messages: number
   moneys: number
   shoppings: number
 }
 
-export type UserAccessSource = {
+export interface UserAccessSource {
   value: number
   name: string
 }
 
-export type WeeklyUserActivity = {
+export interface WeeklyUserActivity {
   value: number
   name: string
 }
 
-export type MonthlySales = {
+export interface MonthlySales {
   name: string
   estimate: number
   actual: number

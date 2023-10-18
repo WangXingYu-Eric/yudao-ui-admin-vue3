@@ -2,7 +2,7 @@
  * 数据字典工具类
  */
 import { useDictStoreWithOut } from '@/store/modules/dict'
-import { ElementPlusInfoType } from '@/types/elementPlus'
+import type { ElementPlusInfoType } from '@/types/elementPlus'
 
 const dictStore = useDictStoreWithOut()
 
@@ -30,7 +30,7 @@ export const getIntDictOptions = (dictType: string): DictDataType[] => {
   dictOptions.forEach((dict: DictDataType) => {
     dictOption.push({
       ...dict,
-      value: parseInt(dict.value + '')
+      value: Number.parseInt(`${dict.value}`),
     })
   })
   return dictOption
@@ -42,7 +42,7 @@ export const getStrDictOptions = (dictType: string) => {
   dictOptions.forEach((dict: DictDataType) => {
     dictOption.push({
       ...dict,
-      value: dict.value + ''
+      value: `${dict.value}`,
     })
   })
   return dictOption
@@ -54,7 +54,7 @@ export const getBoolDictOptions = (dictType: string) => {
   dictOptions.forEach((dict: DictDataType) => {
     dictOption.push({
       ...dict,
-      value: dict.value + '' === 'true'
+      value: `${dict.value}` === 'true',
     })
   })
   return dictOption
@@ -69,9 +69,8 @@ export const getBoolDictOptions = (dictType: string) => {
 export const getDictObj = (dictType: string, value: any): DictDataType | undefined => {
   const dictOptions: DictDataType[] = getDictOptions(dictType)
   for (const dict of dictOptions) {
-    if (dict.value === value + '') {
+    if (dict.value === `${value}`)
       return dict
-    }
   }
 }
 
@@ -86,9 +85,8 @@ export const getDictLabel = (dictType: string, value: any): string => {
   const dictOptions: DictDataType[] = getDictOptions(dictType)
   const dictLabel = ref('')
   dictOptions.forEach((dict: DictDataType) => {
-    if (dict.value === value + '') {
+    if (dict.value === `${value}`)
       dictLabel.value = dict.label
-    }
   })
   return dictLabel.value
 }
@@ -154,10 +152,10 @@ export enum DICT_TYPE {
 
   // ========== MALL - 商品模块 ==========
   PRODUCT_UNIT = 'product_unit', // 商品单位
-  PRODUCT_SPU_STATUS = 'product_spu_status', //商品状态
+  PRODUCT_SPU_STATUS = 'product_spu_status', // 商品状态
 
   // ========== MALL - 交易模块 ==========
-  EXPRESS_CHARGE_MODE = 'trade_delivery_express_charge_mode', //快递的计费方式
+  EXPRESS_CHARGE_MODE = 'trade_delivery_express_charge_mode', // 快递的计费方式
   TRADE_AFTER_SALE_STATUS = 'trade_after_sale_status', // 售后 - 状态
   TRADE_AFTER_SALE_WAY = 'trade_after_sale_way', // 售后 - 方式
   TRADE_AFTER_SALE_TYPE = 'trade_after_sale_type', // 售后 - 类型
@@ -182,5 +180,5 @@ export enum DICT_TYPE {
   PROMOTION_ACTIVITY_STATUS = 'promotion_activity_status', // 优惠活动的状态
   PROMOTION_CONDITION_TYPE = 'promotion_condition_type', // 营销的条件类型枚举
   PROMOTION_BARGAIN_RECORD_STATUS = 'promotion_bargain_record_status', // 砍价记录的状态
-  PROMOTION_COMBINATION_RECORD_STATUS = 'promotion_combination_record_status' // 拼团记录的状态
+  PROMOTION_COMBINATION_RECORD_STATUS = 'promotion_combination_record_status', // 拼团记录的状态
 }

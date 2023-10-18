@@ -2,9 +2,9 @@
   <!-- 搜索工作栏 -->
   <ContentWrap>
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="100px"
     >
@@ -13,8 +13,8 @@
           v-model="queryParams.code"
           placeholder="请输快递公司编号"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="快递公司名称" prop="name">
@@ -22,27 +22,31 @@
           v-model="queryParams.name"
           placeholder="请输快递公司名称"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        <el-button @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" /> 搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon icon="ep:refresh" class="mr-5px" /> 重置
+        </el-button>
         <el-button
+          v-hasPermi="['trade:delivery:express:create']"
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['trade:delivery:express:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
         <el-button
+          v-hasPermi="['trade:delivery:express:export']"
           type="success"
           plain
-          @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['trade:delivery:express:export']"
+          @click="handleExport"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
@@ -57,7 +61,7 @@
       <el-table-column label="公司名称" prop="name" />
       <el-table-column label="公司 logo " prop="logo">
         <template #default="scope">
-          <img v-if="scope.row.logo" :src="scope.row.logo" alt="公司logo" class="h-40px" />
+          <img v-if="scope.row.logo" :src="scope.row.logo" alt="公司logo" class="h-40px">
         </template>
       </el-table-column>
       <el-table-column label="排序" align="center" prop="sort" />
@@ -76,18 +80,18 @@
       <el-table-column label="操作" align="center">
         <template #default="scope">
           <el-button
+            v-hasPermi="['trade:delivery:express:update']"
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['trade:delivery:express:update']"
           >
             编辑
           </el-button>
           <el-button
+            v-hasPermi="['trade:delivery:express:delete']"
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
-            v-hasPermi="['trade:delivery:express:delete']"
           >
             删除
           </el-button>
@@ -99,12 +103,13 @@
   <!-- 表单弹窗：添加/修改 -->
   <ExpressForm ref="formRef" @success="getList" />
 </template>
+
 <script lang="ts" setup>
+import ExpressForm from './ExpressForm.vue'
 import { DICT_TYPE } from '@/utils/dict'
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
 import * as DeliveryExpressApi from '@/api/mall/trade/delivery/express'
-import ExpressForm from './ExpressForm.vue'
 
 defineOptions({ name: 'Express' })
 
@@ -117,7 +122,7 @@ const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
   code: '',
-  name: ''
+  name: '',
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
@@ -129,7 +134,8 @@ const getList = async () => {
     const data = await DeliveryExpressApi.getDeliveryExpressPage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -162,7 +168,8 @@ const handleDelete = async (id: number) => {
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
 /** 导出按钮操作 */
@@ -174,13 +181,15 @@ const handleExport = async () => {
     exportLoading.value = true
     const data = await DeliveryExpressApi.exportDeliveryExpressApi(queryParams)
     download.excel(data, '快递公司.xls')
-  } catch {
-  } finally {
+  }
+  catch {
+  }
+  finally {
     exportLoading.value = false
   }
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

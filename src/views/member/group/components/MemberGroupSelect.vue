@@ -8,18 +8,19 @@
     />
   </el-select>
 </template>
+
 <script lang="ts" setup>
 import * as GroupApi from '@/api/member/group'
 
-/** 会员分组选择框 **/
+/** 会员分组选择框 */
 defineOptions({ name: 'MemberGroupSelect' })
 
 const props = defineProps({
-  /** 下拉框选中值 **/
+  /** 下拉框选中值 */
   modelValue: {
     type: Number,
-    default: undefined
-  }
+    default: undefined,
+  },
 })
 const emit = defineEmits(['update:modelValue'])
 
@@ -29,7 +30,7 @@ const groupId = computed({
   },
   set(value: any) {
     emit('update:modelValue', value)
-  }
+  },
 })
 
 const groupOptions = ref<GroupApi.GroupVO[]>([])

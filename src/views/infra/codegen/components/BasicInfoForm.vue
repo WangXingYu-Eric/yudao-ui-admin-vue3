@@ -40,17 +40,18 @@
     </el-row>
   </el-form>
 </template>
+
 <script lang="ts" setup>
-import * as CodegenApi from '@/api/infra/codegen'
-import { PropType } from 'vue'
+import type { PropType } from 'vue'
+import type * as CodegenApi from '@/api/infra/codegen'
 
 defineOptions({ name: 'InfraCodegenBasicInfoForm' })
 
 const props = defineProps({
   table: {
     type: Object as PropType<Nullable<CodegenApi.CodegenTableVO>>,
-    default: () => null
-  }
+    default: () => null,
+  },
 })
 
 const formRef = ref()
@@ -59,29 +60,30 @@ const formData = ref({
   tableComment: '',
   className: '',
   author: '',
-  remark: ''
+  remark: '',
 })
 const rules = reactive({
   tableName: [required],
   tableComment: [required],
   className: [required],
-  author: [required]
+  author: [required],
 })
 
 /** 监听 table 属性，复制给 formData 属性 */
 watch(
   () => props.table,
   (table) => {
-    if (!table) return
+    if (!table)
+      return
     formData.value = table
   },
   {
     deep: true,
-    immediate: true
-  }
+    immediate: true,
+  },
 )
 
 defineExpose({
-  validate: async () => unref(formRef)?.validate()
+  validate: async () => unref(formRef)?.validate(),
 })
 </script>

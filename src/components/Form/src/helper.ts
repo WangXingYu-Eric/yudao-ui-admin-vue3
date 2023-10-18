@@ -1,8 +1,8 @@
 import type { Slots } from 'vue'
+import type { PlaceholderModel } from './types'
 import { getSlot } from '@/utils/tsxHelper'
-import { PlaceholderModel } from './types'
-import { FormSchema } from '@/types/form'
-import { ColProps } from '@/types/components'
+import type { FormSchema } from '@/types/form'
+import type { ColProps } from '@/types/components'
 
 /**
  *
@@ -16,7 +16,7 @@ export const setTextPlaceholder = (schema: FormSchema): PlaceholderModel => {
   const selectMap = ['Select', 'SelectV2', 'TimePicker', 'DatePicker', 'TimeSelect', 'TimeSelect']
   if (textMap.includes(schema?.component as string)) {
     return {
-      placeholder: t('common.inputText') + schema.label
+      placeholder: t('common.inputText') + schema.label,
     }
   }
   if (selectMap.includes(schema?.component as string)) {
@@ -24,17 +24,18 @@ export const setTextPlaceholder = (schema: FormSchema): PlaceholderModel => {
     const twoTextMap = ['datetimerange', 'daterange', 'monthrange', 'datetimerange', 'daterange']
     if (
       twoTextMap.includes(
-        (schema?.componentProps?.type || schema?.componentProps?.isRange) as string
+        (schema?.componentProps?.type || schema?.componentProps?.isRange) as string,
       )
     ) {
       return {
         startPlaceholder: t('common.startTimeText'),
         endPlaceholder: t('common.endTimeText'),
-        rangeSeparator: '-'
+        rangeSeparator: '-',
       }
-    } else {
+    }
+    else {
       return {
-        placeholder: t('common.selectText') + schema.label
+        placeholder: t('common.selectText') + schema.label,
       }
     }
   }
@@ -57,9 +58,9 @@ export const setGridProp = (col: ColProps = {}): ColProps => {
           sm: 12,
           md: 12,
           lg: 12,
-          xl: 12
+          xl: 12,
         }),
-    ...col
+    ...col,
   }
   return colProps
 }
@@ -75,7 +76,7 @@ export const setComponentProps = (item: FormSchema): Recordable => {
     ? { ...item.componentProps }
     : {
         clearable: true,
-        ...item.componentProps
+        ...item.componentProps,
       }
   // 需要删除额外的属性
   delete componentProps?.slots
@@ -91,7 +92,7 @@ export const setComponentProps = (item: FormSchema): Recordable => {
 export const setItemComponentSlots = (
   slots: Slots,
   slotsProps: Recordable = {},
-  field: string
+  field: string,
 ): Recordable => {
   const slotObj: Recordable = {}
   for (const key in slotsProps) {
@@ -118,7 +119,8 @@ export const initModel = (schema: FormSchema[], formModel: Recordable) => {
     // 如果是hidden，就删除对应的值
     if (v.hidden) {
       delete model[v.field]
-    } else if (v.component && v.component !== 'Divider') {
+    }
+    else if (v.component && v.component !== 'Divider') {
       const hasField = Reflect.has(model, v.field)
       // 如果先前已经有值存在，则不进行重新赋值，而是采用现有的值
       model[v.field] = hasField ? model[v.field] : v.value !== void 0 ? v.value : ''
@@ -135,12 +137,12 @@ export const initModel = (schema: FormSchema[], formModel: Recordable) => {
 export const setFormItemSlots = (slots: Slots, field: string): Recordable => {
   const slotObj: Recordable = {}
   if (slots[`${field}-error`]) {
-    slotObj['error'] = (data: Recordable) => {
+    slotObj.error = (data: Recordable) => {
       return getSlot(slots, `${field}-error`, data)
     }
   }
   if (slots[`${field}-label`]) {
-    slotObj['label'] = (data: Recordable) => {
+    slotObj.label = (data: Recordable) => {
       return getSlot(slots, `${field}-label`, data)
     }
   }

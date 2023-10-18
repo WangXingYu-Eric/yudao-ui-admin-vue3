@@ -35,7 +35,7 @@ export interface TradeAfterSaleVO {
 export interface ProductPropertiesVO {
   propertyId?: number | null // 属性的编号
   propertyName?: string // 属性的名称
-  valueId?: number | null //属性值的编号
+  valueId?: number | null // 属性值的编号
   valueName?: string // 属性值的名称
 }
 

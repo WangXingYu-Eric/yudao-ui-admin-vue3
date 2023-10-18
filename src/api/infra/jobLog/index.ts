@@ -21,13 +21,13 @@ export const getJobLogPage = (params: PageParam) => {
 
 // 任务日志详情
 export const getJobLog = (id: number) => {
-  return request.get({ url: '/infra/job-log/get?id=' + id })
+  return request.get({ url: `/infra/job-log/get?id=${id}` })
 }
 
 // 导出定时任务日志
 export const exportJobLog = (params) => {
   return request.download({
     url: '/infra/job-log/export-excel',
-    params
+    params,
   })
 }

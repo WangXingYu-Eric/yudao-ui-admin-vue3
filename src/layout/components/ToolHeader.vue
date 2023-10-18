@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, computed } from 'vue'
+import { computed, defineComponent } from 'vue'
 import { Message } from '@/layout/components//Message'
 import { Collapse } from '@/layout/components/Collapse'
 import { UserInfo } from '@/layout/components/UserInfo'
@@ -46,38 +46,51 @@ export default defineComponent({
         class={[
           prefixCls,
           'h-[var(--top-tool-height)] relative px-[var(--top-tool-p-x)] flex items-center justify-between',
-          'dark:bg-[var(--el-bg-color)]'
+          'dark:bg-[var(--el-bg-color)]',
         ]}
       >
-        {layout.value !== 'top' ? (
-          <div class="h-full flex items-center">
-            {hamburger.value && layout.value !== 'cutMenu' ? (
-              <Collapse class="custom-hover" color="var(--top-header-text-color)"></Collapse>
-            ) : undefined}
-            {breadcrumb.value ? <Breadcrumb class="lt-md:hidden"></Breadcrumb> : undefined}
-          </div>
-        ) : undefined}
+        {layout.value !== 'top'
+          ? (
+            <div class="h-full flex items-center">
+              {hamburger.value && layout.value !== 'cutMenu'
+                ? (
+                  <Collapse class="custom-hover" color="var(--top-header-text-color)"></Collapse>
+                  )
+                : undefined}
+              {breadcrumb.value ? <Breadcrumb class="lt-md:hidden"></Breadcrumb> : undefined}
+            </div>
+            )
+          : undefined}
         <div class="h-full flex items-center">
-          {screenfull.value ? (
-            <Screenfull class="custom-hover" color="var(--top-header-text-color)"></Screenfull>
-          ) : undefined}
-          {size.value ? (
-            <SizeDropdown class="custom-hover" color="var(--top-header-text-color)"></SizeDropdown>
-          ) : undefined}
-          {locale.value ? (
-            <LocaleDropdown
-              class="custom-hover"
-              color="var(--top-header-text-color)"
-            ></LocaleDropdown>
-          ) : undefined}
-          {message.value ? (
-            <Message class="custom-hover" color="var(--top-header-text-color)"></Message>
-          ) : undefined}
+          {screenfull.value
+            ? (
+              <Screenfull class="custom-hover" color="var(--top-header-text-color)"></Screenfull>
+              )
+            : undefined}
+          {size.value
+            ? (
+              <SizeDropdown class="custom-hover" color="var(--top-header-text-color)"></SizeDropdown>
+              )
+            : undefined}
+          {locale.value
+            ? (
+              <LocaleDropdown
+                class="custom-hover"
+                color="var(--top-header-text-color)"
+              >
+              </LocaleDropdown>
+              )
+            : undefined}
+          {message.value
+            ? (
+              <Message class="custom-hover" color="var(--top-header-text-color)"></Message>
+              )
+            : undefined}
           <UserInfo></UserInfo>
         </div>
       </div>
     )
-  }
+  },
 })
 </script>
 

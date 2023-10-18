@@ -14,7 +14,7 @@
         <el-option label="外部资源" value="external" />
       </el-select>
     </el-form-item>
-    <el-form-item label="脚本" v-show="scriptTaskForm.scriptType === 'inline'">
+    <el-form-item v-show="scriptTaskForm.scriptType === 'inline'" label="脚本">
       <el-input
         v-model="scriptTaskForm.script"
         type="textarea"
@@ -25,7 +25,7 @@
         @change="updateElementTask()"
       />
     </el-form-item>
-    <el-form-item label="资源地址" v-show="scriptTaskForm.scriptType === 'external'">
+    <el-form-item v-show="scriptTaskForm.scriptType === 'external'" label="资源地址">
       <el-input
         v-model="scriptTaskForm.resource"
         clearable
@@ -48,13 +48,13 @@
 defineOptions({ name: 'ScriptTask' })
 const props = defineProps({
   id: String,
-  type: String
+  type: String,
 })
 const defaultTaskForm = ref({
   scriptFormat: '',
   script: '',
   resource: '',
-  resultVariable: ''
+  resultVariable: '',
 })
 const scriptTaskForm = ref<any>({})
 const bpmnElement = ref()
@@ -62,20 +62,21 @@ const bpmnElement = ref()
 const bpmnInstances = () => (window as any)?.bpmnInstances
 
 const resetTaskForm = () => {
-  for (let key in defaultTaskForm.value) {
-    let value = bpmnElement.value?.businessObject[key] || defaultTaskForm.value[key]
+  for (const key in defaultTaskForm.value) {
+    const value = bpmnElement.value?.businessObject[key] || defaultTaskForm.value[key]
     scriptTaskForm.value[key] = value
   }
   scriptTaskForm.value.scriptType = scriptTaskForm.value.script ? 'inline' : 'external'
 }
 const updateElementTask = () => {
-  let taskAttr = Object.create(null)
+  const taskAttr = Object.create(null)
   taskAttr.scriptFormat = scriptTaskForm.value.scriptFormat || null
   taskAttr.resultVariable = scriptTaskForm.value.resultVariable || null
   if (scriptTaskForm.value.scriptType === 'inline') {
     taskAttr.script = scriptTaskForm.value.script || null
     taskAttr.resource = null
-  } else {
+  }
+  else {
     taskAttr.resource = scriptTaskForm.value.resource || null
     taskAttr.script = null
   }
@@ -94,6 +95,6 @@ watch(
       resetTaskForm()
     })
   },
-  { immediate: true }
+  { immediate: true },
 )
 </script>

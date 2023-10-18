@@ -46,7 +46,7 @@
               {{ t('common.copy') }}
             </el-button>
             <el-scrollbar height="600px">
-              <pre><code v-dompurify-html="highlightedCode(item)" class="hljs"></code></pre>
+              <pre><code v-dompurify-html="highlightedCode(item)" class="hljs" /></pre>
             </el-scrollbar>
           </el-tab-pane>
         </el-tabs>
@@ -54,12 +54,15 @@
     </div>
   </Dialog>
 </template>
+
 <script lang="ts" setup>
 import { useClipboard } from '@vueuse/core'
 import { handleTree2 } from '@/utils/tree'
 import * as CodegenApi from '@/api/infra/codegen'
 
-import hljs from 'highlight.js' // 导入代码高亮文件
+import hljs from 'highlight.js'
+
+// 导入代码高亮文件
 import 'highlight.js/styles/github.css' // 导入代码高亮样式
 import java from 'highlight.js/lib/languages/java'
 import xml from 'highlight.js/lib/languages/java'
@@ -76,19 +79,19 @@ const dialogVisible = ref(false) // 弹窗的是否展示
 const loading = ref(false) // 加载中的状态
 const preview = reactive({
   fileTree: [], // 文件树
-  activeName: '' // 激活的文件名
+  activeName: '', // 激活的文件名
 })
 const previewCodegen = ref<CodegenApi.CodegenPreviewVO[]>()
 
 /** 点击文件 */
 const handleNodeClick = async (data, node) => {
-  if (node && !node.isLeaf) {
+  if (node && !node.isLeaf)
     return false
-  }
+
   preview.activeName = data.id
 }
 
-/** 生成 files 目录 **/
+/** 生成 files 目录 */
 interface filesType {
   id: string
   label: string
@@ -104,11 +107,12 @@ const open = async (id: number) => {
     const data = await CodegenApi.previewCodegen(id)
     previewCodegen.value = data
     // 处理文件
-    let file = handleFiles(data)
+    const file = handleFiles(data)
     preview.fileTree = handleTree2(file, 'id', 'parentId', 'children', '/')
     // 点击首个文件
     preview.activeName = data[0].filePath
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -116,15 +120,15 @@ defineExpose({ open }) // 提供 open 方法，用于打开弹窗
 
 /** 处理文件 */
 const handleFiles = (datas: CodegenApi.CodegenPreviewVO[]) => {
-  let exists = {} // key：file 的 id；value：true
-  let files: filesType[] = []
+  const exists = {} // key：file 的 id；value：true
+  const files: filesType[] = []
   // 遍历每个元素
   for (const data of datas) {
     let paths = data.filePath.split('/')
     let fullPath = '' // 从头开始的路径，用于生成 id
     // 特殊处理 java 文件
-    if (paths[paths.length - 1].indexOf('.java') >= 0) {
-      let newPaths: string[] = []
+    if (paths[paths.length - 1].includes('.java')) {
+      const newPaths: string[] = []
       for (let i = 0; i < paths.length; i++) {
         let path = paths[i]
         if (path !== 'java') {
@@ -137,48 +141,47 @@ const handleFiles = (datas: CodegenApi.CodegenPreviewVO[]) => {
         while (i < paths.length) {
           path = paths[i + 1]
           if (
-            path === 'controller' ||
-            path === 'convert' ||
-            path === 'dal' ||
-            path === 'enums' ||
-            path === 'service' ||
-            path === 'vo' || // 下面三个，主要是兜底。可能考虑到有人改了包结构
-            path === 'mysql' ||
-            path === 'dataobject'
-          ) {
+            path === 'controller'
+            || path === 'convert'
+            || path === 'dal'
+            || path === 'enums'
+            || path === 'service'
+            || path === 'vo' // 下面三个，主要是兜底。可能考虑到有人改了包结构
+            || path === 'mysql'
+            || path === 'dataobject'
+          )
             break
-          }
-          tmp = tmp ? tmp + '.' + path : path
+
+          tmp = tmp ? `${tmp}.${path}` : path
           i++
         }
-        if (tmp) {
+        if (tmp)
           newPaths.push(tmp)
-        }
       }
       paths = newPaths
     }
     // 遍历每个 path， 拼接成树
     for (let i = 0; i < paths.length; i++) {
       // 已经添加到 files 中，则跳过
-      let oldFullPath = fullPath
+      const oldFullPath = fullPath
       // 下面的 replaceAll 的原因，是因为上面包处理了，导致和 tabs 不匹配，所以 replaceAll 下
-      fullPath = fullPath.length === 0 ? paths[i] : fullPath.replaceAll('.', '/') + '/' + paths[i]
-      if (exists[fullPath]) {
+      fullPath = fullPath.length === 0 ? paths[i] : `${fullPath.replaceAll('.', '/')}/${paths[i]}`
+      if (exists[fullPath])
         continue
-      }
+
       // 添加到 files 中
       exists[fullPath] = true
       files.push({
         id: fullPath,
         label: paths[i],
-        parentId: oldFullPath || '/' // "/" 为根节点
+        parentId: oldFullPath || '/', // "/" 为根节点
       })
     }
   }
   return files
 }
 
-/** 复制 **/
+/** 复制 */
 const copy = async (text: string) => {
   const { copy, copied, isSupported } = useClipboard({ source: text })
   if (!isSupported) {
@@ -186,9 +189,8 @@ const copy = async (text: string) => {
     return
   }
   await copy()
-  if (unref(copied)) {
+  if (unref(copied))
     message.success(t('common.copySuccess'))
-  }
 }
 
 /**
@@ -200,7 +202,7 @@ const highlightedCode = (item) => {
   return result.value || '&nbsp;'
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(async () => {
   // 注册代码高亮的各种语言
   hljs.registerLanguage('java', java)
@@ -212,6 +214,7 @@ onMounted(async () => {
   hljs.registerLanguage('typescript', typescript)
 })
 </script>
+
 <style lang="scss">
 .app-infra-codegen-preview-container {
   .el-scrollbar .el-scrollbar__wrap .el-scrollbar__view {

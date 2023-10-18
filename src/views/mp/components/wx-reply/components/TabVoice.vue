@@ -1,12 +1,16 @@
 <template>
   <div>
-    <div class="select-item2" v-if="reply.url">
-      <p class="item-name">{{ reply.name }}</p>
+    <div v-if="reply.url" class="select-item2">
+      <p class="item-name">
+{{ reply.name }}
+</p>
       <el-row class="ope-row" justify="center">
         <WxVoicePlayer :url="reply.url" />
       </el-row>
       <el-row class="ope-row" justify="center">
-        <el-button type="danger" circle @click="onDelete"><Icon icon="ep:delete" /></el-button>
+        <el-button type="danger" circle @click="onDelete">
+<Icon icon="ep:delete" />
+</el-button>
       </el-row>
     </div>
     <el-row v-else style="text-align: center">
@@ -16,8 +20,8 @@
           素材库选择<Icon icon="ep:circle-check" />
         </el-button>
         <el-dialog
-          title="选择语音"
           v-model="showDialog"
+          title="选择语音"
           width="90%"
           append-to-body
           destroy-on-close
@@ -41,7 +45,9 @@
           :before-upload="beforeVoiceUpload"
           :on-success="onUploadSuccess"
         >
-          <el-button type="primary">点击上传</el-button>
+          <el-button type="primary">
+点击上传
+</el-button>
           <template #tip>
             <div class="el-upload__tip">
               格式支持 mp3/wma/wav/amr，文件大小不超过 2M，播放长度不超过 60s
@@ -52,27 +58,31 @@
     </el-row>
   </div>
 </template>
+
 <script lang="ts" setup>
+import type { UploadRawFile } from 'element-plus'
 import WxMaterialSelect from '@/views/mp/components/wx-material-select'
 import WxVoicePlayer from '@/views/mp/components/wx-voice-play'
 import { UploadType, useBeforeUpload } from '@/views/mp/hooks/useUpload'
-import type { UploadRawFile } from 'element-plus'
 import { getAccessToken } from '@/utils/auth'
-import { Reply } from './types'
-const message = useMessage()
+import type { Reply } from './types'
 
-const UPLOAD_URL = import.meta.env.VITE_API_BASEPATH + '/admin-api/mp/material/upload-temporary'
-const HEADERS = { Authorization: 'Bearer ' + getAccessToken() } // 设置上传的请求头部
+// 设置上传的请求头部
 
 const props = defineProps<{
   modelValue: Reply
 }>()
+
 const emit = defineEmits<{
   (e: 'update:modelValue', v: Reply)
 }>()
-const reply = computed<Reply>({
+
+const message = useMessage()
+
+const UPLOAD_URL = import.meta.env.VITE_API_BASEPATH + '/admin-api/mp/material/upload-temporary'
+const HEADERS = { Authorization: 'Bearer ' + getAccessToken() }const reply = computed<Reply>({
   get: () => props.modelValue,
-  set: (val) => emit('update:modelValue', val)
+  set: val => emit('update:modelValue', val),
 })
 
 const showDialog = ref(false)
@@ -81,14 +91,14 @@ const uploadData = reactive({
   accountId: reply.value.accountId,
   type: 'voice',
   title: '',
-  introduction: ''
+  introduction: '',
 })
 
 const beforeVoiceUpload = (rawFile: UploadRawFile) => useBeforeUpload(UploadType.Voice, 10)(rawFile)
 
 const onUploadSuccess = (res: any) => {
   if (res.code !== 0) {
-    message.error('上传出错：' + res.msg)
+    message.error(`上传出错：${  res.msg}`)
     return false
   }
 

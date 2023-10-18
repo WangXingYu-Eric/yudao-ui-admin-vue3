@@ -27,7 +27,7 @@ export interface CouponTemplateVO {
 export function createCouponTemplate(data: CouponTemplateVO) {
   return request.post({
     url: '/promotion/coupon-template/create',
-    data: data
+    data,
   })
 }
 
@@ -35,7 +35,7 @@ export function createCouponTemplate(data: CouponTemplateVO) {
 export function updateCouponTemplate(data: CouponTemplateVO) {
   return request.put({
     url: '/promotion/coupon-template/update',
-    data: data
+    data,
   })
 }
 
@@ -43,25 +43,25 @@ export function updateCouponTemplate(data: CouponTemplateVO) {
 export function updateCouponTemplateStatus(id: number, status: [0, 1]) {
   const data = {
     id,
-    status
+    status,
   }
   return request.put({
     url: '/promotion/coupon-template/update-status',
-    data: data
+    data,
   })
 }
 
 // 删除优惠劵模板
 export function deleteCouponTemplate(id: number) {
   return request.delete({
-    url: '/promotion/coupon-template/delete?id=' + id
+    url: `/promotion/coupon-template/delete?id=${id}`,
   })
 }
 
 // 获得优惠劵模板
 export function getCouponTemplate(id: number) {
   return request.get({
-    url: '/promotion/coupon-template/get?id=' + id
+    url: `/promotion/coupon-template/get?id=${id}`,
   })
 }
 
@@ -69,7 +69,7 @@ export function getCouponTemplate(id: number) {
 export function getCouponTemplatePage(params: PageParam) {
   return request.get({
     url: '/promotion/coupon-template/page',
-    params: params
+    params,
   })
 }
 
@@ -77,7 +77,7 @@ export function getCouponTemplatePage(params: PageParam) {
 export function exportCouponTemplateExcel(params: PageParam) {
   return request.get({
     url: '/promotion/coupon-template/export-excel',
-    params: params,
-    responseType: 'blob'
+    params,
+    responseType: 'blob',
   })
 }

@@ -15,7 +15,7 @@
 
     <template #code="form">
       <div class="w-[100%] flex">
-        <el-input v-model="form['code']" :placeholder="t('login.codePlaceholder')" />
+        <el-input v-model="form.code" :placeholder="t('login.codePlaceholder')" />
       </div>
     </template>
 
@@ -35,14 +35,15 @@
     </template>
   </Form>
 </template>
+
 <script lang="ts" setup>
 import type { FormRules } from 'element-plus'
 
-import { useForm } from '@/hooks/web/useForm'
-import { useValidator } from '@/hooks/web/useValidator'
 import LoginFormTitle from './LoginFormTitle.vue'
 import { LoginStateEnum, useLoginState } from './useLogin'
-import { FormSchema } from '@/types/form'
+import { useForm } from '@/hooks/web/useForm'
+import { useValidator } from '@/hooks/web/useValidator'
+import type { FormSchema } from '@/types/form'
 
 defineOptions({ name: 'RegisterForm' })
 
@@ -56,8 +57,8 @@ const schema = reactive<FormSchema[]>([
   {
     field: 'title',
     colProps: {
-      span: 24
-    }
+      span: 24,
+    },
   },
   {
     field: 'username',
@@ -65,11 +66,11 @@ const schema = reactive<FormSchema[]>([
     value: '',
     component: 'Input',
     colProps: {
-      span: 24
+      span: 24,
     },
     componentProps: {
-      placeholder: t('login.usernamePlaceholder')
-    }
+      placeholder: t('login.usernamePlaceholder'),
+    },
   },
   {
     field: 'password',
@@ -77,15 +78,15 @@ const schema = reactive<FormSchema[]>([
     value: '',
     component: 'InputPassword',
     colProps: {
-      span: 24
+      span: 24,
     },
     componentProps: {
       style: {
-        width: '100%'
+        width: '100%',
       },
       strength: true,
-      placeholder: t('login.passwordPlaceholder')
-    }
+      placeholder: t('login.passwordPlaceholder'),
+    },
   },
   {
     field: 'check_password',
@@ -93,36 +94,36 @@ const schema = reactive<FormSchema[]>([
     value: '',
     component: 'InputPassword',
     colProps: {
-      span: 24
+      span: 24,
     },
     componentProps: {
       style: {
-        width: '100%'
+        width: '100%',
       },
       strength: true,
-      placeholder: t('login.passwordPlaceholder')
-    }
+      placeholder: t('login.passwordPlaceholder'),
+    },
   },
   {
     field: 'code',
     label: t('login.code'),
     colProps: {
-      span: 24
-    }
+      span: 24,
+    },
   },
   {
     field: 'register',
     colProps: {
-      span: 24
-    }
-  }
+      span: 24,
+    },
+  },
 ])
 
 const rules: FormRules = {
   username: [required()],
   password: [required()],
   check_password: [required()],
-  code: [required()]
+  code: [required()],
 }
 
 const loading = ref(false)
@@ -133,7 +134,8 @@ const loginRegister = async () => {
     if (valid) {
       try {
         loading.value = true
-      } finally {
+      }
+      finally {
         loading.value = false
       }
     }

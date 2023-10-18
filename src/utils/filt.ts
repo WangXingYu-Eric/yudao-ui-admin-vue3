@@ -4,7 +4,7 @@ export const openWindow = (
     target?: '_self' | '_blank' | string
     noopener?: boolean
     noreferrer?: boolean
-  }
+  },
 ) => {
   const { target = '__blank', noopener = true, noreferrer = true } = opt || {}
   const feature: string[] = []
@@ -25,9 +25,9 @@ export const dataURLtoBlob = (base64Buf: string): Blob => {
   const bstr = window.atob(arr[1])
   let n = bstr.length
   const u8arr = new Uint8Array(n)
-  while (n--) {
+  while (n--)
     u8arr[n] = bstr.charCodeAt(n)
-  }
+
   return new Blob([u8arr], { type: mime })
 }
 
@@ -43,9 +43,10 @@ export const urlToBase64 = (url: string, mineType?: string): Promise<string> => 
     const img = new Image()
     img.crossOrigin = ''
     img.onload = function () {
-      if (!canvas || !ctx) {
+      if (!canvas || !ctx)
+        // eslint-disable-next-line prefer-promise-reject-errors
         return reject()
-      }
+
       canvas.height = img.height
       canvas.width = img.width
       ctx.drawImage(img, 0, 0)
@@ -68,7 +69,7 @@ export const downloadByOnlineUrl = (
   url: string,
   filename: string,
   mime?: string,
-  bom?: BlobPart
+  bom?: BlobPart,
 ) => {
   urlToBase64(url).then((base64) => {
     downloadByBase64(base64, filename, mime, bom)
@@ -103,9 +104,9 @@ export const downloadByData = (data: BlobPart, filename: string, mime?: string, 
   tempLink.style.display = 'none'
   tempLink.href = blobURL
   tempLink.setAttribute('download', filename)
-  if (typeof tempLink.download === 'undefined') {
+  if (typeof tempLink.download === 'undefined')
     tempLink.setAttribute('target', '_blank')
-  }
+
   document.body.appendChild(tempLink)
   tempLink.click()
   document.body.removeChild(tempLink)
@@ -119,14 +120,14 @@ export const downloadByData = (data: BlobPart, filename: string, mime?: string, 
 export const downloadByUrl = ({
   url,
   target = '_blank',
-  fileName
+  fileName,
 }: {
   url: string
   target?: '_self' | '_blank'
   fileName?: string
 }): boolean => {
-  const isChrome = window.navigator.userAgent.toLowerCase().indexOf('chrome') > -1
-  const isSafari = window.navigator.userAgent.toLowerCase().indexOf('safari') > -1
+  const isChrome = window.navigator.userAgent.toLowerCase().includes('chrome')
+  const isSafari = window.navigator.userAgent.toLowerCase().includes('safari')
 
   if (/(iP)/g.test(window.navigator.userAgent)) {
     console.error('Your browser does not support download!')
@@ -137,9 +138,8 @@ export const downloadByUrl = ({
     link.href = url
     link.target = target
 
-    if (link.download !== undefined) {
+    if (link.download !== undefined)
       link.download = fileName || url.substring(url.lastIndexOf('/') + 1, url.length)
-    }
 
     if (document.createEvent) {
       const e = document.createEvent('MouseEvents')
@@ -148,9 +148,8 @@ export const downloadByUrl = ({
       return true
     }
   }
-  if (url.indexOf('?') === -1) {
+  if (!url.includes('?'))
     url += '?download'
-  }
 
   openWindow(url, { target })
   return true

@@ -1,16 +1,16 @@
 <template>
-  <div class="waterfall" v-loading="props.loading">
-    <div class="waterfall-item" v-for="item in props.list" :key="item.id">
+  <div v-loading="props.loading" class="waterfall">
+    <div v-for="item in props.list" :key="item.id" class="waterfall-item">
       <a target="_blank" :href="item.url">
-        <img class="material-img" :src="item.url" />
+        <img class="material-img" :src="item.url">
         <div class="item-name">{{ item.name }}</div>
       </a>
       <el-row justify="center">
         <el-button
+          v-hasPermi="['mp:material:delete']"
           type="danger"
           circle
           @click="emit('delete', item.id)"
-          v-hasPermi="['mp:material:delete']"
         >
           <Icon icon="ep:delete" />
         </el-button>

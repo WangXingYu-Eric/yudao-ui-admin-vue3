@@ -11,7 +11,7 @@ export interface TagVO {
 export const createTag = (data: TagVO) => {
   return request.post({
     url: '/mp/tag/create',
-    data: data
+    data,
   })
 }
 
@@ -19,21 +19,21 @@ export const createTag = (data: TagVO) => {
 export const updateTag = (data: TagVO) => {
   return request.put({
     url: '/mp/tag/update',
-    data: data
+    data,
   })
 }
 
 // 删除公众号标签
 export const deleteTag = (id: number) => {
   return request.delete({
-    url: '/mp/tag/delete?id=' + id
+    url: `/mp/tag/delete?id=${id}`,
   })
 }
 
 // 获得公众号标签
 export const getTag = (id: number) => {
   return request.get({
-    url: '/mp/tag/get?id=' + id
+    url: `/mp/tag/get?id=${id}`,
   })
 }
 
@@ -41,20 +41,20 @@ export const getTag = (id: number) => {
 export const getTagPage = (query: PageParam) => {
   return request.get({
     url: '/mp/tag/page',
-    params: query
+    params: query,
   })
 }
 
 // 获取公众号标签精简信息列表
 export const getSimpleTagList = () => {
   return request.get({
-    url: '/mp/tag/list-all-simple'
+    url: '/mp/tag/list-all-simple',
   })
 }
 
 // 同步公众号标签
 export const syncTag = (accountId: number) => {
   return request.post({
-    url: '/mp/tag/sync?accountId=' + accountId
+    url: `/mp/tag/sync?accountId=${accountId}`,
   })
 }

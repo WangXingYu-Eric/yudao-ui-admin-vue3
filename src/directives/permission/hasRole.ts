@@ -10,17 +10,17 @@ export function hasRole(app: App<Element>) {
     const super_admin = 'admin'
     const roles = wsCache.get(CACHE_KEY.USER).roles
 
-    if (value && value instanceof Array && value.length > 0) {
+    if (value && Array.isArray(value) && value.length > 0) {
       const roleFlag = value
 
       const hasRole = roles.some((role: string) => {
         return super_admin === role || roleFlag.includes(role)
       })
 
-      if (!hasRole) {
+      if (!hasRole)
         el.parentNode && el.parentNode.removeChild(el)
-      }
-    } else {
+    }
+    else {
       throw new Error(t('permission.hasRole'))
     }
   })

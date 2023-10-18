@@ -19,6 +19,7 @@
     />
   </el-table>
 </template>
+
 <script lang="ts" setup>
 import { DICT_TYPE } from '@/utils/dict'
 import { dateFormatter } from '@/utils/formatTime'
@@ -27,8 +28,8 @@ import * as AddressApi from '@/api/member/address'
 const { userId }: { userId: number } = defineProps({
   userId: {
     type: Number,
-    required: true
-  }
+    required: true,
+  },
 })
 
 const loading = ref(true) // 列表的加载中
@@ -40,12 +41,13 @@ const getList = async () => {
   loading.value = true
   try {
     list.value = await AddressApi.getAddressList({ userId })
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

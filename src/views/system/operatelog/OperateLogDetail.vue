@@ -43,10 +43,16 @@
       <el-descriptions-item label="操作时间">
         {{ formatDate(detailData.startTime) }}
       </el-descriptions-item>
-      <el-descriptions-item label="执行时长">{{ detailData.duration }} ms</el-descriptions-item>
+      <el-descriptions-item label="执行时长">
+        {{ detailData.duration }} ms
+      </el-descriptions-item>
       <el-descriptions-item label="操作结果">
-        <div v-if="detailData.resultCode === 0">正常</div>
-        <div v-else>失败({{ detailData.resultCode }})</div>
+        <div v-if="detailData.resultCode === 0">
+          正常
+        </div>
+        <div v-else>
+          失败({{ detailData.resultCode }})
+        </div>
       </el-descriptions-item>
       <el-descriptions-item v-if="detailData.resultCode === 0" label="操作结果">
         {{ detailData.resultData }}
@@ -57,9 +63,10 @@
     </el-descriptions>
   </Dialog>
 </template>
+
 <script lang="ts" setup>
 import { formatDate } from '@/utils/formatTime'
-import * as OperateLogApi from '@/api/system/operatelog'
+import type * as OperateLogApi from '@/api/system/operatelog'
 
 defineOptions({ name: 'SystemOperateLogDetail' })
 
@@ -74,7 +81,8 @@ const open = async (data: OperateLogApi.OperateLogVO) => {
   detailLoading.value = true
   try {
     detailData.value = data
-  } finally {
+  }
+  finally {
     detailLoading.value = false
   }
 }

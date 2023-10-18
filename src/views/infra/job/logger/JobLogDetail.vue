@@ -17,20 +17,21 @@
         {{ detailData.executeIndex }}
       </el-descriptions-item>
       <el-descriptions-item label="执行时间">
-        {{ formatDate(detailData.beginTime) + ' ~ ' + formatDate(detailData.endTime) }}
+        {{ `${formatDate(detailData.beginTime)} ~ ${formatDate(detailData.endTime)}` }}
       </el-descriptions-item>
       <el-descriptions-item label="执行时长">
-        {{ detailData.duration + ' 毫秒' }}
+        {{ `${detailData.duration} 毫秒` }}
       </el-descriptions-item>
       <el-descriptions-item label="任务状态">
         <dict-tag :type="DICT_TYPE.INFRA_JOB_LOG_STATUS" :value="detailData.status" />
       </el-descriptions-item>
       <el-descriptions-item label="执行结果">
-        {{ detailData.duration + ' result' }}
+        {{ `${detailData.duration} result` }}
       </el-descriptions-item>
     </el-descriptions>
   </Dialog>
 </template>
+
 <script lang="ts" setup>
 import { DICT_TYPE } from '@/utils/dict'
 import { formatDate } from '@/utils/formatTime'
@@ -50,7 +51,8 @@ const open = async (id: number) => {
     detailLoading.value = true
     try {
       detailData.value = await JobLogApi.getJobLog(id)
-    } finally {
+    }
+    finally {
       detailLoading.value = false
     }
   }

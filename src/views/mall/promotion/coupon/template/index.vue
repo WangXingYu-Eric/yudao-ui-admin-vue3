@@ -61,8 +61,12 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery"> <Icon icon="ep:search" class="mr-5px" />搜索 </el-button>
-        <el-button @click="resetQuery"> <Icon icon="ep:refresh" class="mr-5px" />重置 </el-button>
+        <el-button @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" />搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon icon="ep:refresh" class="mr-5px" />重置
+        </el-button>
         <el-button
           v-hasPermi="['promotion:coupon-template:create']"
           plain
@@ -167,16 +171,16 @@
 </template>
 
 <script lang="ts" setup>
+import CouponTemplateForm from './CouponTemplateForm.vue'
 import * as CouponTemplateApi from '@/api/mall/promotion/coupon/couponTemplate'
 import { CommonStatusEnum } from '@/utils/constants'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { dateFormatter } from '@/utils/formatTime'
-import CouponTemplateForm from './CouponTemplateForm.vue'
 import {
   discountFormat,
   remainedCountFormat,
   takeLimitCountFormat,
-  validityTypeFormat
+  validityTypeFormat,
 } from '@/views/mall/promotion/coupon/formatter'
 
 defineOptions({ name: 'PromotionCouponTemplate' })
@@ -194,7 +198,7 @@ const queryParams = reactive({
   status: null,
   discountType: null,
   type: null,
-  createTime: []
+  createTime: [],
 })
 const queryFormRef = ref() // 搜索的表单
 
@@ -206,7 +210,8 @@ const getList = async () => {
     const data = await CouponTemplateApi.getCouponTemplatePage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -232,16 +237,17 @@ const openForm = (type: string, id?: number) => {
 /** 优惠劵模板状态修改 */
 const handleStatusChange = async (row: any) => {
   // 此时，row 已经变成目标状态了，所以可以直接提交请求和提示
-  let text = row.status === CommonStatusEnum.ENABLE ? '启用' : '停用'
+  const text = row.status === CommonStatusEnum.ENABLE ? '启用' : '停用'
 
   try {
-    await message.confirm('确认要"' + text + '""' + row.name + '"优惠劵吗?')
+    await message.confirm(`确认要"${text}""${row.name}"优惠劵吗?`)
     await CouponTemplateApi.updateCouponTemplateStatus(row.id, row.status)
-    message.success(text + '成功')
-  } catch {
+    message.success(`${text}成功`)
+  }
+  catch {
     // 异常时，需要将 row.status 状态重置回之前的
-    row.status =
-      row.status === CommonStatusEnum.ENABLE ? CommonStatusEnum.DISABLE : CommonStatusEnum.ENABLE
+    row.status
+      = row.status === CommonStatusEnum.ENABLE ? CommonStatusEnum.DISABLE : CommonStatusEnum.ENABLE
   }
 }
 
@@ -249,16 +255,17 @@ const handleStatusChange = async (row: any) => {
 const handleDelete = async (id: number) => {
   try {
     // 删除的二次确认
-    await message.confirm('是否确认删除优惠劵编号为"' + id + '"的数据项?')
+    await message.confirm(`是否确认删除优惠劵编号为"${id}"的数据项?`)
     // 发起删除
     await CouponTemplateApi.deleteCouponTemplate(id)
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

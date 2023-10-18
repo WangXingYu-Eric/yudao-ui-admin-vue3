@@ -30,6 +30,7 @@
   <!-- 表单弹窗：添加/修改 -->
   <AreaForm ref="formRef" />
 </template>
+
 <script setup lang="tsx">
 import type { Column } from 'element-plus'
 import AreaForm from './AreaForm.vue'
@@ -44,13 +45,13 @@ const columns: Column[] = [
     title: '编号', // 显示在单元格表头的文本
     width: 400, // 当前列的宽度，必须设置
     fixed: true, // 是否固定列
-    key: 'id' // 树形展开对应的 key
+    key: 'id', // 树形展开对应的 key
   },
   {
     dataKey: 'name',
     title: '地名',
-    width: 200
-  }
+    width: 200,
+  },
 ]
 // 表格的数据
 const list = ref([])
@@ -68,7 +69,7 @@ const openForm = () => {
   formRef.value.open()
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

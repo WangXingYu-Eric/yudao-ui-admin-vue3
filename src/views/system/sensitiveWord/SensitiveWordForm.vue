@@ -27,9 +27,8 @@
       <el-form-item label="标签" prop="tags">
         <el-select
           v-model="formData.tags"
-          allow-create
-          filterable
-          multiple
+
+          filterable multiple allow-create
           placeholder="请选择文章标签"
           style="width: 380px"
         >
@@ -38,11 +37,16 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button :disabled="formLoading" type="primary" @click="submitForm">确 定</el-button>
-      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button :disabled="formLoading" type="primary" @click="submitForm">
+        确 定
+      </el-button>
+      <el-button @click="dialogVisible = false">
+        取 消
+      </el-button>
     </template>
   </Dialog>
 </template>
+
 <script lang="ts" setup>
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import * as SensitiveWordApi from '@/api/system/sensitiveWord'
@@ -50,7 +54,10 @@ import { CommonStatusEnum } from '@/utils/constants'
 
 defineOptions({ name: 'SystemSensitiveWordForm' })
 
-const { t } = useI18n() // 国际化
+// 提供 open 方法，用于打开弹窗
+
+/** 提交表单 */
+const emit = defineEmits(['success']); const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 
 const dialogVisible = ref(false) // 弹窗的是否展示
@@ -62,11 +69,11 @@ const formData = ref({
   name: '',
   status: CommonStatusEnum.ENABLE,
   description: '',
-  tags: []
+  tags: [],
 })
 const formRules = reactive({
   name: [{ required: true, message: '敏感词不能为空', trigger: 'blur' }],
-  tags: [{ required: true, message: '标签不能为空', trigger: 'blur' }]
+  tags: [{ required: true, message: '标签不能为空', trigger: 'blur' }],
 })
 const formRef = ref() // 表单 Ref
 const tagList = ref([]) // 标签数组
@@ -74,7 +81,7 @@ const tagList = ref([]) // 标签数组
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
   dialogVisible.value = true
-  dialogTitle.value = t('action.' + type)
+  dialogTitle.value = t(`action.${type}`)
   formType.value = type
   resetForm()
   // 修改时，设置数据
@@ -82,22 +89,22 @@ const open = async (type: string, id?: number) => {
     formLoading.value = true
     try {
       formData.value = await SensitiveWordApi.getSensitiveWord(id)
-    } finally {
+    }
+    finally {
       formLoading.value = false
     }
   }
   // 获得 Tag 标签列表
   tagList.value = await SensitiveWordApi.getSensitiveWordTagList()
 }
-defineExpose({ open }) // 提供 open 方法，用于打开弹窗
-
-/** 提交表单 */
-const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
+defineExpose({ open }) // 定义 success 事件，用于操作成功后的回调
 const submitForm = async () => {
   // 校验表单
-  if (!formRef) return
+  if (!formRef)
+    return
   const valid = await formRef.value.validate()
-  if (!valid) return
+  if (!valid)
+    return
   // 提交请求
   formLoading.value = true
   try {
@@ -105,14 +112,16 @@ const submitForm = async () => {
     if (formType.value === 'create') {
       await SensitiveWordApi.createSensitiveWord(data)
       message.success(t('common.createSuccess'))
-    } else {
+    }
+    else {
       await SensitiveWordApi.updateSensitiveWord(data)
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
     // 发送操作成功的事件
     emit('success')
-  } finally {
+  }
+  finally {
     formLoading.value = false
   }
 }
@@ -124,7 +133,7 @@ const resetForm = () => {
     name: '',
     status: CommonStatusEnum.ENABLE,
     description: '',
-    tags: []
+    tags: [],
   }
   formRef.value?.resetFields()
 }

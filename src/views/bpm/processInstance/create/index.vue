@@ -35,8 +35,8 @@
       </div>
       <el-col :span="16" :offset="6" style="margin-top: 20px">
         <form-create
-          :rule="detailForm.rule"
           v-model:api="fApi"
+          :rule="detailForm.rule"
           :option="detailForm.option"
           @submit="submitForm"
         />
@@ -46,13 +46,14 @@
     <ProcessInstanceBpmnViewer :bpmn-xml="bpmnXML as any" />
   </ContentWrap>
 </template>
+
 <script lang="ts" setup>
+import type { ApiAttrs } from '@form-create/element-ui/types/config'
+import ProcessInstanceBpmnViewer from '../detail/ProcessInstanceBpmnViewer.vue'
 import { DICT_TYPE } from '@/utils/dict'
 import * as DefinitionApi from '@/api/bpm/definition'
 import * as ProcessInstanceApi from '@/api/bpm/processInstance'
 import { setConfAndFields2 } from '@/utils/formCreate'
-import type { ApiAttrs } from '@form-create/element-ui/types/config'
-import ProcessInstanceBpmnViewer from '../detail/ProcessInstanceBpmnViewer.vue'
 
 defineOptions({ name: 'BpmProcessInstanceCreate' })
 
@@ -63,7 +64,7 @@ const message = useMessage() // 消息
 const loading = ref(true) // 列表的加载中
 const list = ref([]) // 列表的数据
 const queryParams = reactive({
-  suspensionState: 1
+  suspensionState: 1,
 })
 
 /** 查询列表 */
@@ -71,7 +72,8 @@ const getList = async () => {
   loading.value = true
   try {
     list.value = await DefinitionApi.getProcessDefinitionList(queryParams)
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -82,11 +84,11 @@ const fApi = ref<ApiAttrs>()
 const detailForm = ref({
   // 流程表单详情
   rule: [],
-  option: {}
+  option: {},
 })
 const selectProcessInstance = ref() // 选择的流程实例
 
-/** 处理选择流程的按钮操作 **/
+/** 处理选择流程的按钮操作 */
 const handleSelect = async (row) => {
   // 设置选择的流程
   selectProcessInstance.value = row
@@ -98,9 +100,10 @@ const handleSelect = async (row) => {
     // 加载流程图
     bpmnXML.value = await DefinitionApi.getProcessDefinitionBpmnXML(row.id)
     // 情况二：业务表单
-  } else if (row.formCustomCreatePath) {
+  }
+  else if (row.formCustomCreatePath) {
     await router.push({
-      path: row.formCustomCreatePath
+      path: row.formCustomCreatePath,
     })
     // 这里暂时无需加载流程图，因为跳出到另外个 Tab；
   }
@@ -108,20 +111,21 @@ const handleSelect = async (row) => {
 
 /** 提交按钮 */
 const submitForm = async (formData) => {
-  if (!fApi.value || !selectProcessInstance.value) {
+  if (!fApi.value || !selectProcessInstance.value)
     return
-  }
+
   // 提交请求
   fApi.value.btn.loading(true)
   try {
     await ProcessInstanceApi.createProcessInstance({
       processDefinitionId: selectProcessInstance.value.id,
-      variables: formData
+      variables: formData,
     })
     // 提示
     message.success('发起流程成功')
     router.go(-1)
-  } finally {
+  }
+  finally {
     fApi.value.btn.loading(false)
   }
 }

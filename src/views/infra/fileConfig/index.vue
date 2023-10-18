@@ -4,9 +4,9 @@
   <!-- 搜索 -->
   <ContentWrap>
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="68px"
     >
@@ -15,8 +15,8 @@
           v-model="queryParams.name"
           placeholder="请输入配置名"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="存储器" prop="storage">
@@ -46,13 +46,17 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        <el-button @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" /> 搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon icon="ep:refresh" class="mr-5px" /> 重置
+        </el-button>
         <el-button
+          v-hasPermi="['infra:file-config:create']"
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['infra:file-config:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
@@ -86,28 +90,30 @@
       <el-table-column label="操作" align="center" width="240px">
         <template #default="scope">
           <el-button
+            v-hasPermi="['infra:file-config:update']"
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['infra:file-config:update']"
           >
             编辑
           </el-button>
           <el-button
+            v-hasPermi="['infra:file-config:update']"
             link
             type="primary"
             :disabled="scope.row.master"
             @click="handleMaster(scope.row.id)"
-            v-hasPermi="['infra:file-config:update']"
           >
             主配置
           </el-button>
-          <el-button link type="primary" @click="handleTest(scope.row.id)"> 测试 </el-button>
+          <el-button link type="primary" @click="handleTest(scope.row.id)">
+            测试
+          </el-button>
           <el-button
+            v-hasPermi="['infra:config:delete']"
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
-            v-hasPermi="['infra:config:delete']"
           >
             删除
           </el-button>
@@ -116,9 +122,9 @@
     </el-table>
     <!-- 分页 -->
     <Pagination
-      :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
+      :total="total"
       @pagination="getList"
     />
   </ContentWrap>
@@ -126,9 +132,10 @@
   <!-- 表单弹窗：添加/修改 -->
   <FileConfigForm ref="formRef" @success="getList" />
 </template>
+
 <script lang="ts" setup>
-import * as FileConfigApi from '@/api/infra/fileConfig'
 import FileConfigForm from './FileConfigForm.vue'
+import * as FileConfigApi from '@/api/infra/fileConfig'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { dateFormatter } from '@/utils/formatTime'
 
@@ -145,7 +152,7 @@ const queryParams = reactive({
   pageSize: 10,
   name: undefined,
   storage: undefined,
-  createTime: []
+  createTime: [],
 })
 const queryFormRef = ref() // 搜索的表单
 
@@ -156,7 +163,8 @@ const getList = async () => {
     const data = await FileConfigApi.getFileConfigPage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -189,28 +197,31 @@ const handleDelete = async (id: number) => {
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
 /** 主配置按钮操作 */
 const handleMaster = async (id) => {
   try {
-    await message.confirm('是否确认修改配置编号为"' + id + '"的数据项为主配置?')
+    await message.confirm(`是否确认修改配置编号为"${id}"的数据项为主配置?`)
     await FileConfigApi.updateFileConfigMaster(id)
     message.success(t('common.updateSuccess'))
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
 /** 测试按钮操作 */
 const handleTest = async (id) => {
   try {
     const response = await FileConfigApi.testFileConfig(id)
-    message.alert('测试通过，上传文件成功！访问地址：' + response)
-  } catch {}
+    message.alert(`测试通过，上传文件成功！访问地址：${response}`)
+  }
+  catch {}
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

@@ -1,4 +1,4 @@
-export type ThemeTypes = {
+export interface ThemeTypes {
   elColorPrimary?: string
   leftMenuBorderColor?: string
   leftMenuBgColor?: string

@@ -1,11 +1,11 @@
 <template>
-  <Dialog title="修改用户等级" v-model="dialogVisible" width="600">
+  <Dialog v-model="dialogVisible" title="修改用户等级" width="600">
     <el-form
       ref="formRef"
+      v-loading="formLoading"
       :model="formData"
       :rules="formRules"
       label-width="100px"
-      v-loading="formLoading"
     >
       <el-form-item label="用户编号" prop="id">
         <el-input v-model="formData.id" placeholder="请输入用户昵称" class="!w-240px" disabled />
@@ -22,20 +22,28 @@
         <MemberLevelSelect v-model="formData.levelId" />
       </el-form-item>
       <el-form-item label="修改原因" prop="reason">
-        <el-input type="textarea" v-model="formData.reason" placeholder="请输入修改原因" />
+        <el-input v-model="formData.reason" type="textarea" placeholder="请输入修改原因" />
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button @click="submitForm" type="primary" :disabled="formLoading">确 定</el-button>
-      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button type="primary" :disabled="formLoading" @click="submitForm">
+        确 定
+      </el-button>
+      <el-button @click="dialogVisible = false">
+        取 消
+      </el-button>
     </template>
   </Dialog>
 </template>
+
 <script setup lang="ts">
 import * as UserApi from '@/api/member/user'
 import MemberLevelSelect from '@/views/member/level/components/MemberLevelSelect.vue'
 
-const { t } = useI18n() // 国际化
+// 提供 open 方法，用于打开弹窗
+
+/** 提交表单 */
+const emit = defineEmits(['success']); const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 
 const dialogVisible = ref(false) // 弹窗的是否展示
@@ -44,10 +52,10 @@ const formData = ref({
   id: undefined,
   nickname: undefined,
   levelId: undefined,
-  reason: undefined
+  reason: undefined,
 })
 const formRules = reactive({
-  reason: [{ required: true, message: '修改原因不能为空', trigger: 'blur' }]
+  reason: [{ required: true, message: '修改原因不能为空', trigger: 'blur' }],
 })
 const formRef = ref() // 表单 Ref
 
@@ -60,20 +68,20 @@ const open = async (id?: number) => {
     formLoading.value = true
     try {
       formData.value = await UserApi.getUser(id)
-    } finally {
+    }
+    finally {
       formLoading.value = false
     }
   }
 }
-defineExpose({ open }) // 提供 open 方法，用于打开弹窗
-
-/** 提交表单 */
-const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
+defineExpose({ open }) // 定义 success 事件，用于操作成功后的回调
 const submitForm = async () => {
   // 校验表单
-  if (!formRef) return
+  if (!formRef)
+    return
   const valid = await formRef.value.validate()
-  if (!valid) return
+  if (!valid)
+    return
   // 提交请求
   formLoading.value = true
   try {
@@ -83,7 +91,8 @@ const submitForm = async () => {
     dialogVisible.value = false
     // 发送操作成功的事件
     emit('success')
-  } finally {
+  }
+  finally {
     formLoading.value = false
   }
 }
@@ -94,7 +103,7 @@ const resetForm = () => {
     id: undefined,
     nickname: undefined,
     levelId: undefined,
-    reason: undefined
+    reason: undefined,
   }
   formRef.value?.resetFields()
 }

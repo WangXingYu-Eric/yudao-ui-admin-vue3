@@ -7,10 +7,10 @@
       <!-- 新增等操作按钮 -->
       <template #actionMore>
         <el-button
+          v-hasPermi="['system:mail-account:create']"
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['system:mail-account:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
@@ -21,36 +21,36 @@
   <!-- 列表 -->
   <ContentWrap>
     <Table
+      v-model:pageSize="tableObject.pageSize"
+      v-model:currentPage="tableObject.currentPage"
       :columns="allSchemas.tableColumns"
       :data="tableObject.tableList"
       :loading="tableObject.loading"
       :pagination="{
-        total: tableObject.total
+        total: tableObject.total,
       }"
-      v-model:pageSize="tableObject.pageSize"
-      v-model:currentPage="tableObject.currentPage"
     >
       <template #action="{ row }">
         <el-button
+          v-hasPermi="['system:mail-account:update']"
           link
           type="primary"
           @click="openForm('update', row.id)"
-          v-hasPermi="['system:mail-account:update']"
         >
           编辑
         </el-button>
         <el-button
+          v-hasPermi="['system:mail-account:query']"
           link
           type="primary"
           @click="openDetail(row.id)"
-          v-hasPermi="['system:mail-account:query']"
         >
           详情
         </el-button>
         <el-button
+          v-hasPermi="['system:mail-account:delete']"
           link
           type="danger"
-          v-hasPermi="['system:mail-account:delete']"
           @click="handleDelete(row.id)"
         >
           删除
@@ -64,11 +64,12 @@
   <!-- 详情弹窗 -->
   <MailAccountDetail ref="detailRef" />
 </template>
+
 <script lang="ts" setup>
 import { allSchemas } from './account.data'
-import * as MailAccountApi from '@/api/system/mail/account'
 import MailAccountForm from './MailAccountForm.vue'
 import MailAccountDetail from './MailAccountDetail.vue'
+import * as MailAccountApi from '@/api/system/mail/account'
 
 defineOptions({ name: 'SystemMailAccount' })
 
@@ -77,7 +78,7 @@ defineOptions({ name: 'SystemMailAccount' })
 // 详细可见：https://doc.iocoder.cn/vue3/crud-schema/
 const { tableObject, tableMethods } = useTable({
   getListApi: MailAccountApi.getMailAccountPage, // 分页接口
-  delListApi: MailAccountApi.deleteMailAccount // 删除接口
+  delListApi: MailAccountApi.deleteMailAccount, // 删除接口
 })
 // 获得表格的各种操作
 const { getList, setSearchParams } = tableMethods
@@ -99,7 +100,7 @@ const handleDelete = (id: number) => {
   tableMethods.delList(id, false)
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

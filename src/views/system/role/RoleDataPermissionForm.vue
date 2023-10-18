@@ -57,22 +57,30 @@
       </el-card>
     </el-form-item>
     <template #footer>
-      <el-button :disabled="formLoading" type="primary" @click="submitForm">确 定</el-button>
-      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button :disabled="formLoading" type="primary" @click="submitForm">
+        确 定
+      </el-button>
+      <el-button @click="dialogVisible = false">
+        取 消
+      </el-button>
     </template>
   </Dialog>
 </template>
+
 <script lang="ts" setup>
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { defaultProps, handleTree } from '@/utils/tree'
 import { SystemDataScopeEnum } from '@/utils/constants'
-import * as RoleApi from '@/api/system/role'
+import type * as RoleApi from '@/api/system/role'
 import * as DeptApi from '@/api/system/dept'
 import * as PermissionApi from '@/api/system/permission'
 
 defineOptions({ name: 'SystemRoleDataPermissionForm' })
 
-const { t } = useI18n() // 国际化
+// 提供 open 方法，用于打开弹窗
+
+/** 提交表单 */
+const emit = defineEmits(['success']); const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 
 const dialogVisible = ref(false) // 弹窗的是否展示
@@ -82,7 +90,7 @@ const formData = reactive({
   name: '',
   code: '',
   dataScope: undefined,
-  dataScopeDeptIds: []
+  dataScopeDeptIds: [],
 })
 const formRef = ref() // 表单 Ref
 const deptOptions = ref<any[]>([]) // 部门树形结构
@@ -106,10 +114,7 @@ const open = async (row: RoleApi.RoleVO) => {
     treeRef.value.setChecked(deptId, true, false)
   })
 }
-defineExpose({ open }) // 提供 open 方法，用于打开弹窗
-
-/** 提交表单 */
-const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
+defineExpose({ open }) // 定义 success 事件，用于操作成功后的回调
 const submitForm = async () => {
   formLoading.value = true
   try {
@@ -119,14 +124,15 @@ const submitForm = async () => {
       dataScopeDeptIds:
         formData.dataScope !== SystemDataScopeEnum.DEPT_CUSTOM
           ? []
-          : treeRef.value.getCheckedKeys(false)
+          : treeRef.value.getCheckedKeys(false),
     }
     await PermissionApi.assignRoleDataScope(data)
     message.success(t('common.updateSuccess'))
     dialogVisible.value = false
     // 发送操作成功的事件
     emit('success')
-  } finally {
+  }
+  finally {
     formLoading.value = false
   }
 }
@@ -143,7 +149,7 @@ const resetForm = () => {
     name: '',
     code: '',
     dataScope: undefined,
-    dataScopeDeptIds: []
+    dataScopeDeptIds: [],
   }
   treeRef.value?.setCheckedNodes([])
   formRef.value?.resetFields()
@@ -157,10 +163,10 @@ const handleCheckedTreeNodeAll = () => {
 /** 展开/折叠全部 */
 const handleCheckedTreeExpand = () => {
   const nodes = treeRef.value?.store.nodesMap
-  for (let node in nodes) {
-    if (nodes[node].expanded === deptExpand.value) {
+  for (const node in nodes) {
+    if (nodes[node].expanded === deptExpand.value)
       continue
-    }
+
     nodes[node].expanded = deptExpand.value
   }
 }

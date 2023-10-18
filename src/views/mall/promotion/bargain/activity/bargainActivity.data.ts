@@ -8,7 +8,7 @@ export const rules = reactive({
   endTime: [required],
   helpMaxCount: [required],
   bargainCount: [required],
-  singleLimitCount: [required]
+  singleLimitCount: [required],
 })
 
 // CrudSchema https://doc.iocoder.cn/vue3/crud-schema/
@@ -20,9 +20,9 @@ const crudSchemas = reactive<CrudSchema[]>([
     isTable: false,
     form: {
       colProps: {
-        span: 24
-      }
-    }
+        span: 24,
+      },
+    },
   },
   {
     label: '活动开始时间',
@@ -33,19 +33,19 @@ const crudSchemas = reactive<CrudSchema[]>([
       component: 'DatePicker',
       componentProps: {
         valueFormat: 'YYYY-MM-DD',
-        type: 'daterange'
-      }
+        type: 'daterange',
+      },
     },
     form: {
       component: 'DatePicker',
       componentProps: {
         type: 'date',
-        valueFormat: 'x'
-      }
+        valueFormat: 'x',
+      },
     },
     table: {
-      width: 120
-    }
+      width: 120,
+    },
   },
   {
     label: '活动结束时间',
@@ -56,19 +56,19 @@ const crudSchemas = reactive<CrudSchema[]>([
       component: 'DatePicker',
       componentProps: {
         valueFormat: 'YYYY-MM-DD',
-        type: 'daterange'
-      }
+        type: 'daterange',
+      },
     },
     form: {
       component: 'DatePicker',
       componentProps: {
         type: 'date',
-        valueFormat: 'x'
-      }
+        valueFormat: 'x',
+      },
     },
     table: {
-      width: 120
-    }
+      width: 120,
+    },
   },
   {
     label: '砍价人数',
@@ -77,8 +77,8 @@ const crudSchemas = reactive<CrudSchema[]>([
     form: {
       component: 'InputNumber',
       labelMessage: '参与人数不能少于两人',
-      value: 2
-    }
+      value: 2,
+    },
   },
   {
     label: '最大帮砍次数',
@@ -87,8 +87,8 @@ const crudSchemas = reactive<CrudSchema[]>([
     form: {
       component: 'InputNumber',
       labelMessage: '参与人数不能少于两人',
-      value: 2
-    }
+      value: 2,
+    },
   },
   {
     label: '总限购数量',
@@ -97,8 +97,8 @@ const crudSchemas = reactive<CrudSchema[]>([
     form: {
       component: 'InputNumber',
       labelMessage: '用户最大能发起砍价的次数',
-      value: 0
-    }
+      value: 0,
+    },
   },
   {
     label: '砍价的最小金额',
@@ -110,11 +110,11 @@ const crudSchemas = reactive<CrudSchema[]>([
       componentProps: {
         min: 0,
         precision: 2,
-        step: 0.1
+        step: 0.1,
       },
       labelMessage: '用户每次砍价的最小金额',
-      value: 0
-    }
+      value: 0,
+    },
   },
   {
     label: '砍价的最大金额',
@@ -126,11 +126,11 @@ const crudSchemas = reactive<CrudSchema[]>([
       componentProps: {
         min: 0,
         precision: 2,
-        step: 0.1
+        step: 0.1,
       },
       labelMessage: '用户每次砍价的最大金额',
-      value: 0
-    }
+      value: 0,
+    },
   },
   {
     label: '拼团商品',
@@ -138,9 +138,9 @@ const crudSchemas = reactive<CrudSchema[]>([
     isSearch: false,
     form: {
       colProps: {
-        span: 24
-      }
-    }
-  }
+        span: 24,
+      },
+    },
+  },
 ])
 export const { allSchemas } = useCrudSchemas(crudSchemas)

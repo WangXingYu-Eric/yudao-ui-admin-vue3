@@ -16,21 +16,26 @@
       <el-form-item
         v-for="param in formData.params"
         :key="param"
-        :label="'参数 {' + param + '}'"
-        :prop="'templateParams.' + param"
+        :label="`参数 {${param}}`"
+        :prop="`templateParams.${param}`"
       >
         <el-input
           v-model="formData.templateParams[param]"
-          :placeholder="'请输入 ' + param + ' 参数'"
+          :placeholder="`请输入 ${param} 参数`"
         />
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button :disabled="formLoading" type="primary" @click="submitForm">确 定</el-button>
-      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button :disabled="formLoading" type="primary" @click="submitForm">
+        确 定
+      </el-button>
+      <el-button @click="dialogVisible = false">
+        取 消
+      </el-button>
     </template>
   </Dialog>
 </template>
+
 <script lang="ts" setup>
 import * as MailTemplateApi from '@/api/system/mail/template'
 
@@ -45,12 +50,12 @@ const formData = ref({
   params: {},
   mail: '',
   templateCode: '',
-  templateParams: new Map()
+  templateParams: new Map(),
 })
 const formRules = reactive({
   mail: [{ required: true, message: '邮箱不能为空', trigger: 'blur' }],
   templateCode: [{ required: true, message: '模版编号不能为空', trigger: 'blur' }],
-  templateParams: {}
+  templateParams: {},
 })
 const formRef = ref() // 表单 Ref
 
@@ -71,10 +76,11 @@ const open = async (id: number) => {
       return obj
     }, {})
     formRules.templateParams = data.params.reduce((obj, item) => {
-      obj[item] = { required: true, message: '参数 ' + item + ' 不能为空', trigger: 'blur' }
+      obj[item] = { required: true, message: `参数 ${item} 不能为空`, trigger: 'blur' }
       return obj
     }, {})
-  } finally {
+  }
+  finally {
     formLoading.value = false
   }
 }
@@ -83,19 +89,22 @@ defineExpose({ open }) // 提供 open 方法，用于打开弹窗
 /** 提交表单 */
 const submitForm = async () => {
   // 校验表单
-  if (!formRef) return
+  if (!formRef)
+    return
   const valid = await formRef.value.validate()
-  if (!valid) return
+  if (!valid)
+    return
   // 提交请求
   formLoading.value = true
   try {
     const data = formData.value as MailTemplateApi.MailSendReqVO
     const logId = await MailTemplateApi.sendMail(data)
-    if (logId) {
-      message.success('提交发送成功！发送结果，见发送日志编号：' + logId)
-    }
+    if (logId)
+      message.success(`提交发送成功！发送结果，见发送日志编号：${logId}`)
+
     dialogVisible.value = false
-  } finally {
+  }
+  finally {
     formLoading.value = false
   }
 }
@@ -107,7 +116,7 @@ const resetForm = () => {
     params: {},
     mail: '',
     templateCode: '',
-    templateParams: new Map()
+    templateParams: new Map(),
   }
   formRules.templateParams = {}
   formRef.value?.resetFields()

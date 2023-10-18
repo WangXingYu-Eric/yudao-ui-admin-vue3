@@ -22,25 +22,33 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button :disabled="formLoading" type="primary" @click="submitForm">确 定</el-button>
-      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button :disabled="formLoading" type="primary" @click="submitForm">
+        确 定
+      </el-button>
+      <el-button @click="dialogVisible = false">
+        取 消
+      </el-button>
     </template>
   </Dialog>
 </template>
+
 <script lang="ts" name="TaskRollbackDialogForm" setup>
 import * as TaskApi from '@/api/bpm/task'
 
-const message = useMessage() // 消息弹窗
+// 提供 openModal 方法，用于打开弹窗
+
+/** 提交表单 */
+const emit = defineEmits(['success']); const message = useMessage() // 消息弹窗
 const dialogVisible = ref(false) // 弹窗的是否展示
 const formLoading = ref(false) // 表单的加载中
 const formData = ref({
   id: '',
   targetDefinitionKey: undefined,
-  reason: ''
+  reason: '',
 })
 const formRules = ref({
   targetDefinitionKey: [{ required: true, message: '必须选择回退节点', trigger: 'change' }],
-  reason: [{ required: true, message: '回退理由不能为空', trigger: 'blur' }]
+  reason: [{ required: true, message: '回退理由不能为空', trigger: 'blur' }],
 })
 
 const formRef = ref() // 表单 Ref
@@ -56,15 +64,14 @@ const open = async (id: string) => {
   resetForm()
   formData.value.id = id
 }
-defineExpose({ open }) // 提供 openModal 方法，用于打开弹窗
-
-/** 提交表单 */
-const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
+defineExpose({ open }) // 定义 success 事件，用于操作成功后的回调
 const submitForm = async () => {
   // 校验表单
-  if (!formRef) return
+  if (!formRef)
+    return
   const valid = await formRef.value.validate()
-  if (!valid) return
+  if (!valid)
+    return
   // 提交请求
   formLoading.value = true
   try {
@@ -73,7 +80,8 @@ const submitForm = async () => {
     dialogVisible.value = false
     // 发送操作成功的事件
     emit('success')
-  } finally {
+  }
+  finally {
     formLoading.value = false
   }
 }
@@ -83,7 +91,7 @@ const resetForm = () => {
   formData.value = {
     id: '',
     targetDefinitionKey: undefined,
-    reason: ''
+    reason: '',
   }
   formRef.value?.resetFields()
 }

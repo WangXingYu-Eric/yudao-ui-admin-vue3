@@ -4,9 +4,9 @@
   <ContentWrap>
     <!-- 搜索工作栏 -->
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="68px"
     >
@@ -15,8 +15,8 @@
           v-model="queryParams.username"
           placeholder="请输入用户名称"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="登录地址" prop="userIp">
@@ -24,8 +24,8 @@
           v-model="queryParams.userIp"
           placeholder="请输入登录地址"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="登录日期" prop="createTime">
@@ -40,14 +40,18 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        <el-button @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" /> 搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon icon="ep:refresh" class="mr-5px" /> 重置
+        </el-button>
         <el-button
+          v-hasPermi="['infra:config:export']"
           type="success"
           plain
-          @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['infra:config:export']"
+          @click="handleExport"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
@@ -82,10 +86,10 @@
       <el-table-column label="操作" align="center">
         <template #default="scope">
           <el-button
+            v-hasPermi="['infra:config:query']"
             link
             type="primary"
             @click="openDetail(scope.row)"
-            v-hasPermi="['infra:config:query']"
           >
             详情
           </el-button>
@@ -94,9 +98,9 @@
     </el-table>
     <!-- 分页 -->
     <Pagination
-      :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
+      :total="total"
       @pagination="getList"
     />
   </ContentWrap>
@@ -104,12 +108,13 @@
   <!-- 表单弹窗：详情 -->
   <LoginLogDetail ref="detailRef" />
 </template>
+
 <script lang="ts" setup>
+import LoginLogDetail from './LoginLogDetail.vue'
 import { DICT_TYPE } from '@/utils/dict'
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
 import * as LoginLogApi from '@/api/system/loginLog'
-import LoginLogDetail from './LoginLogDetail.vue'
 
 defineOptions({ name: 'SystemLoginLog' })
 
@@ -123,7 +128,7 @@ const queryParams = reactive({
   pageSize: 10,
   username: undefined,
   userIp: undefined,
-  createTime: []
+  createTime: [],
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
@@ -135,7 +140,8 @@ const getList = async () => {
     const data = await LoginLogApi.getLoginLogPage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -167,13 +173,15 @@ const handleExport = async () => {
     exportLoading.value = true
     const data = await LoginLogApi.exportLoginLog(queryParams)
     download.excel(data, '登录日志.xls')
-  } catch {
-  } finally {
+  }
+  catch {
+  }
+  finally {
     exportLoading.value = false
   }
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

@@ -1,15 +1,15 @@
 import { reactive } from 'vue'
-import { AxiosPromise } from 'axios'
+import type { AxiosPromise } from 'axios'
+import { cloneDeep, merge } from 'lodash-es'
 import { findIndex } from '@/utils'
 import { eachTree, filter, treeMap } from '@/utils/tree'
 import { getBoolDictOptions, getDictOptions, getIntDictOptions } from '@/utils/dict'
 
-import { FormSchema } from '@/types/form'
-import { TableColumn } from '@/types/table'
-import { DescriptionsSchema } from '@/types/descriptions'
-import { ComponentOptions, ComponentProps } from '@/types/components'
+import type { FormSchema } from '@/types/form'
+import type { TableColumn } from '@/types/table'
+import type { DescriptionsSchema } from '@/types/descriptions'
+import type { ComponentOptions, ComponentProps } from '@/types/components'
 import { DictTag } from '@/components/DictTag'
-import { cloneDeep, merge } from 'lodash-es'
 
 export type CrudSchema = Omit<TableColumn, 'children'> & {
   isSearch?: boolean // 是否在查询显示
@@ -65,7 +65,7 @@ const { t } = useI18n()
 
 // 过滤所有结构
 export const useCrudSchemas = (
-  crudSchema: CrudSchema[]
+  crudSchema: CrudSchema[],
 ): {
   allSchemas: AllSchemas
 } => {
@@ -74,7 +74,7 @@ export const useCrudSchemas = (
     searchSchema: [],
     tableColumns: [],
     formSchema: [],
-    detailSchema: []
+    detailSchema: [],
   })
 
   const searchSchema = filterSearchSchema(crudSchema, allSchemas)
@@ -90,7 +90,7 @@ export const useCrudSchemas = (
   allSchemas.detailSchema = detailSchema
 
   return {
-    allSchemas
+    allSchemas,
   }
 }
 
@@ -113,9 +113,10 @@ const filterSearchSchema = (crudSchema: CrudSchema[], allSchemas: AllSchemas): F
           options.push(dict)
         })
         comonentProps = {
-          options: options
+          options,
         }
-        if (!schemaItem.search?.component) component = 'Select'
+        if (!schemaItem.search?.component)
+          component = 'Select'
       }
 
       // updated by AKing: 解决了当使用默认的dict选项时，form中事件不能触发的问题
@@ -125,9 +126,9 @@ const filterSearchSchema = (crudSchema: CrudSchema[], allSchemas: AllSchemas): F
           component,
           ...schemaItem.search,
           field: schemaItem.field,
-          label: schemaItem.search?.label || schemaItem.label
+          label: schemaItem.search?.label || schemaItem.label,
         },
-        { componentProps: comonentProps }
+        { componentProps: comonentProps },
       )
       if (searchSchemaItem.api) {
         searchRequestTask.push(async () => {
@@ -139,7 +140,7 @@ const filterSearchSchema = (crudSchema: CrudSchema[], allSchemas: AllSchemas): F
             if (index !== -1) {
               allSchemas.searchSchema[index]!.componentProps!.options = filterOptions(
                 res,
-                searchSchemaItem.componentProps.optionsAlias?.labelField
+                searchSchemaItem.componentProps.optionsAlias?.labelField,
               )
             }
           }
@@ -151,9 +152,9 @@ const filterSearchSchema = (crudSchema: CrudSchema[], allSchemas: AllSchemas): F
       searchSchema.push(searchSchemaItem)
     }
   })
-  for (const task of searchRequestTask) {
+  for (const task of searchRequestTask)
     task()
-  }
+
   return searchSchema
 }
 
@@ -167,23 +168,23 @@ const filterTableSchema = (crudSchema: CrudSchema[]): TableColumn[] => {
           schema.formatter = (_: Recordable, __: TableColumn, cellValue: any) => {
             return h(DictTag, {
               type: schema.dictType!, // ! 表示一定不为空
-              value: cellValue
+              value: cellValue,
             })
           }
         }
         return {
           ...schema.table,
-          ...schema
+          ...schema,
         }
       }
-    }
+    },
   })
 
   // 第一次过滤会有 undefined 所以需要二次过滤
   return filter<TableColumn>(tableColumns as TableColumn[], (data) => {
-    if (data.children === void 0) {
+    if (data.children === void 0)
       delete data.children
-    }
+
     return !!data.field
   })
 }
@@ -202,10 +203,10 @@ const filterFormSchema = (crudSchema: CrudSchema[], allSchemas: AllSchemas): For
       let defaultValue: any = ''
       if (schemaItem.form?.value) {
         defaultValue = schemaItem.form?.value
-      } else {
-        if (component === 'InputNumber') {
+      }
+      else {
+        if (component === 'InputNumber')
           defaultValue = 0
-        }
       }
       let comonentProps: ComponentProps = {}
       if (schemaItem.dictType) {
@@ -214,19 +215,22 @@ const filterFormSchema = (crudSchema: CrudSchema[], allSchemas: AllSchemas): For
           getIntDictOptions(schemaItem.dictType).forEach((dict) => {
             options.push(dict)
           })
-        } else if (schemaItem.dictClass && schemaItem.dictClass === 'boolean') {
+        }
+        else if (schemaItem.dictClass && schemaItem.dictClass === 'boolean') {
           getBoolDictOptions(schemaItem.dictType).forEach((dict) => {
             options.push(dict)
           })
-        } else {
+        }
+        else {
           getDictOptions(schemaItem.dictType).forEach((dict) => {
             options.push(dict)
           })
         }
         comonentProps = {
-          options: options
+          options,
         }
-        if (!(schemaItem.form && schemaItem.form.component)) component = 'Select'
+        if (!(schemaItem.form && schemaItem.form.component))
+          component = 'Select'
       }
 
       // updated by AKing: 解决了当使用默认的dict选项时，form中事件不能触发的问题
@@ -237,9 +241,9 @@ const filterFormSchema = (crudSchema: CrudSchema[], allSchemas: AllSchemas): For
           value: defaultValue,
           ...schemaItem.form,
           field: schemaItem.field,
-          label: schemaItem.form?.label || schemaItem.label
+          label: schemaItem.form?.label || schemaItem.label,
         },
-        { componentProps: comonentProps }
+        { componentProps: comonentProps },
       )
 
       if (formSchemaItem.api) {
@@ -252,7 +256,7 @@ const filterFormSchema = (crudSchema: CrudSchema[], allSchemas: AllSchemas): For
             if (index !== -1) {
               allSchemas.formSchema[index]!.componentProps!.options = filterOptions(
                 res,
-                formSchemaItem.componentProps.optionsAlias?.labelField
+                formSchemaItem.componentProps.optionsAlias?.labelField,
               )
             }
           }
@@ -266,9 +270,9 @@ const filterFormSchema = (crudSchema: CrudSchema[], allSchemas: AllSchemas): For
     }
   })
 
-  for (const task of formRequestTask) {
+  for (const task of formRequestTask)
     task()
-  }
+
   return formSchema
 }
 
@@ -282,11 +286,11 @@ const filterDescriptionsSchema = (crudSchema: CrudSchema[]): DescriptionsSchema[
       const descriptionsSchemaItem = {
         ...schemaItem.detail,
         field: schemaItem.field,
-        label: schemaItem.detail?.label || schemaItem.label
+        label: schemaItem.detail?.label || schemaItem.label,
       }
-      if (schemaItem.dictType) {
+      if (schemaItem.dictType)
         descriptionsSchemaItem.dictType = schemaItem.dictType
-      }
+
       if (schemaItem.detail?.dateFormat || schemaItem.formatter == 'formatDate') {
         // 优先使用 detail 下的配置，如果没有默认为 YYYY-MM-DD HH:mm:ss
         descriptionsSchemaItem.dateFormat = schemaItem?.detail?.dateFormat
@@ -307,18 +311,18 @@ const filterDescriptionsSchema = (crudSchema: CrudSchema[]): DescriptionsSchema[
 // 给options添加国际化
 const filterOptions = (options: Recordable, labelField?: string) => {
   return options?.map((v: Recordable) => {
-    if (labelField) {
-      v['labelField'] = t(v.labelField)
-    } else {
-      v['label'] = t(v.label)
-    }
+    if (labelField)
+      v.labelField = t(v.labelField)
+    else
+      v.label = t(v.label)
+
     return v
   })
 }
 
 // 将 tableColumns 指定 fields 放到最前面
 export const sortTableColumns = (tableColumns: TableColumn[], field: string) => {
-  const fieldIndex = tableColumns.findIndex((item) => item.field === field)
+  const fieldIndex = tableColumns.findIndex(item => item.field === field)
   const fieldColumn = cloneDeep(tableColumns[fieldIndex])
   tableColumns.splice(fieldIndex, 1)
   // 添加到开头

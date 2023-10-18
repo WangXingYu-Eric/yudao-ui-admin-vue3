@@ -1,4 +1,5 @@
-import { Reply, NewsType, ReplyType, createEmptyReply } from './components/types'
+import type { Reply } from './components/types'
+import { NewsType, ReplyType, createEmptyReply } from './components/types'
 
 import WxReplySelect from './main.vue'
 

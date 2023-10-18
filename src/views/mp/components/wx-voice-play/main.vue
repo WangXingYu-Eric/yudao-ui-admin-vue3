@@ -14,10 +14,12 @@
     <el-icon>
       <Icon v-if="playing !== true" icon="ep:video-play" :size="32" />
       <Icon v-else icon="ep:video-pause" :size="32" />
-      <span class="amr-duration" v-if="duration">{{ duration }} 秒</span>
+      <span v-if="duration" class="amr-duration">{{ duration }} 秒</span>
     </el-icon>
     <div v-if="content">
-      <el-tag type="success" size="small">语音识别</el-tag>
+      <el-tag type="success" size="small">
+        语音识别
+      </el-tag>
       {{ content }}
     </div>
   </div>
@@ -32,12 +34,12 @@ defineOptions({ name: 'WxVoicePlayer' })
 const props = defineProps({
   url: {
     type: String, // 语音地址，例如说：https://www.iocoder.cn/xxx.amr
-    required: true
+    required: true,
   },
   content: {
     type: String, // 语音文本
-    required: false
-  }
+    required: false,
+  },
 })
 
 const amr = ref()
@@ -52,23 +54,22 @@ const playVoice = () => {
     return
   }
   // 情况二：已经初始化，则根据情况播放或暂时
-  if (amr.value.isPlaying()) {
+  if (amr.value.isPlaying())
     amrStop()
-  } else {
+  else
     amrPlay()
-  }
 }
 
 /** 音频初始化 */
 const amrInit = () => {
   amr.value = new BenzAMRRecorder()
   // 设置播放
-  amr.value.initWithUrl(props.url).then(function () {
+  amr.value.initWithUrl(props.url).then(() => {
     amrPlay()
     duration.value = amr.value.getDuration()
   })
   // 监听暂停
-  amr.value.onEnded(function () {
+  amr.value.onEnded(() => {
     playing.value = false
   })
 }
@@ -86,6 +87,7 @@ const amrStop = () => {
 }
 // TODO 芋艿：下面样式有点问题
 </script>
+
 <style lang="scss" scoped>
 .wx-voice-div {
   display: flex;

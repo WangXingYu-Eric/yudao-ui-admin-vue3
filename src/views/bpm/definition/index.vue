@@ -31,14 +31,22 @@
       </el-table-column>
       <el-table-column label="流程版本" align="center" prop="processDefinition.version" width="80">
         <template #default="scope">
-          <el-tag v-if="scope.row">v{{ scope.row.version }}</el-tag>
-          <el-tag type="warning" v-else>未部署</el-tag>
+          <el-tag v-if="scope.row">
+            v{{ scope.row.version }}
+          </el-tag>
+          <el-tag v-else type="warning">
+            未部署
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column label="状态" align="center" prop="version" width="80">
         <template #default="scope">
-          <el-tag type="success" v-if="scope.row.suspensionState === 1">激活</el-tag>
-          <el-tag type="warning" v-if="scope.row.suspensionState === 2">挂起</el-tag>
+          <el-tag v-if="scope.row.suspensionState === 1" type="success">
+            激活
+          </el-tag>
+          <el-tag v-if="scope.row.suspensionState === 2" type="warning">
+            挂起
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -58,10 +66,10 @@
       <el-table-column label="操作" align="center" width="150" fixed="right">
         <template #default="scope">
           <el-button
+            v-hasPermi="['bpm:task-assign-rule:query']"
             link
             type="primary"
             @click="handleAssignRule(scope.row)"
-            v-hasPermi="['bpm:task-assign-rule:query']"
           >
             分配规则
           </el-button>
@@ -70,20 +78,20 @@
     </el-table>
     <!-- 分页 -->
     <Pagination
-      :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
+      :total="total"
       @pagination="getList"
     />
   </ContentWrap>
 
   <!-- 弹窗：表单详情 -->
-  <Dialog title="表单详情" v-model="formDetailVisible" width="800">
+  <Dialog v-model="formDetailVisible" title="表单详情" width="800">
     <form-create :rule="formDetailPreview.rule" :option="formDetailPreview.option" />
   </Dialog>
 
   <!-- 弹窗：流程模型图的预览 -->
-  <Dialog title="流程图" v-model="bpmnDetailVisible" width="800">
+  <Dialog v-model="bpmnDetailVisible" title="流程图" width="800">
     <MyProcessViewer
       key="designer"
       v-model="bpmnXML"
@@ -112,7 +120,7 @@ const list = ref([]) // 列表的数据
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
-  key: query.key
+  key: query.key,
 })
 
 /** 查询列表 */
@@ -122,7 +130,8 @@ const getList = async () => {
     const data = await DefinitionApi.getProcessDefinitionPage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -132,8 +141,8 @@ const handleAssignRule = (row) => {
   push({
     name: 'BpmTaskAssignRuleList',
     query: {
-      modelId: row.id
-    }
+      modelId: row.id,
+    },
   })
 }
 
@@ -141,7 +150,7 @@ const handleAssignRule = (row) => {
 const formDetailVisible = ref(false)
 const formDetailPreview = ref({
   rule: [],
-  option: {}
+  option: {},
 })
 const handleFormDetail = async (row) => {
   if (row.formType == 10) {
@@ -149,9 +158,10 @@ const handleFormDetail = async (row) => {
     setConfAndFields2(formDetailPreview, row.formConf, row.formFields)
     // 弹窗打开
     formDetailVisible.value = true
-  } else {
+  }
+  else {
     await push({
-      path: row.formCustomCreatePath
+      path: row.formCustomCreatePath,
     })
   }
 }
@@ -160,14 +170,14 @@ const handleFormDetail = async (row) => {
 const bpmnDetailVisible = ref(false)
 const bpmnXML = ref(null)
 const bpmnControlForm = ref({
-  prefix: 'flowable'
+  prefix: 'flowable',
 })
 const handleBpmnDetail = async (row) => {
   bpmnXML.value = await DefinitionApi.getProcessDefinitionBpmnXML(row.id)
   bpmnDetailVisible.value = true
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

@@ -39,20 +39,28 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button :disabled="formLoading" type="primary" @click="submitForm">确 定</el-button>
-      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button :disabled="formLoading" type="primary" @click="submitForm">
+        确 定
+      </el-button>
+      <el-button @click="dialogVisible = false">
+        取 消
+      </el-button>
     </template>
   </Dialog>
 </template>
+
 <script lang="ts" setup>
 import { defaultProps, handleTree } from '@/utils/tree'
-import * as RoleApi from '@/api/system/role'
+import type * as RoleApi from '@/api/system/role'
 import * as MenuApi from '@/api/system/menu'
 import * as PermissionApi from '@/api/system/permission'
 
 defineOptions({ name: 'SystemRoleAssignMenuForm' })
 
-const { t } = useI18n() // 国际化
+// 提供 open 方法，用于打开弹窗
+
+/** 提交表单 */
+const emit = defineEmits(['success']); const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 
 const dialogVisible = ref(false) // 弹窗的是否展示
@@ -61,7 +69,7 @@ const formData = reactive({
   id: 0,
   name: '',
   code: '',
-  menuIds: []
+  menuIds: [],
 })
 const formRef = ref() // 表单 Ref
 const menuOptions = ref<any[]>([]) // 菜单树形结构
@@ -86,19 +94,19 @@ const open = async (row: RoleApi.RoleVO) => {
     formData.value.menuIds.forEach((menuId: number) => {
       treeRef.value.setChecked(menuId, true, false)
     })
-  } finally {
+  }
+  finally {
     formLoading.value = false
   }
 }
-defineExpose({ open }) // 提供 open 方法，用于打开弹窗
-
-/** 提交表单 */
-const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
+defineExpose({ open }) // 定义 success 事件，用于操作成功后的回调
 const submitForm = async () => {
   // 校验表单
-  if (!formRef) return
+  if (!formRef)
+    return
   const valid = await formRef.value.validate()
-  if (!valid) return
+  if (!valid)
+    return
   // 提交请求
   formLoading.value = true
   try {
@@ -106,15 +114,16 @@ const submitForm = async () => {
       roleId: formData.id,
       menuIds: [
         ...(treeRef.value.getCheckedKeys(false) as unknown as Array<number>), // 获得当前选中节点
-        ...(treeRef.value.getHalfCheckedKeys() as unknown as Array<number>) // 获得半选中的父节点
-      ]
+        ...(treeRef.value.getHalfCheckedKeys() as unknown as Array<number>), // 获得半选中的父节点
+      ],
     }
     await PermissionApi.assignRoleMenu(data)
     message.success(t('common.updateSuccess'))
     dialogVisible.value = false
     // 发送操作成功的事件
     emit('success')
-  } finally {
+  }
+  finally {
     formLoading.value = false
   }
 }
@@ -129,7 +138,7 @@ const resetForm = () => {
     id: 0,
     name: '',
     code: '',
-    menuIds: []
+    menuIds: [],
   }
   treeRef.value?.setCheckedNodes([])
   formRef.value?.resetFields()
@@ -143,14 +152,15 @@ const handleCheckedTreeNodeAll = () => {
 /** 展开/折叠全部 */
 const handleCheckedTreeExpand = () => {
   const nodes = treeRef.value?.store.nodesMap
-  for (let node in nodes) {
-    if (nodes[node].expanded === menuExpand.value) {
+  for (const node in nodes) {
+    if (nodes[node].expanded === menuExpand.value)
       continue
-    }
+
     nodes[node].expanded = menuExpand.value
   }
 }
 </script>
+
 <style lang="scss" scoped>
 .cardHeight {
   width: 100%;

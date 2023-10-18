@@ -1,3 +1,14 @@
+<template>
+  <div
+    :class="prefixCls"
+    class="h-[var(--app-footer-height)] bg-[var(--app-content-bg-color)] text-center leading-[var(--app-footer-height)] text-[var(--el-text-color-placeholder)] dark:bg-[var(--el-bg-color)]"
+  >
+    <p style="font-size: 14px">
+      Copyright ©2022-{{ title }}
+    </p>
+  </div>
+</template>
+
 <script lang="ts" setup>
 import { useAppStore } from '@/store/modules/app'
 import { useDesign } from '@/hooks/web/useDesign'
@@ -13,12 +24,3 @@ const appStore = useAppStore()
 
 const title = computed(() => appStore.getTitle)
 </script>
-
-<template>
-  <div
-    :class="prefixCls"
-    class="h-[var(--app-footer-height)] bg-[var(--app-content-bg-color)] text-center leading-[var(--app-footer-height)] text-[var(--el-text-color-placeholder)] dark:bg-[var(--el-bg-color)]"
-  >
-    <p style="font-size: 14px">Copyright ©2022-{{ title }}</p>
-  </div>
-</template>

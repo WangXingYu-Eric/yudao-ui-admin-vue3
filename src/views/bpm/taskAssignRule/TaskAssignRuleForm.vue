@@ -92,11 +92,16 @@
     </el-form>
     <!-- 操作按钮 -->
     <template #footer>
-      <el-button :disabled="formLoading" type="primary" @click="submitForm">确 定</el-button>
-      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button :disabled="formLoading" type="primary" @click="submitForm">
+        确 定
+      </el-button>
+      <el-button @click="dialogVisible = false">
+        取 消
+      </el-button>
     </template>
   </Dialog>
 </template>
+
 <script lang="ts" setup>
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { defaultProps, handleTree } from '@/utils/tree'
@@ -109,7 +114,10 @@ import * as UserGroupApi from '@/api/bpm/userGroup'
 
 defineOptions({ name: 'BpmTaskAssignRuleForm' })
 
-const { t } = useI18n() // 国际化
+// 提供 open 方法，用于打开弹窗
+
+/** 提交表单 */
+const emit = defineEmits(['success']); const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 
 const dialogVisible = ref(false) // 弹窗的是否展示
@@ -123,7 +131,7 @@ const formData = ref({
   postIds: [],
   userIds: [],
   userGroupIds: [],
-  scripts: []
+  scripts: [],
 })
 const formRules = reactive({
   type: [{ required: true, message: '规则类型不能为空', trigger: 'change' }],
@@ -132,7 +140,7 @@ const formRules = reactive({
   postIds: [{ required: true, message: '指定岗位不能为空', trigger: 'change' }],
   userIds: [{ required: true, message: '指定用户不能为空', trigger: 'change' }],
   userGroupIds: [{ required: true, message: '指定用户组不能为空', trigger: 'change' }],
-  scripts: [{ required: true, message: '指定脚本不能为空', trigger: 'change' }]
+  scripts: [{ required: true, message: '指定脚本不能为空', trigger: 'change' }],
 })
 const formRef = ref() // 表单 Ref
 const roleOptions = ref<RoleApi.RoleVO[]>([]) // 角色列表
@@ -150,29 +158,29 @@ const open = async (modelId: string, row: TaskAssignRuleApi.TaskAssignVO) => {
   // 2. 再设置表单
   formData.value = {
     ...row,
-    modelId: modelId,
+    modelId,
     options: [],
     roleIds: [],
     deptIds: [],
     postIds: [],
     userIds: [],
     userGroupIds: [],
-    scripts: []
+    scripts: [],
   }
   // 将 options 赋值到对应的 roleIds 等选项
-  if (row.type === 10) {
+  if (row.type === 10)
     formData.value.roleIds.push(...row.options)
-  } else if (row.type === 20 || row.type === 21) {
+  else if (row.type === 20 || row.type === 21)
     formData.value.deptIds.push(...row.options)
-  } else if (row.type === 22) {
+  else if (row.type === 22)
     formData.value.postIds.push(...row.options)
-  } else if (row.type === 30 || row.type === 31 || row.type === 32) {
+  else if (row.type === 30 || row.type === 31 || row.type === 32)
     formData.value.userIds.push(...row.options)
-  } else if (row.type === 40) {
+  else if (row.type === 40)
     formData.value.userGroupIds.push(...row.options)
-  } else if (row.type === 50) {
+  else if (row.type === 50)
     formData.value.scripts.push(...row.options)
-  }
+
   // 打开弹窗
   dialogVisible.value = true
 
@@ -188,35 +196,34 @@ const open = async (modelId: string, row: TaskAssignRuleApi.TaskAssignVO) => {
   // 获得用户组列表
   userGroupOptions.value = await UserGroupApi.getSimpleUserGroupList()
 }
-defineExpose({ open }) // 提供 open 方法，用于打开弹窗
-
-/** 提交表单 */
-const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
+defineExpose({ open }) // 定义 success 事件，用于操作成功后的回调
 const submitForm = async () => {
   // 校验表单
-  if (!formRef) return
+  if (!formRef)
+    return
   const valid = await formRef.value.validate()
-  if (!valid) return
+  if (!valid)
+    return
 
   // 构建表单
   const form = {
     ...formData.value,
-    taskDefinitionName: undefined
+    taskDefinitionName: undefined,
   }
   // 将 roleIds 等选项赋值到 options 中
-  if (form.type === 10) {
+  if (form.type === 10)
     form.options = form.roleIds
-  } else if (form.type === 20 || form.type === 21) {
+  else if (form.type === 20 || form.type === 21)
     form.options = form.deptIds
-  } else if (form.type === 22) {
+  else if (form.type === 22)
     form.options = form.postIds
-  } else if (form.type === 30 || form.type === 31 || form.type === 32) {
+  else if (form.type === 30 || form.type === 31 || form.type === 32)
     form.options = form.userIds
-  } else if (form.type === 40) {
+  else if (form.type === 40)
     form.options = form.userGroupIds
-  } else if (form.type === 50) {
+  else if (form.type === 50)
     form.options = form.scripts
-  }
+
   form.roleIds = undefined
   form.deptIds = undefined
   form.postIds = undefined
@@ -231,14 +238,16 @@ const submitForm = async () => {
     if (!data.id) {
       await TaskAssignRuleApi.createTaskAssignRule(data)
       message.success(t('common.createSuccess'))
-    } else {
+    }
+    else {
       await TaskAssignRuleApi.updateTaskAssignRule(data)
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
     // 发送操作成功的事件
     emit('success')
-  } finally {
+  }
+  finally {
     formLoading.value = false
   }
 }

@@ -44,9 +44,15 @@
         <!--   TODO @puhui999：tag展示暂时不考虑排序；支持拖动排序 -->
         <el-form-item label="活动优先级">
           <el-tag>默认</el-tag>
-          <el-tag class="ml-2" type="success">秒杀</el-tag>
-          <el-tag class="ml-2" type="info">砍价</el-tag>
-          <el-tag class="ml-2" type="warning">拼团</el-tag>
+          <el-tag class="ml-2" type="success">
+            秒杀
+          </el-tag>
+          <el-tag class="ml-2" type="info">
+            砍价
+          </el-tag>
+          <el-tag class="ml-2" type="warning">
+            拼团
+          </el-tag>
         </el-form-item>
       </el-col>
       <!-- TODO @puhui999：等优惠劵 ok 在搞 -->
@@ -77,33 +83,45 @@
     </template>
     <template #activityOrders>
       <el-tag>默认</el-tag>
-      <el-tag class="ml-2" type="success">秒杀</el-tag>
-      <el-tag class="ml-2" type="info">砍价</el-tag>
-      <el-tag class="ml-2" type="warning">拼团</el-tag>
+      <el-tag class="ml-2" type="success">
+        秒杀
+      </el-tag>
+      <el-tag class="ml-2" type="info">
+        砍价
+      </el-tag>
+      <el-tag class="ml-2" type="warning">
+        拼团
+      </el-tag>
     </template>
   </Descriptions>
 </template>
+
 <script lang="ts" setup>
+import type { PropType } from 'vue'
+import { otherSettingsSchema } from './spu.data'
 import type { Spu } from '@/api/mall/product/spu'
-import { PropType } from 'vue'
 import { propTypes } from '@/utils/propTypes'
 import { copyValueToTarget } from '@/utils'
-import { otherSettingsSchema } from './spu.data'
 
 defineOptions({ name: 'OtherSettingsForm' })
-
-const message = useMessage() // 消息弹窗
-
-const { allSchemas } = useCrudSchemas(otherSettingsSchema)
 
 const props = defineProps({
   propFormData: {
     type: Object as PropType<Spu>,
-    default: () => {}
+    default: () => {},
   },
   activeName: propTypes.string.def(''),
-  isDetail: propTypes.bool.def(false) // 是否作为详情组件
-})
+  isDetail: propTypes.bool.def(false), // 是否作为详情组件
+})/**
+}}}} * 表单校验
+}}}}
+}}
+}}
+}}
+*/
+const emit = defineEmits(['update:activeName']); const message = useMessage() // 消息弹窗
+
+const { allSchemas } = useCrudSchemas(otherSettingsSchema)
 
 const otherSettingsFormRef = ref() // 表单Ref
 // 表单数据
@@ -115,20 +133,20 @@ const formData = ref<Spu>({
   recommendBenefit: false, // 是否优惠
   recommendBest: false, // 是否精品
   recommendNew: false, // 是否新品
-  recommendGood: false // 是否优品
+  recommendGood: false, // 是否优品
 })
 // 表单规则
 const rules = reactive({
   sort: [required],
   giveIntegral: [required],
-  virtualSalesCount: [required]
+  virtualSalesCount: [required],
 })
 const recommendOptions = [
   { name: '是否热卖', value: 'recommendHot' },
   { name: '是否优惠', value: 'recommendBenefit' },
   { name: '是否精品', value: 'recommendBest' },
   { name: '是否新品', value: 'recommendNew' },
-  { name: '是否优品', value: 'recommendGood' }
+  { name: '是否优品', value: 'recommendGood' },
 ] // 商品推荐选项
 const checkboxGroup = ref<string[]>([]) // 选中的推荐选项
 
@@ -145,35 +163,32 @@ const onChangeGroup = () => {
 watch(
   () => props.propFormData,
   (data) => {
-    if (!data) {
+    if (!data)
       return
-    }
+
     copyValueToTarget(formData.value, data)
     recommendOptions.forEach(({ value }) => {
-      if (formData.value[value] && !checkboxGroup.value.includes(value)) {
+      if (formData.value[value] && !checkboxGroup.value.includes(value))
         checkboxGroup.value.push(value)
-      }
     })
   },
   {
-    immediate: true
-  }
+    immediate: true,
+  },
 )
 
-/**
- * 表单校验
- */
-const emit = defineEmits(['update:activeName'])
 const validate = async () => {
   // 校验表单
-  if (!otherSettingsFormRef) return
+  if (!otherSettingsFormRef)
+    return
   return await unref(otherSettingsFormRef).validate((valid) => {
     if (!valid) {
       message.warning('商品其他设置未完善！！')
       emit('update:activeName', 'otherSettings')
       // 目的截断之后的校验
       throw new Error('商品其他设置未完善！！')
-    } else {
+    }
+    else {
       // 校验通过更新数据
       Object.assign(props.propFormData, formData.value)
     }

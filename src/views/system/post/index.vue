@@ -2,9 +2,9 @@
   <ContentWrap>
     <!-- 搜索工作栏 -->
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="68px"
     >
@@ -35,22 +35,26 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        <el-button @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" /> 搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon icon="ep:refresh" class="mr-5px" /> 重置
+        </el-button>
         <el-button
+          v-hasPermi="['system:notice:create']"
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['system:notice:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
         <el-button
+          v-hasPermi="['infra:config:export']"
           type="success"
           plain
-          @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['infra:config:export']"
+          @click="handleExport"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
@@ -81,18 +85,18 @@
       <el-table-column label="操作" align="center">
         <template #default="scope">
           <el-button
+            v-hasPermi="['system:post:update']"
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['system:post:update']"
           >
             编辑
           </el-button>
           <el-button
+            v-hasPermi="['system:post:delete']"
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
-            v-hasPermi="['system:post:delete']"
           >
             删除
           </el-button>
@@ -101,9 +105,9 @@
     </el-table>
     <!-- 分页 -->
     <Pagination
-      :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
+      :total="total"
       @pagination="getList"
     />
   </ContentWrap>
@@ -111,12 +115,13 @@
   <!-- 表单弹窗：添加/修改 -->
   <PostForm ref="formRef" @success="getList" />
 </template>
+
 <script lang="ts" setup>
+import PostForm from './PostForm.vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
 import * as PostApi from '@/api/system/post'
-import PostForm from './PostForm.vue'
 
 defineOptions({ name: 'SystemPost' })
 
@@ -131,7 +136,7 @@ const queryParams = reactive({
   pageSize: 10,
   code: '',
   name: '',
-  status: undefined
+  status: undefined,
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
@@ -143,7 +148,8 @@ const getList = async () => {
     const data = await PostApi.getPostPage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -176,7 +182,8 @@ const handleDelete = async (id: number) => {
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
 /** 导出按钮操作 */
@@ -188,14 +195,16 @@ const handleExport = async () => {
     exportLoading.value = true
     const data = await PostApi.exportPost(queryParams)
     download.excel(data, '岗位列表.xls')
-  } catch {
-  } finally {
+  }
+  catch {
+  }
+  finally {
     exportLoading.value = false
   }
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })
-</script>
+</template>

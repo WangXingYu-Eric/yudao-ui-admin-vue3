@@ -2,9 +2,9 @@
   <ContentWrap>
     <!-- 搜索工作栏 -->
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="68px"
     >
@@ -13,8 +13,8 @@
           v-model="queryParams.userId"
           placeholder="请输入用户编号"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="提现类型" prop="type">
@@ -37,8 +37,8 @@
           v-model="queryParams.accountNo"
           placeholder="请输入账号"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="提现银行" prop="bankName">
@@ -78,8 +78,12 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        <el-button @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" /> 搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon icon="ep:refresh" class="mr-5px" /> 重置
+        </el-button>
       </el-form-item>
     </el-form>
   </ContentWrap>
@@ -102,7 +106,9 @@
       </el-table-column>
       <el-table-column label="提现方式" align="left" prop="type" min-width="120px">
         <template #default="scope">
-          <div v-if="scope.row.type === BrokerageWithdrawTypeEnum.WALLET.type"> 余额 </div>
+          <div v-if="scope.row.type === BrokerageWithdrawTypeEnum.WALLET.type">
+            余额
+          </div>
           <div v-else>
             {{ getDictLabel(DICT_TYPE.BROKERAGE_WITHDRAW_TYPE, scope.row.type) }}
             <span v-if="scope.row.accountNo">账号：{{ scope.row.accountNo }}</span>
@@ -152,18 +158,18 @@
         <template #default="scope">
           <template v-if="scope.row.status === BrokerageWithdrawStatusEnum.AUDITING.status">
             <el-button
+              v-hasPermi="['trade:brokerage-withdraw:audit']"
               link
               type="primary"
               @click="handleApprove(scope.row.id)"
-              v-hasPermi="['trade:brokerage-withdraw:audit']"
             >
               通过
             </el-button>
             <el-button
+              v-hasPermi="['trade:brokerage-withdraw:audit']"
               link
               type="danger"
               @click="openForm(scope.row.id)"
-              v-hasPermi="['trade:brokerage-withdraw:audit']"
             >
               驳回
             </el-button>
@@ -173,9 +179,9 @@
     </el-table>
     <!-- 分页 -->
     <Pagination
-      :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
+      :total="total"
       @pagination="getList"
     />
   </ContentWrap>
@@ -185,12 +191,11 @@
 </template>
 
 <script setup lang="ts">
+import BrokerageWithdrawRejectForm from './BrokerageWithdrawRejectForm.vue'
 import { DICT_TYPE, getDictLabel, getIntDictOptions, getStrDictOptions } from '@/utils/dict'
 import { dateFormatter, formatDate } from '@/utils/formatTime'
 import * as BrokerageWithdrawApi from '@/api/mall/trade/brokerage/withdraw'
-import BrokerageWithdrawRejectForm from './BrokerageWithdrawRejectForm.vue'
 import { BrokerageWithdrawStatusEnum, BrokerageWithdrawTypeEnum } from '@/utils/constants'
-import { fenToYuanFormat } from '@/utils/formatter'
 import { fenToYuan } from '@/utils'
 
 defineOptions({ name: 'BrokerageWithdraw' })
@@ -212,7 +217,7 @@ const queryParams = reactive({
   auditReason: null,
   auditTime: [],
   remark: null,
-  createTime: []
+  createTime: [],
 })
 const queryFormRef = ref() // 搜索的表单
 
@@ -223,7 +228,8 @@ const getList = async () => {
     const data = await BrokerageWithdrawApi.getBrokerageWithdrawPage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -254,12 +260,13 @@ const handleApprove = async (id: number) => {
     await BrokerageWithdrawApi.approveBrokerageWithdraw(id)
     await message.success(t('common.success'))
     await getList()
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

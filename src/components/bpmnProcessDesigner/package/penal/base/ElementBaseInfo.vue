@@ -38,18 +38,19 @@
     </el-form>
   </div>
 </template>
+
 <script lang="ts" setup>
 defineOptions({ name: 'ElementBaseInfo' })
 
 const props = defineProps({
   businessObject: {
     type: Object,
-    default: () => {}
+    default: () => {},
   },
   model: {
     type: Object,
-    default: () => {}
-  }
+    default: () => {},
+  },
 })
 const needProps = ref<any>({})
 const bpmnElement = ref()
@@ -59,7 +60,7 @@ const elementBaseInfo = ref<any>({})
 // 流程模型的校验
 const rules = reactive({
   id: [{ required: true, message: '流程标识不能为空', trigger: 'blur' }],
-  name: [{ required: true, message: '流程名称不能为空', trigger: 'blur' }]
+  name: [{ required: true, message: '流程名称不能为空', trigger: 'blur' }],
 })
 
 const bpmnInstances = () => (window as any)?.bpmnInstances
@@ -70,7 +71,7 @@ const resetBaseInfo = () => {
   bpmnElement.value = bpmnInstances()?.bpmnElement
   console.log(bpmnElement.value, 'resetBaseInfo11111111111')
   elementBaseInfo.value = bpmnElement.value.businessObject
-  needProps.value['type'] = bpmnElement.value.businessObject.$type
+  needProps.value.type = bpmnElement.value.businessObject.$type
   // elementBaseInfo.value['typess'] = bpmnElement.value.businessObject.$type
 
   // elementBaseInfo.value = JSON.parse(JSON.stringify(bpmnElement.value.businessObject))
@@ -78,9 +79,9 @@ const resetBaseInfo = () => {
 }
 const handleKeyUpdate = (value) => {
   // 校验 value 的值，只有 XML NCName 通过的情况下，才进行赋值。否则，会导致流程图报错，无法绘制的问题
-  if (!value) {
+  if (!value)
     return
-  }
+
   if (!value.match(/[a-zA-Z_][\-_.0-9a-zA-Z$]*/)) {
     console.log('key 不满足 XML NCName 规则，所以不进行赋值')
     return
@@ -88,7 +89,7 @@ const handleKeyUpdate = (value) => {
   console.log('key 满足 XML NCName 规则，所以进行赋值')
 
   // 在 BPMN 的 XML 中，流程标识 key，其实对应的是 id 节点
-  elementBaseInfo.value['id'] = value
+  elementBaseInfo.value.id = value
 
   setTimeout(() => {
     updateBaseInfo('id')
@@ -96,10 +97,10 @@ const handleKeyUpdate = (value) => {
 }
 const handleNameUpdate = (value) => {
   console.log(elementBaseInfo, 'elementBaseInfo')
-  if (!value) {
+  if (!value)
     return
-  }
-  elementBaseInfo.value['name'] = value
+
+  elementBaseInfo.value.name = value
 
   setTimeout(() => {
     updateBaseInfo('name')
@@ -131,9 +132,10 @@ const updateBaseInfo = (key) => {
     console.log(toRaw(bpmnElement.value), 'bpmnElement')
     bpmnInstances().modeling.updateProperties(toRaw(bpmnElement.value), {
       id: elementBaseInfo.value[key],
-      di: { id: `${elementBaseInfo.value[key]}_di` }
+      di: { id: `${elementBaseInfo.value[key]}_di` },
     })
-  } else {
+  }
+  else {
     console.log(attrObj, 'attrObj')
     bpmnInstances().modeling.updateProperties(toRaw(bpmnElement.value), attrObj)
   }
@@ -157,7 +159,7 @@ watch(
       resetBaseInfo()
       // })
     }
-  }
+  },
 )
 // watch(
 //   () => ({ ...props }),

@@ -1,5 +1,6 @@
 import type { CrudSchema } from '@/hooks/web/useCrudSchemas'
 import { dateFormatter } from '@/utils/formatTime'
+
 const { t } = useI18n() // 国际化
 
 // 表单校验
@@ -9,14 +10,14 @@ export const rules = reactive({
     {
       type: 'email',
       message: t('profile.rules.truemail'),
-      trigger: ['blur', 'change']
-    }
+      trigger: ['blur', 'change'],
+    },
   ],
   username: [required],
   password: [required],
   host: [required],
   port: [required],
-  sslEnable: [required]
+  sslEnable: [required],
 })
 
 // CrudSchema：https://doc.iocoder.cn/vue3/crud-schema/
@@ -24,29 +25,29 @@ const crudSchemas = reactive<CrudSchema[]>([
   {
     label: '邮箱',
     field: 'mail',
-    isSearch: true
+    isSearch: true,
   },
   {
     label: '用户名',
     field: 'username',
-    isSearch: true
+    isSearch: true,
   },
   {
     label: '密码',
     field: 'password',
-    isTable: false
+    isTable: false,
   },
   {
     label: 'SMTP 服务器域名',
-    field: 'host'
+    field: 'host',
   },
   {
     label: 'SMTP 服务器端口',
     field: 'port',
     form: {
       component: 'InputNumber',
-      value: 465
-    }
+      value: 465,
+    },
   },
   {
     label: '是否开启 SSL',
@@ -54,8 +55,8 @@ const crudSchemas = reactive<CrudSchema[]>([
     dictType: DICT_TYPE.INFRA_BOOLEAN_STRING,
     dictClass: 'boolean',
     form: {
-      component: 'Radio'
-    }
+      component: 'Radio',
+    },
   },
   {
     label: '创建时间',
@@ -63,14 +64,14 @@ const crudSchemas = reactive<CrudSchema[]>([
     isForm: false,
     formatter: dateFormatter,
     detail: {
-      dateFormat: 'YYYY-MM-DD HH:mm:ss'
-    }
+      dateFormat: 'YYYY-MM-DD HH:mm:ss',
+    },
   },
   {
     label: '操作',
     field: 'action',
     isForm: false,
-    isDetail: false
-  }
+    isDetail: false,
+  },
 ])
 export const { allSchemas } = useCrudSchemas(crudSchemas)

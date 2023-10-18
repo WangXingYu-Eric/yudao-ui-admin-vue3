@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-row>
-      <div class="select-item" v-if="reply.articles && reply.articles.length > 0">
+      <div v-if="reply.articles && reply.articles.length > 0" class="select-item">
         <WxNews :articles="reply.articles" />
         <el-col class="ope-row">
           <el-button type="danger" circle @click="onDelete">
@@ -10,7 +10,7 @@
         </el-col>
       </div>
       <!-- 选择素材 -->
-      <el-col :span="24" v-if="!reply.content">
+      <el-col v-if="!reply.content" :span="24">
         <el-row style="text-align: center" align="middle">
           <el-col :span="24">
             <el-button type="success" @click="showDialog = true">
@@ -20,11 +20,11 @@
           </el-col>
         </el-row>
       </el-col>
-      <el-dialog title="选择图文" v-model="showDialog" width="90%" append-to-body destroy-on-close>
+      <el-dialog v-model="showDialog" title="选择图文" width="90%" append-to-body destroy-on-close>
         <WxMaterialSelect
           type="news"
           :account-id="reply.accountId"
-          :newsType="newsType"
+          :news-type="newsType"
           @select-material="selectMaterial"
         />
       </el-dialog>
@@ -33,9 +33,10 @@
 </template>
 
 <script lang="ts" setup>
+import type { Reply } from './types'
+import { NewsType } from './types'
 import WxNews from '@/views/mp/components/wx-news'
 import WxMaterialSelect from '@/views/mp/components/wx-material-select'
-import { Reply, NewsType } from './types'
 
 const props = defineProps<{
   modelValue: Reply
@@ -46,7 +47,7 @@ const emit = defineEmits<{
 }>()
 const reply = computed<Reply>({
   get: () => props.modelValue,
-  set: (val) => emit('update:modelValue', val)
+  set: val => emit('update:modelValue', val),
 })
 
 const showDialog = ref(false)

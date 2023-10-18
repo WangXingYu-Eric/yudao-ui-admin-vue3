@@ -8,10 +8,12 @@
   <div class="pb-30px">
     <!-- 类型：image -->
     <div v-if="props.type === 'image'">
-      <div class="waterfall" v-loading="loading">
-        <div class="waterfall-item" v-for="item in list" :key="item.mediaId">
-          <img class="material-img" :src="item.url" />
-          <p class="item-name">{{ item.name }}</p>
+      <div v-loading="loading" class="waterfall">
+        <div v-for="item in list" :key="item.mediaId" class="waterfall-item">
+          <img class="material-img" :src="item.url">
+          <p class="item-name">
+            {{ item.name }}
+          </p>
           <el-row class="ope-row">
             <el-button type="success" @click="selectMaterialFun(item)">
               选择
@@ -22,9 +24,9 @@
       </div>
       <!-- 分页组件 -->
       <Pagination
-        :total="total"
         v-model:page="queryParams.pageNo"
         v-model:limit="queryParams.pageSize"
+        :total="total"
         @pagination="getMaterialPageFun"
       />
     </div>
@@ -48,8 +50,8 @@
         />
         <el-table-column label="操作" align="center" fixed="right">
           <template #default="scope">
-            <el-button type="primary" link @click="selectMaterialFun(scope.row)"
-              >选择
+            <el-button type="primary" link @click="selectMaterialFun(scope.row)">
+              选择
               <Icon icon="ep:plus" />
             </el-button>
           </template>
@@ -57,9 +59,9 @@
       </el-table>
       <!-- 分页组件 -->
       <Pagination
-        :total="total"
         v-model:page="queryParams.pageNo"
         v-model:limit="queryParams.pageSize"
+        :total="total"
         @pagination="getPage"
       />
     </div>
@@ -90,8 +92,8 @@
           class-name="small-padding fixed-width"
         >
           <template #default="scope">
-            <el-button type="primary" link @click="selectMaterialFun(scope.row)"
-              >选择
+            <el-button type="primary" link @click="selectMaterialFun(scope.row)">
+              选择
               <Icon icon="akar-icons:circle-plus" />
             </el-button>
           </template>
@@ -99,16 +101,16 @@
       </el-table>
       <!-- 分页组件 -->
       <Pagination
-        :total="total"
         v-model:page="queryParams.pageNo"
         v-model:limit="queryParams.pageSize"
+        :total="total"
         @pagination="getMaterialPageFun"
       />
     </div>
     <!-- 类型：news -->
     <div v-else-if="props.type === 'news'">
-      <div class="waterfall" v-loading="loading">
-        <div class="waterfall-item" v-for="item in list" :key="item.mediaId">
+      <div v-loading="loading" class="waterfall">
+        <div v-for="item in list" :key="item.mediaId" class="waterfall-item">
           <div v-if="item.content && item.content.newsItem">
             <WxNews :articles="item.content.newsItem" />
             <el-row class="ope-row">
@@ -122,9 +124,9 @@
       </div>
       <!-- 分页组件 -->
       <Pagination
-        :total="total"
         v-model:page="queryParams.pageNo"
         v-model:limit="queryParams.pageSize"
+        :total="total"
         @pagination="getMaterialPageFun"
       />
     </div>
@@ -132,10 +134,10 @@
 </template>
 
 <script lang="ts" setup>
+import { NewsType } from './types'
 import WxNews from '@/views/mp/components/wx-news'
 import WxVoicePlayer from '@/views/mp/components/wx-voice-play'
 import WxVideoPlayer from '@/views/mp/components/wx-video-play'
-import { NewsType } from './types'
 import * as MpMaterialApi from '@/api/mp/material'
 import * as MpFreePublishApi from '@/api/mp/freePublish'
 import * as MpDraftApi from '@/api/mp/draft'
@@ -150,8 +152,8 @@ const props = withDefaults(
     newsType?: NewsType
   }>(),
   {
-    newsType: NewsType.Published
-  }
+    newsType: NewsType.Published,
+  },
 )
 
 const emit = defineEmits(['select-material'])
@@ -166,7 +168,7 @@ const list = ref<any[]>([])
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
-  accountId: props.accountId
+  accountId: props.accountId,
 })
 
 const selectMaterialFun = (item) => {
@@ -179,14 +181,17 @@ const getPage = async () => {
     if (props.type === 'news' && props.newsType === NewsType.Published) {
       // 【图文】+ 【已发布】
       await getFreePublishPageFun()
-    } else if (props.type === 'news' && props.newsType === NewsType.Draft) {
+    }
+    else if (props.type === 'news' && props.newsType === NewsType.Draft) {
       // 【图文】+ 【草稿】
       await getDraftPageFun()
-    } else {
+    }
+    else {
       // 【素材】
       await getMaterialPageFun()
     }
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -194,7 +199,7 @@ const getPage = async () => {
 const getMaterialPageFun = async () => {
   const data = await MpMaterialApi.getMaterialPage({
     ...queryParams,
-    type: props.type
+    type: props.type,
   })
   list.value = data.list
   total.value = data.total
@@ -228,6 +233,7 @@ onMounted(async () => {
   getPage()
 })
 </script>
+
 <style lang="scss" scoped>
 @media (width >= 992px) and (width <= 1300px) {
   .waterfall {

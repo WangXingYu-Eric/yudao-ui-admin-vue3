@@ -10,38 +10,43 @@
     :before-upload="onBeforeUpload"
     :on-success="onUploadSuccess"
   >
-    <el-button type="primary" plain> 点击上传 </el-button>
+    <el-button type="primary" plain>
+      点击上传
+    </el-button>
     <template #tip>
       <span class="el-upload__tip" style="margin-left: 5px">
-        <slot></slot>
+        <slot />
       </span>
     </template>
   </el-upload>
 </template>
+
 <script lang="ts" setup>
 import type { UploadProps, UploadUserFile } from 'element-plus'
+import type {
+  UploadData,
+} from './upload'
 import {
   HEADERS,
   UPLOAD_URL,
-  UploadData,
   UploadType,
   beforeImageUpload,
-  beforeVoiceUpload
+  beforeVoiceUpload,
 } from './upload'
-
-const message = useMessage()
 
 const props = defineProps<{ type: UploadType }>()
 
-const fileList = ref<UploadUserFile[]>([])
 const emit = defineEmits<{
   (e: 'uploaded', v: void)
 }>()
 
+const message = useMessage()
+
+const fileList = ref<UploadUserFile[]>([])
 const uploadData: UploadData = reactive({
   type: UploadType.Image,
   title: '',
-  introduction: ''
+  introduction: '',
 })
 
 /** 上传前检查 */
@@ -50,7 +55,7 @@ const onBeforeUpload = props.type === UploadType.Image ? beforeImageUpload : bef
 /** 上传成功处理 */
 const onUploadSuccess: UploadProps['onSuccess'] = (res: any) => {
   if (res.code !== 0) {
-    message.alertError('上传出错：' + res.msg)
+    message.alertError(`上传出错：${res.msg}`)
     return false
   }
 
@@ -64,7 +69,7 @@ const onUploadSuccess: UploadProps['onSuccess'] = (res: any) => {
 }
 
 /** 上传失败处理 */
-const onUploadError = (err: Error) => message.error('上传失败: ' + err.message)
+const onUploadError = (err: Error) => message.error(`上传失败: ${err.message}`)
 </script>
 
 <style lang="scss" scoped>

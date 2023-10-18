@@ -9,7 +9,7 @@ const accountList = await MailAccountApi.getSimpleMailAccountList()
 const crudSchemas = reactive<CrudSchema[]>([
   {
     label: '编号',
-    field: 'id'
+    field: 'id',
   },
   {
     label: '发送时间',
@@ -21,22 +21,22 @@ const crudSchemas = reactive<CrudSchema[]>([
       componentProps: {
         valueFormat: 'YYYY-MM-DD HH:mm:ss',
         type: 'daterange',
-        defaultTime: [new Date('1 00:00:00'), new Date('1 23:59:59')]
-      }
+        defaultTime: [new Date('1 00:00:00'), new Date('1 23:59:59')],
+      },
     },
     detail: {
-      dateFormat: 'YYYY-MM-DD HH:mm:ss'
-    }
+      dateFormat: 'YYYY-MM-DD HH:mm:ss',
+    },
   },
   {
     label: '接收邮箱',
-    field: 'toMail'
+    field: 'toMail',
   },
   {
     label: '用户编号',
     field: 'userId',
     isSearch: true,
-    isTable: false
+    isTable: false,
   },
   {
     label: '用户类型',
@@ -44,28 +44,28 @@ const crudSchemas = reactive<CrudSchema[]>([
     dictType: DICT_TYPE.USER_TYPE,
     dictClass: 'number',
     isSearch: true,
-    isTable: false
+    isTable: false,
   },
   {
     label: '邮件标题',
-    field: 'templateTitle'
+    field: 'templateTitle',
   },
   {
     label: '邮件内容',
     field: 'templateContent',
-    isTable: false
+    isTable: false,
   },
   {
     label: '邮箱参数',
     field: 'templateParams',
-    isTable: false
+    isTable: false,
   },
   {
     label: '发送状态',
     field: 'sendStatus',
     dictType: DICT_TYPE.SYSTEM_MAIL_SEND_STATUS,
     dictClass: 'string',
-    isSearch: true
+    isSearch: true,
   },
   {
     label: '邮箱账号',
@@ -78,42 +78,42 @@ const crudSchemas = reactive<CrudSchema[]>([
       componentProps: {
         optionsAlias: {
           labelField: 'mail',
-          valueField: 'id'
-        }
-      }
-    }
+          valueField: 'id',
+        },
+      },
+    },
   },
   {
     label: '发送邮箱地址',
     field: 'fromMail',
     table: {
-      label: '邮箱账号'
-    }
+      label: '邮箱账号',
+    },
   },
   {
     label: '模板编号',
     field: 'templateId',
-    isSearch: true
+    isSearch: true,
   },
   {
     label: '模板编码',
     field: 'templateCode',
-    isTable: false
+    isTable: false,
   },
   {
     label: '模版发送人名称',
     field: 'templateNickname',
-    isTable: false
+    isTable: false,
   },
   {
     label: '发送返回的消息编号',
     field: 'sendMessageId',
-    isTable: false
+    isTable: false,
   },
   {
     label: '发送异常',
     field: 'sendException',
-    isTable: false
+    isTable: false,
   },
   {
     label: '创建时间',
@@ -121,13 +121,13 @@ const crudSchemas = reactive<CrudSchema[]>([
     isTable: false,
     formatter: dateFormatter,
     detail: {
-      dateFormat: 'YYYY-MM-DD HH:mm:ss'
-    }
+      dateFormat: 'YYYY-MM-DD HH:mm:ss',
+    },
   },
   {
     label: '操作',
     field: 'action',
-    isDetail: false
-  }
+    isDetail: false,
+  },
 ])
 export const { allSchemas } = useCrudSchemas(crudSchemas)

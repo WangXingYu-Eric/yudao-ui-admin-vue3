@@ -14,11 +14,15 @@
         style="padding: 10px; background-color: #fff; border-radius: 5px"
       >
         <div class="avue-card__avatar">
-          <img :src="thumbMediaUrl" alt="" />
+          <img :src="thumbMediaUrl" alt="">
         </div>
         <div class="avue-card__detail">
-          <div class="avue-card__title" style="margin-bottom: unset">{{ title }}</div>
-          <div class="avue-card__info" style="height: unset">{{ description }}</div>
+          <div class="avue-card__title" style="margin-bottom: unset">
+            {{ title }}
+          </div>
+          <div class="avue-card__info" style="height: unset">
+            {{ description }}
+          </div>
         </div>
       </div>
     </el-link>
@@ -31,28 +35,28 @@ defineOptions({ name: 'WxMusic' })
 const props = defineProps({
   title: {
     required: false,
-    type: String
+    type: String,
   },
   description: {
     required: false,
-    type: String
+    type: String,
   },
   musicUrl: {
     required: false,
-    type: String
+    type: String,
   },
   hqMusicUrl: {
     required: false,
-    type: String
+    type: String,
   },
   thumbMediaUrl: {
     required: true,
-    type: String
-  }
+    type: String,
+  },
 })
 
 defineExpose({
-  musicUrl: props.musicUrl
+  musicUrl: props.musicUrl,
 })
 </script>
 

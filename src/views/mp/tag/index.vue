@@ -4,9 +4,9 @@
   <!-- 搜索工作栏 -->
   <ContentWrap>
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="68px"
     >
@@ -15,20 +15,20 @@
       </el-form-item>
       <el-form-item>
         <el-button
+          v-hasPermi="['mp:tag:create']"
           type="primary"
           plain
-          @click="openForm('create')"
-          v-hasPermi="['mp:tag:create']"
           :disabled="queryParams.accountId === 0"
+          @click="openForm('create')"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
         <el-button
+          v-hasPermi="['mp:tag:sync']"
           type="success"
           plain
-          @click="handleSync"
-          v-hasPermi="['mp:tag:sync']"
           :disabled="queryParams.accountId === 0"
+          @click="handleSync"
         >
           <Icon icon="ep:refresh" class="mr-5px" /> 同步
         </el-button>
@@ -52,18 +52,18 @@
       <el-table-column label="操作" align="center">
         <template #default="scope">
           <el-button
+            v-hasPermi="['mp:tag:update']"
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['mp:tag:update']"
           >
             修改
           </el-button>
           <el-button
+            v-hasPermi="['mp:tag:delete']"
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
-            v-hasPermi="['mp:tag:delete']"
           >
             删除
           </el-button>
@@ -72,9 +72,9 @@
     </el-table>
     <!-- 分页 -->
     <Pagination
-      :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
+      :total="total"
       @pagination="getList"
     />
   </ContentWrap>
@@ -82,10 +82,11 @@
   <!-- 表单弹窗：添加/修改 -->
   <TagForm ref="formRef" @success="getList" />
 </template>
+
 <script lang="ts" setup>
+import TagForm from './TagForm.vue'
 import { dateFormatter } from '@/utils/formatTime'
 import * as MpTagApi from '@/api/mp/tag'
-import TagForm from './TagForm.vue'
 import WxAccountSelect from '@/views/mp/components/wx-account-select'
 
 defineOptions({ name: 'MpTag' })
@@ -100,12 +101,12 @@ const list = ref<any[]>([]) // 列表的数据
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
-  accountId: -1
+  accountId: -1,
 })
 
 const formRef = ref<InstanceType<typeof TagForm> | null>(null)
 
-/** 侦听公众号变化 **/
+/** 侦听公众号变化 */
 const onAccountChanged = (id: number) => {
   queryParams.accountId = id
   queryParams.pageNo = 1
@@ -119,7 +120,8 @@ const getList = async () => {
     const data = await MpTagApi.getTagPage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -139,7 +141,8 @@ const handleDelete = async (id: number) => {
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
 /** 同步操作 */
@@ -149,6 +152,7 @@ const handleSync = async () => {
     await MpTagApi.syncTag(queryParams.accountId as number)
     message.success('同步标签成功')
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 </script>

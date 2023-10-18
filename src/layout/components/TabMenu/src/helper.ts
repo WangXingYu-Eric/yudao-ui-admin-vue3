@@ -1,9 +1,9 @@
-import { getAllParentPath } from '@/layout/components/Menu/src/helper'
 import type { RouteMeta } from 'vue-router'
-import { isUrl } from '@/utils/is'
 import { cloneDeep } from 'lodash-es'
+import { getAllParentPath } from '@/layout/components/Menu/src/helper'
+import { isUrl } from '@/utils/is'
 
-export type TabMapTypes = {
+export interface TabMapTypes {
   [key: string]: string[]
 }
 
@@ -12,15 +12,14 @@ export const tabPathMap = reactive<TabMapTypes>({})
 export const initTabMap = (routes: AppRouteRecordRaw[]) => {
   for (const v of routes) {
     const meta = (v.meta ?? {}) as RouteMeta
-    if (!meta?.hidden) {
+    if (!meta?.hidden)
       tabPathMap[v.path] = []
-    }
   }
 }
 
 export const filterMenusPath = (
   routes: AppRouteRecordRaw[],
-  allRoutes: AppRouteRecordRaw[]
+  allRoutes: AppRouteRecordRaw[],
 ): AppRouteRecordRaw[] => {
   const res: AppRouteRecordRaw[] = []
   for (const v of routes) {
@@ -33,17 +32,14 @@ export const filterMenusPath = (
 
       data = cloneDeep(v)
       data.path = fullPath
-      if (v.children && data) {
+      if (v.children && data)
         data.children = filterMenusPath(v.children, allRoutes)
-      }
 
-      if (data) {
+      if (data)
         res.push(data)
-      }
 
-      if (allParentPath.length && Reflect.has(tabPathMap, allParentPath[0])) {
+      if (allParentPath.length && Reflect.has(tabPathMap, allParentPath[0]))
         tabPathMap[allParentPath[0]].push(fullPath)
-      }
     }
   }
 

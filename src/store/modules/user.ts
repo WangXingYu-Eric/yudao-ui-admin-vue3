@@ -1,5 +1,5 @@
-import { store } from '../index'
 import { defineStore } from 'pinia'
+import { store } from '../index'
 import { getAccessToken, removeToken } from '@/utils/auth'
 import { CACHE_KEY, useCache } from '@/hooks/web/useCache'
 import { getInfo, loginOut } from '@/api/login'
@@ -26,8 +26,8 @@ export const useUserStore = defineStore('admin-user', {
     user: {
       id: 0,
       avatar: '',
-      nickname: ''
-    }
+      nickname: '',
+    },
   }),
   getters: {
     getPermissions(): string[] {
@@ -41,7 +41,7 @@ export const useUserStore = defineStore('admin-user', {
     },
     getUser(): UserVO {
       return this.user
-    }
+    },
   },
   actions: {
     async setUserInfoAction() {
@@ -50,9 +50,9 @@ export const useUserStore = defineStore('admin-user', {
         return null
       }
       let userInfo = wsCache.get(CACHE_KEY.USER)
-      if (!userInfo) {
+      if (!userInfo)
         userInfo = await getInfo()
-      }
+
       this.permissions = userInfo.permissions
       this.roles = userInfo.roles
       this.user = userInfo.user
@@ -73,10 +73,10 @@ export const useUserStore = defineStore('admin-user', {
       this.user = {
         id: 0,
         avatar: '',
-        nickname: ''
+        nickname: '',
       }
-    }
-  }
+    },
+  },
 })
 
 export const useUserStoreWithOut = () => {

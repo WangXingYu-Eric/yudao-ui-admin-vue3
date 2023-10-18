@@ -1,5 +1,5 @@
 import SkuList from './SkuList.vue'
-import { Spu } from '@/api/mall/product/spu'
+import type { Spu } from '@/api/mall/product/spu'
 
 interface PropertyAndValues {
   id: number
@@ -37,14 +37,13 @@ const getPropertyList = (spu: Spu): PropertyAndValues[] => {
     spu.skus?.forEach((sku) => {
       sku.properties?.forEach(({ propertyId, propertyName, valueId, valueName }) => {
         // 添加属性
-        if (!properties?.some((item) => item.id === propertyId)) {
+        if (!properties?.some(item => item.id === propertyId))
           properties.push({ id: propertyId!, name: propertyName!, values: [] })
-        }
+
         // 添加属性值
-        const index = properties?.findIndex((item) => item.id === propertyId)
-        if (!properties[index].values?.some((value) => value.id === valueId)) {
+        const index = properties?.findIndex(item => item.id === propertyId)
+        if (!properties[index].values?.some(value => value.id === valueId))
           properties[index].values?.push({ id: valueId!, name: valueName! })
-        }
       })
     })
   }

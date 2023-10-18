@@ -1,18 +1,19 @@
 import type { App } from 'vue'
+
 // 👇使用 form-create 需额外全局引入 element plus 组件
 import {
+  ElAlert,
   ElAside,
-  ElPopconfirm,
-  ElHeader,
-  ElMain,
   ElContainer,
   ElDivider,
-  ElTransfer,
-  ElAlert,
-  ElTabs,
+  ElHeader,
+  ElMain,
+  ElPopconfirm,
+  ElTabPane,
   ElTable,
   ElTableColumn,
-  ElTabPane
+  ElTabs,
+  ElTransfer,
 } from 'element-plus'
 
 import formCreate from '@form-create/element-ui'
@@ -30,7 +31,7 @@ const components = [
   ElTabs,
   ElTable,
   ElTableColumn,
-  ElTabPane
+  ElTabPane,
 ]
 
 // 参考 http://www.form-create.com/v3/element-ui/auto-import.html 文档

@@ -6,9 +6,9 @@
   <ContentWrap>
     <!-- 搜索工作栏 -->
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="120px"
     >
@@ -17,8 +17,8 @@
           v-model="queryParams.handlerName"
           placeholder="请输入处理器的名字"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="开始执行时间" prop="beginTime">
@@ -58,14 +58,18 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        <el-button @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" /> 搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon icon="ep:refresh" class="mr-5px" /> 重置
+        </el-button>
         <el-button
+          v-hasPermi="['infra:job:export']"
           type="success"
           plain
-          @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['infra:job:export']"
+          @click="handleExport"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
@@ -83,12 +87,12 @@
       <el-table-column label="第几次执行" align="center" prop="executeIndex" />
       <el-table-column label="执行时间" align="center" width="170s">
         <template #default="scope">
-          <span>{{ formatDate(scope.row.beginTime) + ' ~ ' + formatDate(scope.row.endTime) }}</span>
+          <span>{{ `${formatDate(scope.row.beginTime)} ~ ${formatDate(scope.row.endTime)}` }}</span>
         </template>
       </el-table-column>
       <el-table-column label="执行时长" align="center" prop="duration">
         <template #default="scope">
-          <span>{{ scope.row.duration + ' 毫秒' }}</span>
+          <span>{{ `${scope.row.duration} 毫秒` }}</span>
         </template>
       </el-table-column>
       <el-table-column label="任务状态" align="center" prop="status">
@@ -99,10 +103,10 @@
       <el-table-column label="操作" align="center">
         <template #default="scope">
           <el-button
+            v-hasPermi="['infra:job:query']"
             type="primary"
             link
             @click="openDetail(scope.row.id)"
-            v-hasPermi="['infra:job:query']"
           >
             详细
           </el-button>
@@ -111,9 +115,9 @@
     </el-table>
     <!-- 分页组件 -->
     <Pagination
-      :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
+      :total="total"
       @pagination="getList"
     />
   </ContentWrap>
@@ -121,11 +125,12 @@
   <!-- 表单弹窗：查看 -->
   <JobLogDetail ref="detailRef" />
 </template>
+
 <script lang="ts" setup>
+import JobLogDetail from './JobLogDetail.vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { formatDate } from '@/utils/formatTime'
 import download from '@/utils/download'
-import JobLogDetail from './JobLogDetail.vue'
 import * as JobLogApi from '@/api/infra/jobLog'
 
 defineOptions({ name: 'InfraJobLog' })
@@ -143,7 +148,7 @@ const queryParams = reactive({
   handlerName: undefined,
   beginTime: undefined,
   endTime: undefined,
-  status: undefined
+  status: undefined,
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
@@ -155,7 +160,8 @@ const getList = async () => {
     const data = await JobLogApi.getJobLogPage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -187,13 +193,15 @@ const handleExport = async () => {
     exportLoading.value = true
     const data = await JobLogApi.exportJobLog(queryParams)
     download.excel(data, '定时任务执行日志.xls')
-  } catch {
-  } finally {
+  }
+  catch {
+  }
+  finally {
     exportLoading.value = false
   }
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

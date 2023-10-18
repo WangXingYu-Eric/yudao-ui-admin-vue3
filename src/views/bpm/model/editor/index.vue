@@ -2,21 +2,21 @@
   <ContentWrap>
     <!-- 流程设计器，负责绘制流程等 -->
     <MyProcessDesigner
-      key="designer"
       v-if="xmlString !== undefined"
+      key="designer"
+      v-bind="controlForm"
+      ref="processDesigner"
       v-model="xmlString"
       :value="xmlString"
-      v-bind="controlForm"
       keyboard
-      ref="processDesigner"
+      :additional-model="controlForm.additionalModel"
       @init-finished="initModeler"
-      :additionalModel="controlForm.additionalModel"
       @save="save"
     />
     <!-- 流程属性器，负责编辑每个流程节点的属性 -->
     <MyProcessPenal
       key="penal"
-      :bpmnModeler="modeler as any"
+      :bpmn-modeler="modeler as any"
       :prefix="controlForm.prefix"
       class="process-panel"
       :model="model"
@@ -26,8 +26,10 @@
 
 <script lang="ts" setup>
 import { MyProcessDesigner, MyProcessPenal } from '@/components/bpmnProcessDesigner/package'
+
 // 自定义元素选中时的弹出菜单（修改 默认任务 为 用户任务）
 import CustomContentPadProvider from '@/components/bpmnProcessDesigner/package/designer/plugins/content-pad'
+
 // 自定义左侧菜单（修改 默认任务 为 用户任务）
 import CustomPaletteProvider from '@/components/bpmnProcessDesigner/package/designer/plugins/palette'
 import * as ModelApi from '@/api/bpm/model'
@@ -46,7 +48,7 @@ const controlForm = ref({
   labelVisible: false,
   prefix: 'flowable',
   headerButtonSize: 'mini',
-  additionalModel: [CustomContentPadProvider, CustomPaletteProvider]
+  additionalModel: [CustomContentPadProvider, CustomPaletteProvider],
 })
 const model = ref<ModelApi.ModelVO>() // 流程模型的信息
 
@@ -61,13 +63,14 @@ const initModeler = (item) => {
 const save = async (bpmnXml) => {
   const data = {
     ...model.value,
-    bpmnXml: bpmnXml // bpmnXml 只是初始化流程图，后续修改无法通过它获得
+    bpmnXml, // bpmnXml 只是初始化流程图，后续修改无法通过它获得
   } as unknown as ModelApi.ModelVO
   // 提交
   if (data.id) {
     await ModelApi.updateModel(data)
     message.success('修改成功')
-  } else {
+  }
+  else {
     await ModelApi.createModel(data)
     message.success('新增成功')
   }
@@ -92,10 +95,11 @@ onMounted(async () => {
   xmlString.value = data.bpmnXml
   model.value = {
     ...data,
-    bpmnXml: undefined // 清空 bpmnXml 属性
+    bpmnXml: undefined, // 清空 bpmnXml 属性
   }
 })
 </script>
+
 <style lang="scss">
 .process-panel__container {
   position: absolute;

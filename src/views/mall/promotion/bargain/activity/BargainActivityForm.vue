@@ -9,7 +9,9 @@
       class="mt-10px"
     >
       <template #spuId>
-        <el-button @click="spuSelectRef.open()">选择商品</el-button>
+        <el-button @click="spuSelectRef.open()">
+          选择商品
+        </el-button>
         <SpuAndSkuList
           ref="spuAndSkuListRef"
           :rule-config="ruleConfig"
@@ -47,25 +49,33 @@
       </template>
     </Form>
     <template #footer>
-      <el-button :disabled="formLoading" type="primary" @click="submitForm">确 定</el-button>
-      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button :disabled="formLoading" type="primary" @click="submitForm">
+        确 定
+      </el-button>
+      <el-button @click="dialogVisible = false">
+        取 消
+      </el-button>
     </template>
   </Dialog>
-  <SpuSelect ref="spuSelectRef" :isSelectSku="true" :radio="true" @confirm="selectSpu" />
+  <SpuSelect ref="spuSelectRef" :is-select-sku="true" :radio="true" @confirm="selectSpu" />
 </template>
+
 <script lang="ts" setup>
-import * as BargainActivityApi from '@/api/mall/promotion/bargain/bargainActivity'
-import { BargainProductVO } from '@/api/mall/promotion/bargain/bargainActivity'
+import { cloneDeep } from 'lodash-es'
 import { allSchemas, rules } from './bargainActivity.data'
-import { SpuAndSkuList, SpuProperty, SpuSelect } from '@/views/mall/promotion/components'
-import { getPropertyList, RuleConfig } from '@/views/mall/product/spu/components'
+import * as BargainActivityApi from '@/api/mall/promotion/bargain/bargainActivity'
+import type { BargainProductVO } from '@/api/mall/promotion/bargain/bargainActivity'
+import type { SpuProperty } from '@/views/mall/promotion/components'
+import { SpuAndSkuList, SpuSelect } from '@/views/mall/promotion/components'
+import type { RuleConfig } from '@/views/mall/product/spu/components'
+import { getPropertyList } from '@/views/mall/product/spu/components'
 import * as ProductSpuApi from '@/api/mall/product/spu'
 import { convertToInteger, formatToFraction } from '@/utils'
-import { cloneDeep } from 'lodash-es'
 
 defineOptions({ name: 'PromotionBargainActivityForm' })
 
-const { t } = useI18n() // 国际化
+/** 提交表单 */
+const emit = defineEmits(['success']); const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 
 const dialogVisible = ref(false) // 弹窗的是否展示
@@ -83,19 +93,19 @@ const spuPropertyList = ref<SpuProperty<BargainActivityApi.SpuExtension>[]>([])
 const ruleConfig: RuleConfig[] = [
   {
     name: 'productConfig.bargainFirstPrice',
-    rule: (arg) => arg > 0,
-    message: '商品砍价起始价格不能小于 0 ！！！'
+    rule: arg => arg > 0,
+    message: '商品砍价起始价格不能小于 0 ！！！',
   },
   {
     name: 'productConfig.bargainMinPrice',
-    rule: (arg) => arg >= 0,
-    message: '商品砍价底价不能小于 0 ！！！'
+    rule: arg => arg >= 0,
+    message: '商品砍价底价不能小于 0 ！！！',
   },
   {
     name: 'productConfig.stock',
-    rule: (arg) => arg >= 1,
-    message: '商品活动库存不能小于 1 ！！！'
-  }
+    rule: arg => arg >= 1,
+    message: '商品活动库存不能小于 1 ！！！',
+  },
 ]
 const selectSpu = (spuId: number, skuIds: number[]) => {
   formRef.value.setValues({ spuId })
@@ -107,28 +117,28 @@ const selectSpu = (spuId: number, skuIds: number[]) => {
 const getSpuDetails = async (
   spuId: number,
   skuIds: number[] | undefined,
-  products?: BargainProductVO[]
+  products?: BargainProductVO[],
 ) => {
   const spuProperties: SpuProperty<BargainActivityApi.SpuExtension>[] = []
   const res = (await ProductSpuApi.getSpuDetailList([spuId])) as BargainActivityApi.SpuExtension[]
-  if (res.length == 0) {
+  if (res.length == 0)
     return
-  }
+
   spuList.value = []
   // 因为只能选择一个
   const spu = res[0]
-  const selectSkus =
-    typeof skuIds === 'undefined' ? spu?.skus : spu?.skus?.filter((sku) => skuIds.includes(sku.id!))
+  const selectSkus
+    = typeof skuIds === 'undefined' ? spu?.skus : spu?.skus?.filter(sku => skuIds.includes(sku.id!))
   selectSkus?.forEach((sku) => {
     let config: BargainProductVO = {
       spuId: spu.id!,
       skuId: sku.id!,
       bargainFirstPrice: 1,
       bargainMinPrice: 1,
-      stock: 1
+      stock: 1,
     }
     if (typeof products !== 'undefined') {
-      const product = products.find((item) => item.skuId === sku.id)
+      const product = products.find(item => item.skuId === sku.id)
       if (product) {
         product.bargainFirstPrice = formatToFraction(product.bargainFirstPrice)
         product.bargainMinPrice = formatToFraction(product.bargainMinPrice)
@@ -141,7 +151,7 @@ const getSpuDetails = async (
   spuProperties.push({
     spuId: spu.id!,
     spuDetail: spu,
-    propertyList: getPropertyList(spu)
+    propertyList: getPropertyList(spu),
   })
   spuList.value.push(spu)
   spuPropertyList.value = spuProperties
@@ -152,7 +162,7 @@ const getSpuDetails = async (
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
   dialogVisible.value = true
-  dialogTitle.value = t('action.' + type)
+  dialogTitle.value = t(`action.${type}`)
   formType.value = type
   await resetForm()
   // 修改时，设置数据
@@ -160,7 +170,7 @@ const open = async (type: string, id?: number) => {
     formLoading.value = true
     try {
       const data = (await BargainActivityApi.getBargainActivity(
-        id
+        id,
       )) as BargainActivityApi.BargainActivityVO
       // 用户每次砍价金额分转元, 分转元
       data.randomMinPrice = formatToFraction(data.randomMinPrice)
@@ -175,12 +185,13 @@ const open = async (type: string, id?: number) => {
             skuId: data.skuId,
             bargainFirstPrice: data.bargainFirstPrice, // 砍价起始价格，单位分
             bargainMinPrice: data.bargainMinPrice, // 砍价底价
-            stock: data.stock // 活动库存
-          }
-        ]
+            stock: data.stock, // 活动库存
+          },
+        ],
       )
       formRef.value.setValues(data)
-    } finally {
+    }
+    finally {
       formLoading.value = false
     }
   }
@@ -195,13 +206,14 @@ const resetForm = async () => {
   formRef.value.getElFormRef().resetFields()
 }
 
-/** 提交表单 */
-const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
+// 定义 success 事件，用于操作成功后的回调
 const submitForm = async () => {
   // 校验表单
-  if (!formRef) return
+  if (!formRef)
+    return
   const valid = await formRef.value.getElFormRef().validate()
-  if (!valid) return
+  if (!valid)
+    return
   // 提交请求
   formLoading.value = true
   try {
@@ -219,14 +231,16 @@ const submitForm = async () => {
     if (formType.value === 'create') {
       await BargainActivityApi.createBargainActivity(formData)
       message.success(t('common.createSuccess'))
-    } else {
+    }
+    else {
       await BargainActivityApi.updateBargainActivity(formData)
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
     // 发送操作成功的事件
     emit('success')
-  } finally {
+  }
+  finally {
     formLoading.value = false
   }
 }

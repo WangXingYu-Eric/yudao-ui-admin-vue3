@@ -20,7 +20,7 @@ export const getJobPage = (params: PageParam) => {
 
 // 任务详情
 export const getJob = (id: number) => {
-  return request.get({ url: '/infra/job/get?id=' + id })
+  return request.get({ url: `/infra/job/get?id=${id}` })
 }
 
 // 新增任务
@@ -35,7 +35,7 @@ export const updateJob = (data: JobVO) => {
 
 // 删除定时任务调度
 export const deleteJob = (id: number) => {
-  return request.delete({ url: '/infra/job/delete?id=' + id })
+  return request.delete({ url: `/infra/job/delete?id=${id}` })
 }
 
 // 导出定时任务调度
@@ -47,17 +47,17 @@ export const exportJob = (params) => {
 export const updateJobStatus = (id: number, status: number) => {
   const params = {
     id,
-    status
+    status,
   }
   return request.put({ url: '/infra/job/update-status', params })
 }
 
 // 定时任务立即执行一次
 export const runJob = (id: number) => {
-  return request.put({ url: '/infra/job/trigger?id=' + id })
+  return request.put({ url: `/infra/job/trigger?id=${id}` })
 }
 
 // 获得定时任务的下 n 次执行时间
 export const getJobNextTimes = (id: number) => {
-  return request.get({ url: '/infra/job/get_next_times?id=' + id })
+  return request.get({ url: `/infra/job/get_next_times?id=${id}` })
 }

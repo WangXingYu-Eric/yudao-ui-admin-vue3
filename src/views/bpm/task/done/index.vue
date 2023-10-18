@@ -63,8 +63,12 @@
       />
       <el-table-column align="center" label="操作">
         <template #default="scope">
-          <el-button link type="primary" @click="openDetail(scope.row)">详情</el-button>
-          <el-button link type="primary" @click="handleAudit(scope.row)">流程</el-button>
+          <el-button link type="primary" @click="openDetail(scope.row)">
+            详情
+          </el-button>
+          <el-button link type="primary" @click="handleAudit(scope.row)">
+            流程
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -80,11 +84,12 @@
   <!-- 表单弹窗：详情 -->
   <TaskDetail ref="detailRef" @success="getList" />
 </template>
+
 <script lang="ts" setup>
+import TaskDetail from './TaskDetail.vue'
 import { DICT_TYPE } from '@/utils/dict'
 import { dateFormatter } from '@/utils/formatTime'
 import * as TaskApi from '@/api/bpm/task'
-import TaskDetail from './TaskDetail.vue'
 
 defineOptions({ name: 'BpmTodoTask' })
 
@@ -97,7 +102,7 @@ const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
   name: '',
-  createTime: []
+  createTime: [],
 })
 const queryFormRef = ref() // 搜索的表单
 
@@ -108,7 +113,8 @@ const getList = async () => {
     const data = await TaskApi.getDoneTaskPage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -136,12 +142,12 @@ const handleAudit = (row) => {
   push({
     name: 'BpmProcessInstanceDetail',
     query: {
-      id: row.processInstance.id
-    }
+      id: row.processInstance.id,
+    },
   })
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

@@ -15,11 +15,16 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button :disabled="formLoading" type="primary" @click="submitForm">确 定</el-button>
-      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button :disabled="formLoading" type="primary" @click="submitForm">
+        确 定
+      </el-button>
+      <el-button @click="dialogVisible = false">
+        取 消
+      </el-button>
     </template>
   </Dialog>
 </template>
+
 <script lang="ts" setup>
 import * as AreaApi from '@/api/system/area'
 
@@ -31,10 +36,10 @@ const dialogVisible = ref(false) // 弹窗的是否展示
 const formLoading = ref(false) // 表单的加载中：提交的按钮禁用
 const formData = ref({
   ip: '',
-  result: undefined
+  result: undefined,
 })
 const formRules = reactive({
-  ip: [{ required: true, message: 'IP 地址不能为空', trigger: 'blur' }]
+  ip: [{ required: true, message: 'IP 地址不能为空', trigger: 'blur' }],
 })
 const formRef = ref() // 表单 Ref
 
@@ -48,15 +53,18 @@ defineExpose({ open }) // 提供 open 方法，用于打开弹窗
 /** 提交表单 */
 const submitForm = async () => {
   // 校验表单
-  if (!formRef) return
+  if (!formRef)
+    return
   const valid = await formRef.value.validate()
-  if (!valid) return
+  if (!valid)
+    return
   // 提交请求
   formLoading.value = true
   try {
     formData.value.result = await AreaApi.getAreaByIp(formData.value.ip!.trim())
     message.success('查询成功')
-  } finally {
+  }
+  finally {
     formLoading.value = false
   }
 }
@@ -65,7 +73,7 @@ const submitForm = async () => {
 const resetForm = () => {
   formData.value = {
     ip: '',
-    result: undefined
+    result: undefined,
   }
   formRef.value?.resetFields()
 }

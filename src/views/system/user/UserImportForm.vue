@@ -3,7 +3,7 @@
     <el-upload
       ref="uploadRef"
       v-model:file-list="fileList"
-      :action="importUrl + '?updateSupport=' + updateSupport"
+      :action="`${importUrl}?updateSupport=${updateSupport}`"
       :auto-upload="false"
       :disabled="formLoading"
       :headers="uploadHeaders"
@@ -15,7 +15,9 @@
       drag
     >
       <Icon icon="ep:upload" />
-      <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+      <div class="el-upload__text">
+        将文件拖到此处，或<em>点击上传</em>
+      </div>
       <template #tip>
         <div class="el-upload__tip text-center">
           <div class="el-upload__tip">
@@ -35,11 +37,16 @@
       </template>
     </el-upload>
     <template #footer>
-      <el-button :disabled="formLoading" type="primary" @click="submitForm">确 定</el-button>
-      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button :disabled="formLoading" type="primary" @click="submitForm">
+        确 定
+      </el-button>
+      <el-button @click="dialogVisible = false">
+        取 消
+      </el-button>
     </template>
   </Dialog>
 </template>
+
 <script lang="ts" setup>
 import * as UserApi from '@/api/system/user'
 import { getAccessToken, getTenantId } from '@/utils/auth'
@@ -47,13 +54,14 @@ import download from '@/utils/download'
 
 defineOptions({ name: 'SystemUserImportForm' })
 
-const message = useMessage() // 消息弹窗
+/** 文件上传成功 */
+const emits = defineEmits(['success']); const message = useMessage() // 消息弹窗
 
 const dialogVisible = ref(false) // 弹窗的是否展示
 const formLoading = ref(false) // 表单的加载中
 const uploadRef = ref()
-const importUrl =
-  import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_URL + '/system/user/import'
+const importUrl
+  = `${import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_URL}/system/user/import`
 const uploadHeaders = ref() // 上传 Header 头
 const fileList = ref([]) // 文件列表
 const updateSupport = ref(0) // 是否更新已经存在的用户数据
@@ -73,15 +81,13 @@ const submitForm = async () => {
   }
   // 提交请求
   uploadHeaders.value = {
-    Authorization: 'Bearer ' + getAccessToken(),
-    'tenant-id': getTenantId()
+    'Authorization': `Bearer ${getAccessToken()}`,
+    'tenant-id': getTenantId(),
   }
   formLoading.value = true
   uploadRef.value!.submit()
 }
 
-/** 文件上传成功 */
-const emits = defineEmits(['success'])
 const submitFormSuccess = (response: any) => {
   if (response.code !== 0) {
     message.error(response.msg)
@@ -90,18 +96,18 @@ const submitFormSuccess = (response: any) => {
   }
   // 拼接提示语
   const data = response.data
-  let text = '上传成功数量：' + data.createUsernames.length + ';'
-  for (let username of data.createUsernames) {
-    text += '< ' + username + ' >'
-  }
-  text += '更新成功数量：' + data.updateUsernames.length + ';'
-  for (const username of data.updateUsernames) {
-    text += '< ' + username + ' >'
-  }
-  text += '更新失败数量：' + Object.keys(data.failureUsernames).length + ';'
-  for (const username in data.failureUsernames) {
-    text += '< ' + username + ': ' + data.failureUsernames[username] + ' >'
-  }
+  let text = `上传成功数量：${data.createUsernames.length};`
+  for (const username of data.createUsernames)
+    text += `< ${username} >`
+
+  text += `更新成功数量：${data.updateUsernames.length};`
+  for (const username of data.updateUsernames)
+    text += `< ${username} >`
+
+  text += `更新失败数量：${Object.keys(data.failureUsernames).length};`
+  for (const username in data.failureUsernames)
+    text += `< ${username}: ${data.failureUsernames[username]} >`
+
   message.alert(text)
   // 发送操作成功的事件
   emits('success')

@@ -116,7 +116,7 @@
           <el-button
             v-hasPermi="['system:permission:assign-role-menu']"
             link
-            preIcon="ep:basketball"
+            pre-icon="ep:basketball"
             title="菜单权限"
             type="primary"
             @click="openAssignMenuForm(scope.row)"
@@ -126,7 +126,7 @@
           <el-button
             v-hasPermi="['system:permission:assign-role-data-scope']"
             link
-            preIcon="ep:coin"
+            pre-icon="ep:coin"
             title="数据权限"
             type="primary"
             @click="openDataPermissionForm(scope.row)"
@@ -160,14 +160,15 @@
   <!-- 表单弹窗：数据权限 -->
   <RoleDataPermissionForm ref="dataPermissionFormRef" @success="getList" />
 </template>
+
 <script lang="ts" setup>
+import RoleForm from './RoleForm.vue'
+import RoleAssignMenuForm from './RoleAssignMenuForm.vue'
+import RoleDataPermissionForm from './RoleDataPermissionForm.vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
 import * as RoleApi from '@/api/system/role'
-import RoleForm from './RoleForm.vue'
-import RoleAssignMenuForm from './RoleAssignMenuForm.vue'
-import RoleDataPermissionForm from './RoleDataPermissionForm.vue'
 
 defineOptions({ name: 'SystemRole' })
 
@@ -183,7 +184,7 @@ const queryParams = reactive({
   code: '',
   name: '',
   status: undefined,
-  createTime: []
+  createTime: [],
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
@@ -195,7 +196,8 @@ const getList = async () => {
     const data = await RoleApi.getRolePage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -240,7 +242,8 @@ const handleDelete = async (id: number) => {
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
 /** 导出按钮操作 */
@@ -252,13 +255,15 @@ const handleExport = async () => {
     exportLoading.value = true
     const data = await RoleApi.exportRole(queryParams)
     download.excel(data, '角色列表.xls')
-  } catch {
-  } finally {
+  }
+  catch {
+  }
+  finally {
     exportLoading.value = false
   }
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

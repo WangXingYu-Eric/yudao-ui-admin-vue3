@@ -10,14 +10,14 @@
       <div class="menu_bottom">
         <!-- 一级菜单 -->
         <div
-          @click="menuClicked(parent, x)"
           class="menu_item"
           :class="{ active: props.activeIndex === `${x}` }"
+          @click="menuClicked(parent, x)"
         >
           <Icon icon="ep:fold" color="black" />{{ parent.name }}
         </div>
-        <!-- 以下为二级菜单-->
-        <div class="submenu" v-if="props.parentIndex === x && parent.children">
+        <!-- 以下为二级菜单 -->
+        <div v-if="props.parentIndex === x && parent.children" class="submenu">
           <draggable
             v-model="parent.children"
             item-key="id"
@@ -28,8 +28,8 @@
             <template #item="{ element: child, index: y }">
               <div class="menu_bottom subtitle">
                 <div
-                  class="menu_subItem"
                   v-if="parent.children"
+                  class="menu_subItem"
                   :class="{ active: props.activeIndex === `${x}-${y}` }"
                   @click="subMenuClicked(child, x, y)"
                 >
@@ -40,8 +40,8 @@
           </draggable>
           <!-- 二级菜单加号， 当长度 小于 5 才显示二级菜单的加号  -->
           <div
-            class="menu_bottom menu_addicon"
             v-if="!parent.children || parent.children.length < 5"
+            class="menu_bottom menu_addicon"
             @click="addSubMenu(x, parent)"
           >
             <Icon icon="ep:plus" class="plus" />
@@ -52,14 +52,14 @@
   </draggable>
 
   <!-- 一级菜单加号 -->
-  <div class="menu_bottom menu_addicon" v-if="menuList.length < 3" @click="addMenu">
+  <div v-if="menuList.length < 3" class="menu_bottom menu_addicon" @click="addMenu">
     <Icon icon="ep:plus" class="plus" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { Menu } from './types'
 import draggable from 'vuedraggable'
+import type { Menu } from './types'
 
 const props = defineProps<{
   modelValue: Menu[]
@@ -76,7 +76,7 @@ const emit = defineEmits<{
 
 const menuList = computed<Menu[]>({
   get: () => props.modelValue,
-  set: (val) => emit('update:modelValue', val)
+  set: val => emit('update:modelValue', val),
 })
 
 // 添加横向一级菜单
@@ -88,8 +88,8 @@ const addMenu = () => {
     reply: {
       // 用于存储回复内容
       type: 'text',
-      accountId: props.accountId // 保证组件里，可以使用到对应的公众号
-    }
+      accountId: props.accountId, // 保证组件里，可以使用到对应的公众号
+    },
   }
   menuList.value[index] = menu
   menuClicked(menu, index - 1)
@@ -103,8 +103,8 @@ const addSubMenu = (i: number, parent: any) => {
     reply: {
       // 用于存储回复内容
       type: 'text',
-      accountId: props.accountId // 保证组件里，可以使用到对应的公众号
-    }
+      accountId: props.accountId, // 保证组件里，可以使用到对应的公众号
+    },
   }
   parent.children[subMenuKeyLength] = addButton
   subMenuClicked(parent.children[subMenuKeyLength], i, subMenuKeyLength)
@@ -126,12 +126,11 @@ const subMenuClicked = (child: Menu, x: number, y: number) => {
  */
 const onParentDragEnd = ({ oldIndex, newIndex }) => {
   // 二级菜单没有展开，直接返回
-  if (props.activeIndex === '__MENU_NOT_SELECTED__') {
+  if (props.activeIndex === '__MENU_NOT_SELECTED__')
     return
-  }
 
   // 使用一个辅助数组来模拟菜单移动，然后找到展开的二级菜单的新下标`newParent`
-  let positions = new Array<boolean>(menuList.value.length).fill(false)
+  const positions = Array.from({ length: menuList.value.length }).fill(false)
   positions[props.parentIndex] = true
   const [out] = positions.splice(oldIndex, 1) // 移出菜单，保存到变量out
   positions.splice(newIndex, 0, out) // 把out变量插入被移出的菜单

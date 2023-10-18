@@ -167,14 +167,30 @@
         <template #header>
           <!-- TODO @puhui999：小屏幕下，会有偏移，后续看看 -->
           <div class="flex items-center" style="width: 100%">
-            <div class="ml-100px mr-200px">商品信息</div>
-            <div class="mr-60px">单价(元)/数量</div>
-            <div class="mr-60px">售后状态</div>
-            <div class="mr-60px">实付金额(元)</div>
-            <div class="mr-60px">买家/收货人</div>
-            <div class="mr-60px">配送方式</div>
-            <div class="mr-60px">订单状态</div>
-            <div class="mr-60px">操作</div>
+            <div class="ml-100px mr-200px">
+              商品信息
+            </div>
+            <div class="mr-60px">
+              单价(元)/数量
+            </div>
+            <div class="mr-60px">
+              售后状态
+            </div>
+            <div class="mr-60px">
+              实付金额(元)
+            </div>
+            <div class="mr-60px">
+              买家/收货人
+            </div>
+            <div class="mr-60px">
+              配送方式
+            </div>
+            <div class="mr-60px">
+              订单状态
+            </div>
+            <div class="mr-60px">
+              操作
+            </div>
           </div>
         </template>
         <template #default="scope">
@@ -206,7 +222,9 @@
                     :value="scope.row.payChannelCode"
                     class="mr-20px"
                   />
-                  <v-else v-else class="mr-20px">未支付</v-else>
+                  <v-else v-else class="mr-20px">
+                    未支付
+                  </v-else>
                   <span v-if="scope.row.payTime" class="mr-20px">
                     支付时间：{{ formatDate(scope.row.payTime) }}
                   </span>
@@ -247,7 +265,7 @@
             </el-table-column>
             <el-table-column align="center" label="实际支付" min-width="120" prop="payPrice">
               <template #default>
-                {{ floatToFixed2(scope.row.payPrice) + '元' }}
+                {{ `${floatToFixed2(scope.row.payPrice)}元` }}
               </template>
             </el-table-column>
             <el-table-column label="买家/收货人" min-width="160">
@@ -313,8 +331,8 @@
                         <!-- 如果是【快递】，并且【未发货】，则展示【发货】按钮 -->
                         <el-dropdown-item
                           v-if="
-                            scope.row.deliveryType === DeliveryTypeEnum.EXPRESS.type &&
-                            scope.row.status === TradeOrderStatusEnum.UNDELIVERED.status
+                            scope.row.deliveryType === DeliveryTypeEnum.EXPRESS.type
+                              && scope.row.status === TradeOrderStatusEnum.UNDELIVERED.status
                           "
                           command="delivery"
                         >
@@ -382,7 +400,7 @@ const queryParams = ref({
   deliveryType: null, // 配送方式
   logisticsId: null, // 快递公司
   pickUpStoreId: null, // 自提门店
-  pickUpVerifyCode: null // 自提核销码
+  pickUpVerifyCode: null, // 自提核销码
 })
 const queryType = reactive({ queryParam: '' }) // 订单搜索类型 queryParam
 
@@ -391,7 +409,7 @@ const dynamicSearchList = ref([
   { value: 'no', label: '订单号' },
   { value: 'userId', label: '用户UID' },
   { value: 'userNickname', label: '用户昵称' },
-  { value: 'userMobile', label: '用户电话' }
+  { value: 'userMobile', label: '用户电话' },
 ])
 /**
  * 聚合搜索切换查询对象时触发
@@ -399,12 +417,11 @@ const dynamicSearchList = ref([
  */
 const inputChangeSelect = (val: string) => {
   dynamicSearchList.value
-    .filter((item) => item.value !== val)
+    .filter(item => item.value !== val)
     ?.forEach((item1) => {
       // 清除集合搜索无用属性
-      if (queryParams.value.hasOwnProperty(item1.value)) {
+      if (queryParams.value.hasOwnProperty(item1.value))
         delete queryParams.value[item1.value]
-      }
     })
 }
 
@@ -412,11 +429,12 @@ const headerStyle = ({ row, columnIndex }: any) => {
   // 表头第一行第一列占 8
   if (columnIndex === 0) {
     row[columnIndex].colSpan = 8
-  } else {
+  }
+  else {
     // 其余的不要
     row[columnIndex].colSpan = 0
     return {
-      display: 'none'
+      display: 'none',
     }
   }
 }
@@ -430,7 +448,7 @@ interface SpanMethodProps {
 
 const spanMethod = ({ row, rowIndex, columnIndex }: SpanMethodProps) => {
   const len = list.value.find(
-    (order) => order.items?.findIndex((item) => item.id === row.id) !== -1
+    order => order.items?.findIndex(item => item.id === row.id) !== -1,
   )?.items?.length
   // 要合并的列，从零开始
   const colIndex = [3, 4, 5, 6, 7]
@@ -439,13 +457,13 @@ const spanMethod = ({ row, rowIndex, columnIndex }: SpanMethodProps) => {
     if (rowIndex !== 0) {
       return {
         rowspan: 0,
-        colspan: 0
+        colspan: 0,
       }
     }
     // 动态合并行
     return {
       rowspan: len,
-      colspan: 1
+      colspan: 1,
     }
   }
 }
@@ -457,7 +475,8 @@ const getList = async () => {
     const data = await TradeOrderApi.getOrderPage(unref(queryParams))
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -482,7 +501,7 @@ const resetQuery = () => {
     type: null, // 订单类型
     deliveryType: null, // 配送方式
     logisticsId: null, // 快递公司
-    pickUpStoreId: null // 自提门店
+    pickUpStoreId: null, // 自提门店
   }
   handleQuery()
 }
@@ -490,7 +509,7 @@ const resetQuery = () => {
 /** 商品图预览 */
 const imagePreview = (imgUrl: string) => {
   createImageViewer({
-    urlList: [imgUrl]
+    urlList: [imgUrl],
   })
 }
 
@@ -518,18 +537,19 @@ watch(
   () => currentRoute.value,
   () => {
     getList()
-  }
+  },
 )
 
 const pickUpStoreList = ref([]) // 自提门店精简列表
 const deliveryExpressList = ref([]) // 物流公司
-/** 初始化 **/
+/** 初始化 */
 onMounted(async () => {
   await getList()
   pickUpStoreList.value = await PickUpStoreApi.getListAllSimple()
   deliveryExpressList.value = await DeliveryExpressApi.getSimpleDeliveryExpressList()
 })
 </script>
+
 <style lang="scss" scoped>
 :deep(.order-table-col > .cell) {
   padding: 0;

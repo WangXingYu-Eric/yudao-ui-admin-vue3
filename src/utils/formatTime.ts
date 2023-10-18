@@ -8,7 +8,7 @@ export const defaultShortcuts = [
     text: '今天',
     value: () => {
       return new Date()
-    }
+    },
   },
   {
     text: '昨天',
@@ -16,7 +16,7 @@ export const defaultShortcuts = [
       const date = new Date()
       date.setTime(date.getTime() - 3600 * 1000 * 24)
       return [date, date]
-    }
+    },
   },
   {
     text: '最近七天',
@@ -24,7 +24,7 @@ export const defaultShortcuts = [
       const date = new Date()
       date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
       return [date, new Date()]
-    }
+    },
   },
   {
     text: '最近 30 天',
@@ -32,7 +32,7 @@ export const defaultShortcuts = [
       const date = new Date()
       date.setTime(date.getTime() - 3600 * 1000 * 24 * 30)
       return [date, new Date()]
-    }
+    },
   },
   {
     text: '本月',
@@ -40,15 +40,15 @@ export const defaultShortcuts = [
       const date = new Date()
       date.setDate(1) // 设置为当前月的第一天
       return [date, new Date()]
-    }
+    },
   },
   {
     text: '今年',
     value: () => {
       const date = new Date()
       return [new Date(`${date.getFullYear()}-01-01`), date]
-    }
-  }
+    },
+  },
 ]
 
 /**
@@ -64,13 +64,13 @@ export const defaultShortcuts = [
  */
 export function formatDate(date: dayjs.ConfigType, format?: string): string {
   // 日期不存在，则返回空
-  if (!date) {
+  if (!date)
     return ''
-  }
+
   // 日期存在，则进行格式化
-  if (format === undefined) {
+  if (format === undefined)
     format = 'YYYY-MM-DD HH:mm:ss'
-  }
+
   return dayjs(date).format(format)
 }
 
@@ -95,7 +95,8 @@ export function getWeek(dateTime: Date): number {
   let firstDay = new Date(temptTime.getFullYear(), 0, 1)
   const dayOfWeek = firstDay.getDay()
   let spendDay = 1
-  if (dayOfWeek != 0) spendDay = 7 - dayOfWeek + 1
+  if (dayOfWeek !== 0)
+    spendDay = 7 - dayOfWeek + 1
   firstDay = new Date(temptTime.getFullYear(), 0, 1 + spendDay)
   const d = Math.ceil((temptTime.valueOf() - firstDay.valueOf()) / 86400000)
   return Math.ceil(d / 7)
@@ -124,23 +125,28 @@ export function formatPast(param: string | Date, format = 'YYYY-mm-dd HH:MM:SS')
   if (time < 10000) {
     // 10秒内
     return '刚刚'
-  } else if (time < 60000 && time >= 10000) {
+  }
+  else if (time < 60000 && time >= 10000) {
     // 超过10秒少于1分钟内
     s = Math.floor(time / 1000)
     return `${s}秒前`
-  } else if (time < 3600000 && time >= 60000) {
+  }
+  else if (time < 3600000 && time >= 60000) {
     // 超过1分钟少于1小时
     s = Math.floor(time / 60000)
     return `${s}分钟前`
-  } else if (time < 86400000 && time >= 3600000) {
+  }
+  else if (time < 86400000 && time >= 3600000) {
     // 超过1小时少于24小时
     s = Math.floor(time / 3600000)
     return `${s}小时前`
-  } else if (time < 259200000 && time >= 86400000) {
+  }
+  else if (time < 259200000 && time >= 86400000) {
     // 超过1天少于3天内
     s = Math.floor(time / 86400000)
     return `${s}天前`
-  } else {
+  }
+  else {
     // 超过3天
     const date = typeof param === 'string' || 'object' ? new Date(param) : param
     return formatDate(date, format)
@@ -155,13 +161,20 @@ export function formatPast(param: string | Date, format = 'YYYY-mm-dd HH:MM:SS')
  */
 export function formatAxis(param: Date): string {
   const hour: number = new Date(param).getHours()
-  if (hour < 6) return '凌晨好'
-  else if (hour < 9) return '早上好'
-  else if (hour < 12) return '上午好'
-  else if (hour < 14) return '中午好'
-  else if (hour < 17) return '下午好'
-  else if (hour < 19) return '傍晚好'
-  else if (hour < 22) return '晚上好'
+  if (hour < 6)
+    return '凌晨好'
+  else if (hour < 9)
+    return '早上好'
+  else if (hour < 12)
+    return '上午好'
+  else if (hour < 14)
+    return '中午好'
+  else if (hour < 17)
+    return '下午好'
+  else if (hour < 19)
+    return '傍晚好'
+  else if (hour < 22)
+    return '晚上好'
   else return '夜里好'
 }
 
@@ -176,49 +189,47 @@ export function formatPast2(ms) {
   const hour = Math.floor(ms / (60 * 60 * 1000) - day * 24)
   const minute = Math.floor(ms / (60 * 1000) - day * 24 * 60 - hour * 60)
   const second = Math.floor(ms / 1000 - day * 24 * 60 * 60 - hour * 60 * 60 - minute * 60)
-  if (day > 0) {
-    return day + '天' + hour + '小时' + minute + '分钟'
-  }
-  if (hour > 0) {
-    return hour + '小时' + minute + '分钟'
-  }
-  if (minute > 0) {
-    return minute + '分钟'
-  }
-  if (second > 0) {
-    return second + '秒'
-  } else {
-    return 0 + '秒'
-  }
+  if (day > 0)
+    return `${day}天${hour}小时${minute}分钟`
+
+  if (hour > 0)
+    return `${hour}小时${minute}分钟`
+
+  if (minute > 0)
+    return `${minute}分钟`
+
+  if (second > 0)
+    return `${second}秒`
+
+  else
+    return `${0}秒`
 }
 
 /**
  * element plus 的时间 Formatter 实现，使用 YYYY-MM-DD HH:mm:ss 格式
  *
- * @param row 行数据
- * @param column 字段
+ * @param _row 行数据
+ * @param _column 字段
  * @param cellValue 字段值
  */
-// @ts-ignore
-export const dateFormatter = (row, column, cellValue) => {
-  if (!cellValue) {
+export const dateFormatter = (_row, _column, cellValue) => {
+  if (!cellValue)
     return
-  }
+
   return formatDate(cellValue)
 }
 
 /**
  * element plus 的时间 Formatter 实现，使用 YYYY-MM-DD 格式
  *
- * @param row 行数据
- * @param column 字段
+ * @param _row 行数据
+ * @param _column 字段
  * @param cellValue 字段值
  */
-// @ts-ignore
-export const dateFormatter2 = (row, column, cellValue) => {
-  if (!cellValue) {
+export const dateFormatter2 = (_row, _column, cellValue) => {
+  if (!cellValue)
     return
-  }
+
   return formatDate(cellValue, 'YYYY-MM-DD')
 }
 
@@ -267,9 +278,9 @@ export function addTime(param1: Date, param2: number) {
  * @param param 日期
  */
 export function convertDate(param: Date | string) {
-  if (typeof param === 'string') {
+  if (typeof param === 'string')
     return new Date(param)
-  }
+
   return param
 }
 
@@ -279,11 +290,12 @@ export function convertDate(param: Date | string) {
  * @param b 日期 B
  */
 export function isSameDay(a: dayjs.ConfigType, b: dayjs.ConfigType): boolean {
-  if (!a || !b) return false
+  if (!a || !b)
+    return false
 
   const aa = dayjs(a)
   const bb = dayjs(b)
-  return aa.year() == bb.year() && aa.month() == bb.month() && aa.day() == bb.day()
+  return aa.year() === bb.year() && aa.month() === bb.month() && aa.day() === bb.day()
 }
 
 /**
@@ -293,7 +305,7 @@ export function isSameDay(a: dayjs.ConfigType, b: dayjs.ConfigType): boolean {
  */
 export function getDayRange(
   date: dayjs.ConfigType,
-  days: number
+  days: number,
 ): [dayjs.ConfigType, dayjs.ConfigType] {
   const day = dayjs(date).add(days, 'd')
   return getDateRange(day, day)
@@ -333,7 +345,7 @@ export function getLast1Year(): [dayjs.ConfigType, dayjs.ConfigType] {
  */
 export function getDateRange(
   beginDate: dayjs.ConfigType,
-  endDate: dayjs.ConfigType
+  endDate: dayjs.ConfigType,
 ): [dayjs.ConfigType, dayjs.ConfigType] {
   return [dayjs(beginDate).startOf('d'), dayjs(endDate).endOf('d')]
 }

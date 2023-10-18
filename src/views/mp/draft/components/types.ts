@@ -32,7 +32,7 @@ const createEmptyNewsItem = (): NewsItem => {
     contentSourceUrl: '',
     needOpenComment: '',
     onlyFansCanComment: '',
-    thumbUrl: ''
+    thumbUrl: '',
   }
 }
 

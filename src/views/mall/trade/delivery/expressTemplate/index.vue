@@ -2,9 +2,9 @@
   <!-- 搜索工作栏 -->
   <ContentWrap>
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="100px"
     >
@@ -13,8 +13,8 @@
           v-model="queryParams.name"
           placeholder="请输入模板名称"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="计费方式" prop="chargeMode">
@@ -33,13 +33,17 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        <el-button @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" /> 搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon icon="ep:refresh" class="mr-5px" /> 重置
+        </el-button>
         <el-button
+          v-hasPermi="['trade:delivery:express-template:create']"
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['trade:delivery:express-template:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" />
           新增
@@ -69,18 +73,18 @@
       <el-table-column label="操作" align="center">
         <template #default="scope">
           <el-button
+            v-hasPermi="['trade:delivery:express-template:update']"
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['trade:delivery:express-template:update']"
           >
             编辑
           </el-button>
           <el-button
+            v-hasPermi="['trade:delivery:express-template:delete']"
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
-            v-hasPermi="['trade:delivery:express-template:delete']"
           >
             删除
           </el-button>
@@ -92,11 +96,12 @@
   <!-- 表单弹窗：添加/修改 -->
   <ExpressTemplateForm ref="formRef" @success="getList" />
 </template>
+
 <script lang="ts" setup>
+import ExpressTemplateForm from './ExpressTemplateForm.vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { dateFormatter } from '@/utils/formatTime'
 import * as DeliveryExpressTemplateApi from '@/api/mall/trade/delivery/expressTemplate'
-import ExpressTemplateForm from './ExpressTemplateForm.vue'
 
 defineOptions({ name: 'DeliveryExpressTemplate' })
 
@@ -109,7 +114,7 @@ const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
   name: '',
-  chargeMode: undefined
+  chargeMode: undefined,
 })
 const queryFormRef = ref() // 搜索的表单
 
@@ -120,7 +125,8 @@ const getList = async () => {
     const data = await DeliveryExpressTemplateApi.getDeliveryExpressTemplatePage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -153,10 +159,11 @@ const handleDelete = async (id: number) => {
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

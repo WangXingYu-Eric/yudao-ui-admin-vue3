@@ -1,12 +1,12 @@
 <template>
   <div>
-    <Dialog v-model="dialogVisible" :title="dialogTitle" @closed="close" width="800px">
+    <Dialog v-model="dialogVisible" :title="dialogTitle" width="800px" @closed="close">
       <el-form
         ref="formRef"
+        v-loading="formLoading"
         :model="formData"
         :rules="formRules"
         label-width="100px"
-        v-loading="formLoading"
       >
         <el-form-item label-width="180px" label="渠道状态" prop="status">
           <el-radio-group v-model="formData.status">
@@ -24,12 +24,17 @@
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button :disabled="formLoading" type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button :disabled="formLoading" type="primary" @click="submitForm">
+          确 定
+        </el-button>
+        <el-button @click="dialogVisible = false">
+          取 消
+        </el-button>
       </template>
     </Dialog>
   </div>
 </template>
+
 <script lang="ts" setup>
 import { CommonStatusEnum } from '@/utils/constants'
 import { DICT_TYPE, getDictOptions } from '@/utils/dict'
@@ -37,7 +42,10 @@ import * as ChannelApi from '@/api/pay/channel'
 
 defineOptions({ name: 'MockChannelForm' })
 
-const { t } = useI18n() // 国际化
+// 提供 open 方法，用于打开弹窗
+
+/** 提交表单 */
+const emit = defineEmits(['success']); const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 
 const dialogVisible = ref(false) // 弹窗的是否展示
@@ -50,11 +58,11 @@ const formData = ref<any>({
   feeRate: 0,
   remark: '',
   config: {
-    name: 'mock-conf'
-  }
+    name: 'mock-conf',
+  },
 })
 const formRules = {
-  status: [{ required: true, message: '渠道状态不能为空', trigger: 'blur' }]
+  status: [{ required: true, message: '渠道状态不能为空', trigger: 'blur' }],
 }
 const formRef = ref() // 表单 Ref
 
@@ -72,19 +80,19 @@ const open = async (appId, code) => {
       formData.value.config = JSON.parse(data.config)
     }
     dialogTitle.value = !formData.value.id ? '创建支付渠道' : '编辑支付渠道'
-  } finally {
+  }
+  finally {
     formLoading.value = false
   }
 }
-defineExpose({ open }) // 提供 open 方法，用于打开弹窗
-
-/** 提交表单 */
-const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
+defineExpose({ open }) // 定义 success 事件，用于操作成功后的回调
 const submitForm = async () => {
   // 校验表单
-  if (!formRef) return
+  if (!formRef)
+    return
   const valid = await formRef.value.validate()
-  if (!valid) return
+  if (!valid)
+    return
   // 提交请求
   formLoading.value = true
   try {
@@ -93,14 +101,16 @@ const submitForm = async () => {
     if (!data.id) {
       await ChannelApi.createChannel(data)
       message.success(t('common.createSuccess'))
-    } else {
+    }
+    else {
       await ChannelApi.updateChannel(data)
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
     // 发送操作成功的事件
     emit('success')
-  } finally {
+  }
+  finally {
     formLoading.value = false
   }
 }
@@ -108,14 +118,14 @@ const submitForm = async () => {
 /** 重置表单 */
 const resetForm = (appId, code) => {
   formData.value = {
-    appId: appId,
-    code: code,
+    appId,
+    code,
     status: CommonStatusEnum.ENABLE,
     remark: '',
     feeRate: 0,
     config: {
-      name: 'mock-conf'
-    }
+      name: 'mock-conf',
+    },
   }
   formRef.value?.resetFields()
 }

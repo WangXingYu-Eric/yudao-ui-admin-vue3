@@ -4,9 +4,9 @@
   <!-- 搜索工作栏 -->
   <ContentWrap>
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="68px"
     >
@@ -15,14 +15,18 @@
           v-model="queryParams.name"
           placeholder="请输入名称"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" />搜索</el-button>
-        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" />重置</el-button>
-        <el-button type="primary" @click="openForm('create')" v-hasPermi="['mp:account:create']">
+        <el-button @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" />搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon icon="ep:refresh" class="mr-5px" />重置
+        </el-button>
+        <el-button v-hasPermi="['mp:account:create']" type="primary" @click="openForm('create')">
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
       </el-form-item>
@@ -37,7 +41,7 @@
       <el-table-column label="appId" align="center" prop="appId" width="180" />
       <el-table-column label="服务器地址(URL)" align="center" prop="appId" width="360">
         <template #default="scope">
-          {{ 'http://服务端地址/mp/open/' + scope.row.appId }}
+          {{ `http://服务端地址/mp/open/${scope.row.appId}` }}
         </template>
       </el-table-column>
       <el-table-column label="二维码" align="center" prop="qrCodeUrl">
@@ -47,12 +51,12 @@
             :src="scope.row.qrCodeUrl"
             alt="二维码"
             style="display: inline-block; height: 100px"
-          />
+          >
           <el-button
+            v-hasPermi="['mp:account:qr-code']"
             link
             type="primary"
             @click="handleGenerateQrCode(scope.row)"
-            v-hasPermi="['mp:account:qr-code']"
           >
             生成二维码
           </el-button>
@@ -62,26 +66,26 @@
       <el-table-column label="操作" align="center">
         <template #default="scope">
           <el-button
+            v-hasPermi="['mp:account:update']"
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['mp:account:update']"
           >
             编辑
           </el-button>
           <el-button
+            v-hasPermi="['mp:account:delete']"
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
-            v-hasPermi="['mp:account:delete']"
           >
             删除
           </el-button>
           <el-button
+            v-hasPermi="['mp:account:clear-quota']"
             link
             type="danger"
             @click="handleCleanQuota(scope.row)"
-            v-hasPermi="['mp:account:clear-quota']"
           >
             清空 API 配额
           </el-button>
@@ -90,9 +94,9 @@
     </el-table>
     <!-- 分页 -->
     <Pagination
-      :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
+      :total="total"
       @pagination="getList"
     />
   </ContentWrap>
@@ -100,9 +104,10 @@
   <!-- 对话框(添加 / 修改) -->
   <AccountForm ref="formRef" @success="getList" />
 </template>
+
 <script lang="ts" setup>
-import * as AccountApi from '@/api/mp/account'
 import AccountForm from './AccountForm.vue'
+import * as AccountApi from '@/api/mp/account'
 
 defineOptions({ name: 'MpAccount' })
 
@@ -117,7 +122,7 @@ const queryParams = reactive({
   pageSize: 10,
   name: null,
   account: null,
-  appId: null
+  appId: null,
 })
 const queryFormRef = ref() // 搜索的表单
 
@@ -128,7 +133,8 @@ const getList = async () => {
     const data = await AccountApi.getAccountPage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -161,34 +167,37 @@ const handleDelete = async (id) => {
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
 /** 生成二维码的按钮操作 */
 const handleGenerateQrCode = async (row) => {
   try {
     // 生成二维码的二次确认
-    await message.confirm('是否确认生成公众号账号编号为"' + row.name + '"的二维码?')
+    await message.confirm(`是否确认生成公众号账号编号为"${row.name}"的二维码?`)
     // 发起生成二维码
     await AccountApi.generateAccountQrCode(row.id)
     message.success('生成二维码成功')
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
 /** 清空二维码 API 配额的按钮操作 */
 const handleCleanQuota = async (row) => {
   try {
     // 清空 API 配额的二次确认
-    await message.confirm('是否确认清空生成公众号账号编号为"' + row.name + '"的 API 配额?')
+    await message.confirm(`是否确认清空生成公众号账号编号为"${row.name}"的 API 配额?`)
     // 发起清空 API 配额
     await AccountApi.clearAccountQuota(row.id)
     message.success('清空 API 配额成功')
-  } catch {}
+  }
+  catch {}
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

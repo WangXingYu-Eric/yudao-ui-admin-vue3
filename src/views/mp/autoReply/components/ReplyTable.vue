@@ -1,22 +1,22 @@
 <template>
   <el-table v-loading="props.loading" :data="props.list">
     <el-table-column
+      v-if="msgType === MsgType.Message"
       label="请求消息类型"
       align="center"
       prop="requestMessageType"
-      v-if="msgType === MsgType.Message"
     />
     <el-table-column
+      v-if="msgType === MsgType.Keyword"
       label="关键词"
       align="center"
       prop="requestKeyword"
-      v-if="msgType === MsgType.Keyword"
     />
     <el-table-column
+      v-if="msgType === MsgType.Keyword"
       label="匹配类型"
       align="center"
       prop="requestMatch"
-      v-if="msgType === MsgType.Keyword"
     >
       <template #default="scope">
         <dict-tag :type="DICT_TYPE.MP_AUTO_REPLY_REQUEST_MATCH" :value="scope.row.requestMatch" />
@@ -29,19 +29,21 @@
     </el-table-column>
     <el-table-column label="回复内容" align="center">
       <template #default="scope">
-        <div v-if="scope.row.responseMessageType === 'text'">{{ scope.row.responseContent }}</div>
+        <div v-if="scope.row.responseMessageType === 'text'">
+          {{ scope.row.responseContent }}
+        </div>
         <div v-else-if="scope.row.responseMessageType === 'voice'">
           <WxVoicePlayer v-if="scope.row.responseMediaUrl" :url="scope.row.responseMediaUrl" />
         </div>
         <div v-else-if="scope.row.responseMessageType === 'image'">
           <a target="_blank" :href="scope.row.responseMediaUrl">
-            <img :src="scope.row.responseMediaUrl" style="width: 100px" />
+            <img :src="scope.row.responseMediaUrl" style="width: 100px">
           </a>
         </div>
         <div
           v-else-if="
-            scope.row.responseMessageType === 'video' ||
-            scope.row.responseMessageType === 'shortvideo'
+            scope.row.responseMessageType === 'video'
+              || scope.row.responseMessageType === 'shortvideo'
           "
         >
           <WxVideoPlayer
@@ -74,18 +76,18 @@
     <el-table-column label="操作" align="center">
       <template #default="scope">
         <el-button
+          v-hasPermi="['mp:auto-reply:update']"
           type="primary"
           link
           @click="emit('on-update', scope.row.id)"
-          v-hasPermi="['mp:auto-reply:update']"
         >
           修改
         </el-button>
         <el-button
+          v-hasPermi="['mp:auto-reply:delete']"
           type="danger"
           link
           @click="emit('on-delete', scope.row.id)"
-          v-hasPermi="['mp:auto-reply:delete']"
         >
           删除
         </el-button>
@@ -93,14 +95,15 @@
     </el-table-column>
   </el-table>
 </template>
+
 <script lang="ts" setup>
+import { MsgType } from './types'
 import WxVideoPlayer from '@/views/mp/components/wx-video-play'
 import WxVoicePlayer from '@/views/mp/components/wx-voice-play'
 import WxMusic from '@/views/mp/components/wx-music'
 import WxNews from '@/views/mp/components/wx-news'
 import { dateFormatter } from '@/utils/formatTime'
 import { DICT_TYPE } from '@/utils/dict'
-import { MsgType } from './types'
 
 const props = defineProps<{
   loading: boolean

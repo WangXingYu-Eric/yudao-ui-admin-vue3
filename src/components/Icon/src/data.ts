@@ -280,7 +280,7 @@ export const IconJson = {
     'watermelon',
     'wind-power',
     'zoom-in',
-    'zoom-out'
+    'zoom-out',
   ],
   'fa:': [
     '500px',
@@ -931,7 +931,7 @@ export const IconJson = {
     'yoast',
     'youtube',
     'youtube-play',
-    'youtube-square'
+    'youtube-square',
   ],
   'fa-solid:': [
     'abacus',
@@ -1956,6 +1956,6 @@ export const IconJson = {
     'wrench',
     'x-ray',
     'yen-sign',
-    'yin-yang'
-  ]
+    'yin-yang',
+  ],
 }

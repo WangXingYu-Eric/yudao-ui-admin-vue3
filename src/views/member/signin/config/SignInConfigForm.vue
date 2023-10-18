@@ -1,11 +1,11 @@
 <template>
-  <Dialog :title="dialogTitle" v-model="dialogVisible">
+  <Dialog v-model="dialogVisible" :title="dialogTitle">
     <el-form
       ref="formRef"
+      v-loading="formLoading"
       :model="formData"
       :rules="formRules"
       label-width="100px"
-      v-loading="formLoading"
     >
       <el-form-item label="签到天数" prop="day">
         <el-input-number v-model="formData.day" :min="1" :max="7" :precision="0" />
@@ -32,17 +32,25 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button @click="submitForm" type="primary" :disabled="formLoading">确 定</el-button>
-      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button type="primary" :disabled="formLoading" @click="submitForm">
+        确 定
+      </el-button>
+      <el-button @click="dialogVisible = false">
+        取 消
+      </el-button>
     </template>
   </Dialog>
 </template>
+
 <script lang="ts" setup>
 import * as SignInConfigApi from '@/api/member/signin/config'
 import { CommonStatusEnum } from '@/utils/constants'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 
-const { t } = useI18n() // 国际化
+// 提供 open 方法，用于打开弹窗
+
+/** 提交表单 */
+const emit = defineEmits(['success']); const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 
 const dialogVisible = ref(false) // 弹窗的是否展示
@@ -66,19 +74,19 @@ const formRules = reactive({
   day: [{ required: true, message: '签到天数不能空', trigger: 'blur' }],
   point: [
     { required: true, message: '奖励积分不能空', trigger: 'blur' },
-    { validator: awardValidator, trigger: 'blur' }
+    { validator: awardValidator, trigger: 'blur' },
   ],
   experience: [
     { required: true, message: '奖励经验不能空', trigger: 'blur' },
-    { validator: awardValidator, trigger: 'blur' }
-  ]
+    { validator: awardValidator, trigger: 'blur' },
+  ],
 })
 const formRef = ref() // 表单 Ref
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
   dialogVisible.value = true
-  dialogTitle.value = t('action.' + type)
+  dialogTitle.value = t(`action.${type}`)
   formType.value = type
   resetForm()
   // 修改时，设置数据
@@ -86,34 +94,36 @@ const open = async (type: string, id?: number) => {
     formLoading.value = true
     try {
       formData.value = await SignInConfigApi.getSignInConfig(id)
-    } finally {
+    }
+    finally {
       formLoading.value = false
     }
   }
 }
-defineExpose({ open }) // 提供 open 方法，用于打开弹窗
-
-/** 提交表单 */
-const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
+defineExpose({ open }) // 定义 success 事件，用于操作成功后的回调
 const submitForm = async () => {
   // 校验表单
-  if (!formRef) return
+  if (!formRef)
+    return
   const valid = await formRef.value.validate()
-  if (!valid) return
+  if (!valid)
+    return
   // 提交请求
   formLoading.value = true
   try {
     if (formType.value === 'create') {
       await SignInConfigApi.createSignInConfig(formData.value)
       message.success(t('common.createSuccess'))
-    } else {
+    }
+    else {
       await SignInConfigApi.updateSignInConfig(formData.value)
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
     // 发送操作成功的事件
     emit('success')
-  } finally {
+  }
+  finally {
     formLoading.value = false
   }
 }
@@ -125,7 +135,7 @@ const resetForm = () => {
     day: undefined,
     point: 0,
     experience: 0,
-    status: CommonStatusEnum.ENABLE
+    status: CommonStatusEnum.ENABLE,
   }
   formRef.value?.resetFields()
 }

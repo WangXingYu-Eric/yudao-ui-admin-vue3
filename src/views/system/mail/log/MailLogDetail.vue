@@ -3,14 +3,15 @@
     <Descriptions :data="detailData" :schema="allSchemas.detailSchema">
       <!-- 展示 HTML 内容 -->
       <template #templateContent="{ row }">
-        <div v-dompurify-html="row.templateContent"></div>
+        <div v-dompurify-html="row.templateContent" />
       </template>
     </Descriptions>
   </Dialog>
 </template>
+
 <script lang="ts" setup>
-import * as MailLogApi from '@/api/system/mail/log'
 import { allSchemas } from './log.data'
+import * as MailLogApi from '@/api/system/mail/log'
 
 defineOptions({ name: 'SystemMailLogDetail' })
 
@@ -25,7 +26,8 @@ const open = async (id: number) => {
   detailLoading.value = true
   try {
     detailData.value = await MailLogApi.getMailLog(id)
-  } finally {
+  }
+  finally {
     detailLoading.value = false
   }
 }

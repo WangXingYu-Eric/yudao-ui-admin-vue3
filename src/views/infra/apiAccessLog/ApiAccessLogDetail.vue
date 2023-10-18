@@ -29,11 +29,15 @@
       <el-descriptions-item label="请求时间">
         {{ formatDate(detailData.beginTime) }} ~ {{ formatDate(detailData.endTime) }}
       </el-descriptions-item>
-      <el-descriptions-item label="请求耗时">{{ detailData.duration }} ms</el-descriptions-item>
+      <el-descriptions-item label="请求耗时">
+        {{ detailData.duration }} ms
+      </el-descriptions-item>
       <el-descriptions-item label="操作结果">
-        <div v-if="detailData.resultCode === 0">正常</div>
-        <div v-else-if="detailData.resultCode > 0"
-          >失败 | {{ detailData.resultCode }} | {{ detailData.resultMsg }}
+        <div v-if="detailData.resultCode === 0">
+          正常
+        </div>
+        <div v-else-if="detailData.resultCode > 0">
+          失败 | {{ detailData.resultCode }} | {{ detailData.resultMsg }}
         </div>
       </el-descriptions-item>
     </el-descriptions>
@@ -43,7 +47,7 @@
 <script lang="ts" setup>
 import { DICT_TYPE } from '@/utils/dict'
 import { formatDate } from '@/utils/formatTime'
-import * as ApiAccessLog from '@/api/infra/apiAccessLog'
+import type * as ApiAccessLog from '@/api/infra/apiAccessLog'
 
 defineOptions({ name: 'ApiAccessLogDetail' })
 
@@ -58,7 +62,8 @@ const open = async (data: ApiAccessLog.ApiAccessLogVO) => {
   detailLoading.value = true
   try {
     detailData.value = data
-  } finally {
+  }
+  finally {
     detailLoading.value = false
   }
 }

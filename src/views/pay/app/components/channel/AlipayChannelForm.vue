@@ -1,16 +1,18 @@
 <template>
   <div>
-    <Dialog v-model="dialogVisible" :title="dialogTitle" @closed="close" width="830px">
+    <Dialog v-model="dialogVisible" :title="dialogTitle" width="830px" @closed="close">
       <el-form
         ref="formRef"
-        :model="formData"
-        :formRules="formRules"
-        label-width="100px"
         v-loading="formLoading"
+        :model="formData"
+        :form-rules="formRules"
+        label-width="100px"
       >
         <el-form-item label-width="180px" label="渠道费率" prop="feeRate">
           <el-input v-model="formData.feeRate" placeholder="请输入渠道费率" clearable>
-            <template #append>%</template>
+            <template #append>
+              %
+            </template>
           </el-input>
         </el-form-item>
         <el-form-item label-width="180px" label="开放平台 APPID" prop="config.appId">
@@ -29,7 +31,9 @@
         </el-form-item>
         <el-form-item label-width="180px" label="网关地址" prop="config.serverUrl">
           <el-radio-group v-model="formData.config.serverUrl">
-            <el-radio label="https://openapi.alipay.com/gateway.do">线上环境</el-radio>
+            <el-radio label="https://openapi.alipay.com/gateway.do">
+              线上环境
+            </el-radio>
             <el-radio label="https://openapi-sandbox.dl.alipaydev.com/gateway.do">
               沙箱环境
             </el-radio>
@@ -37,21 +41,27 @@
         </el-form-item>
         <el-form-item label-width="180px" label="算法类型" prop="config.signType">
           <el-radio-group v-model="formData.config.signType">
-            <el-radio key="RSA2" label="RSA2">RSA2</el-radio>
+            <el-radio key="RSA2" label="RSA2">
+              RSA2
+            </el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label-width="180px" label="公钥类型" prop="config.mode">
           <el-radio-group v-model="formData.config.mode">
-            <el-radio key="公钥模式" :label="1">公钥模式</el-radio>
-            <el-radio key="证书模式" :label="2">证书模式</el-radio>
+            <el-radio key="公钥模式" :label="1">
+              公钥模式
+            </el-radio>
+            <el-radio key="证书模式" :label="2">
+              证书模式
+            </el-radio>
           </el-radio-group>
         </el-form-item>
         <div v-if="formData.config.mode === 1">
           <el-form-item label-width="180px" label="应用私钥" prop="config.privateKey">
             <el-input
+              v-model="formData.config.privateKey"
               type="textarea"
               :autosize="{ minRows: 8, maxRows: 8 }"
-              v-model="formData.config.privateKey"
               placeholder="请输入应用私钥"
               clearable
               :style="{ width: '100%' }"
@@ -59,9 +69,9 @@
           </el-form-item>
           <el-form-item label-width="180px" label="支付宝公钥" prop="config.alipayPublicKey">
             <el-input
+              v-model="formData.config.alipayPublicKey"
               type="textarea"
               :autosize="{ minRows: 8, maxRows: 8 }"
-              v-model="formData.config.alipayPublicKey"
               placeholder="请输入支付宝公钥"
               clearable
               :style="{ width: '100%' }"
@@ -81,8 +91,8 @@
           </el-form-item>
           <el-form-item label-width="180px" label="">
             <el-upload
-              action=""
               ref="privateKeyContentFile"
+              action=""
               :limit="1"
               :accept="fileAccept"
               :http-request="appCertUpload"
@@ -151,12 +161,17 @@
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button :disabled="formLoading" type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button :disabled="formLoading" type="primary" @click="submitForm">
+          确 定
+        </el-button>
+        <el-button @click="dialogVisible = false">
+          取 消
+        </el-button>
       </template>
     </Dialog>
   </div>
 </template>
+
 <script lang="ts" setup>
 import { CommonStatusEnum } from '@/utils/constants'
 import { DICT_TYPE, getDictOptions } from '@/utils/dict'
@@ -164,7 +179,10 @@ import * as ChannelApi from '@/api/pay/channel'
 
 defineOptions({ name: 'AlipayChannelForm' })
 
-const { t } = useI18n() // 国际化
+// 提供 open 方法，用于打开弹窗
+
+/** 提交表单 */
+const emit = defineEmits(['success']); const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 
 const dialogVisible = ref(false) // 弹窗的是否展示
@@ -185,25 +203,25 @@ const formData = ref<any>({
     alipayPublicKey: '',
     appCertContent: '',
     alipayPublicCertContent: '',
-    rootCertContent: ''
-  }
+    rootCertContent: '',
+  },
 })
 const formRules = {
-  feeRate: [{ required: true, message: '请输入渠道费率', trigger: 'blur' }],
-  status: [{ required: true, message: '渠道状态不能为空', trigger: 'blur' }],
+  'feeRate': [{ required: true, message: '请输入渠道费率', trigger: 'blur' }],
+  'status': [{ required: true, message: '渠道状态不能为空', trigger: 'blur' }],
   'config.appId': [{ required: true, message: '请输入开放平台上创建的应用的 ID', trigger: 'blur' }],
   'config.serverUrl': [{ required: true, message: '请传入网关地址', trigger: 'blur' }],
   'config.signType': [{ required: true, message: '请传入签名算法类型', trigger: 'blur' }],
   'config.mode': [{ required: true, message: '公钥类型不能为空', trigger: 'blur' }],
   'config.privateKey': [{ required: true, message: '请输入商户私钥', trigger: 'blur' }],
   'config.alipayPublicKey': [
-    { required: true, message: '请输入支付宝公钥字符串', trigger: 'blur' }
+    { required: true, message: '请输入支付宝公钥字符串', trigger: 'blur' },
   ],
   'config.appCertContent': [{ required: true, message: '请上传商户公钥应用证书', trigger: 'blur' }],
   'config.alipayPublicCertContent': [
-    { required: true, message: '请上传支付宝公钥证书', trigger: 'blur' }
+    { required: true, message: '请上传支付宝公钥证书', trigger: 'blur' },
   ],
-  'config.rootCertContent': [{ required: true, message: '请上传指定根证书', trigger: 'blur' }]
+  'config.rootCertContent': [{ required: true, message: '请上传指定根证书', trigger: 'blur' }],
 }
 const fileAccept = '.crt'
 const formRef = ref() // 表单 Ref
@@ -221,19 +239,19 @@ const open = async (appId, code) => {
       formData.value.config = JSON.parse(data.config)
     }
     dialogTitle.value = !formData.value.id ? '创建支付渠道' : '编辑支付渠道'
-  } finally {
+  }
+  finally {
     formLoading.value = false
   }
 }
-defineExpose({ open }) // 提供 open 方法，用于打开弹窗
-
-/** 提交表单 */
-const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
+defineExpose({ open }) // 定义 success 事件，用于操作成功后的回调
 const submitForm = async () => {
   // 校验表单
-  if (!formRef) return
+  if (!formRef)
+    return
   const valid = await formRef.value.validate()
-  if (!valid) return
+  if (!valid)
+    return
   // 提交请求
   formLoading.value = true
   try {
@@ -242,14 +260,16 @@ const submitForm = async () => {
     if (!data.id) {
       await ChannelApi.createChannel(data)
       message.success(t('common.createSuccess'))
-    } else {
+    }
+    else {
       await ChannelApi.updateChannel(data)
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
     // 发送操作成功的事件
     emit('success')
-  } finally {
+  }
+  finally {
     formLoading.value = false
   }
 }
@@ -257,8 +277,8 @@ const submitForm = async () => {
 /** 重置表单 */
 const resetForm = (appId, code) => {
   formData.value = {
-    appId: appId,
-    code: code,
+    appId,
+    code,
     status: CommonStatusEnum.ENABLE,
     remark: '',
     feeRate: null,
@@ -271,22 +291,22 @@ const resetForm = (appId, code) => {
       alipayPublicKey: '',
       appCertContent: '',
       alipayPublicCertContent: '',
-      rootCertContent: ''
-    }
+      rootCertContent: '',
+    },
   }
   formRef.value?.resetFields()
 }
 
 const fileBeforeUpload = (file) => {
-  let format = '.' + file.name.split('.')[1]
+  const format = `.${file.name.split('.')[1]}`
   if (format !== fileAccept) {
     message.error(`请上传指定格式"${fileAccept}"文件`)
     return false
   }
-  let isRightSize = file.size / 1024 / 1024 < 2
-  if (!isRightSize) {
+  const isRightSize = file.size / 1024 / 1024 < 2
+  if (!isRightSize)
     message.error('文件大小超过 2MB')
-  }
+
   return isRightSize
 }
 

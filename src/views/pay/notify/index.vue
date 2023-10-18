@@ -4,9 +4,9 @@
   <!-- 搜索工作栏 -->
   <ContentWrap>
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="100px"
     >
@@ -41,8 +41,8 @@
           v-model="queryParams.dataId"
           placeholder="请输入关联编号"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="通知状态" prop="status">
@@ -65,8 +65,8 @@
           v-model="queryParams.merchantOrderId"
           placeholder="请输入商户订单编号"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="创建时间" prop="createTime">
@@ -83,8 +83,12 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        <el-button @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" /> 搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon icon="ep:refresh" class="mr-5px" /> 重置
+        </el-button>
       </el-form-item>
     </el-form>
   </ContentWrap>
@@ -130,10 +134,10 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button
+            v-hasPermi="['pay:notify:query']"
             link
             type="primary"
             @click="openDetail(scope.row.id)"
-            v-hasPermi="['pay:notify:query']"
           >
             查看详情
           </el-button>
@@ -142,9 +146,9 @@
     </el-table>
     <!-- 分页组件 -->
     <Pagination
-      :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
+      :total="total"
       @pagination="getList"
     />
   </ContentWrap>
@@ -154,11 +158,11 @@
 </template>
 
 <script lang="ts" setup>
+import NotifyDetail from './NotifyDetail.vue'
 import * as PayNotifyApi from '@/api/pay/notify'
 import * as PayAppApi from '@/api/pay/app'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { dateFormatter } from '@/utils/formatTime'
-import NotifyDetail from './NotifyDetail.vue'
 
 defineOptions({ name: 'PayNotify' })
 
@@ -173,7 +177,7 @@ const queryParams = ref({
   dataId: null,
   status: null,
   merchantOrderId: null,
-  createTime: []
+  createTime: [],
 })
 const queryFormRef = ref() // 搜索的表单
 const appList = ref([]) // 支付应用列表集合
@@ -181,7 +185,7 @@ const appList = ref([]) // 支付应用列表集合
 const open = ref(false)
 // 通知详情
 const notifyDetail = ref<any>({
-  logs: []
+  logs: [],
 })
 
 /** 搜索按钮操作 */
@@ -198,7 +202,8 @@ const getList = async () => {
     list.value = data.list
     total.value = data.total
     loading.value = false
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -215,7 +220,7 @@ const openDetail = (id: number) => {
   detailRef.value.open(id)
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(async () => {
   await getList()
   // 获得筛选项

@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia'
-import { store } from '../index'
-import { setCssVar, humpToUnderline } from '@/utils'
 import { ElMessage } from 'element-plus'
+import { store } from '../index'
+import { humpToUnderline, setCssVar } from '@/utils'
 import { CACHE_KEY, useCache } from '@/hooks/web/useCache'
-import { ElementPlusSize } from '@/types/elementPlus'
-import { LayoutType } from '@/types/layout'
-import { ThemeTypes } from '@/types/theme'
+import type { ElementPlusSize } from '@/types/elementPlus'
+import type { LayoutType } from '@/types/layout'
+import type { ThemeTypes } from '@/types/theme'
 
 const { wsCache } = useCache()
 
@@ -94,8 +94,8 @@ export const useAppStore = defineStore('app', {
         // 头部悬停颜色
         topHeaderHoverColor: '#f6f6f6',
         // 头部边框颜色
-        topToolBorderColor: '#eee'
-      }
+        topToolBorderColor: '#eee',
+      },
     }
   },
   getters: {
@@ -173,7 +173,7 @@ export const useAppStore = defineStore('app', {
     },
     getFooter(): boolean {
       return this.footer
-    }
+    },
   },
   actions: {
     setBreadcrumb(breadcrumb: boolean) {
@@ -241,7 +241,8 @@ export const useAppStore = defineStore('app', {
       if (this.isDark) {
         document.documentElement.classList.add('dark')
         document.documentElement.classList.remove('light')
-      } else {
+      }
+      else {
         document.documentElement.classList.add('light')
         document.documentElement.classList.remove('dark')
       }
@@ -259,14 +260,13 @@ export const useAppStore = defineStore('app', {
       wsCache.set(CACHE_KEY.THEME, this.theme)
     },
     setCssVarTheme() {
-      for (const key in this.theme) {
+      for (const key in this.theme)
         setCssVar(`--${humpToUnderline(key)}`, this.theme[key])
-      }
     },
     setFooter(footer: boolean) {
       this.footer = footer
-    }
-  }
+    },
+  },
 })
 
 export const useAppStoreWithOut = () => {

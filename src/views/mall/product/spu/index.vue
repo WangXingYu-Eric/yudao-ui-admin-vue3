@@ -72,7 +72,7 @@
       <el-tab-pane
         v-for="item in tabsData"
         :key="item.type"
-        :label="item.name + '(' + item.count + ')'"
+        :label="`${item.name}(${item.count})`"
         :name="item.type"
       />
     </el-tabs>
@@ -128,7 +128,9 @@
       </el-table-column>
       <el-table-column :show-overflow-tooltip="true" label="商品名称" min-width="300" prop="name" />
       <el-table-column align="center" label="商品售价" min-width="90" prop="price">
-        <template #default="{ row }"> {{ fenToYuan(row.price) }}元</template>
+        <template #default="{ row }">
+          {{ fenToYuan(row.price) }}元
+        </template>
       </el-table-column>
       <el-table-column align="center" label="销量" min-width="90" prop="salesCount" />
       <el-table-column align="center" label="库存" min-width="90" prop="stock" />
@@ -154,7 +156,9 @@
             />
           </template>
           <template v-else>
-            <el-tag type="info">回收站</el-tag>
+            <el-tag type="info">
+              回收站
+            </el-tag>
           </template>
         </template>
       </el-table-column>
@@ -216,8 +220,9 @@
     />
   </ContentWrap>
 </template>
+
 <script lang="ts" setup>
-import { TabsPaneContext } from 'element-plus'
+import type { TabsPaneContext } from 'element-plus'
 import { createImageViewer } from '@/components/ImageViewer'
 import { dateFormatter } from '@/utils/formatTime'
 import { defaultProps, handleTree, treeToString } from '@/utils/tree'
@@ -242,36 +247,35 @@ const tabsData = ref([
   {
     count: 0,
     name: '出售中商品',
-    type: 0
+    type: 0,
   },
   {
     count: 0,
     name: '仓库中商品',
-    type: 1
+    type: 1,
   },
   {
     count: 0,
     name: '已售罄商品',
-    type: 2
+    type: 2,
   },
   {
     count: 0,
     name: '警戒库存',
-    type: 3
+    type: 3,
   },
   {
     count: 0,
     name: '商品回收站',
-    type: 4
-  }
+    type: 4,
+  },
 ])
 
 /** 获得每个 Tab 的数量 */
 const getTabsCount = async () => {
   const res = await ProductSpuApi.getTabsCount()
-  for (let objName in res) {
+  for (const objName in res)
     tabsData.value[Number(objName)].count = res[objName]
-  }
 }
 const queryParams = ref({
   pageNo: 1,
@@ -279,7 +283,7 @@ const queryParams = ref({
   tabType: 0,
   name: '',
   categoryId: null,
-  createTime: []
+  createTime: [],
 }) // 查询参数
 const queryFormRef = ref() // 搜索的表单Ref
 
@@ -295,7 +299,8 @@ const getList = async () => {
     const data = await ProductSpuApi.getSpuPage(queryParams.value)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -308,12 +313,13 @@ const handleStatus02Change = async (row, newStatus: number) => {
     await message.confirm(`确认要"${row.name}"${text}吗？`)
     // 发起修改
     await ProductSpuApi.updateStatus({ id: row.id, status: newStatus })
-    message.success(text + '成功')
+    message.success(`${text}成功`)
     // 刷新 tabs 数据
     await getTabsCount()
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
 /** 更新上架/下架状态 */
@@ -324,15 +330,16 @@ const handleStatusChange = async (row) => {
     await message.confirm(`确认要${text}"${row.name}"吗？`)
     // 发起修改
     await ProductSpuApi.updateStatus({ id: row.id, status: row.status })
-    message.success(text + '成功')
+    message.success(`${text}成功`)
     // 刷新 tabs 数据
     await getTabsCount()
     // 刷新列表
     await getList()
-  } catch {
+  }
+  catch {
     // 异常时，需要重置回之前的值
-    row.status =
-      row.status === ProductSpuStatusEnum.DISABLE.status
+    row.status
+      = row.status === ProductSpuStatusEnum.DISABLE.status
         ? ProductSpuStatusEnum.ENABLE.status
         : ProductSpuStatusEnum.DISABLE.status
   }
@@ -350,13 +357,14 @@ const handleDelete = async (id: number) => {
     await getTabsCount()
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
 /** 商品图预览 */
 const imagePreview = (imgUrl: string) => {
   createImageViewer({
-    urlList: [imgUrl]
+    urlList: [imgUrl],
   })
 }
 
@@ -396,8 +404,10 @@ const handleExport = async () => {
     exportLoading.value = true
     const data = await ProductSpuApi.exportSpu(queryParams)
     download.excel(data, '商品列表.xls')
-  } catch {
-  } finally {
+  }
+  catch {
+  }
+  finally {
     exportLoading.value = false
   }
 }
@@ -413,10 +423,10 @@ watch(
   () => currentRoute.value,
   () => {
     getList()
-  }
+  },
 )
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(async () => {
   await getTabsCount()
   await getList()
@@ -425,6 +435,7 @@ onMounted(async () => {
   categoryList.value = handleTree(data, 'id', 'parentId')
 })
 </script>
+
 <style lang="scss" scoped>
 .spu-table-expand {
   padding-left: 42px;

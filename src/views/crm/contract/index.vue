@@ -2,9 +2,9 @@
   <ContentWrap>
     <!-- 搜索工作栏 -->
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="68px"
     >
@@ -13,8 +13,8 @@
           v-model="queryParams.name"
           placeholder="请输入合同名称"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="客户编号" prop="customerId">
@@ -22,8 +22,8 @@
           v-model="queryParams.customerId"
           placeholder="请输入客户编号"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="商机编号" prop="businessId">
@@ -31,8 +31,8 @@
           v-model="queryParams.businessId"
           placeholder="请输入商机编号"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="下单日期" prop="orderDate">
@@ -51,22 +51,26 @@
           v-model="queryParams.no"
           placeholder="请输入合同编号"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
-        <el-button type="primary" @click="openForm('create')" v-hasPermi="['crm:contract:create']">
+        <el-button @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" /> 搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon icon="ep:refresh" class="mr-5px" /> 重置
+        </el-button>
+        <el-button v-hasPermi="['crm:contract:create']" type="primary" @click="openForm('create')">
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
         <el-button
+          v-hasPermi="['crm:contract:export']"
           type="success"
           plain
-          @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['crm:contract:export']"
+          @click="handleExport"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
@@ -129,18 +133,18 @@
       <el-table-column label="操作" width="120px">
         <template #default="scope">
           <el-button
+            v-hasPermi="['crm:contract:update']"
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['crm:contract:update']"
           >
             编辑
           </el-button>
           <el-button
+            v-hasPermi="['crm:contract:delete']"
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
-            v-hasPermi="['crm:contract:delete']"
           >
             删除
           </el-button>
@@ -149,9 +153,9 @@
     </el-table>
     <!-- 分页 -->
     <Pagination
-      :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
+      :total="total"
       @pagination="getList"
     />
   </ContentWrap>
@@ -161,10 +165,10 @@
 </template>
 
 <script setup lang="ts">
+import ContractForm from './ContractForm.vue'
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
 import * as ContractApi from '@/api/crm/contract'
-import ContractForm from './ContractForm.vue'
 
 defineOptions({ name: 'Contract' })
 
@@ -183,7 +187,7 @@ const queryParams = reactive({
   orderDate: [],
   no: null,
   discountPercent: null,
-  productPrice: null
+  productPrice: null,
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
@@ -195,7 +199,8 @@ const getList = async () => {
     const data = await ContractApi.getContractPage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -228,7 +233,8 @@ const handleDelete = async (id: number) => {
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
 /** 导出按钮操作 */
@@ -240,13 +246,15 @@ const handleExport = async () => {
     exportLoading.value = true
     const data = await ContractApi.exportContract(queryParams)
     download.excel(data, '合同.xls')
-  } catch {
-  } finally {
+  }
+  catch {
+  }
+  finally {
     exportLoading.value = false
   }
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

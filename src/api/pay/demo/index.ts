@@ -9,14 +9,14 @@ export interface DemoOrderVO {
 export function createDemoOrder(data: DemoOrderVO) {
   return request.post({
     url: '/pay/demo-order/create',
-    data: data
+    data,
   })
 }
 
 // 获得示例订单
 export function getDemoOrder(id: number) {
   return request.get({
-    url: '/pay/demo-order/get?id=' + id
+    url: `/pay/demo-order/get?id=${id}`,
   })
 }
 
@@ -24,13 +24,13 @@ export function getDemoOrder(id: number) {
 export function getDemoOrderPage(query: PageParam) {
   return request.get({
     url: '/pay/demo-order/page',
-    params: query
+    params: query,
   })
 }
 
 // 退款示例订单
 export function refundDemoOrder(id) {
   return request.put({
-    url: '/pay/demo-order/refund?id=' + id
+    url: `/pay/demo-order/refund?id=${id}`,
   })
 }

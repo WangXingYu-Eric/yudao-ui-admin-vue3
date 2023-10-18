@@ -5,7 +5,7 @@ const message = useMessage() // 消息
 enum UploadType {
   Image = 'image',
   Voice = 'voice',
-  Video = 'video'
+  Video = 'video',
 }
 
 const useBeforeUpload = (type: UploadType, maxSizeMB: number) => {

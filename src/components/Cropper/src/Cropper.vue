@@ -7,18 +7,35 @@
       :crossorigin="crossorigin"
       :src="src"
       :style="getImageStyle"
-    />
+    >
   </div>
 </template>
+
 <script lang="ts" setup>
-import { CSSProperties, PropType } from 'vue'
+import type { CSSProperties, PropType } from 'vue'
 import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.css'
+import { useDebounceFn } from '@vueuse/core'
 import { useDesign } from '@/hooks/web/useDesign'
 import { propTypes } from '@/utils/propTypes'
-import { useDebounceFn } from '@vueuse/core'
 
 defineOptions({ name: 'Cropper' })
+
+const props = defineProps({
+  src: propTypes.string.def(''),
+  alt: propTypes.string.def(''),
+  circled: propTypes.bool.def(false),
+  realTimePreview: propTypes.bool.def(true),
+  height: propTypes.string.def('360px'),
+  crossorigin: {
+    type: String as PropType<'' | 'anonymous' | 'use-credentials' | undefined>,
+    default: undefined,
+  },
+  imageStyle: { type: Object as PropType<CSSProperties>, default: () => ({}) },
+  options: { type: Object as PropType<Options>, default: () => ({}) },
+})
+
+const emit = defineEmits(['cropend', 'ready', 'cropendError'])
 
 type Options = Cropper.Options
 
@@ -42,24 +59,9 @@ const defaultOptions: Options = {
   modal: true,
   guides: true,
   movable: true,
-  rotatable: true
+  rotatable: true,
 }
 
-const props = defineProps({
-  src: propTypes.string.def(''),
-  alt: propTypes.string.def(''),
-  circled: propTypes.bool.def(false),
-  realTimePreview: propTypes.bool.def(true),
-  height: propTypes.string.def('360px'),
-  crossorigin: {
-    type: String as PropType<'' | 'anonymous' | 'use-credentials' | undefined>,
-    default: undefined
-  },
-  imageStyle: { type: Object as PropType<CSSProperties>, default: () => ({}) },
-  options: { type: Object as PropType<Options>, default: () => ({}) }
-})
-
-const emit = defineEmits(['cropend', 'ready', 'cropendError'])
 const attrs = useAttrs()
 const imgElRef = ref<ElRef<HTMLImageElement>>()
 const cropper = ref<Nullable<Cropper>>()
@@ -73,7 +75,7 @@ const getImageStyle = computed((): CSSProperties => {
   return {
     height: props.height,
     maxWidth: '100%',
-    ...props.imageStyle
+    ...props.imageStyle,
   }
 })
 
@@ -82,12 +84,12 @@ const getClass = computed(() => {
     prefixCls,
     attrs.class,
     {
-      [`${prefixCls}--circled`]: props.circled
-    }
+      [`${prefixCls}--circled`]: props.circled,
+    },
   ]
 })
 const getWrapperStyle = computed((): CSSProperties => {
-  return { height: `${props.height}`.replace(/px/, '') + 'px' }
+  return { height: `${`${props.height}`.replace(/px/, '')}px` }
 })
 
 onMounted(init)
@@ -98,9 +100,9 @@ onUnmounted(() => {
 
 async function init() {
   const imgEl = unref(imgElRef)
-  if (!imgEl) {
+  if (!imgEl)
     return
-  }
+
   cropper.value = new Cropper(imgEl, {
     ...defaultOptions,
     ready: () => {
@@ -117,7 +119,7 @@ async function init() {
     cropmove() {
       debounceRealTimeCroppered()
     },
-    ...props.options
+    ...props.options,
   })
 }
 
@@ -128,21 +130,21 @@ function realTimeCroppered() {
 
 // event: return base64 and width and height information after cropping
 function croppered() {
-  if (!cropper.value) {
+  if (!cropper.value)
     return
-  }
-  let imgInfo = cropper.value.getData()
+
+  const imgInfo = cropper.value.getData()
   const canvas = props.circled ? getRoundedCanvas() : cropper.value.getCroppedCanvas()
   canvas.toBlob((blob) => {
-    if (!blob) {
+    if (!blob)
       return
-    }
-    let fileReader: FileReader = new FileReader()
+
+    const fileReader: FileReader = new FileReader()
     fileReader.readAsDataURL(blob)
     fileReader.onloadend = (e) => {
       emit('cropend', {
         imgBase64: e.target?.result ?? '',
-        imgInfo
+        imgInfo,
       })
     }
     fileReader.onerror = () => {
@@ -169,6 +171,7 @@ function getRoundedCanvas() {
   return canvas
 }
 </script>
+
 <style lang="scss">
 $prefix-cls: #{$namespace}-cropper-image;
 

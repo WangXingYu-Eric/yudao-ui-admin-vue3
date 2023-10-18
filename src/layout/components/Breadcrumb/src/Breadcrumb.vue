@@ -1,11 +1,11 @@
 <script lang="tsx">
 import { ElBreadcrumb, ElBreadcrumbItem } from 'element-plus'
-import { ref, watch, computed, unref, defineComponent, TransitionGroup } from 'vue'
+import { TransitionGroup, computed, defineComponent, ref, unref, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { usePermissionStore } from '@/store/modules/permission'
-import { filterBreadcrumb } from './helper'
-import { filter, treeToList } from '@/utils/tree'
 import type { RouteLocationNormalizedLoaded, RouteMeta } from 'vue-router'
+import { filterBreadcrumb } from './helper'
+import { usePermissionStore } from '@/store/modules/permission'
+import { filter, treeToList } from '@/utils/tree'
 
 import { Icon } from '@/components/Icon'
 import { useAppStore } from '@/store/modules/app'
@@ -51,14 +51,16 @@ export default defineComponent({
         const meta = v.meta as RouteMeta
         return (
           <ElBreadcrumbItem to={{ path: disabled ? '' : v.path }} key={v.name}>
-            {meta?.icon && breadcrumbIcon.value ? (
-              <div class="flex items-center">
-                <Icon icon={meta.icon} class="mr-[2px]" svgClass="inline-block"></Icon>
-                {t(v?.meta?.title)}
-              </div>
-            ) : (
-              t(v?.meta?.title)
-            )}
+            {meta?.icon && breadcrumbIcon.value
+              ? (
+                <div class="flex items-center">
+                  <Icon icon={meta.icon} class="mr-[2px]" svgClass="inline-block"></Icon>
+                  {t(v?.meta?.title)}
+                </div>
+                )
+              : (
+                  t(v?.meta?.title)
+                )}
           </ElBreadcrumbItem>
         )
       })
@@ -67,14 +69,14 @@ export default defineComponent({
     watch(
       () => currentRoute.value,
       (route: RouteLocationNormalizedLoaded) => {
-        if (route.path.startsWith('/redirect/')) {
+        if (route.path.startsWith('/redirect/'))
           return
-        }
+
         getBreadcrumb()
       },
       {
-        immediate: true
-      }
+        immediate: true,
+      },
     )
 
     return () => (
@@ -84,7 +86,7 @@ export default defineComponent({
         </TransitionGroup>
       </ElBreadcrumb>
     )
-  }
+  },
 })
 </script>
 

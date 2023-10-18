@@ -1,5 +1,5 @@
-import router from './router'
 import type { RouteRecordRaw } from 'vue-router'
+import router from './router'
 import { isRelogin } from '@/config/axios/service'
 import { getAccessToken } from '@/utils/auth'
 import { useTitle } from '@/hooks/web/useTitle'
@@ -19,7 +19,7 @@ const whiteList = [
   '/auth-redirect',
   '/bind',
   '/register',
-  '/oauthLogin/gitee'
+  '/oauthLogin/gitee',
 ]
 
 // 路由加载前
@@ -29,14 +29,15 @@ router.beforeEach(async (to, from, next) => {
   if (getAccessToken()) {
     if (to.path === '/login') {
       next({ path: '/' })
-    } else {
+    }
+    else {
       // 获取所有字典
       const dictStore = useDictStoreWithOut()
       const userStore = useUserStoreWithOut()
       const permissionStore = usePermissionStoreWithOut()
-      if (!dictStore.getIsSetDict) {
+      if (!dictStore.getIsSetDict)
         await dictStore.setDictMap()
-      }
+
       if (!userStore.getIsSetUser) {
         isRelogin.show = true
         await userStore.setUserInfoAction()
@@ -50,16 +51,18 @@ router.beforeEach(async (to, from, next) => {
         const redirect = decodeURIComponent(redirectPath as string)
         const nextData = to.path === redirect ? { ...to, replace: true } : { path: redirect }
         next(nextData)
-      } else {
+      }
+      else {
         next()
       }
     }
-  } else {
-    if (whiteList.indexOf(to.path) !== -1) {
+  }
+  else {
+    if (whiteList.includes(to.path))
       next()
-    } else {
+
+    else
       next(`/login?redirect=${to.fullPath}`) // 否则全部重定向到登录页
-    }
   }
 })
 

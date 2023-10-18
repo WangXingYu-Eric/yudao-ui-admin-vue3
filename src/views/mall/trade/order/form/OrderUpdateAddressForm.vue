@@ -25,11 +25,16 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button :disabled="formLoading" type="primary" @click="submitForm">确 定</el-button>
-      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button :disabled="formLoading" type="primary" @click="submitForm">
+        确 定
+      </el-button>
+      <el-button @click="dialogVisible = false">
+        取 消
+      </el-button>
     </template>
   </Dialog>
 </template>
+
 <script lang="ts" setup>
 import * as TradeOrderApi from '@/api/mall/trade/order'
 import { getAreaTree } from '@/api/system/area'
@@ -38,7 +43,10 @@ import { defaultProps } from '@/utils/tree'
 
 defineOptions({ name: 'OrderUpdateAddressForm' })
 
-const { t } = useI18n() // 国际化
+// 提供 open 方法，用于打开弹窗
+
+/** 提交表单 */
+const emit = defineEmits(['success']); const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 
 const dialogVisible = ref(false) // 弹窗的是否展示
@@ -47,8 +55,8 @@ const formData = ref({
   id: 0, // 订单编号
   receiverName: '', // 收件人名称
   receiverMobile: '', // 收件人手机
-  receiverAreaId: null, //收件人地区编号
-  receiverDetailAddress: '' //收件人详细地址
+  receiverAreaId: null, // 收件人地区编号
+  receiverDetailAddress: '', // 收件人详细地址
 })
 const areaList = ref([]) // 地区列表
 const formRef = ref() // 表单 Ref
@@ -60,10 +68,7 @@ const open = async (row: TradeOrderApi.OrderVO) => {
   copyValueToTarget(formData.value, row)
   dialogVisible.value = true
 }
-defineExpose({ open }) // 提供 open 方法，用于打开弹窗
-
-/** 提交表单 */
-const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
+defineExpose({ open }) // 定义 success 事件，用于操作成功后的回调
 const submitForm = async () => {
   // 提交请求
   formLoading.value = true
@@ -74,7 +79,8 @@ const submitForm = async () => {
     dialogVisible.value = false
     // 发送操作成功的事件
     emit('success', true)
-  } finally {
+  }
+  finally {
     formLoading.value = false
   }
 }
@@ -85,8 +91,8 @@ const resetForm = () => {
     id: 0, // 订单编号
     receiverName: '', // 收件人名称
     receiverMobile: '', // 收件人手机
-    receiverAreaId: null, //收件人地区编号
-    receiverDetailAddress: '' //收件人详细地址
+    receiverAreaId: null, // 收件人地区编号
+    receiverDetailAddress: '', // 收件人详细地址
   }
   formRef.value?.resetFields()
 }

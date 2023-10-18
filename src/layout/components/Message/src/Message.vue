@@ -1,3 +1,38 @@
+<template>
+  <div class="message">
+    <ElPopover :width="400" placement="bottom" trigger="click">
+      <template #reference>
+        <ElBadge :is-dot="unreadCount > 0" class="item">
+          <Icon :size="18" class="cursor-pointer" icon="ep:bell" @click="getList" />
+        </ElBadge>
+      </template>
+      <ElTabs v-model="activeName">
+        <ElTabPane label="我的站内信" name="notice">
+          <div class="message-list">
+            <template v-for="item in list" :key="item.id">
+              <div class="message-item">
+                <img alt="" class="message-icon" src="@/assets/imgs/avatar.gif">
+                <div class="message-content">
+                  <span class="message-title">
+                    {{ item.templateNickname }}：{{ item.templateContent }}
+                  </span>
+                  <span class="message-date">
+                    {{ formatDate(item.createTime) }}
+                  </span>
+                </div>
+              </div>
+            </template>
+          </div>
+        </ElTabPane>
+      </ElTabs>
+      <!-- 更多 -->
+      <div style="margin-top: 10px; text-align: right">
+        <XButton pre-icon="ep:view" title="查看全部" type="primary" @click="goMyList" />
+      </div>
+    </ElPopover>
+  </div>
+</template>
+
 <script lang="ts" setup>
 import { formatDate } from '@/utils/formatTime'
 import * as NotifyMessageApi from '@/api/system/notify/message'
@@ -26,7 +61,7 @@ const getUnreadCount = async () => {
 // 跳转我的站内信
 const goMyList = () => {
   push({
-    name: 'MyNotifyMessage'
+    name: 'MyNotifyMessage',
   })
 }
 
@@ -39,44 +74,11 @@ onMounted(() => {
     () => {
       getUnreadCount()
     },
-    1000 * 60 * 2
+    1000 * 60 * 2,
   )
 })
 </script>
-<template>
-  <div class="message">
-    <ElPopover :width="400" placement="bottom" trigger="click">
-      <template #reference>
-        <ElBadge :is-dot="unreadCount > 0" class="item">
-          <Icon :size="18" class="cursor-pointer" icon="ep:bell" @click="getList" />
-        </ElBadge>
-      </template>
-      <ElTabs v-model="activeName">
-        <ElTabPane label="我的站内信" name="notice">
-          <div class="message-list">
-            <template v-for="item in list" :key="item.id">
-              <div class="message-item">
-                <img alt="" class="message-icon" src="@/assets/imgs/avatar.gif" />
-                <div class="message-content">
-                  <span class="message-title">
-                    {{ item.templateNickname }}：{{ item.templateContent }}
-                  </span>
-                  <span class="message-date">
-                    {{ formatDate(item.createTime) }}
-                  </span>
-                </div>
-              </div>
-            </template>
-          </div>
-        </ElTabPane>
-      </ElTabs>
-      <!-- 更多 -->
-      <div style="margin-top: 10px; text-align: right">
-        <XButton preIcon="ep:view" title="查看全部" type="primary" @click="goMyList" />
-      </div>
-    </ElPopover>
-  </div>
-</template>
+
 <style lang="scss" scoped>
 .message-empty {
   display: flex;

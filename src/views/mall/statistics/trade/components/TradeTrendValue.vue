@@ -9,7 +9,7 @@
     <div class="flex flex-col gap-1">
       <div class="flex items-center gap-1 text-gray-500">
         <span class="text-3.5">{{ title }}</span>
-        <el-tooltip :content="tooltip" placement="top-start" v-if="tooltip">
+        <el-tooltip v-if="tooltip" :content="tooltip" placement="top-start">
           <Icon icon="ep:warning" class="item-center flex !text-3" />
         </el-tooltip>
       </div>
@@ -31,9 +31,10 @@
     </div>
   </div>
 </template>
+
 <script lang="ts" setup>
-import { propTypes } from '@/utils/propTypes'
 import { toNumber } from 'lodash-es'
+import { propTypes } from '@/utils/propTypes'
 
 /** 交易状况统计值组件 */
 defineOptions({ name: 'TradeTrendValue' })
@@ -47,6 +48,6 @@ defineProps({
   prefix: propTypes.string.def(''),
   value: propTypes.number.def(0),
   decimals: propTypes.number.def(0),
-  percent: propTypes.oneOfType([Number, String]).def(undefined)
+  percent: propTypes.oneOfType([Number, String]).def(undefined),
 })
 </script>

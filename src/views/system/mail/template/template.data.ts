@@ -1,6 +1,6 @@
 import type { CrudSchema } from '@/hooks/web/useCrudSchemas'
 import { dateFormatter } from '@/utils/formatTime'
-import { TableColumn } from '@/types/table'
+import type { TableColumn } from '@/types/table'
 import * as MailAccountApi from '@/api/system/mail/account'
 
 // 邮箱账号的列表
@@ -14,7 +14,7 @@ export const rules = reactive({
   label: [required],
   content: [required],
   params: [required],
-  status: [required]
+  status: [required],
 })
 
 // CrudSchema：https://doc.iocoder.cn/vue3/crud-schema/
@@ -22,16 +22,16 @@ const crudSchemas = reactive<CrudSchema[]>([
   {
     label: '模板编码',
     field: 'code',
-    isSearch: true
+    isSearch: true,
   },
   {
     label: '模板名称',
     field: 'name',
-    isSearch: true
+    isSearch: true,
   },
   {
     label: '模板标题',
-    field: 'title'
+    field: 'title',
   },
   {
     label: '模板内容',
@@ -40,16 +40,16 @@ const crudSchemas = reactive<CrudSchema[]>([
       component: 'Editor',
       componentProps: {
         valueHtml: '',
-        height: 200
-      }
-    }
+        height: 200,
+      },
+    },
   },
   {
     label: '邮箱账号',
     field: 'accountId',
     width: '200px',
     formatter: (_: Recordable, __: TableColumn, cellValue: number) => {
-      return accountList.find((account) => account.id === cellValue)?.mail
+      return accountList.find(account => account.id === cellValue)?.mail
     },
     search: {
       show: true,
@@ -58,9 +58,9 @@ const crudSchemas = reactive<CrudSchema[]>([
       componentProps: {
         optionsAlias: {
           labelField: 'mail',
-          valueField: 'id'
-        }
-      }
+          valueField: 'id',
+        },
+      },
     },
     form: {
       component: 'Select',
@@ -68,26 +68,26 @@ const crudSchemas = reactive<CrudSchema[]>([
       componentProps: {
         optionsAlias: {
           labelField: 'mail',
-          valueField: 'id'
-        }
-      }
-    }
+          valueField: 'id',
+        },
+      },
+    },
   },
   {
     label: '发送人名称',
-    field: 'nickname'
+    field: 'nickname',
   },
   {
     label: '开启状态',
     field: 'status',
     isSearch: true,
     dictType: DICT_TYPE.COMMON_STATUS,
-    dictClass: 'number'
+    dictClass: 'number',
   },
   {
     label: '备注',
     field: 'remark',
-    isTable: false
+    isTable: false,
   },
   {
     label: '创建时间',
@@ -100,14 +100,14 @@ const crudSchemas = reactive<CrudSchema[]>([
       componentProps: {
         valueFormat: 'YYYY-MM-DD HH:mm:ss',
         type: 'daterange',
-        defaultTime: [new Date('1 00:00:00'), new Date('1 23:59:59')]
-      }
-    }
+        defaultTime: [new Date('1 00:00:00'), new Date('1 23:59:59')],
+      },
+    },
   },
   {
     label: '操作',
     field: 'action',
-    isForm: false
-  }
+    isForm: false,
+  },
 ])
 export const { allSchemas } = useCrudSchemas(crudSchemas)

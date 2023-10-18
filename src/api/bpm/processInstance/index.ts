@@ -1,11 +1,11 @@
 import request from '@/config/axios'
 
-export type Task = {
+export interface Task {
   id: string
   name: string
 }
 
-export type ProcessInstanceVO = {
+export interface ProcessInstanceVO {
   id: number
   name: string
   processDefinitionId: string
@@ -25,17 +25,17 @@ export const getMyProcessInstancePage = async (params) => {
 }
 
 export const createProcessInstance = async (data) => {
-  return await request.post({ url: '/bpm/process-instance/create', data: data })
+  return await request.post({ url: '/bpm/process-instance/create', data })
 }
 
 export const cancelProcessInstance = async (id: number, reason: string) => {
   const data = {
-    id: id,
-    reason: reason
+    id,
+    reason,
   }
-  return await request.delete({ url: '/bpm/process-instance/cancel', data: data })
+  return await request.delete({ url: '/bpm/process-instance/cancel', data })
 }
 
 export const getProcessInstance = async (id: number) => {
-  return await request.get({ url: '/bpm/process-instance/get?id=' + id })
+  return await request.get({ url: `/bpm/process-instance/get?id=${id}` })
 }

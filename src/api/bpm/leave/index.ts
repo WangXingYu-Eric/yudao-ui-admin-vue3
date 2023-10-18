@@ -1,6 +1,6 @@
 import request from '@/config/axios'
 
-export type LeaveVO = {
+export interface LeaveVO {
   id: number
   result: number
   type: number
@@ -13,12 +13,12 @@ export type LeaveVO = {
 
 // 创建请假申请
 export const createLeave = async (data: LeaveVO) => {
-  return await request.post({ url: '/bpm/oa/leave/create', data: data })
+  return await request.post({ url: '/bpm/oa/leave/create', data })
 }
 
 // 获得请假申请
 export const getLeave = async (id: number) => {
-  return await request.get({ url: '/bpm/oa/leave/get?id=' + id })
+  return await request.get({ url: `/bpm/oa/leave/get?id=${id}` })
 }
 
 // 获得请假申请分页

@@ -16,8 +16,10 @@
       accept=".jpg, .png, .gif"
       drag
     >
-      <i class="el-icon-upload"></i>
-      <div class="el-upload__text"> 将文件拖到此处，或 <em>点击上传</em></div>
+      <i class="el-icon-upload" />
+      <div class="el-upload__text">
+        将文件拖到此处，或 <em>点击上传</em>
+      </div>
       <template #tip>
         <div class="el-upload__tip" style="color: red">
           提示：仅允许导入 jpg、png、gif 格式文件！
@@ -25,17 +27,23 @@
       </template>
     </el-upload>
     <template #footer>
-      <el-button :disabled="formLoading" type="primary" @click="submitFileForm">确 定</el-button>
-      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button :disabled="formLoading" type="primary" @click="submitFileForm">
+        确 定
+      </el-button>
+      <el-button @click="dialogVisible = false">
+        取 消
+      </el-button>
     </template>
   </Dialog>
 </template>
+
 <script lang="ts" setup>
 import { getAccessToken, getTenantId } from '@/utils/auth'
 
 defineOptions({ name: 'InfraFileForm' })
 
-const { t } = useI18n() // 国际化
+/** 文件上传成功处理 */
+const emit = defineEmits(['success']); const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 
 const dialogVisible = ref(false) // 弹窗的是否展示
@@ -66,14 +74,13 @@ const submitFileForm = () => {
   }
   // 提交请求
   uploadHeaders.value = {
-    Authorization: 'Bearer ' + getAccessToken(),
-    'tenant-id': getTenantId()
+    'Authorization': `Bearer ${getAccessToken()}`,
+    'tenant-id': getTenantId(),
   }
   unref(uploadRef)?.submit()
 }
 
-/** 文件上传成功处理 */
-const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
+// 定义 success 事件，用于操作成功后的回调
 const submitFormSuccess = () => {
   // 清理
   dialogVisible.value = false

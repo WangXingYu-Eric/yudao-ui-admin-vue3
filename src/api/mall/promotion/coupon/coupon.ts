@@ -5,7 +5,7 @@ import request from '@/config/axios'
 // 删除优惠劵
 export const deleteCoupon = async (id: number) => {
   return request.delete({
-    url: `/promotion/coupon/delete?id=${id}`
+    url: `/promotion/coupon/delete?id=${id}`,
   })
 }
 
@@ -13,7 +13,7 @@ export const deleteCoupon = async (id: number) => {
 export const getCouponPage = async (params: PageParam) => {
   return request.get({
     url: '/promotion/coupon/page',
-    params: params
+    params,
   })
 }
 
@@ -21,6 +21,6 @@ export const getCouponPage = async (params: PageParam) => {
 export const sendCoupon = async (data: any) => {
   return request.post({
     url: '/promotion/coupon/send',
-    data: data
+    data,
   })
 }

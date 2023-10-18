@@ -10,8 +10,8 @@
       <div>
         <span>菜单名称：</span>
         <el-input
-          class="input_width"
           v-model="menu.name"
+          class="input_width"
           placeholder="请输入菜单名称"
           :maxlength="isParent ? 4 : 7"
           clearable
@@ -21,8 +21,8 @@
         <div class="menu_content">
           <span>菜单标识：</span>
           <el-input
-            class="input_width"
             v-model="menu.menuKey"
+            class="input_width"
             placeholder="请输入菜单 KEY"
             clearable
           />
@@ -32,22 +32,22 @@
           <el-select v-model="menu.type" clearable placeholder="请选择" class="menu_option">
             <el-option
               v-for="item in menuOptions"
+              :key="item.value"
               :label="item.label"
               :value="item.value"
-              :key="item.value"
             />
           </el-select>
         </div>
-        <div class="configur_content" v-if="menu.type === 'view'">
+        <div v-if="menu.type === 'view'" class="configur_content">
           <span>跳转链接：</span>
-          <el-input class="input_width" v-model="menu.url" placeholder="请输入链接" clearable />
+          <el-input v-model="menu.url" class="input_width" placeholder="请输入链接" clearable />
         </div>
-        <div class="configur_content" v-if="menu.type === 'miniprogram'">
+        <div v-if="menu.type === 'miniprogram'" class="configur_content">
           <div class="applet">
             <span>小程序的 appid ：</span>
             <el-input
-              class="input_width"
               v-model="menu.miniProgramAppId"
+              class="input_width"
               placeholder="请输入小程序的appid"
               clearable
             />
@@ -55,8 +55,8 @@
           <div class="applet">
             <span>小程序的页面路径：</span>
             <el-input
-              class="input_width"
               v-model="menu.miniProgramPagePath"
+              class="input_width"
               placeholder="请输入小程序的页面路径，如：pages/index"
               clearable
             />
@@ -64,17 +64,19 @@
           <div class="applet">
             <span>小程序的备用网页：</span>
             <el-input
-              class="input_width"
               v-model="menu.url"
+              class="input_width"
               placeholder="不支持小程序的老版本客户端将打开本网页"
               clearable
             />
           </div>
-          <p class="blue">tips:需要和公众号进行关联才可以把小程序绑定带微信菜单上哟！</p>
+          <p class="blue">
+            tips:需要和公众号进行关联才可以把小程序绑定带微信菜单上哟！
+          </p>
         </div>
-        <div class="configur_content" v-if="menu.type === 'article_view_limited'">
+        <div v-if="menu.type === 'article_view_limited'" class="configur_content">
           <el-row>
-            <div class="select-item" v-if="menu && menu.replyArticles">
+            <div v-if="menu && menu.replyArticles" class="select-item">
               <WxNews :articles="menu.replyArticles" />
               <el-row class="ope-row" justify="center" align="middle">
                 <el-button type="danger" circle @click="deleteMaterial">
@@ -92,7 +94,7 @@
                 </el-col>
               </el-row>
             </div>
-            <el-dialog title="选择图文" v-model="showNewsDialog" width="80%" destroy-on-close>
+            <el-dialog v-model="showNewsDialog" title="选择图文" width="80%" destroy-on-close>
               <WxMaterialSelect
                 type="news"
                 :account-id="props.accountId"
@@ -102,8 +104,8 @@
           </el-row>
         </div>
         <div
-          class="configur_content"
           v-if="menu.type === 'click' || menu.type === 'scancode_waitmsg'"
+          class="configur_content"
         >
           <WxReplySelect v-if="hackResetWxReplySelect" v-model="menu.reply" />
         </div>
@@ -113,12 +115,10 @@
 </template>
 
 <script lang="ts" setup>
+import menuOptions from './menuOptions'
 import WxReplySelect from '@/views/mp/components/wx-reply'
 import WxNews from '@/views/mp/components/wx-news'
 import WxMaterialSelect from '@/views/mp/components/wx-material-select'
-import menuOptions from './menuOptions'
-
-const message = useMessage()
 
 const props = defineProps<{
   accountId: number
@@ -131,13 +131,15 @@ const emit = defineEmits<{
   (e: 'update:modelValue', v: any)
 }>()
 
+const message = useMessage()
+
 const menu = computed({
   get() {
     return props.modelValue
   },
   set(val) {
     emit('update:modelValue', val)
-  }
+  },
 })
 const showNewsDialog = ref(false)
 const hackResetWxReplySelect = ref(false)
@@ -155,9 +157,9 @@ const selectMaterial = (item: any) => {
   const articleId = item.articleId
   const articles = item.content.newsItem
   // 提示，针对多图文
-  if (articles.length > 1) {
+  if (articles.length > 1)
     message.alertWarning('您选择的是多图文，将默认跳转第一篇')
-  }
+
   showNewsDialog.value = false
 
   // 设置菜单的回复
@@ -168,14 +170,14 @@ const selectMaterial = (item: any) => {
       title: article.title,
       description: article.digest,
       picUrl: article.picUrl,
-      url: article.url
+      url: article.url,
     })
   })
 }
 
 const deleteMaterial = () => {
-  delete menu.value['articleId']
-  delete menu.value['replyArticles']
+  delete menu.value.articleId
+  delete menu.value.replyArticles
 }
 </script>
 

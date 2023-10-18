@@ -1,5 +1,5 @@
 import WxMaterialSelect from './main.vue'
-import { NewsType, MaterialType } from './types'
+import { MaterialType, NewsType } from './types'
 
 export { NewsType, MaterialType }
 

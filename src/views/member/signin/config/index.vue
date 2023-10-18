@@ -2,10 +2,10 @@
   <ContentWrap>
     <!-- 搜索工作栏 -->
     <el-button
+      v-hasPermi="['point:sign-in-config:create']"
       type="primary"
       plain
       @click="openForm('create')"
-      v-hasPermi="['point:sign-in-config:create']"
     >
       <Icon icon="ep:plus" class="mr-5px" /> 新增
     </el-button>
@@ -30,18 +30,18 @@
       <el-table-column label="操作" align="center">
         <template #default="scope">
           <el-button
+            v-hasPermi="['point:sign-in-config:update']"
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['point:sign-in-config:update']"
           >
             编辑
           </el-button>
           <el-button
+            v-hasPermi="['point:sign-in-config:delete']"
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
-            v-hasPermi="['point:sign-in-config:delete']"
           >
             删除
           </el-button>
@@ -53,9 +53,10 @@
   <!-- 表单弹窗：添加/修改 -->
   <SignInConfigForm ref="formRef" @success="getList" />
 </template>
+
 <script lang="ts" setup>
-import * as SignInConfigApi from '@/api/member/signin/config'
 import SignInConfigForm from './SignInConfigForm.vue'
+import * as SignInConfigApi from '@/api/member/signin/config'
 import { DICT_TYPE } from '@/utils/dict'
 
 defineOptions({ name: 'SignInConfig' })
@@ -73,7 +74,8 @@ const getList = async () => {
     const data = await SignInConfigApi.getSignInConfigList()
     console.log(data)
     list.value = data
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -94,10 +96,11 @@ const handleDelete = async (id: number) => {
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

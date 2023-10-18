@@ -16,6 +16,7 @@
     <IFrame v-if="!loading" v-loading="loading" :src="src" />
   </ContentWrap>
 </template>
+
 <script lang="ts" setup>
 import download from '@/utils/download'
 import * as DbDocApi from '@/api/infra/dbDoc'
@@ -31,7 +32,8 @@ const init = async () => {
     const data = await DbDocApi.exportHtml()
     const blob = new Blob([data], { type: 'text/html' })
     src.value = window.URL.createObjectURL(blob)
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }

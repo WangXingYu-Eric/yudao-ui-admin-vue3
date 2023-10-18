@@ -90,42 +90,52 @@
       <el-col :span="12">
         <el-form-item label="商品规格" props="specType">
           <el-radio-group v-model="formData.specType" @change="onChangeSpec">
-            <el-radio :label="false" class="radio">单规格</el-radio>
-            <el-radio :label="true">多规格</el-radio>
+            <el-radio :label="false" class="radio">
+单规格
+</el-radio>
+            <el-radio :label="true">
+多规格
+</el-radio>
           </el-radio-group>
         </el-form-item>
       </el-col>
       <el-col :span="12">
         <el-form-item label="分销类型" props="subCommissionType">
           <el-radio-group v-model="formData.subCommissionType" @change="changeSubCommissionType">
-            <el-radio :label="false">默认设置</el-radio>
-            <el-radio :label="true" class="radio">单独设置</el-radio>
+            <el-radio :label="false">
+默认设置
+</el-radio>
+            <el-radio :label="true" class="radio">
+单独设置
+</el-radio>
           </el-radio-group>
         </el-form-item>
       </el-col>
-      <!-- 多规格添加-->
+      <!-- 多规格添加 -->
       <el-col :span="24">
         <el-form-item v-if="!formData.specType">
           <SkuList
             ref="skuListRef"
             :prop-form-data="formData"
-            :propertyList="propertyList"
+            :property-list="propertyList"
             :rule-config="ruleConfig"
           />
         </el-form-item>
         <el-form-item v-if="formData.specType" label="商品属性">
-          <el-button class="mb-10px mr-15px" @click="attributesAddFormRef.open">添加属性</el-button>
-          <ProductAttributes :propertyList="propertyList" @success="generateSkus" />
+          <el-button class="mb-10px mr-15px" @click="attributesAddFormRef.open">
+添加属性
+</el-button>
+          <ProductAttributes :property-list="propertyList" @success="generateSkus" />
         </el-form-item>
         <template v-if="formData.specType && propertyList.length > 0">
           <el-form-item label="批量设置">
-            <SkuList :is-batch="true" :prop-form-data="formData" :propertyList="propertyList" />
+            <SkuList :is-batch="true" :prop-form-data="formData" :property-list="propertyList" />
           </el-form-item>
           <el-form-item label="属性列表">
             <SkuList
               ref="skuListRef"
               :prop-form-data="formData"
-              :propertyList="propertyList"
+              :property-list="propertyList"
               :rule-config="ruleConfig"
             />
           </el-form-item>
@@ -136,7 +146,9 @@
 
   <!-- 情况二：详情 -->
   <Descriptions v-if="isDetail" :data="formData" :schema="allSchemas.detailSchema">
-    <template #categoryId="{ row }"> {{ formatCategoryName(row.categoryId) }}</template>
+    <template #categoryId="{ row }">
+{{ formatCategoryName(row.categoryId) }}
+</template>
     <template #brandId="{ row }">
       {{ brandList.find((item) => item.id === row.brandId)?.name }}
     </template>
@@ -166,16 +178,18 @@
         ref="skuDetailListRef"
         :is-detail="isDetail"
         :prop-form-data="formData"
-        :propertyList="propertyList"
+        :property-list="propertyList"
       />
     </template>
   </Descriptions>
 
   <!-- 商品属性添加 Form 表单 -->
-  <ProductPropertyAddForm ref="attributesAddFormRef" :propertyList="propertyList" />
+  <ProductPropertyAddForm ref="attributesAddFormRef" :property-list="propertyList" />
 </template>
+
 <script lang="ts" setup>
-import { PropType } from 'vue'
+import type { PropType } from 'vue'
+import ProductAttributes from './ProductAttributes.vue'
 import { isArray } from '@/utils/is'
 import { copyValueToTarget } from '@/utils'
 import { propTypes } from '@/utils/propTypes'
@@ -183,7 +197,6 @@ import { checkSelectedNode, defaultProps, handleTree, treeToString } from '@/uti
 import { createImageViewer } from '@/components/ImageViewer'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { getPropertyList, RuleConfig, SkuList } from '@/views/mall/product/spu/components/index.ts'
-import ProductAttributes from './ProductAttributes.vue'
 import ProductPropertyAddForm from './ProductPropertyAddForm.vue'
 import { basicInfoSchema } from './spu.data'
 import type { Spu } from '@/api/mall/product/spu'
@@ -192,6 +205,22 @@ import * as ProductBrandApi from '@/api/mall/product/brand'
 import * as ExpressTemplateApi from '@/api/mall/trade/delivery/expressTemplate'
 
 defineOptions({ name: 'ProductSpuBasicInfoForm' })
+
+// 消息弹窗
+
+const props = defineProps({
+  propFormData: {
+    type: Object as PropType<Spu>,
+    default: () => {}
+  },
+  activeName: propTypes.string.def(''),
+  isDetail: propTypes.bool.def(false) // 是否作为详情组件
+})
+
+/**
+ * 表单校验
+ */
+const emit = defineEmits(['update:activeName'])
 
 // sku 相关属性校验规则
 const ruleConfig: RuleConfig[] = [
@@ -236,17 +265,7 @@ const imagePreview = (args) => {
 
 // ====== end ======
 
-const message = useMessage() // 消息弹窗
-
-const props = defineProps({
-  propFormData: {
-    type: Object as PropType<Spu>,
-    default: () => {}
-  },
-  activeName: propTypes.string.def(''),
-  isDetail: propTypes.bool.def(false) // 是否作为详情组件
-})
-const attributesAddFormRef = ref() // 添加商品属性表单
+const message = useMessage()const attributesAddFormRef = ref() // 添加商品属性表单
 const productSpuBasicInfoRef = ref() // 表单 Ref
 const propertyList = ref([]) // 商品属性列表
 const skuListRef = ref() // 商品属性列表Ref
@@ -302,22 +321,20 @@ watch(
   }
 )
 
-/**
- * 表单校验
- */
-const emit = defineEmits(['update:activeName'])
 const validate = async () => {
   // 校验 sku
   skuListRef.value.validateSku()
   // 校验表单
-  if (!productSpuBasicInfoRef) return
+  if (!productSpuBasicInfoRef) 
+return
   return await unref(productSpuBasicInfoRef).validate((valid) => {
     if (!valid) {
       message.warning('商品信息未完善！！')
       emit('update:activeName', 'basicInfo')
       // 目的截断之后的校验
       throw new Error('商品信息未完善！！')
-    } else {
+    }
+ else {
       // 校验通过更新数据
       Object.assign(props.propFormData, formData)
     }
@@ -350,7 +367,7 @@ const onChangeSpec = () => {
       weight: 0,
       volume: 0,
       firstBrokeragePrice: 0,
-      secondBrokeragePrice: 0
+      secondBrokeragePrice: 0,
     }
   ]
 }

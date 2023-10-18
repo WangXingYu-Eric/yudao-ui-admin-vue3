@@ -2,24 +2,24 @@ import * as echarts from 'echarts/core'
 
 import {
   BarChart,
+  GaugeChart,
   LineChart,
-  PieChart,
   MapChart,
   PictorialBarChart,
+  PieChart,
   RadarChart,
-  GaugeChart
 } from 'echarts/charts'
 
 import {
-  TitleComponent,
-  TooltipComponent,
-  GridComponent,
-  PolarComponent,
   AriaComponent,
-  ParallelComponent,
+  GridComponent,
   LegendComponent,
+  ParallelComponent,
+  PolarComponent,
+  TitleComponent,
   ToolboxComponent,
-  VisualMapComponent
+  TooltipComponent,
+  VisualMapComponent,
 } from 'echarts/components'
 
 import { CanvasRenderer } from 'echarts/renderers'
@@ -41,7 +41,7 @@ echarts.use([
   CanvasRenderer,
   PictorialBarChart,
   RadarChart,
-  GaugeChart
+  GaugeChart,
 ])
 
 export default echarts

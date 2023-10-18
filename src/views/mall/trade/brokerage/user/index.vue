@@ -2,9 +2,9 @@
   <ContentWrap>
     <!-- 搜索工作栏 -->
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="85px"
     >
@@ -13,8 +13,8 @@
           v-model="queryParams.bindUserId"
           placeholder="请输入推广员编号"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="推广资格" prop="brokerageEnabled">
@@ -40,8 +40,12 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        <el-button @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" /> 搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon icon="ep:refresh" class="mr-5px" /> 重置
+        </el-button>
       </el-form-item>
     </el-form>
   </ContentWrap>
@@ -122,13 +126,13 @@
       <el-table-column label="操作" align="center" width="150px" fixed="right">
         <template #default="scope">
           <el-dropdown
-            @command="(command) => handleCommand(command, scope.row)"
             v-hasPermi="[
               'trade:brokerage-user:user-query',
               'trade:brokerage-user:order-query',
               'trade:brokerage-user:update-bind-user',
-              'trade:brokerage-user:clear-bind-user'
+              'trade:brokerage-user:clear-bind-user',
             ]"
+            @command="(command) => handleCommand(command, scope.row)"
           >
             <el-button link type="primary">
               <Icon icon="ep:d-arrow-right" />
@@ -137,28 +141,28 @@
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item
-                  command="openBrokerageUserTable"
                   v-if="checkPermi(['trade:brokerage-user:user-query'])"
+                  command="openBrokerageUserTable"
                 >
                   推广人
                 </el-dropdown-item>
                 <el-dropdown-item
-                  command="openBrokerageOrderTable"
                   v-if="checkPermi(['trade:brokerage-user:order-query'])"
+                  command="openBrokerageOrderTable"
                 >
                   推广订单
                 </el-dropdown-item>
                 <el-dropdown-item
-                  command="openUpdateBindUserForm"
                   v-if="checkPermi(['trade:brokerage-user:update-bind-user'])"
+                  command="openUpdateBindUserForm"
                 >
                   修改上级推广人
                 </el-dropdown-item>
                 <el-dropdown-item
-                  command="handleClearBindUser"
                   v-if="
                     scope.row.bindUserId && checkPermi(['trade:brokerage-user:clear-bind-user'])
                   "
+                  command="handleClearBindUser"
                 >
                   清除上级推广人
                 </el-dropdown-item>
@@ -170,9 +174,9 @@
     </el-table>
     <!-- 分页 -->
     <Pagination
-      :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
+      :total="total"
       @pagination="getList"
     />
   </ContentWrap>
@@ -205,7 +209,7 @@ const queryParams = reactive({
   pageSize: 10,
   bindUserId: null,
   brokerageEnabled: true,
-  createTime: []
+  createTime: [],
 })
 const queryFormRef = ref() // 搜索的表单
 
@@ -216,7 +220,8 @@ const getList = async () => {
     const data = await BrokerageUserApi.getBrokerageUserPage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -278,7 +283,8 @@ const handleClearBindUser = async (row: BrokerageUserApi.BrokerageUserVO) => {
     message.success('清除成功')
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
 /** 推广资格：开通/关闭 */
@@ -289,16 +295,17 @@ const handleBrokerageEnabledChange = async (row: BrokerageUserApi.BrokerageUserV
     await message.confirm(`确认要${text}"${row.nickname}"的推广资格吗？`)
     // 发起修改
     await BrokerageUserApi.updateBrokerageEnabled({ id: row.id, enabled: row.brokerageEnabled })
-    message.success(text + '成功')
+    message.success(`${text}成功`)
     // 刷新列表
     await getList()
-  } catch {
+  }
+  catch {
     // 异常时，需要重置回之前的值
     row.brokerageEnabled = !row.brokerageEnabled
   }
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

@@ -1,5 +1,5 @@
+import type dayjs from 'dayjs'
 import request from '@/config/axios'
-import dayjs from 'dayjs'
 import { formatDate } from '@/utils/formatTime'
 
 /** 交易统计对照 Response VO */
@@ -36,7 +36,7 @@ export interface TradeTrendSummaryRespVO {
 // 查询交易统计
 export const getTradeStatisticsSummary = () => {
   return request.get<TradeStatisticsComparisonRespVO<TradeSummaryRespVO>>({
-    url: '/statistics/trade/summary'
+    url: '/statistics/trade/summary',
   })
 }
 
@@ -44,7 +44,7 @@ export const getTradeStatisticsSummary = () => {
 export const getTradeTrendSummary = (params: TradeTrendReqVO) => {
   return request.get<TradeStatisticsComparisonRespVO<TradeTrendSummaryRespVO>>({
     url: '/statistics/trade/trend/summary',
-    params: formatDateParam(params)
+    params: formatDateParam(params),
   })
 }
 
@@ -52,7 +52,7 @@ export const getTradeTrendSummary = (params: TradeTrendReqVO) => {
 export const getTradeTrendList = (params: TradeTrendReqVO) => {
   return request.get<TradeTrendSummaryRespVO[]>({
     url: '/statistics/trade/trend/list',
-    params: formatDateParam(params)
+    params: formatDateParam(params),
   })
 }
 
@@ -60,7 +60,7 @@ export const getTradeTrendList = (params: TradeTrendReqVO) => {
 export const exportTradeTrend = (params: TradeTrendReqVO) => {
   return request.download({
     url: '/statistics/trade/trend/export-excel',
-    params: formatDateParam(params)
+    params: formatDateParam(params),
   })
 }
 

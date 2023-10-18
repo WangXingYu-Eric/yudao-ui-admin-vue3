@@ -1,13 +1,13 @@
 import request from '@/config/axios'
 
-export type ProcessDefinitionVO = {
+export interface ProcessDefinitionVO {
   id: string
   version: number
   deploymentTIme: string
   suspensionState: number
 }
 
-export type ModelVO = {
+export interface ModelVO {
   id: number
   formName: string
   key: string
@@ -30,30 +30,30 @@ export const getModelPage = async (params) => {
 }
 
 export const getModel = async (id: number) => {
-  return await request.get({ url: '/bpm/model/get?id=' + id })
+  return await request.get({ url: `/bpm/model/get?id=${id}` })
 }
 
 export const updateModel = async (data: ModelVO) => {
-  return await request.put({ url: '/bpm/model/update', data: data })
+  return await request.put({ url: '/bpm/model/update', data })
 }
 
 // 任务状态修改
 export const updateModelState = async (id: number, state: number) => {
   const data = {
-    id: id,
-    state: state
+    id,
+    state,
   }
-  return await request.put({ url: '/bpm/model/update-state', data: data })
+  return await request.put({ url: '/bpm/model/update-state', data })
 }
 
 export const createModel = async (data: ModelVO) => {
-  return await request.post({ url: '/bpm/model/create', data: data })
+  return await request.post({ url: '/bpm/model/create', data })
 }
 
 export const deleteModel = async (id: number) => {
-  return await request.delete({ url: '/bpm/model/delete?id=' + id })
+  return await request.delete({ url: `/bpm/model/delete?id=${id}` })
 }
 
 export const deployModel = async (id: number) => {
-  return await request.post({ url: '/bpm/model/deploy?id=' + id })
+  return await request.post({ url: `/bpm/model/deploy?id=${id}` })
 }

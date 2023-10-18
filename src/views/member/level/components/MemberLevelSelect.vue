@@ -8,18 +8,19 @@
     </el-option>
   </el-select>
 </template>
+
 <script lang="ts" setup>
 import * as LevelApi from '@/api/member/level'
 
-/** 会员等级选择框 **/
+/** 会员等级选择框 */
 defineOptions({ name: 'MemberLevelSelect' })
 
 const props = defineProps({
-  /** 下拉框选中值 **/
+  /** 下拉框选中值 */
   modelValue: {
     type: Number,
-    default: undefined
-  }
+    default: undefined,
+  },
 })
 const emit = defineEmits(['update:modelValue'])
 
@@ -29,7 +30,7 @@ const levelId = computed({
   },
   set(value: any) {
     emit('update:modelValue', value)
-  }
+  },
 })
 
 const levelOptions = ref<LevelApi.LevelVO[]>([])

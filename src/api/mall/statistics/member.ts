@@ -1,6 +1,6 @@
+import type dayjs from 'dayjs'
 import request from '@/config/axios'
-import dayjs from 'dayjs'
-import { TradeStatisticsComparisonRespVO } from '@/api/mall/statistics/trade'
+import type { TradeStatisticsComparisonRespVO } from '@/api/mall/statistics/trade'
 import { formatDate } from '@/utils/formatTime'
 
 /** 会员分析 Request VO */
@@ -57,7 +57,7 @@ export interface MemberTerminalStatisticsRespVO {
 // 查询会员统计
 export const getMemberSummary = () => {
   return request.get<MemberSummaryRespVO>({
-    url: '/statistics/member/summary'
+    url: '/statistics/member/summary',
   })
 }
 
@@ -65,27 +65,27 @@ export const getMemberSummary = () => {
 export const getMemberAnalyse = (params: MemberAnalyseReqVO) => {
   return request.get<MemberAnalyseRespVO>({
     url: '/statistics/member/analyse',
-    params: { times: [formatDate(params.times[0]), formatDate(params.times[1])] }
+    params: { times: [formatDate(params.times[0]), formatDate(params.times[1])] },
   })
 }
 
 // 按照省份，查询会员统计列表
 export const getMemberAreaStatisticsList = () => {
   return request.get<MemberAreaStatisticsRespVO[]>({
-    url: '/statistics/member/get-area-statistics-list'
+    url: '/statistics/member/get-area-statistics-list',
   })
 }
 
 // 按照性别，查询会员统计列表
 export const getMemberSexStatisticsList = () => {
   return request.get<MemberSexStatisticsRespVO[]>({
-    url: '/statistics/member/get-sex-statistics-list'
+    url: '/statistics/member/get-sex-statistics-list',
   })
 }
 
 // 按照终端，查询会员统计列表
 export const getMemberTerminalStatisticsList = () => {
   return request.get<MemberTerminalStatisticsRespVO[]>({
-    url: '/statistics/member/get-terminal-statistics-list'
+    url: '/statistics/member/get-terminal-statistics-list',
   })
 }

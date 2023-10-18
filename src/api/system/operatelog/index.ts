@@ -1,6 +1,6 @@
 import request from '@/config/axios'
 
-export type OperateLogVO = {
+export interface OperateLogVO {
   id: number
   userNickname: string
   traceId: string
@@ -9,7 +9,7 @@ export type OperateLogVO = {
   name: string
   type: number
   content: string
-  exts: Map<String, Object>
+  exts: Map<string, Object>
   requestMethod: string
   requestUrl: string
   userIp: string

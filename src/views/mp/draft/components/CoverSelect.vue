@@ -27,24 +27,28 @@
           :on-success="onUploadSuccess"
         >
           <template #trigger>
-            <el-button size="small" type="primary">本地上传</el-button>
+            <el-button size="small" type="primary">
+本地上传
+</el-button>
           </template>
           <el-button
             size="small"
             type="primary"
-            @click="showImageDialog = true"
             style="margin-left: 5px"
+            @click="showImageDialog = true"
           >
             素材库选择
           </el-button>
           <template #tip>
-            <div class="el-upload__tip">支持 bmp/png/jpeg/jpg/gif 格式，大小不超过 2M</div>
+            <div class="el-upload__tip">
+支持 bmp/png/jpeg/jpg/gif 格式，大小不超过 2M
+</div>
           </template>
         </el-upload>
       </div>
       <el-dialog
-        title="选择图片"
         v-model="showImageDialog"
+        title="选择图片"
         width="80%"
         append-to-body
         destroy-on-close
@@ -60,15 +64,13 @@
 </template>
 
 <script lang="ts" setup>
+import type { UploadFiles, UploadProps, UploadRawFile } from 'element-plus'
 import WxMaterialSelect from '@/views/mp/components/wx-material-select'
 import { getAccessToken } from '@/utils/auth'
-import type { UploadFiles, UploadProps, UploadRawFile } from 'element-plus'
 import { UploadType, useBeforeUpload } from '@/views/mp/hooks/useUpload'
-import { NewsItem } from './types'
-const message = useMessage()
+import type { NewsItem } from './types'
 
-const UPLOAD_URL = import.meta.env.VITE_BASE_URL + '/admin-api/mp/material/upload-permanent' // 上传永久素材的地址
-const HEADERS = { Authorization: 'Bearer ' + getAccessToken() } // 设置上传的请求头部
+// 设置上传的请求头部
 
 const props = defineProps<{
   modelValue: NewsItem
@@ -78,13 +80,17 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'update:modelValue', v: NewsItem)
 }>()
-const newsItem = computed<NewsItem>({
+
+const message = useMessage()
+
+const UPLOAD_URL = import.meta.env.VITE_BASE_URL + '/admin-api/mp/material/upload-permanent' // 上传永久素材的地址
+const HEADERS = { Authorization: 'Bearer ' + getAccessToken() }const newsItem = computed<NewsItem>({
   get() {
     return props.modelValue
   },
   set(val) {
     emit('update:modelValue', val)
-  }
+  },
 })
 
 const accountId = inject<number>('accountId')
@@ -97,10 +103,10 @@ interface UploadData {
 }
 const uploadData: UploadData = reactive({
   type: UploadType.Image,
-  accountId: accountId!
+  accountId: accountId!,
 })
 
-/** 素材选择完成事件*/
+/** 素材选择完成事件 */
 const onMaterialSelected = (item: any) => {
   showImageDialog.value = false
   newsItem.value.thumbMediaId = item.mediaId
@@ -112,7 +118,7 @@ const onBeforeUpload: UploadProps['beforeUpload'] = (rawFile: UploadRawFile) =>
 
 const onUploadSuccess: UploadProps['onSuccess'] = (res: any) => {
   if (res.code !== 0) {
-    message.error('上传出错：' + res.msg)
+    message.error(`上传出错：${  res.msg}`)
     return false
   }
 
@@ -125,7 +131,7 @@ const onUploadSuccess: UploadProps['onSuccess'] = (res: any) => {
 }
 
 const onUploadError = (err: Error) => {
-  message.error('上传失败: ' + err.message)
+  message.error(`上传失败: ${  err.message}`)
 }
 </script>
 

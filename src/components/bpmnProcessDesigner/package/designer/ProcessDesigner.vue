@@ -1,33 +1,33 @@
 <template>
   <div class="my-process-designer">
     <div class="my-process-designer__header" style="z-index: 999; display: table-row-group">
-      <slot name="control-header"></slot>
+      <slot name="control-header" />
       <template v-if="!$slots['control-header']">
         <ElButtonGroup key="file-control">
-          <XButton preIcon="ep:folder-opened" title="打开文件" @click="refFile.click()" />
+          <XButton pre-icon="ep:folder-opened" title="打开文件" @click="refFile.click()" />
           <el-tooltip effect="light" placement="bottom">
             <template #content>
               <div style="color: #409eff">
                 <!-- <el-button link @click="downloadProcessAsXml()">下载为XML文件</el-button> -->
                 <XTextButton title="下载为XML文件" @click="downloadProcessAsXml()" />
-                <br />
+                <br>
 
                 <!-- <el-button link @click="downloadProcessAsSvg()">下载为SVG文件</el-button> -->
                 <XTextButton title="下载为SVG文件" @click="downloadProcessAsSvg()" />
-                <br />
+                <br>
 
                 <!-- <el-button link @click="downloadProcessAsBpmn()">下载为BPMN文件</el-button> -->
                 <XTextButton title="下载为BPMN文件" @click="downloadProcessAsBpmn()" />
               </div>
             </template>
-            <XButton title="下载文件" preIcon="ep:download" />
+            <XButton title="下载文件" pre-icon="ep:download" />
           </el-tooltip>
           <el-tooltip effect="light">
-            <XButton preIcon="ep:view" title="浏览" />
+            <XButton pre-icon="ep:view" title="浏览" />
             <template #content>
               <!-- <el-button link @click="previewProcessXML">预览XML</el-button> -->
               <XTextButton title="预览XML" @click="previewProcessXML" />
-              <br />
+              <br>
               <!-- <el-button link @click="previewProcessJson">预览JSON</el-button> -->
               <XTextButton title="预览JSON" @click="previewProcessJson" />
             </template>
@@ -37,7 +37,7 @@
             effect="light"
             :content="simulationStatus ? '退出模拟' : '开启模拟'"
           >
-            <XButton preIcon="ep:cpu" title="模拟" @click="processSimulation" />
+            <XButton pre-icon="ep:cpu" title="模拟" @click="processSimulation" />
           </el-tooltip>
         </ElButtonGroup>
         <ElButtonGroup key="align-control">
@@ -48,7 +48,7 @@
               @click="elementsAlign('left')"
             /> -->
             <XButton
-              preIcon="fa:align-left"
+              pre-icon="fa:align-left"
               class="align align-bottom"
               @click="elementsAlign('left')"
             />
@@ -60,7 +60,7 @@
               @click="elementsAlign('right')"
             /> -->
             <XButton
-              preIcon="fa:align-left"
+              pre-icon="fa:align-left"
               class="align align-top"
               @click="elementsAlign('right')"
             />
@@ -72,7 +72,7 @@
               @click="elementsAlign('top')"
             /> -->
             <XButton
-              preIcon="fa:align-left"
+              pre-icon="fa:align-left"
               class="align align-left"
               @click="elementsAlign('top')"
             />
@@ -84,7 +84,7 @@
               @click="elementsAlign('bottom')"
             /> -->
             <XButton
-              preIcon="fa:align-left"
+              pre-icon="fa:align-left"
               class="align align-right"
               @click="elementsAlign('bottom')"
             />
@@ -97,7 +97,7 @@
             /> -->
             <!-- class="align align-center" -->
             <XButton
-              preIcon="fa:align-left"
+              pre-icon="fa:align-left"
               class="align align-center"
               @click="elementsAlign('center')"
             />
@@ -109,7 +109,7 @@
               @click="elementsAlign('middle')"
             /> -->
             <XButton
-              preIcon="fa:align-left"
+              pre-icon="fa:align-left"
               class="align align-middle"
               @click="elementsAlign('middle')"
             />
@@ -123,29 +123,29 @@
               @click="processZoomOut()"
             /> -->
             <XButton
-              preIcon="ep:zoom-out"
-              @click="processZoomOut()"
+              pre-icon="ep:zoom-out"
               :disabled="defaultZoom < 0.2"
+              @click="processZoomOut()"
             />
           </el-tooltip>
-          <el-button>{{ Math.floor(defaultZoom * 10 * 10) + '%' }}</el-button>
+          <el-button>{{ `${Math.floor(defaultZoom * 10 * 10)}%` }}</el-button>
           <el-tooltip effect="light" content="放大视图">
             <!-- <el-button
               :disabled="defaultZoom > 4"
               icon="el-icon-zoom-in"
               @click="processZoomIn()"
             /> -->
-            <XButton preIcon="ep:zoom-in" @click="processZoomIn()" :disabled="defaultZoom > 4" />
+            <XButton pre-icon="ep:zoom-in" :disabled="defaultZoom > 4" @click="processZoomIn()" />
           </el-tooltip>
           <el-tooltip effect="light" content="重置视图并居中">
             <!-- <el-button icon="el-icon-c-scale-to-original" @click="processReZoom()" /> -->
-            <XButton preIcon="ep:scale-to-original" @click="processReZoom()" />
+            <XButton pre-icon="ep:scale-to-original" @click="processReZoom()" />
           </el-tooltip>
         </ElButtonGroup>
         <ElButtonGroup key="stack-control">
           <el-tooltip effect="light" content="撤销">
             <!-- <el-button :disabled="!revocable" icon="el-icon-refresh-left" @click="processUndo()" /> -->
-            <XButton preIcon="ep:refresh-left" @click="processUndo()" :disabled="!revocable" />
+            <XButton pre-icon="ep:refresh-left" :disabled="!revocable" @click="processUndo()" />
           </el-tooltip>
           <el-tooltip effect="light" content="恢复">
             <!-- <el-button
@@ -153,44 +153,44 @@
               icon="el-icon-refresh-right"
               @click="processRedo()"
             /> -->
-            <XButton preIcon="ep:refresh-right" @click="processRedo()" :disabled="!recoverable" />
+            <XButton pre-icon="ep:refresh-right" :disabled="!recoverable" @click="processRedo()" />
           </el-tooltip>
           <el-tooltip effect="light" content="重新绘制">
             <!-- <el-button icon="el-icon-refresh" @click="processRestart" /> -->
-            <XButton preIcon="ep:refresh" @click="processRestart()" />
+            <XButton pre-icon="ep:refresh" @click="processRestart()" />
           </el-tooltip>
         </ElButtonGroup>
         <XButton
-          preIcon="ep:plus"
+          pre-icon="ep:plus"
           title="保存模型"
-          @click="processSave"
           :type="props.headerButtonType"
           :disabled="simulationStatus"
+          @click="processSave"
         />
       </template>
-      <!-- 用于打开本地文件-->
+      <!-- 用于打开本地文件 -->
       <input
-        type="file"
         id="files"
         ref="refFile"
+        type="file"
         style="display: none"
         accept=".xml, .bpmn"
         @change="importLocalFile"
-      />
+      >
     </div>
     <div class="my-process-designer__container">
       <div
-        class="my-process-designer__canvas"
-        ref="bpmnCanvas"
         id="bpmnCanvas"
+        ref="bpmnCanvas"
+        class="my-process-designer__canvas"
         style="width: 1680px; height: 800px"
-      ></div>
+      />
       <!-- <div id="js-properties-panel" class="panel"></div> -->
       <!-- <div class="my-process-designer__canvas" ref="bpmn-canvas"></div> -->
     </div>
     <Dialog
-      title="预览"
       v-model="previewModelVisible"
+      title="预览"
       width="80%"
       :scroll="true"
       max-height="600px"
@@ -214,12 +214,15 @@
 // import 'bpmn-js-properties-panel/dist/assets/bpmn-js-properties-panel.css' // 右侧框样式
 import { ElMessage, ElMessageBox } from 'element-plus'
 import BpmnModeler from 'bpmn-js/lib/Modeler'
+import tokenSimulation from 'bpmn-js-token-simulation'
+import { XmlNode, XmlNodeType, parseXmlString } from 'steady-xml'
 import DefaultEmptyXML from './plugins/defaultEmpty'
+
 // 翻译方法
 import customTranslate from './plugins/translate/customTranslate'
 import translationsCN from './plugins/translate/zh'
+
 // 模拟流转流程
-import tokenSimulation from 'bpmn-js-token-simulation'
 // 标签解析构建器
 // import bpmnPropertiesProvider from "bpmn-js-properties-panel/lib/provider/bpmn";
 // import propertiesPanelModule from 'bpmn-js-properties-panel'
@@ -228,14 +231,16 @@ import tokenSimulation from 'bpmn-js-token-simulation'
 import camundaModdleDescriptor from './plugins/descriptor/camundaDescriptor.json'
 import activitiModdleDescriptor from './plugins/descriptor/activitiDescriptor.json'
 import flowableModdleDescriptor from './plugins/descriptor/flowableDescriptor.json'
+
 // 标签解析 Extension
 import camundaModdleExtension from './plugins/extension-moddle/camunda'
 import activitiModdleExtension from './plugins/extension-moddle/activiti'
 import flowableModdleExtension from './plugins/extension-moddle/flowable'
+
 // 引入json转换与高亮
 // import xml2js from 'xml-js'
 // import xml2js from 'fast-xml-parser'
-import { XmlNode, XmlNodeType, parseXmlString } from 'steady-xml'
+
 // 代码高亮插件
 // import hljs from 'highlight.js/lib/highlight'
 // import 'highlight.js/styles/github-gist.css'
@@ -247,20 +252,6 @@ import { XmlNode, XmlNodeType, parseXmlString } from 'steady-xml'
 
 defineOptions({ name: 'MyProcessDesigner' })
 
-const bpmnCanvas = ref()
-const refFile = ref()
-const emit = defineEmits([
-  'destroy',
-  'init-finished',
-  'save',
-  'commandStack-changed',
-  'input',
-  'change',
-  'canvas-viewbox-changed',
-  // eventName.name
-  'element-click'
-])
-
 const props = defineProps({
   value: String, // xml 字符串
   // valueWatch: true, // xml 字符串的 watch 状态
@@ -270,51 +261,63 @@ const props = defineProps({
   translations: {
     // 自定义的翻译文件
     type: Object,
-    default: () => {}
+    default: () => {},
   },
   additionalModel: [Object, Array], // 自定义model
   moddleExtension: {
     // 自定义moddle
     type: Object,
-    default: () => {}
+    default: () => {},
   },
   onlyCustomizeAddi: {
     type: Boolean,
-    default: false
+    default: false,
   },
   onlyCustomizeModdle: {
     type: Boolean,
-    default: false
+    default: false,
   },
   simulation: {
     type: Boolean,
-    default: true
+    default: true,
   },
   keyboard: {
     type: Boolean,
-    default: true
+    default: true,
   },
   prefix: {
     type: String,
-    default: 'camunda'
+    default: 'camunda',
   },
   events: {
     type: Array,
-    default: () => ['element.click']
+    default: () => ['element.click'],
   },
   headerButtonSize: {
     type: String,
     default: 'small',
-    validator: (value: string) => ['default', 'medium', 'small', 'mini'].indexOf(value) !== -1
+    validator: (value: string) => ['default', 'medium', 'small', 'mini'].includes(value),
   },
   headerButtonType: {
     type: String,
     default: 'primary',
     validator: (value: string) =>
-      ['default', 'primary', 'success', 'warning', 'danger', 'info'].indexOf(value) !== -1
-  }
+      ['default', 'primary', 'success', 'warning', 'danger', 'info'].includes(value),
+  },
 })
-
+const emit = defineEmits([
+  'destroy',
+  'init-finished',
+  'save',
+  'commandStack-changed',
+  'input',
+  'change',
+  'canvas-viewbox-changed',
+  // eventName.name
+  'element-click',
+])
+const bpmnCanvas = ref()
+const refFile = ref()
 provide('configGlobal', props)
 let bpmnModeler: any = null
 const defaultZoom = ref(1)
@@ -329,44 +332,41 @@ const additionalModules = computed(() => {
   const Modules: any[] = []
   // 仅保留用户自定义扩展模块
   if (props.onlyCustomizeAddi) {
-    if (Object.prototype.toString.call(props.additionalModel) == '[object Array]') {
+    if (Object.prototype.toString.call(props.additionalModel) === '[object Array]')
       return props.additionalModel || []
-    }
+
     return [props.additionalModel]
   }
 
   // 插入用户自定义扩展模块
-  if (Object.prototype.toString.call(props.additionalModel) == '[object Array]') {
+  if (Object.prototype.toString.call(props.additionalModel) === '[object Array]')
     Modules.push(...(props.additionalModel as any[]))
-  } else {
+  else
     props.additionalModel && Modules.push(props.additionalModel)
-  }
 
   // 翻译模块
   const TranslateModule = {
-    translate: ['value', customTranslate(props.translations || translationsCN)]
+    translate: ['value', customTranslate(props.translations || translationsCN)],
   }
   Modules.push(TranslateModule)
 
   // 模拟流转模块
-  if (props.simulation) {
+  if (props.simulation)
     Modules.push(tokenSimulation)
-  }
 
   // 根据需要的流程类型设置扩展元素构建模块
   // if (this.prefix === "bpmn") {
   //   Modules.push(bpmnModdleExtension);
   // }
   console.log(props.prefix, 'props.prefix ')
-  if (props.prefix === 'camunda') {
+  if (props.prefix === 'camunda')
     Modules.push(camundaModdleExtension)
-  }
-  if (props.prefix === 'flowable') {
+
+  if (props.prefix === 'flowable')
     Modules.push(flowableModdleExtension)
-  }
-  if (props.prefix === 'activiti') {
+
+  if (props.prefix === 'activiti')
     Modules.push(activitiModdleExtension)
-  }
 
   return Modules
 })
@@ -376,34 +376,33 @@ const moddleExtensions = computed(() => {
   console.log(props.prefix, 'props.prefix')
   const Extensions: any = {}
   // 仅使用用户自定义模块
-  if (props.onlyCustomizeModdle) {
+  if (props.onlyCustomizeModdle)
     return props.moddleExtension || null
-  }
 
   // 插入用户自定义模块
   if (props.moddleExtension) {
-    for (let key in props.moddleExtension) {
+    for (const key in props.moddleExtension)
       Extensions[key] = props.moddleExtension[key]
-    }
   }
 
   // 根据需要的 "流程类型" 设置 对应的解析文件
-  if (props.prefix === 'activiti') {
+  if (props.prefix === 'activiti')
     Extensions.activiti = activitiModdleDescriptor
-  }
-  if (props.prefix === 'flowable') {
+
+  if (props.prefix === 'flowable')
     Extensions.flowable = flowableModdleDescriptor
-  }
-  if (props.prefix === 'camunda') {
+
+  if (props.prefix === 'camunda')
     Extensions.camunda = camundaModdleDescriptor
-  }
+
   return Extensions
 })
 console.log(additionalModules, 'additionalModules()')
 console.log(moddleExtensions, 'moddleExtensions()')
 const initBpmnModeler = () => {
-  if (bpmnModeler) return
-  let data = document.getElementById('bpmnCanvas')
+  if (bpmnModeler)
+    return
+  const data = document.getElementById('bpmnCanvas')
   console.log(data, 'data')
   console.log(props.keyboard, 'props.keyboard')
   console.log(additionalModules, 'additionalModules()')
@@ -423,7 +422,7 @@ const initBpmnModeler = () => {
     keyboard: props.keyboard ? { bindTo: document } : null,
     // additionalModules: additionalModules.value,
     additionalModules: additionalModules.value,
-    moddleExtensions: moddleExtensions.value
+    moddleExtensions: moddleExtensions.value,
 
     // additionalModules: [
     // additionalModules.value
@@ -446,10 +445,10 @@ const initModelListeners = () => {
   console.log(EventBus, 'EventBus')
   // 注册需要的监听事件, 将. 替换为 - , 避免解析异常
   props.events.forEach((event: any) => {
-    EventBus.on(event, function (eventObj) {
-      let eventName = event.replace(/\./g, '-')
+    EventBus.on(event, (eventObj) => {
+      const eventName = event.replace(/\./g, '-')
       // eventName.name = eventName
-      let element = eventObj ? eventObj.element : null
+      const element = eventObj ? eventObj.element : null
       console.log(eventName, 'eventName')
       console.log(element, 'element')
       emit('element-click', element, eventObj)
@@ -461,11 +460,12 @@ const initModelListeners = () => {
     try {
       recoverable.value = bpmnModeler.get('commandStack').canRedo()
       revocable.value = bpmnModeler.get('commandStack').canUndo()
-      let { xml } = await bpmnModeler.saveXML({ format: true })
+      const { xml } = await bpmnModeler.saveXML({ format: true })
       emit('commandStack-changed', event)
       emit('input', xml)
       emit('change', xml)
-    } catch (e: any) {
+    }
+    catch (e: any) {
       console.error(`[Process Designer Warn]: ${e.message || e}`)
     }
   })
@@ -480,18 +480,18 @@ const initModelListeners = () => {
 const createNewDiagram = async (xml) => {
   console.log(xml, 'xml')
   // 将字符串转换成图显示出来
-  let newId = props.processId || `Process_${new Date().getTime()}`
-  let newName = props.processName || `业务流程_${new Date().getTime()}`
-  let xmlString = xml || DefaultEmptyXML(newId, newName, props.prefix)
+  const newId = props.processId || `Process_${new Date().getTime()}`
+  const newName = props.processName || `业务流程_${new Date().getTime()}`
+  const xmlString = xml || DefaultEmptyXML(newId, newName, props.prefix)
   try {
     // console.log(xmlString, 'xmlString')
     // console.log(this.bpmnModeler.importXML);
-    let { warnings } = await bpmnModeler.importXML(xmlString)
+    const { warnings } = await bpmnModeler.importXML(xmlString)
     console.log(warnings, 'warnings')
-    if (warnings && warnings.length) {
-      warnings.forEach((warn) => console.warn(warn))
-    }
-  } catch (e: any) {
+    if (warnings && warnings.length)
+      warnings.forEach(warn => console.warn(warn))
+  }
+  catch (e: any) {
     console.error(`[Process Designer Warn]: ${e.message || e}`)
   }
 }
@@ -503,28 +503,30 @@ const downloadProcess = async (type) => {
     if (type === 'xml' || type === 'bpmn') {
       const { err, xml } = await bpmnModeler.saveXML()
       // 读取异常时抛出异常
-      if (err) {
+      if (err)
         console.error(`[Process Designer Warn ]: ${err.message || err}`)
-      }
-      let { href, filename } = setEncoded(type.toUpperCase(), xml)
-      downloadFunc(href, filename)
-    } else {
-      const { err, svg } = await bpmnModeler.saveSVG()
-      // 读取异常时抛出异常
-      if (err) {
-        return console.error(err)
-      }
-      let { href, filename } = setEncoded('SVG', svg)
+
+      const { href, filename } = setEncoded(type.toUpperCase(), xml)
       downloadFunc(href, filename)
     }
-  } catch (e: any) {
+    else {
+      const { err, svg } = await bpmnModeler.saveSVG()
+      // 读取异常时抛出异常
+      if (err)
+        return console.error(err)
+
+      const { href, filename } = setEncoded('SVG', svg)
+      downloadFunc(href, filename)
+    }
+  }
+  catch (e: any) {
     console.error(`[Process Designer Warn ]: ${e.message || e}`)
   }
   // 文件下载方法
   function downloadFunc(href, filename) {
     if (href && filename) {
-      let a = document.createElement('a')
-      a.download = filename //指定下载的文件名
+      const a = document.createElement('a')
+      a.download = filename // 指定下载的文件名
       a.href = href //  URL对象
       a.click() // 模拟点击
       URL.revokeObjectURL(a.href) // 释放URL 对象
@@ -541,7 +543,7 @@ const setEncoded = (type, data) => {
     href: `data:application/${
       type === 'svg' ? 'text/xml' : 'bpmn20-xml'
     };charset=UTF-8,${encodedData}`,
-    data: data
+    data,
   }
 }
 
@@ -551,7 +553,7 @@ const importLocalFile = () => {
   const reader = new FileReader()
   reader.readAsText(file)
   reader.onload = function () {
-    let xmlStr = this.result
+    const xmlStr = this.result
     createNewDiagram(xmlStr)
   }
 }
@@ -567,7 +569,7 @@ const downloadProcessAsSvg = () => {
 }
 const processSimulation = () => {
   simulationStatus.value = !simulationStatus.value
-  console.log(bpmnModeler.get('toggleMode', 'strict'), "bpmnModeler.get('toggleMode')")
+  console.log(bpmnModeler.get('toggleMode', 'strict'), 'bpmnModeler.get(\'toggleMode\')')
   props.simulation && bpmnModeler.get('toggleMode', 'strict').toggleMode()
 }
 const processRedo = () => {
@@ -577,18 +579,18 @@ const processUndo = () => {
   bpmnModeler.get('commandStack').undo()
 }
 const processZoomIn = (zoomStep = 0.1) => {
-  let newZoom = Math.floor(defaultZoom.value * 100 + zoomStep * 100) / 100
-  if (newZoom > 4) {
+  const newZoom = Math.floor(defaultZoom.value * 100 + zoomStep * 100) / 100
+  if (newZoom > 4)
     throw new Error('[Process Designer Warn ]: The zoom ratio cannot be greater than 4')
-  }
+
   defaultZoom.value = newZoom
   bpmnModeler.get('canvas').zoom(defaultZoom.value)
 }
 const processZoomOut = (zoomStep = 0.1) => {
-  let newZoom = Math.floor(defaultZoom.value * 100 - zoomStep * 100) / 100
-  if (newZoom < 0.2) {
+  const newZoom = Math.floor(defaultZoom.value * 100 - zoomStep * 100) / 100
+  if (newZoom < 0.2)
     throw new Error('[Process Designer Warn ]: The zoom ratio cannot be less than 0.2')
-  }
+
   defaultZoom.value = newZoom
   bpmnModeler.get('canvas').zoom(defaultZoom.value)
 }
@@ -623,12 +625,12 @@ const elementsAlign = (align) => {
   ElMessageBox.confirm('自动对齐可能造成图形变形，是否继续？', '警告', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
-    type: 'warning'
+    type: 'warning',
   }).then(() => {
     Align.trigger(SelectedElements, align)
   })
 }
-/*-----------------------------    方法结束     ---------------------------------*/
+/* -----------------------------    方法结束     --------------------------------- */
 const previewProcessXML = () => {
   console.log(bpmnModeler.saveXML, 'bpmnModeler')
   bpmnModeler.saveXML({ format: true }).then(({ xml }) => {
@@ -697,7 +699,8 @@ onMounted(() => {
 onBeforeUnmount(() => {
   // this.$once('hook:beforeDestroy', () => {
   // })
-  if (bpmnModeler) bpmnModeler.destroy()
+  if (bpmnModeler)
+    bpmnModeler.destroy()
   emit('destroy', bpmnModeler)
   bpmnModeler = null
 })

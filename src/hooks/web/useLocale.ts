@@ -7,11 +7,12 @@ const setI18nLanguage = (locale: LocaleType) => {
 
   if (i18n.mode === 'legacy') {
     i18n.global.locale = locale
-  } else {
+  }
+  else {
     ;(i18n.global.locale as any).value = locale
   }
   localeStore.setCurrentLocale({
-    lang: locale
+    lang: locale,
   })
   setHtmlPageLang(locale)
 }
@@ -30,6 +31,6 @@ export const useLocale = () => {
   }
 
   return {
-    changeLocale
+    changeLocale,
   }
 }

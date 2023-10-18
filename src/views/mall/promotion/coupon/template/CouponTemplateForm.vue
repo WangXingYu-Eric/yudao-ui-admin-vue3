@@ -22,12 +22,12 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item
-        label="商品"
         v-if="formData.productScope === PromotionProductScopeEnum.SPU.scope"
+        label="商品"
         prop="productSpuIds"
       >
         <div class="flex flex-wrap items-center gap-1">
-          <div class="select-box spu-pic" v-for="(spu, index) in productSpus" :key="spu.id">
+          <div v-for="(spu, index) in productSpus" :key="spu.id" class="select-box spu-pic">
             <el-image :src="spu.picUrl" />
             <Icon icon="ep:circle-close-filled" class="del-icon" @click="handleRemoveSpu(index)" />
           </div>
@@ -37,8 +37,8 @@
         </div>
       </el-form-item>
       <el-form-item
-        label="分类"
         v-if="formData.productScope === PromotionProductScopeEnum.CATEGORY.scope"
+        label="分类"
         prop="productCategoryIds"
       >
         <ProductCategorySelect v-model="formData.productCategoryIds" />
@@ -109,8 +109,12 @@
       </el-form-item>
       <el-form-item label="领取方式" prop="takeType">
         <el-radio-group v-model="formData.takeType">
-          <el-radio :key="1" :label="1">直接领取</el-radio>
-          <el-radio :key="2" :label="2">指定发放</el-radio>
+          <el-radio :key="1" :label="1">
+            直接领取
+          </el-radio>
+          <el-radio :key="2" :label="2">
+            指定发放
+          </el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item v-if="formData.takeType === 1" label="发放数量" prop="totalCount">
@@ -182,12 +186,17 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button :disabled="formLoading" type="primary" @click="submitForm">确 定</el-button>
-      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button :disabled="formLoading" type="primary" @click="submitForm">
+        确 定
+      </el-button>
+      <el-button @click="dialogVisible = false">
+        取 消
+      </el-button>
     </template>
   </Dialog>
   <SpuTableSelect ref="spuTableSelectRef" multiple @change="handleSpuSelected" />
 </template>
+
 <script lang="ts" setup>
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import * as CouponTemplateApi from '@/api/mall/promotion/coupon/couponTemplate'
@@ -195,14 +204,17 @@ import * as ProductSpuApi from '@/api/mall/product/spu'
 import {
   CouponTemplateValidityTypeEnum,
   PromotionDiscountTypeEnum,
-  PromotionProductScopeEnum
+  PromotionProductScopeEnum,
 } from '@/utils/constants'
 import SpuTableSelect from '@/views/mall/product/spu/components/SpuTableSelect.vue'
 import ProductCategorySelect from '@/views/mall/product/category/components/ProductCategorySelect.vue'
 
 defineOptions({ name: 'CouponTemplateForm' })
 
-const { t } = useI18n() // 国际化
+// 提供 open 方法，用于打开弹窗
+
+/** 提交表单 */
+const emit = defineEmits(['success']); const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 
 const dialogVisible = ref(false) // 弹窗的是否展示
@@ -229,7 +241,7 @@ const formData = ref({
   productScope: PromotionProductScopeEnum.ALL.scope,
   productScopeValues: [], // 商品范围：值为 品类编号列表 或 商品编号列表 ，用于提交
   productCategoryIds: [], // 仅用于表单，不提交
-  productSpuIds: [] // 仅用于表单，不提交
+  productSpuIds: [], // 仅用于表单，不提交
 })
 const formRules = reactive({
   name: [{ required: true, message: '优惠券名称不能为空', trigger: 'blur' }],
@@ -247,7 +259,7 @@ const formRules = reactive({
   fixedEndTerm: [{ required: true, message: '开始领取天数不能为空', trigger: 'blur' }],
   productScope: [{ required: true, message: '商品范围不能为空', trigger: 'blur' }],
   productSpuIds: [{ required: true, message: '商品不能为空', trigger: 'blur' }],
-  productCategoryIds: [{ required: true, message: '分类不能为空', trigger: 'blur' }]
+  productCategoryIds: [{ required: true, message: '分类不能为空', trigger: 'blur' }],
 })
 const formRef = ref() // 表单 Ref
 const productSpus = ref<ProductSpuApi.Spu[]>([]) // 商品列表
@@ -255,7 +267,7 @@ const productSpus = ref<ProductSpuApi.Spu[]>([]) // 商品列表
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
   dialogVisible.value = true
-  dialogTitle.value = t('action.' + type)
+  dialogTitle.value = t(`action.${type}`)
   formType.value = type
   resetForm()
   // 修改时，设置数据
@@ -271,24 +283,24 @@ const open = async (type: string, id?: number) => {
         discountLimitPrice:
           data.discountLimitPrice !== undefined ? data.discountLimitPrice / 100.0 : undefined,
         usePrice: data.usePrice !== undefined ? data.usePrice / 100.0 : undefined,
-        validTimes: [data.validStartTime, data.validEndTime]
+        validTimes: [data.validStartTime, data.validEndTime],
       }
       // 获得商品范围
       await getProductScope()
-    } finally {
+    }
+    finally {
       formLoading.value = false
     }
   }
 }
-defineExpose({ open }) // 提供 open 方法，用于打开弹窗
-
-/** 提交表单 */
-const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
+defineExpose({ open }) // 定义 success 事件，用于操作成功后的回调
 const submitForm = async () => {
   // 校验表单
-  if (!formRef) return
+  if (!formRef)
+    return
   const valid = await formRef.value.validate()
-  if (!valid) return
+  if (!valid)
+    return
   // 提交请求
   formLoading.value = true
   try {
@@ -312,7 +324,7 @@ const submitForm = async () => {
       validEndTime:
         formData.value.validTimes && formData.value.validTimes.length === 2
           ? formData.value.validTimes[1]
-          : undefined
+          : undefined,
     } as unknown as CouponTemplateApi.CouponTemplateVO
 
     // 设置商品范围
@@ -321,14 +333,16 @@ const submitForm = async () => {
     if (formType.value === 'create') {
       await CouponTemplateApi.createCouponTemplate(data)
       message.success(t('common.createSuccess'))
-    } else {
+    }
+    else {
       await CouponTemplateApi.updateCouponTemplate(data)
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
     // 发送操作成功的事件
     emit('success')
-  } finally {
+  }
+  finally {
     formLoading.value = false
   }
 }
@@ -355,7 +369,7 @@ const resetForm = () => {
     productScope: PromotionProductScopeEnum.ALL.scope,
     productScopeValues: [],
     productSpuIds: [],
-    productCategoryIds: []
+    productCategoryIds: [],
   }
   formRef.value?.resetFields()
   productSpus.value = []
@@ -410,7 +424,7 @@ const openSpuTableSelect = () => {
 /** 选择商品后触发 */
 const handleSpuSelected = (spus: ProductSpuApi.Spu[]) => {
   productSpus.value = spus
-  formData.value.productSpuIds = spus.map((spu) => spu.id) as []
+  formData.value.productSpuIds = spus.map(spu => spu.id) as []
 }
 
 /** 选择商品后触发 */

@@ -1,9 +1,9 @@
 <template>
   <ContentWrap>
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="68px"
     >
@@ -22,8 +22,8 @@
           v-model="queryParams.label"
           placeholder="请输入字典标签"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="状态" prop="status">
@@ -37,22 +37,26 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        <el-button @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" /> 搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon icon="ep:refresh" class="mr-5px" /> 重置
+        </el-button>
         <el-button
+          v-hasPermi="['system:dict:create']"
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['system:dict:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
         <el-button
+          v-hasPermi="['system:dict:export']"
           type="success"
           plain
-          @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['system:dict:export']"
+          @click="handleExport"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
@@ -85,18 +89,18 @@
       <el-table-column label="操作" align="center">
         <template #default="scope">
           <el-button
+            v-hasPermi="['system:dict:update']"
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['system:dict:update']"
           >
             修改
           </el-button>
           <el-button
+            v-hasPermi="['system:dict:delete']"
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
-            v-hasPermi="['system:dict:delete']"
           >
             删除
           </el-button>
@@ -105,9 +109,9 @@
     </el-table>
     <!-- 分页 -->
     <Pagination
-      :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
+      :total="total"
       @pagination="getList"
     />
   </ContentWrap>
@@ -115,13 +119,14 @@
   <!-- 表单弹窗：添加/修改 -->
   <DictDataForm ref="formRef" @success="getList" />
 </template>
+
 <script lang="ts" setup>
-import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
+import DictDataForm from './DictDataForm.vue'
+import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
 import * as DictDataApi from '@/api/system/dict/dict.data'
 import * as DictTypeApi from '@/api/system/dict/dict.type'
-import DictDataForm from './DictDataForm.vue'
 
 defineOptions({ name: 'SystemDictData' })
 
@@ -137,7 +142,7 @@ const queryParams = reactive({
   pageSize: 10,
   label: '',
   status: undefined,
-  dictType: route.params.dictType
+  dictType: route.params.dictType,
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
@@ -150,7 +155,8 @@ const getList = async () => {
     const data = await DictDataApi.getDictDataPage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -183,7 +189,8 @@ const handleDelete = async (id: number) => {
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
 /** 导出按钮操作 */
@@ -195,13 +202,15 @@ const handleExport = async () => {
     exportLoading.value = true
     const data = await DictDataApi.exportDictData(queryParams)
     download.excel(data, '字典数据.xls')
-  } catch {
-  } finally {
+  }
+  catch {
+  }
+  finally {
     exportLoading.value = false
   }
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(async () => {
   await getList()
   // 查询字典（精简)列表

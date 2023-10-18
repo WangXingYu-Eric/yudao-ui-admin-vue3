@@ -2,12 +2,12 @@
   <ContentWrap>
     <el-form
       ref="formRef"
+      v-loading="formLoading"
       :model="formData"
       :rules="formRules"
       label-width="120px"
-      v-loading="formLoading"
     >
-      <el-form-item label="hideId" v-show="false">
+      <el-form-item v-show="false" label="hideId">
         <el-input v-model="formData.id" />
       </el-form-item>
 
@@ -15,7 +15,9 @@
         <el-tab-pane label="积分">
           <el-form-item label="积分抵扣" prop="pointTradeDeductEnable">
             <el-switch v-model="formData.pointTradeDeductEnable" style="user-select: none" />
-            <el-text class="w-full" size="small" type="info">下单积分是否抵用订单金额</el-text>
+            <el-text class="w-full" size="small" type="info">
+              下单积分是否抵用订单金额
+            </el-text>
           </el-form-item>
           <el-form-item label="积分抵扣" prop="pointTradeDeductUnitPrice">
             <el-input-number
@@ -49,11 +51,14 @@
       </el-tabs>
 
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">保存</el-button>
+        <el-button type="primary" @click="onSubmit">
+          保存
+        </el-button>
       </el-form-item>
     </el-form>
   </ContentWrap>
 </template>
+
 <script lang="ts" setup>
 import * as ConfigApi from '@/api/member/config'
 
@@ -69,7 +74,7 @@ const formData = ref({
   pointTradeDeductEnable: true,
   pointTradeDeductUnitPrice: 0,
   pointTradeDeductMaxPrice: 0,
-  pointTradeGivePoint: 0
+  pointTradeGivePoint: 0,
 })
 
 // 创建一个计算属性，用于将 pointTradeDeductUnitPrice 显示为带两位小数的形式
@@ -77,7 +82,7 @@ const computedPointTradeDeductUnitPrice = computed({
   get: () => (formData.value.pointTradeDeductUnitPrice / 100).toFixed(2),
   set: (newValue: number) => {
     formData.value.pointTradeDeductUnitPrice = Math.round(newValue * 100)
-  }
+  },
 })
 
 const formRules = reactive({})
@@ -86,9 +91,11 @@ const formRef = ref() // 表单 Ref
 /** 修改积分配置 */
 const onSubmit = async () => {
   // 校验表单
-  if (!formRef) return
+  if (!formRef)
+    return
   const valid = await formRef.value.validate()
-  if (!valid) return
+  if (!valid)
+    return
   // 提交请求
   formLoading.value = true
   try {
@@ -96,7 +103,8 @@ const onSubmit = async () => {
     await ConfigApi.saveConfig(data)
     message.success(t('common.updateSuccess'))
     dialogVisible.value = false
-  } finally {
+  }
+  finally {
     formLoading.value = false
   }
 }
@@ -105,11 +113,12 @@ const onSubmit = async () => {
 const getConfig = async () => {
   try {
     const data = await ConfigApi.getConfig()
-    if (data === null) {
+    if (data === null)
       return
-    }
+
     formData.value = data
-  } finally {
+  }
+  finally {
   }
 }
 

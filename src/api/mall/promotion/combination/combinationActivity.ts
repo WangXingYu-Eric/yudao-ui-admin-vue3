@@ -1,5 +1,5 @@
 import request from '@/config/axios'
-import { Sku, Spu } from '@/api/mall/product/spu'
+import type { Sku, Spu } from '@/api/mall/product/spu'
 
 export interface CombinationActivityVO {
   id?: number
@@ -42,7 +42,7 @@ export const getCombinationActivityPage = async (params) => {
 
 // 查询拼团活动详情
 export const getCombinationActivity = async (id: number) => {
-  return await request.get({ url: '/promotion/combination-activity/get?id=' + id })
+  return await request.get({ url: `/promotion/combination-activity/get?id=${id}` })
 }
 
 // 新增拼团活动
@@ -57,10 +57,10 @@ export const updateCombinationActivity = async (data: CombinationActivityVO) => 
 
 // 关闭拼团活动
 export const closeCombinationActivity = async (id: number) => {
-  return await request.put({ url: '/promotion/bargain-combination/close?id=' + id })
+  return await request.put({ url: `/promotion/bargain-combination/close?id=${id}` })
 }
 
 // 删除拼团活动
 export const deleteCombinationActivity = async (id: number) => {
-  return await request.delete({ url: '/promotion/combination-activity/delete?id=' + id })
+  return await request.delete({ url: `/promotion/combination-activity/delete?id=${id}` })
 }

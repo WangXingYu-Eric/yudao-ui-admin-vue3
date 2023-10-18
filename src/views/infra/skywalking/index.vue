@@ -5,6 +5,7 @@
     <IFrame v-if="!loading" v-loading="loading" :src="src" />
   </ContentWrap>
 </template>
+
 <script lang="ts" setup>
 import * as ConfigApi from '@/api/infra/config'
 
@@ -17,10 +18,10 @@ const src = ref('http://skywalking.shop.iocoder.cn')
 onMounted(async () => {
   try {
     const data = await ConfigApi.getConfigKey('url.skywalking')
-    if (data && data.length > 0) {
+    if (data && data.length > 0)
       src.value = data
-    }
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 })

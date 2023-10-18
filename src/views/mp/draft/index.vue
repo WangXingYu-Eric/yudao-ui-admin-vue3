@@ -4,9 +4,9 @@
   <!-- 搜索工作栏 -->
   <ContentWrap>
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="68px"
     >
@@ -15,11 +15,11 @@
       </el-form-item>
       <el-form-item>
         <el-button
+          v-hasPermi="['mp:draft:create']"
           type="primary"
           plain
-          @click="handleAdd"
-          v-hasPermi="['mp:draft:create']"
           :disabled="accountId === 0"
+          @click="handleAdd"
         >
           <Icon icon="ep:plus" />新增
         </el-button>
@@ -38,40 +38,45 @@
     />
     <!-- 分页记录 -->
     <Pagination
-      :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
+      :total="total"
       @pagination="getList"
     />
   </ContentWrap>
 
   <!-- 添加或修改草稿对话框 -->
   <el-dialog
+    v-model="showDialog"
     :title="isCreating ? '新建图文' : '修改图文'"
     width="80%"
-    v-model="showDialog"
     :before-close="onBeforeDialogClose"
     destroy-on-close
   >
     <NewsForm v-model="newsList" v-loading="isSubmitting" :is-creating="isCreating" />
     <template #footer>
-      <el-button @click="showDialog = false">取 消</el-button>
-      <el-button type="primary" @click="onSubmitNewsItem">提 交</el-button>
+      <el-button @click="showDialog = false">
+        取 消
+      </el-button>
+      <el-button type="primary" @click="onSubmitNewsItem">
+        提 交
+      </el-button>
     </template>
   </el-dialog>
 </template>
 
 <script lang="ts" setup>
+import {
+  type Article,
+  DraftTable,
+  NewsForm,
+  type NewsItem,
+  createEmptyNewsItem,
+} from './components/'
 import WxAccountSelect from '@/views/mp/components/wx-account-select'
 import * as MpDraftApi from '@/api/mp/draft'
 import * as MpFreePublishApi from '@/api/mp/freePublish'
-import {
-  type Article,
-  type NewsItem,
-  NewsForm,
-  DraftTable,
-  createEmptyNewsItem
-} from './components/'
+
 // import drafts from './mock' // 可以用改本地数据模拟，避免API调用超限
 
 defineOptions({ name: 'MpDraft' })
@@ -88,7 +93,7 @@ const total = ref(0) // 列表的总页数
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
-  accountId: accountId
+  accountId,
 })
 
 // ========== 草稿新建 or 修改 ==========
@@ -98,7 +103,7 @@ const mediaId = ref('')
 const isCreating = ref(true)
 const isSubmitting = ref(false)
 
-/** 侦听公众号变化 **/
+/** 侦听公众号变化 */
 const onAccountChanged = (id: number) => {
   accountId.value = id
   queryParams.pageNo = 1
@@ -110,7 +115,8 @@ const onBeforeDialogClose = async (onDone: () => {}) => {
   try {
     await message.confirm('修改内容可能还未保存，确定关闭吗?')
     onDone()
-  } catch {}
+  }
+  catch {}
 }
 
 // ======================== 列表查询 ========================
@@ -128,7 +134,8 @@ const getList = async () => {
     })
     list.value = drafts.list
     total.value = drafts.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -156,11 +163,13 @@ const onSubmitNewsItem = async () => {
     if (isCreating.value) {
       await MpDraftApi.createDraft(accountId.value, newsList.value)
       message.notifySuccess('新增成功')
-    } else {
+    }
+    else {
       await MpDraftApi.updateDraft(accountId.value, mediaId.value, newsList.value)
       message.notifySuccess('更新成功')
     }
-  } finally {
+  }
+  finally {
     showDialog.value = false
     isSubmitting.value = false
     await getList()
@@ -170,16 +179,17 @@ const onSubmitNewsItem = async () => {
 // ======================== 草稿箱发布 ========================
 const onPublish = async (item: Article) => {
   const mediaId = item.mediaId
-  const content =
-    '你正在通过发布的方式发表内容。 发布不占用群发次数，一天可多次发布。' +
-    '已发布内容不会推送给用户，也不会展示在公众号主页中。 ' +
-    '发布后，你可以前往发表记录获取链接，也可以将发布内容添加到自定义菜单、自动回复、话题和页面模板中。'
+  const content
+    = '你正在通过发布的方式发表内容。 发布不占用群发次数，一天可多次发布。'
+    + '已发布内容不会推送给用户，也不会展示在公众号主页中。 '
+    + '发布后，你可以前往发表记录获取链接，也可以将发布内容添加到自定义菜单、自动回复、话题和页面模板中。'
   try {
     await message.confirm(content)
     await MpFreePublishApi.submitFreePublish(accountId.value, mediaId)
     message.notifySuccess('发布成功')
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
 /** 删除按钮操作 */
@@ -190,7 +200,8 @@ const onDelete = async (item: Article) => {
     await MpDraftApi.deleteDraft(accountId.value, mediaId)
     message.notifySuccess('删除成功')
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 </script>
 

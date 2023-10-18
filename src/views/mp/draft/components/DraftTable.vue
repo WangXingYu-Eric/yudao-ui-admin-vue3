@@ -1,31 +1,31 @@
 <template>
-  <div class="waterfall" v-loading="props.loading">
+  <div v-loading="props.loading" class="waterfall">
     <template v-for="item in props.list" :key="item.articleId">
-      <div class="waterfall-item" v-if="item.content && item.content.newsItem">
+      <div v-if="item.content && item.content.newsItem" class="waterfall-item">
         <WxNews :articles="item.content.newsItem" />
         <!-- 操作按钮 -->
         <el-row>
           <el-button
+            v-hasPermi="['mp:free-publish:submit']"
             type="success"
             circle
             @click="emit('publish', item)"
-            v-hasPermi="['mp:free-publish:submit']"
           >
             <Icon icon="fa:upload" />
           </el-button>
           <el-button
+            v-hasPermi="['mp:draft:update']"
             type="primary"
             circle
             @click="emit('update', item)"
-            v-hasPermi="['mp:draft:update']"
           >
             <Icon icon="ep:edit" />
           </el-button>
           <el-button
+            v-hasPermi="['mp:draft:delete']"
             type="danger"
             circle
             @click="emit('delete', item)"
-            v-hasPermi="['mp:draft:delete']"
           >
             <Icon icon="ep:delete" />
           </el-button>
@@ -36,9 +36,8 @@
 </template>
 
 <script lang="ts" setup>
+import type { Article } from './types'
 import WxNews from '@/views/mp/components/wx-news'
-
-import { Article } from './types'
 
 const props = defineProps<{
   list: Article[]

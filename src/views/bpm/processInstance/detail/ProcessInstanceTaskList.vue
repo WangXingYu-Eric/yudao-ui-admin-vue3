@@ -16,8 +16,8 @@
               任务：{{ item.name }}
               <dict-tag :type="DICT_TYPE.BPM_PROCESS_INSTANCE_RESULT" :value="item.result" />
               <el-button
-                style="margin-left: 5px"
                 v-if="!isEmpty(item.children)"
+                style="margin-left: 5px"
                 @click="openChildrenTask(item)"
               >
                 <Icon icon="ep:memo" />
@@ -46,7 +46,9 @@
                 {{ formatPast2(item?.durationInMillis) }}
               </label>
               <p v-if="item.reason">
-                <el-tag :type="getTimelineItemType(item)">{{ item.reason }}</el-tag>
+                <el-tag :type="getTimelineItemType(item)">
+                  {{ item.reason }}
+                </el-tag>
               </p>
             </el-card>
           </el-timeline-item>
@@ -57,63 +59,64 @@
     <ProcessInstanceChildrenTaskList ref="processInstanceChildrenTaskList" />
   </el-card>
 </template>
+
 <script lang="ts" setup>
+import ProcessInstanceChildrenTaskList from './ProcessInstanceChildrenTaskList.vue'
 import { formatDate, formatPast2 } from '@/utils/formatTime'
 import { propTypes } from '@/utils/propTypes'
 import { DICT_TYPE } from '@/utils/dict'
 import { isEmpty } from '@/utils/is'
-import ProcessInstanceChildrenTaskList from './ProcessInstanceChildrenTaskList.vue'
 
 defineOptions({ name: 'BpmProcessInstanceTaskList' })
 
 defineProps({
   loading: propTypes.bool, // 是否加载中
-  tasks: propTypes.arrayOf(propTypes.object) // 流程任务的数组
+  tasks: propTypes.arrayOf(propTypes.object), // 流程任务的数组
 })
 
 /** 获得任务对应的 icon */
 const getTimelineItemIcon = (item) => {
-  if (item.result === 1) {
+  if (item.result === 1)
     return 'el-icon-time'
-  }
-  if (item.result === 2) {
+
+  if (item.result === 2)
     return 'el-icon-check'
-  }
-  if (item.result === 3) {
+
+  if (item.result === 3)
     return 'el-icon-close'
-  }
-  if (item.result === 4) {
+
+  if (item.result === 4)
     return 'el-icon-remove-outline'
-  }
-  if (item.result === 5) {
+
+  if (item.result === 5)
     return 'el-icon-back'
-  }
+
   return ''
 }
 
 /** 获得任务对应的颜色 */
 const getTimelineItemType = (item) => {
-  if (item.result === 1) {
+  if (item.result === 1)
     return 'primary'
-  }
-  if (item.result === 2) {
+
+  if (item.result === 2)
     return 'success'
-  }
-  if (item.result === 3) {
+
+  if (item.result === 3)
     return 'danger'
-  }
-  if (item.result === 4) {
+
+  if (item.result === 4)
     return 'info'
-  }
-  if (item.result === 5) {
+
+  if (item.result === 5)
     return 'warning'
-  }
-  if (item.result === 6) {
+
+  if (item.result === 6)
     return 'default'
-  }
-  if (item.result === 7 || item.result === 8) {
+
+  if (item.result === 7 || item.result === 8)
     return 'warning'
-  }
+
   return ''
 }
 

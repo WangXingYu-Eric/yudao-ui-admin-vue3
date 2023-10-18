@@ -100,27 +100,27 @@
           />
         </el-select>
       </el-form-item>
-      <!-- TODO 聚合搜索等售后结束后实现-->
-      <!--      <el-form-item label="聚合搜索">-->
-      <!--        <el-input-->
-      <!--          v-show="true"-->
-      <!--          v-model="queryType.v"-->
-      <!--          class="!w-280px"-->
-      <!--          clearable-->
-      <!--          placeholder="请输入"-->
-      <!--        >-->
-      <!--          <template #prepend>-->
-      <!--            <el-select v-model="queryType.k" class="!w-110px" clearable placeholder="全部">-->
-      <!--              <el-option-->
-      <!--                v-for="dict in searchList"-->
-      <!--                :key="dict.value"-->
-      <!--                :label="dict.label"-->
-      <!--                :value="dict.value"-->
-      <!--              />-->
-      <!--            </el-select>-->
-      <!--          </template>-->
-      <!--        </el-input>-->
-      <!--      </el-form-item>-->
+      <!-- TODO 聚合搜索等售后结束后实现 -->
+      <!--      <el-form-item label="聚合搜索"> -->
+      <!--        <el-input -->
+      <!--          v-show="true" -->
+      <!--          v-model="queryType.v" -->
+      <!--          class="!w-280px" -->
+      <!--          clearable -->
+      <!--          placeholder="请输入" -->
+      <!--        > -->
+      <!--          <template #prepend> -->
+      <!--            <el-select v-model="queryType.k" class="!w-110px" clearable placeholder="全部"> -->
+      <!--              <el-option -->
+      <!--                v-for="dict in searchList" -->
+      <!--                :key="dict.value" -->
+      <!--                :label="dict.label" -->
+      <!--                :value="dict.value" -->
+      <!--              /> -->
+      <!--            </el-select> -->
+      <!--          </template> -->
+      <!--        </el-input> -->
+      <!--      </el-form-item> -->
       <el-form-item>
         <el-button @click="handleQuery">
           <Icon class="mr-5px" icon="ep:search" />
@@ -141,14 +141,30 @@
         <template #header>
           <!-- TODO @puhui999：小屏幕下，会有偏移，后续看看 -->
           <div class="flex items-center" style="width: 100%">
-            <div class="ml-100px mr-200px">商品信息</div>
-            <div class="mr-60px">单价(元)/数量</div>
-            <div class="mr-60px">售后状态</div>
-            <div class="mr-60px">实付金额(元)</div>
-            <div class="mr-60px">买家/收货人</div>
-            <div class="mr-60px">配送方式</div>
-            <div class="mr-60px">订单状态</div>
-            <div class="mr-60px">操作</div>
+            <div class="ml-100px mr-200px">
+商品信息
+</div>
+            <div class="mr-60px">
+单价(元)/数量
+</div>
+            <div class="mr-60px">
+售后状态
+</div>
+            <div class="mr-60px">
+实付金额(元)
+</div>
+            <div class="mr-60px">
+买家/收货人
+</div>
+            <div class="mr-60px">
+配送方式
+</div>
+            <div class="mr-60px">
+订单状态
+</div>
+            <div class="mr-60px">
+操作
+</div>
           </div>
         </template>
         <template #default="scope">
@@ -180,7 +196,9 @@
                     :value="scope.row.payChannelCode"
                     class="mr-20px"
                   />
-                  <v-else v-else class="mr-20px">未支付</v-else>
+                  <v-else v-else class="mr-20px">
+未支付
+</v-else>
                   <span v-if="scope.row.payTime" class="mr-20px">
                     支付时间：{{ formatDate(scope.row.payTime) }}
                   </span>
@@ -221,7 +239,7 @@
             </el-table-column>
             <el-table-column align="center" label="实际支付" min-width="120" prop="payPrice">
               <template #default>
-                {{ floatToFixed2(scope.row.payPrice) + '元' }}
+                {{ `${floatToFixed2(scope.row.payPrice)  }元` }}
               </template>
             </el-table-column>
             <el-table-column label="买家/收货人" min-width="160">
@@ -284,7 +302,9 @@
     />
   </ContentWrap>
 </template>
+
 <script setup lang="ts">
+import { FormInstance, TableColumnCtx } from 'element-plus'
 import * as OrderApi from '@/api/mall/trade/order/index'
 import { DICT_TYPE, getIntDictOptions, getStrDictOptions } from '@/utils/dict'
 import { formatDate } from '@/utils/formatTime'
@@ -293,17 +313,15 @@ import * as PickUpStoreApi from '@/api/mall/trade/delivery/pickUpStore'
 import * as DeliveryExpressApi from '@/api/mall/trade/delivery/express'
 import { createImageViewer } from '@/components/ImageViewer'
 import * as TradeOrderApi from '@/api/mall/trade/order'
-import { FormInstance, TableColumnCtx } from 'element-plus'
 
-const { push } = useRouter() // 路由跳转
+// 路由跳转
 
 const { userId }: { userId: number } = defineProps({
   userId: {
     type: Number,
     required: true
   }
-})
-const loading = ref(true) // 列表的加载中
+}) ;const { push } = useRouter()const loading = ref(true) // 列表的加载中
 const total = ref(0) // 列表的总页数
 const list = ref([]) // 列表的数据
 const pickUpStoreList = ref([]) // 自提门店精简列表
@@ -313,17 +331,18 @@ const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
   createDate: [],
-  userId: NaN
+  userId: Number.NaN
 })
 const headerStyle = ({ row, columnIndex }: any) => {
   // 表头第一行第一列占 8
   if (columnIndex === 0) {
     row[columnIndex].colSpan = 8
-  } else {
+  }
+ else {
     // 其余的不要
     row[columnIndex].colSpan = 0
     return {
-      display: 'none'
+      display: 'none',
     }
   }
 }
@@ -346,7 +365,8 @@ const getList = async () => {
     console.log(data)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+ finally {
     loading.value = false
   }
 }
@@ -354,7 +374,7 @@ const getList = async () => {
 /** 商品图预览 */
 const imagePreview = (imgUrl: string) => {
   createImageViewer({
-    urlList: [imgUrl]
+    urlList: [imgUrl],
   })
 }
 
@@ -367,7 +387,7 @@ interface SpanMethodProps {
 
 const spanMethod = ({ row, rowIndex, columnIndex }: SpanMethodProps) => {
   const len = list.value.find(
-    (order) => order.items?.findIndex((item) => item.id === row.id) !== -1
+    order => order.items?.findIndex(item => item.id === row.id) !== -1,
   )?.items?.length
   // 要合并的列，从零开始
   const colIndex = [3, 4, 5, 6, 7]
@@ -376,13 +396,13 @@ const spanMethod = ({ row, rowIndex, columnIndex }: SpanMethodProps) => {
     if (rowIndex !== 0) {
       return {
         rowspan: 0,
-        colspan: 0
+        colspan: 0,
       }
     }
     // 动态合并行
     return {
       rowspan: len,
-      colspan: 1
+      colspan: 1,
     }
   }
 }
@@ -392,7 +412,7 @@ const openDetail = (id: number) => {
   push({ name: 'TradeOrderDetail', params: { orderId: id } })
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(async () => {
   queryParams.userId = userId
   await getList()
@@ -400,4 +420,5 @@ onMounted(async () => {
   deliveryExpressList.value = await DeliveryExpressApi.getSimpleDeliveryExpressList()
 })
 </script>
+
 <style scoped lang="scss"></style>

@@ -2,9 +2,9 @@
   <ContentWrap>
     <!-- 搜索工作栏 -->
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="68px"
     >
@@ -13,8 +13,8 @@
           v-model="queryParams.key"
           placeholder="请输入流程标识"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="流程名称" prop="name">
@@ -22,8 +22,8 @@
           v-model="queryParams.name"
           placeholder="请输入流程名称"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="流程分类" prop="category">
@@ -42,17 +42,21 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        <el-button @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" /> 搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon icon="ep:refresh" class="mr-5px" /> 重置
+        </el-button>
         <el-button
+          v-hasPermi="['bpm:model:create']"
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['bpm:model:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新建流程
         </el-button>
-        <el-button type="success" plain @click="openImportForm" v-hasPermi="['bpm:model:import']">
+        <el-button v-hasPermi="['bpm:model:import']" type="success" plain @click="openImportForm">
           <Icon icon="ep:upload" class="mr-5px" /> 导入流程
         </el-button>
       </el-form-item>
@@ -114,7 +118,9 @@
             <el-tag v-if="scope.row.processDefinition">
               v{{ scope.row.processDefinition.version }}
             </el-tag>
-            <el-tag v-else type="warning">未部署</el-tag>
+            <el-tag v-else type="warning">
+              未部署
+            </el-tag>
           </template>
         </el-table-column>
         <el-table-column
@@ -144,50 +150,50 @@
       <el-table-column label="操作" align="center" width="240" fixed="right">
         <template #default="scope">
           <el-button
+            v-hasPermi="['bpm:model:update']"
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['bpm:model:update']"
           >
             修改流程
           </el-button>
           <el-button
+            v-hasPermi="['bpm:model:update']"
             link
             type="primary"
             @click="handleDesign(scope.row)"
-            v-hasPermi="['bpm:model:update']"
           >
             设计流程
           </el-button>
           <el-button
+            v-hasPermi="['bpm:task-assign-rule:query']"
             link
             type="primary"
             @click="handleAssignRule(scope.row)"
-            v-hasPermi="['bpm:task-assign-rule:query']"
           >
             分配规则
           </el-button>
           <el-button
+            v-hasPermi="['bpm:model:deploy']"
             link
             type="primary"
             @click="handleDeploy(scope.row)"
-            v-hasPermi="['bpm:model:deploy']"
           >
             发布流程
           </el-button>
           <el-button
+            v-hasPermi="['bpm:process-definition:query']"
             link
             type="primary"
-            v-hasPermi="['bpm:process-definition:query']"
             @click="handleDefinitionList(scope.row)"
           >
             流程定义
           </el-button>
           <el-button
+            v-hasPermi="['bpm:model:delete']"
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
-            v-hasPermi="['bpm:model:delete']"
           >
             删除
           </el-button>
@@ -196,9 +202,9 @@
     </el-table>
     <!-- 分页 -->
     <Pagination
-      :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
+      :total="total"
       @pagination="getList"
     />
   </ContentWrap>
@@ -210,12 +216,12 @@
   <ModelImportForm ref="importFormRef" @success="getList" />
 
   <!-- 弹窗：表单详情 -->
-  <Dialog title="表单详情" v-model="formDetailVisible" width="800">
+  <Dialog v-model="formDetailVisible" title="表单详情" width="800">
     <form-create :rule="formDetailPreview.rule" :option="formDetailPreview.option" />
   </Dialog>
 
   <!-- 弹窗：流程模型图的预览 -->
-  <Dialog title="流程图" v-model="bpmnDetailVisible" width="800">
+  <Dialog v-model="bpmnDetailVisible" title="流程图" width="800">
     <MyProcessViewer
       key="designer"
       v-model="bpmnXML"
@@ -227,12 +233,12 @@
 </template>
 
 <script lang="ts" setup>
+import ModelForm from './ModelForm.vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { dateFormatter, formatDate } from '@/utils/formatTime'
 import { MyProcessViewer } from '@/components/bpmnProcessDesigner/package'
 import * as ModelApi from '@/api/bpm/model'
 import * as FormApi from '@/api/bpm/form'
-import ModelForm from './ModelForm.vue'
 import ModelImportForm from '@/views/bpm/model/ModelImportForm.vue'
 import { setConfAndFields2 } from '@/utils/formCreate'
 
@@ -250,7 +256,7 @@ const queryParams = reactive({
   pageSize: 10,
   key: undefined,
   name: undefined,
-  category: undefined
+  category: undefined,
 })
 const queryFormRef = ref() // 搜索的表单
 
@@ -261,7 +267,8 @@ const getList = async () => {
     const data = await ModelApi.getModelPage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -300,7 +307,8 @@ const handleDelete = async (id: number) => {
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
 /** 更新状态操作 */
@@ -310,13 +318,14 @@ const handleChangeState = async (row) => {
     // 修改状态的二次确认
     const id = row.id
     const statusState = state === 1 ? '激活' : '挂起'
-    const content = '是否确认' + statusState + '流程名字为"' + row.name + '"的数据项?'
+    const content = `是否确认${statusState}流程名字为"${row.name}"的数据项?`
     await message.confirm(content)
     // 发起修改状态
     await ModelApi.updateModelState(id, state)
     // 刷新列表
     await getList()
-  } catch {
+  }
+  catch {
     // 取消后，进行恢复按钮
     row.processDefinition.suspensionState = state === 1 ? 2 : 1
   }
@@ -327,8 +336,8 @@ const handleDesign = (row) => {
   push({
     name: 'BpmModelEditor',
     query: {
-      modelId: row.id
-    }
+      modelId: row.id,
+    },
   })
 }
 
@@ -342,7 +351,8 @@ const handleDeploy = async (row) => {
     message.success(t('部署成功'))
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
 /** 点击任务分配按钮 */
@@ -350,8 +360,8 @@ const handleAssignRule = (row) => {
   push({
     name: 'BpmTaskAssignRuleList',
     query: {
-      modelId: row.id
-    }
+      modelId: row.id,
+    },
   })
 }
 
@@ -360,8 +370,8 @@ const handleDefinitionList = (row) => {
   push({
     name: 'BpmProcessDefinition',
     query: {
-      key: row.key
-    }
+      key: row.key,
+    },
   })
 }
 
@@ -369,7 +379,7 @@ const handleDefinitionList = (row) => {
 const formDetailVisible = ref(false)
 const formDetailPreview = ref({
   rule: [],
-  option: {}
+  option: {},
 })
 const handleFormDetail = async (row) => {
   if (row.formType == 10) {
@@ -378,9 +388,10 @@ const handleFormDetail = async (row) => {
     setConfAndFields2(formDetailPreview, data.conf, data.fields)
     // 弹窗打开
     formDetailVisible.value = true
-  } else {
+  }
+  else {
     await push({
-      path: row.formCustomCreatePath
+      path: row.formCustomCreatePath,
     })
   }
 }
@@ -389,7 +400,7 @@ const handleFormDetail = async (row) => {
 const bpmnDetailVisible = ref(false)
 const bpmnXML = ref(null)
 const bpmnControlForm = ref({
-  prefix: 'flowable'
+  prefix: 'flowable',
 })
 const handleBpmnDetail = async (row) => {
   const data = await ModelApi.getModel(row.id)
@@ -397,7 +408,7 @@ const handleBpmnDetail = async (row) => {
   bpmnDetailVisible.value = true
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

@@ -3,6 +3,7 @@
     <IFrame :src="src" />
   </ContentWrap>
 </template>
+
 <script lang="ts" setup>
 defineOptions({ name: 'GoView' })
 

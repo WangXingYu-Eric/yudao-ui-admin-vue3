@@ -2,9 +2,9 @@
   <!-- 搜索工作栏 -->
   <ContentWrap>
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="68px"
     >
@@ -13,18 +13,22 @@
           v-model="queryParams.name"
           placeholder="请输入分类名称"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        <el-button @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" /> 搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon icon="ep:refresh" class="mr-5px" /> 重置
+        </el-button>
         <el-button
+          v-hasPermi="['product:category:create']"
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['product:category:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
@@ -38,7 +42,7 @@
       <el-table-column label="名称" min-width="240" prop="name" sortable />
       <el-table-column label="分类图标" align="center" min-width="80" prop="picUrl">
         <template #default="scope">
-          <img v-if="scope.row.picUrl" :src="scope.row.picUrl" alt="移动端分类图" class="h-36px" />
+          <img v-if="scope.row.picUrl" :src="scope.row.picUrl" alt="移动端分类图" class="h-36px">
         </template>
       </el-table-column>
       <el-table-column label="排序" align="center" min-width="150" prop="sort" />
@@ -57,18 +61,18 @@
       <el-table-column label="操作" align="center">
         <template #default="scope">
           <el-button
+            v-hasPermi="['product:category:update']"
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['product:category:update']"
           >
             编辑
           </el-button>
           <el-button
+            v-hasPermi="['product:category:delete']"
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
-            v-hasPermi="['product:category:delete']"
           >
             删除
           </el-button>
@@ -80,12 +84,13 @@
   <!-- 表单弹窗：添加/修改 -->
   <CategoryForm ref="formRef" @success="getList" />
 </template>
+
 <script lang="ts" setup>
+import CategoryForm from './CategoryForm.vue'
 import { DICT_TYPE } from '@/utils/dict'
 import { handleTree } from '@/utils/tree'
 import { dateFormatter } from '@/utils/formatTime'
 import * as ProductCategoryApi from '@/api/mall/product/category'
-import CategoryForm from './CategoryForm.vue'
 
 defineOptions({ name: 'ProductCategory' })
 
@@ -95,7 +100,7 @@ const { t } = useI18n() // 国际化
 const loading = ref(true) // 列表的加载中
 const list = ref<any[]>([]) // 列表的数据
 const queryParams = reactive({
-  name: undefined
+  name: undefined,
 })
 const queryFormRef = ref() // 搜索的表单
 
@@ -105,7 +110,8 @@ const getList = async () => {
   try {
     const data = await ProductCategoryApi.getCategoryList(queryParams)
     list.value = handleTree(data, 'id', 'parentId')
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -137,10 +143,11 @@ const handleDelete = async (id: number) => {
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

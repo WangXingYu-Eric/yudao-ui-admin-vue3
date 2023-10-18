@@ -4,32 +4,32 @@ import request from '@/config/axios'
 export const getDraftPage = (query) => {
   return request.get({
     url: '/mp/draft/page',
-    params: query
+    params: query,
   })
 }
 
 // 创建公众号草稿
 export const createDraft = (accountId, articles) => {
   return request.post({
-    url: '/mp/draft/create?accountId=' + accountId,
+    url: `/mp/draft/create?accountId=${accountId}`,
     data: {
-      articles
-    }
+      articles,
+    },
   })
 }
 
 // 更新公众号草稿
 export const updateDraft = (accountId, mediaId, articles) => {
   return request.put({
-    url: '/mp/draft/update?accountId=' + accountId + '&mediaId=' + mediaId,
+    url: `/mp/draft/update?accountId=${accountId}&mediaId=${mediaId}`,
     method: 'put',
-    data: articles
+    data: articles,
   })
 }
 
 // 删除公众号草稿
 export const deleteDraft = (accountId, mediaId) => {
   return request.delete({
-    url: '/mp/draft/delete?accountId=' + accountId + '&mediaId=' + mediaId
+    url: `/mp/draft/delete?accountId=${accountId}&mediaId=${mediaId}`,
   })
 }

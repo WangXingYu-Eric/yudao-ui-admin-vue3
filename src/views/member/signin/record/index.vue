@@ -2,9 +2,9 @@
   <ContentWrap>
     <!-- 搜索工作栏 -->
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="68px"
     >
@@ -13,8 +13,8 @@
           v-model="queryParams.nickname"
           placeholder="请输入签到用户"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="签到天数" prop="day">
@@ -22,8 +22,8 @@
           v-model="queryParams.day"
           placeholder="请输入签到天数"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="签到时间" prop="createTime">
@@ -38,8 +38,12 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        <el-button @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" /> 搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon icon="ep:refresh" class="mr-5px" /> 重置
+        </el-button>
       </el-form-item>
     </el-form>
   </ContentWrap>
@@ -60,7 +64,9 @@
           <el-tag v-if="scope.row.point > 0" class="ml-2" type="success" effect="dark">
             +{{ scope.row.point }}
           </el-tag>
-          <el-tag v-else class="ml-2" type="danger" effect="dark"> {{ scope.row.point }} </el-tag>
+          <el-tag v-else class="ml-2" type="danger" effect="dark">
+            {{ scope.row.point }}
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -72,9 +78,9 @@
     </el-table>
     <!-- 分页 -->
     <Pagination
-      :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
+      :total="total"
       @pagination="getList"
     />
   </ContentWrap>
@@ -96,7 +102,7 @@ const queryParams = reactive({
   pageSize: 10,
   nickname: null,
   day: null,
-  createTime: []
+  createTime: [],
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
@@ -108,7 +114,8 @@ const getList = async () => {
     const data = await SignInRecordApi.getSignInRecordPage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -125,7 +132,7 @@ const resetQuery = () => {
   handleQuery()
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

@@ -4,9 +4,9 @@
   <!-- 搜索工作栏 -->
   <ContentWrap>
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="68px"
     >
@@ -18,8 +18,8 @@
           v-model="queryParams.openid"
           placeholder="请输入用户标识"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="昵称" prop="nickname">
@@ -27,19 +27,23 @@
           v-model="queryParams.nickname"
           placeholder="请输入昵称"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery"> <Icon icon="ep:search" />搜索 </el-button>
-        <el-button @click="resetQuery"> <Icon icon="ep:refresh" />重置 </el-button>
+        <el-button @click="handleQuery">
+          <Icon icon="ep:search" />搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon icon="ep:refresh" />重置
+        </el-button>
         <el-button
+          v-hasPermi="['mp:user:sync']"
           type="success"
           plain
-          @click="handleSync"
-          v-hasPermi="['mp:user:sync']"
           :disabled="queryParams.accountId === 0"
+          @click="handleSync"
         >
           <Icon icon="ep:refresh" class="mr-5px" /> 同步
         </el-button>
@@ -63,8 +67,12 @@
       </el-table-column>
       <el-table-column label="订阅状态" align="center" prop="subscribeStatus">
         <template #default="scope">
-          <el-tag v-if="scope.row.subscribeStatus === 0" type="success">已订阅</el-tag>
-          <el-tag v-else type="danger">未订阅</el-tag>
+          <el-tag v-if="scope.row.subscribeStatus === 0" type="success">
+            已订阅
+          </el-tag>
+          <el-tag v-else type="danger">
+            未订阅
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -77,10 +85,10 @@
       <el-table-column label="操作" align="center">
         <template #default="scope">
           <el-button
+            v-hasPermi="['mp:user:update']"
             type="primary"
             link
             @click="openForm(scope.row.id)"
-            v-hasPermi="['mp:user:update']"
           >
             修改
           </el-button>
@@ -89,9 +97,9 @@
     </el-table>
     <!-- 分页 -->
     <Pagination
-      :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
+      :total="total"
       @pagination="getList"
     />
   </ContentWrap>
@@ -99,13 +107,14 @@
   <!-- 表单弹窗：修改 -->
   <UserForm ref="formRef" @success="getList" />
 </template>
+
 <script lang="ts" setup>
+import type { FormInstance } from 'element-plus'
+import UserForm from './UserForm.vue'
 import { dateFormatter } from '@/utils/formatTime'
 import * as MpUserApi from '@/api/mp/user'
 import * as MpTagApi from '@/api/mp/tag'
 import WxAccountSelect from '@/views/mp/components/wx-account-select'
-import type { FormInstance } from 'element-plus'
-import UserForm from './UserForm.vue'
 
 defineOptions({ name: 'MpUser' })
 
@@ -120,12 +129,12 @@ const queryParams = reactive({
   pageSize: 10,
   accountId: -1,
   openid: '',
-  nickname: ''
+  nickname: '',
 })
 const queryFormRef = ref<FormInstance | null>(null) // 搜索的表单
 const tagList = ref<any[]>([]) // 公众号标签列表
 
-/** 侦听公众号变化 **/
+/** 侦听公众号变化 */
 const onAccountChanged = (id: number) => {
   queryParams.accountId = id
   queryParams.pageNo = 1
@@ -139,7 +148,8 @@ const getList = async () => {
     const data = await MpUserApi.getUserPage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -171,7 +181,8 @@ const handleSync = async () => {
     await MpUserApi.syncUser(queryParams.accountId)
     message.success('开始从微信公众号同步粉丝信息，同步需要一段时间，建议稍后再查询')
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
 /** 初始化 */

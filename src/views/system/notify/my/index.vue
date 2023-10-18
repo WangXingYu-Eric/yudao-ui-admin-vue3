@@ -4,9 +4,9 @@
   <ContentWrap>
     <!-- 搜索工作栏 -->
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="68px"
     >
@@ -37,8 +37,12 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        <el-button @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" /> 搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon icon="ep:refresh" class="mr-5px" /> 重置
+        </el-button>
         <el-button @click="handleUpdateList">
           <Icon icon="ep:reading" class="mr-5px" /> 标记已读
         </el-button>
@@ -52,9 +56,9 @@
   <!-- 列表 -->
   <ContentWrap>
     <el-table
+      ref="tableRef"
       v-loading="loading"
       :data="list"
-      ref="tableRef"
       row-key="id"
       @selection-change="handleSelectionChange"
     >
@@ -104,9 +108,9 @@
     </el-table>
     <!-- 分页 -->
     <Pagination
-      :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
+      :total="total"
       @pagination="getList"
     />
   </ContentWrap>
@@ -116,10 +120,10 @@
 </template>
 
 <script lang="ts" setup>
+import MyNotifyMessageDetail from './MyNotifyMessageDetail.vue'
 import { DICT_TYPE, getBoolDictOptions } from '@/utils/dict'
 import { dateFormatter } from '@/utils/formatTime'
 import * as NotifyMessageApi from '@/api/system/notify/message'
-import MyNotifyMessageDetail from './MyNotifyMessageDetail.vue'
 
 defineOptions({ name: 'SystemMyNotify' })
 
@@ -132,7 +136,7 @@ const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
   readStatus: undefined,
-  createTime: []
+  createTime: [],
 })
 const queryFormRef = ref() // 搜索的表单
 const tableRef = ref() // 表格的 Ref
@@ -145,7 +149,8 @@ const getList = async () => {
     const data = await NotifyMessageApi.getMyNotifyMessagePage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -166,9 +171,9 @@ const resetQuery = () => {
 /** 详情操作 */
 const detailRef = ref()
 const openDetail = (data: NotifyMessageApi.NotifyMessageVO) => {
-  if (!data.readStatus) {
+  if (!data.readStatus)
     handleReadOne(data.id)
-  }
+
   detailRef.value.open(data)
 }
 
@@ -178,7 +183,7 @@ const handleReadOne = async (id) => {
   await getList()
 }
 
-/** 标记全部站内信已读 **/
+/** 标记全部站内信已读 */
 const handleUpdateAll = async () => {
   await NotifyMessageApi.updateAllNotifyMessageRead()
   message.success('全部已读成功！')
@@ -186,11 +191,11 @@ const handleUpdateAll = async () => {
   await getList()
 }
 
-/** 标记一些站内信已读 **/
+/** 标记一些站内信已读 */
 const handleUpdateList = async () => {
-  if (selectedIds.value.length === 0) {
+  if (selectedIds.value.length === 0)
     return
-  }
+
   await NotifyMessageApi.updateNotifyMessageRead(selectedIds.value)
   message.success('批量已读成功！')
   tableRef.value.clearSelection()
@@ -205,13 +210,13 @@ const selectable = (row) => {
 /** 当表格选择项发生变化时会触发该事件  */
 const handleSelectionChange = (array: NotifyMessageApi.NotifyMessageVO[]) => {
   selectedIds.value = []
-  if (!array) {
+  if (!array)
     return
-  }
-  array.forEach((row) => selectedIds.value.push(row.id))
+
+  array.forEach(row => selectedIds.value.push(row.id))
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

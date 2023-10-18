@@ -8,16 +8,15 @@ const router = createRouter({
   history: createWebHistory(), // createWebHashHistory URL带#，createWebHistory URL不带#
   strict: true,
   routes: remainingRouter as RouteRecordRaw[],
-  scrollBehavior: () => ({ left: 0, top: 0 })
+  scrollBehavior: () => ({ left: 0, top: 0 }),
 })
 
 export const resetRouter = (): void => {
   const resetWhiteNameList = ['Redirect', 'Login', 'NoFind', 'Root']
   router.getRoutes().forEach((route) => {
     const { name } = route
-    if (name && !resetWhiteNameList.includes(name as string)) {
+    if (name && !resetWhiteNameList.includes(name as string))
       router.hasRoute(name) && router.removeRoute(name)
-    }
   })
 }
 

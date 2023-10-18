@@ -2,9 +2,9 @@
   <!-- 搜索工作栏 -->
   <ContentWrap>
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="68px"
     >
@@ -32,13 +32,17 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        <el-button @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" /> 搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon icon="ep:refresh" class="mr-5px" /> 重置
+        </el-button>
         <el-button
+          v-hasPermi="['system:dept:create']"
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['system:dept:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
@@ -52,11 +56,11 @@
   <!-- 列表 -->
   <ContentWrap>
     <el-table
+      v-if="refreshTable"
       v-loading="loading"
       :data="list"
       row-key="id"
       :default-expand-all="isExpandAll"
-      v-if="refreshTable"
     >
       <el-table-column prop="name" label="部门名称" width="260" />
       <el-table-column prop="leader" label="负责人" width="120">
@@ -80,18 +84,18 @@
       <el-table-column label="操作" align="center" class-name="fixed-width">
         <template #default="scope">
           <el-button
+            v-hasPermi="['system:dept:update']"
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['system:dept:update']"
           >
             修改
           </el-button>
           <el-button
+            v-hasPermi="['system:dept:delete']"
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
-            v-hasPermi="['system:dept:delete']"
           >
             删除
           </el-button>
@@ -103,12 +107,13 @@
   <!-- 表单弹窗：添加/修改 -->
   <DeptForm ref="formRef" @success="getList" />
 </template>
+
 <script lang="ts" setup>
+import DeptForm from './DeptForm.vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { dateFormatter } from '@/utils/formatTime'
 import { handleTree } from '@/utils/tree'
 import * as DeptApi from '@/api/system/dept'
-import DeptForm from './DeptForm.vue'
 import * as UserApi from '@/api/system/user'
 
 defineOptions({ name: 'SystemDept' })
@@ -123,7 +128,7 @@ const queryParams = reactive({
   name: undefined,
   status: undefined,
   pageNo: 1,
-  pageSize: 100
+  pageSize: 100,
 })
 const queryFormRef = ref() // 搜索的表单
 const isExpandAll = ref(true) // 是否展开，默认全部展开
@@ -136,7 +141,8 @@ const getList = async () => {
   try {
     const data = await DeptApi.getDeptPage(queryParams)
     list.value = handleTree(data)
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -178,10 +184,11 @@ const handleDelete = async (id: number) => {
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(async () => {
   await getList()
   // 获取用户列表

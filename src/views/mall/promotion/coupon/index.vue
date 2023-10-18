@@ -31,8 +31,12 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery"> <Icon icon="ep:search" class="mr-5px" />搜索 </el-button>
-        <el-button @click="resetQuery"> <Icon icon="ep:refresh" class="mr-5px" />重置 </el-button>
+        <el-button @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" />搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon icon="ep:refresh" class="mr-5px" />重置
+        </el-button>
       </el-form-item>
     </el-form>
   </ContentWrap>
@@ -129,7 +133,7 @@ const queryParams = reactive({
   pageSize: 10,
   createTime: [],
   status: undefined,
-  nickname: undefined
+  nickname: undefined,
 })
 const queryFormRef = ref() // 搜索的表单
 
@@ -137,8 +141,8 @@ const activeTab = ref('all') // Tab 筛选
 const statusTabs = reactive([
   {
     label: '全部',
-    value: 'all'
-  }
+    value: 'all',
+  },
 ])
 
 /** 查询列表 */
@@ -149,7 +153,8 @@ const getList = async () => {
     const data = await getCouponPage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -171,14 +176,15 @@ const handleDelete = async (id: number) => {
   try {
     // 二次确认
     await message.confirm(
-      '回收将会收回会员领取的待使用的优惠券，已使用的将无法回收，确定要回收所选优惠券吗？'
+      '回收将会收回会员领取的待使用的优惠券，已使用的将无法回收，确定要回收所选优惠券吗？',
     )
     // 发起删除
     await deleteCoupon(id)
     message.notifySuccess('回收成功')
     // 重新加载列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
 /** tab 切换 */
@@ -187,14 +193,14 @@ const onTabChange = (tabName) => {
   getList()
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
   // 设置 statuses 过滤
   for (const dict of getIntDictOptions(DICT_TYPE.PROMOTION_COUPON_STATUS)) {
     statusTabs.push({
       label: dict.label,
-      value: dict.value as string
+      value: dict.value as string,
     })
   }
 })

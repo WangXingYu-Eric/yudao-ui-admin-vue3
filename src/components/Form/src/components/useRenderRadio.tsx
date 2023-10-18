@@ -1,6 +1,6 @@
-import { FormSchema } from '@/types/form'
 import { ElRadio, ElRadioButton } from 'element-plus'
-import { defineComponent } from 'vue'
+import type { defineComponent } from 'vue'
+import type { FormSchema } from '@/types/form'
 
 export const useRenderRadio = () => {
   const renderRadioOptions = (item: FormSchema) => {
@@ -21,6 +21,6 @@ export const useRenderRadio = () => {
   }
 
   return {
-    renderRadioOptions
+    renderRadioOptions,
   }
 }

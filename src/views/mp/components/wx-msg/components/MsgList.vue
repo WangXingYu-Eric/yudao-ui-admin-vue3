@@ -1,18 +1,20 @@
 <template>
-  <div class="execution" v-for="item in props.list" :key="item.id">
+  <div v-for="item in props.list" :key="item.id" class="execution">
     <div
       class="avue-comment"
       :class="{ 'avue-comment--reverse': item.sendFrom === SendFrom.MpBot }"
     >
       <div class="avatar-div">
-        <img :src="getAvatar(item.sendFrom)" class="avue-comment__avatar" />
+        <img :src="getAvatar(item.sendFrom)" class="avue-comment__avatar">
         <div class="avue-comment__author">
           {{ getNickname(item.sendFrom) }}
         </div>
       </div>
       <div class="avue-comment__main">
         <div class="avue-comment__header">
-          <div class="avue-comment__create_time">{{ formatDate(item.createTime) }}</div>
+          <div class="avue-comment__create_time">
+            {{ formatDate(item.createTime) }}
+          </div>
         </div>
         <div
           class="avue-comment__body"
@@ -24,10 +26,11 @@
     </div>
   </div>
 </template>
+
 <script lang="ts" setup>
+import type { User } from '../types'
 import Msg from './Msg.vue'
 import { formatDate } from '@/utils/formatTime'
-import { User } from '../types'
 import avatarWechat from '@/assets/imgs/wechat.png'
 
 defineOptions({ name: 'MsgList' })
@@ -40,7 +43,7 @@ const props = defineProps<{
 
 enum SendFrom {
   User = 1,
-  MpBot = 2
+  MpBot = 2,
 }
 
 const getAvatar = (sendFrom: SendFrom) =>

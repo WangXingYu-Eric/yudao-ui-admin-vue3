@@ -1,6 +1,7 @@
 <template>
-  <el-dialog title="新建视频" v-model="showDialog" width="600px">
+  <el-dialog v-model="showDialog" title="新建视频" width="600px">
     <el-upload
+      ref="uploadVideoRef"
       :action="UPLOAD_URL"
       :headers="HEADERS"
       multiple
@@ -10,21 +11,20 @@
       :before-upload="beforeVideoUpload"
       :on-error="onUploadError"
       :on-success="onUploadSuccess"
-      ref="uploadVideoRef"
       :auto-upload="false"
       class="mb-5"
     >
       <template #trigger>
-        <el-button type="primary" plain>选择视频</el-button>
+        <el-button type="primary" plain>
+          选择视频
+        </el-button>
       </template>
       <template #tip>
-        <span class="el-upload__tip" style="margin-left: 10px"
-          >格式支持 MP4，文件大小不超过 10MB</span
-        >
+        <span class="el-upload__tip" style="margin-left: 10px">格式支持 MP4，文件大小不超过 10MB</span>
       </template>
     </el-upload>
     <el-divider />
-    <el-form :model="uploadData" :rules="uploadRules" ref="uploadFormRef">
+    <el-form ref="uploadFormRef" :model="uploadData" :rules="uploadRules">
       <el-form-item label="标题" prop="title">
         <el-input
           v-model="uploadData.title"
@@ -33,16 +33,20 @@
       </el-form-item>
       <el-form-item label="描述" prop="introduction">
         <el-input
+          v-model="uploadData.introduction"
           :rows="3"
           type="textarea"
-          v-model="uploadData.introduction"
           placeholder="介绍语将展示在相关播放页面，建议填写简洁明确、有信息量的内容"
         />
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button @click="showDialog = false">取 消</el-button>
-      <el-button type="primary" @click="submitVideo">提 交</el-button>
+      <el-button @click="showDialog = false">
+        取 消
+      </el-button>
+      <el-button type="primary" @click="submitVideo">
+        提 交
+      </el-button>
     </template>
   </el-dialog>
 </template>
@@ -53,27 +57,29 @@ import type {
   FormRules,
   UploadInstance,
   UploadProps,
-  UploadUserFile
+  UploadUserFile,
 } from 'element-plus'
-import { HEADERS, UploadData, UPLOAD_URL, UploadType, beforeVideoUpload } from './upload'
+import type { UploadData } from './upload'
+import { HEADERS, UPLOAD_URL, UploadType, beforeVideoUpload } from './upload'
+
+const props = defineProps({
+  modelValue: {
+    type: Boolean,
+    default: false,
+  },
+})
+
+const emit = defineEmits<{
+  (e: 'update:modelValue', v: boolean)
+  (e: 'uploaded', v: void)
+}>()
 
 const message = useMessage()
 
 const uploadRules: FormRules = {
   title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
-  introduction: [{ required: true, message: '请输入描述', trigger: 'blur' }]
+  introduction: [{ required: true, message: '请输入描述', trigger: 'blur' }],
 }
-
-const props = defineProps({
-  modelValue: {
-    type: Boolean,
-    default: false
-  }
-})
-const emit = defineEmits<{
-  (e: 'update:modelValue', v: boolean)
-  (e: 'uploaded', v: void)
-}>()
 
 const showDialog = computed<boolean>({
   get() {
@@ -81,7 +87,7 @@ const showDialog = computed<boolean>({
   },
   set(val) {
     emit('update:modelValue', val)
-  }
+  },
 })
 
 const fileList = ref<UploadUserFile[]>([])
@@ -89,7 +95,7 @@ const fileList = ref<UploadUserFile[]>([])
 const uploadData: UploadData = reactive({
   type: UploadType.Video,
   title: '',
-  introduction: ''
+  introduction: '',
 })
 
 const uploadFormRef = ref<FormInstance | null>(null)
@@ -97,9 +103,9 @@ const uploadVideoRef = ref<UploadInstance | null>(null)
 
 const submitVideo = () => {
   uploadFormRef.value?.validate((valid) => {
-    if (!valid) {
+    if (!valid)
       return false
-    }
+
     uploadVideoRef.value?.submit()
   })
 }
@@ -107,7 +113,7 @@ const submitVideo = () => {
 /** 上传成功处理 */
 const onUploadSuccess: UploadProps['onSuccess'] = (res: any) => {
   if (res.code !== 0) {
-    message.error('上传出错：' + res.msg)
+    message.error(`上传出错：${res.msg}`)
     return false
   }
 

@@ -2,9 +2,9 @@
   <ContentWrap>
     <!-- 搜索工作栏 -->
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="68px"
     >
@@ -13,8 +13,8 @@
           v-model="queryParams.name"
           placeholder="请输入活动名称"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="活动状态" prop="status">
@@ -33,13 +33,17 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        <el-button @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" /> 搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon icon="ep:refresh" class="mr-5px" /> 重置
+        </el-button>
         <el-button
+          v-hasPermi="['promotion:seckill-activity:create']"
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['promotion:seckill-activity:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
@@ -110,28 +114,28 @@
       <el-table-column label="操作" align="center" width="150px" fixed="right">
         <template #default="scope">
           <el-button
+            v-hasPermi="['promotion:seckill-activity:update']"
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['promotion:seckill-activity:update']"
           >
             编辑
           </el-button>
           <el-button
+            v-if="scope.row.status === 0"
+            v-hasPermi="['promotion:seckill-activity:close']"
             link
             type="danger"
             @click="handleClose(scope.row.id)"
-            v-if="scope.row.status === 0"
-            v-hasPermi="['promotion:seckill-activity:close']"
           >
             关闭
           </el-button>
           <el-button
+            v-else
+            v-hasPermi="['promotion:seckill-activity:delete']"
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
-            v-else
-            v-hasPermi="['promotion:seckill-activity:delete']"
           >
             删除
           </el-button>
@@ -140,9 +144,9 @@
     </el-table>
     <!-- 分页 -->
     <Pagination
-      :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
+      :total="total"
       @pagination="getList"
     />
   </ContentWrap>
@@ -152,12 +156,12 @@
 </template>
 
 <script setup lang="ts">
+import SeckillActivityForm from './SeckillActivityForm.vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
-import { dateFormatter } from '@/utils/formatTime'
+import { dateFormatter, formatDate } from '@/utils/formatTime'
 import * as SeckillActivityApi from '@/api/mall/promotion/seckill/seckillActivity'
 import * as SeckillConfigApi from '@/api/mall/promotion/seckill/seckillConfig'
-import SeckillActivityForm from './SeckillActivityForm.vue'
-import { formatDate } from '@/utils/formatTime'
+
 import { fenToYuanFormat } from '@/utils/formatter'
 import { fenToYuan } from '@/utils'
 
@@ -173,7 +177,7 @@ const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
   name: null,
-  status: null
+  status: null,
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
@@ -185,7 +189,8 @@ const getList = async () => {
     const data = await SeckillActivityApi.getSeckillActivityPage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -218,7 +223,8 @@ const handleClose = async (id: number) => {
     message.success('关闭成功')
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
 /** 删除按钮操作 */
@@ -231,21 +237,22 @@ const handleDelete = async (id: number) => {
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
 const configList = ref([]) // 时段配置精简列表
 const formatConfigNames = (configId) => {
-  const config = configList.value.find((item) => item.id === configId)
+  const config = configList.value.find(item => item.id === configId)
   return config != null ? `${config.name}[${config.startTime} ~ ${config.endTime}]` : ''
 }
 
 const formatSeckillPrice = (products) => {
-  const seckillPrice = Math.min(...products.map((item) => item.seckillPrice))
+  const seckillPrice = Math.min(...products.map(item => item.seckillPrice))
   return `￥${fenToYuan(seckillPrice)}`
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(async () => {
   await getList()
   // 获得秒杀时间段

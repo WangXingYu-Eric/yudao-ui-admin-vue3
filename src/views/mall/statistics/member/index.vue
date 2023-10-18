@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col">
     <el-row :gutter="16" class="summary">
-      <el-col :sm="6" :xs="12" v-loading="loading">
+      <el-col v-loading="loading" :sm="6" :xs="12">
         <TradeTrendValue
           title="累计会员数"
           icon="fa-solid:users"
@@ -10,7 +10,7 @@
           :value="summary?.userCount || 0"
         />
       </el-col>
-      <el-col :sm="6" :xs="12" v-loading="loading">
+      <el-col v-loading="loading" :sm="6" :xs="12">
         <TradeTrendValue
           title="累计充值人数"
           icon="fa-solid:user"
@@ -19,7 +19,7 @@
           :value="summary?.rechargeUserCount || 0"
         />
       </el-col>
-      <el-col :sm="6" :xs="12" v-loading="loading">
+      <el-col v-loading="loading" :sm="6" :xs="12">
         <TradeTrendValue
           title="累计充值金额"
           icon="fa-solid:money-check-alt"
@@ -30,7 +30,7 @@
           :value="fenToYuan(summary?.rechargePrice || 0)"
         />
       </el-col>
-      <el-col :sm="6" :xs="12" v-loading="loading">
+      <el-col v-loading="loading" :sm="6" :xs="12">
         <TradeTrendValue
           title="累计消费金额"
           icon="fa-solid:yen-sign"
@@ -51,9 +51,15 @@
               <!-- 查询条件 -->
               <div class="my--2 flex flex-row items-center gap-2">
                 <el-radio-group v-model="shortcutDays" @change="handleDateTypeChange">
-                  <el-radio-button :label="1">昨天</el-radio-button>
-                  <el-radio-button :label="7">最近7天</el-radio-button>
-                  <el-radio-button :label="30">最近30天</el-radio-button>
+                  <el-radio-button :label="1">
+                    昨天
+                  </el-radio-button>
+                  <el-radio-button :label="7">
+                    最近7天
+                  </el-radio-button>
+                  <el-radio-button :label="30">
+                    最近30天
+                  </el-radio-button>
                 </el-radio-group>
                 <el-date-picker
                   v-model="queryParams.times"
@@ -69,7 +75,7 @@
               </div>
             </div>
           </template>
-          <div class="min-w-225 py-1.75" v-loading="analyseLoading">
+          <div v-loading="analyseLoading" class="min-w-225 py-1.75">
             <div class="relative h-24 flex">
               <div class="h-full w-75% bg-blue-50 <lg:w-35% <xl:w-55%">
                 <div class="ml-15 h-full flex flex-col justify-center">
@@ -80,7 +86,7 @@
                     环比增长率：{{
                       calculateRelativeRate(
                         analyseData?.comparison?.value?.userCount,
-                        analyseData?.comparison?.reference?.userCount
+                        analyseData?.comparison?.reference?.userCount,
                       )
                     }}%
                   </div>
@@ -103,7 +109,7 @@
                     环比增长率：{{
                       calculateRelativeRate(
                         analyseData?.comparison?.value?.activeUserCount,
-                        analyseData?.comparison?.reference?.activeUserCount
+                        analyseData?.comparison?.reference?.activeUserCount,
                       )
                     }}%
                   </div>
@@ -127,13 +133,15 @@
                       环比增长率：{{
                         calculateRelativeRate(
                           analyseData?.comparison?.value?.rechargeUserCount,
-                          analyseData?.comparison?.reference?.rechargeUserCount
+                          analyseData?.comparison?.reference?.rechargeUserCount,
                         )
                       }}%
                     </div>
                   </div>
                   <div class="flex flex-col justify-center">
-                    <div class="font-bold">客单价：{{ fenToYuan(analyseData?.atv || 0) }}</div>
+                    <div class="font-bold">
+                      客单价：{{ fenToYuan(analyseData?.atv || 0) }}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -148,7 +156,7 @@
         </el-card>
       </el-col>
       <el-col :md="6" :sm="24">
-        <el-card shadow="never" header="会员终端" v-loading="loading">
+        <el-card v-loading="loading" shadow="never" header="会员终端">
           <Echart :height="300" :options="terminalChartOptions" />
         </el-card>
       </el-col>
@@ -206,30 +214,32 @@
         </el-card>
       </el-col>
       <el-col :md="6" :sm="24">
-        <el-card shadow="never" header="会员性别比例" v-loading="loading">
+        <el-card v-loading="loading" shadow="never" header="会员性别比例">
           <Echart :height="300" :options="sexChartOptions" />
         </el-card>
       </el-col>
     </el-row>
   </div>
 </template>
+
 <script lang="ts" setup>
-import * as TradeMemberApi from '@/api/mall/statistics/member'
-import TradeTrendValue from '../trade/components/TradeTrendValue.vue'
-import { EChartsOption } from 'echarts'
-import china from '@/assets/map/json/china.json'
+import type { EChartsOption } from 'echarts'
 import dayjs from 'dayjs'
+import TradeTrendValue from '../trade/components/TradeTrendValue.vue'
+import * as TradeMemberApi from '@/api/mall/statistics/member'
+import china from '@/assets/map/json/china.json'
 import { fenToYuan } from '@/utils'
 import * as DateUtil from '@/utils/formatTime'
-import {
+import type {
+  MemberAnalyseReqVO,
   MemberAnalyseRespVO,
   MemberAreaStatisticsRespVO,
   MemberSexStatisticsRespVO,
-  MemberAnalyseReqVO,
   MemberSummaryRespVO,
-  MemberTerminalStatisticsRespVO
+  MemberTerminalStatisticsRespVO,
 } from '@/api/mall/statistics/member'
-import { DICT_TYPE, DictDataType, getIntDictOptions } from '@/utils/dict'
+import type { DictDataType } from '@/utils/dict'
+import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import echarts from '@/plugins/echarts'
 import { fenToYuanFormat } from '@/utils/formatter'
 
@@ -251,24 +261,24 @@ echarts?.registerMap('china', china!)
 const shortcuts = [
   {
     text: '昨天',
-    value: () => DateUtil.getDayRange(new Date(), -1)
+    value: () => DateUtil.getDayRange(new Date(), -1),
   },
   {
     text: '最近7天',
-    value: () => DateUtil.getLast7Days()
+    value: () => DateUtil.getLast7Days(),
   },
   {
     text: '本月',
-    value: () => [dayjs().startOf('M'), dayjs().subtract(1, 'd')]
+    value: () => [dayjs().startOf('M'), dayjs().subtract(1, 'd')],
   },
   {
     text: '最近30天',
-    value: () => DateUtil.getLast30Days()
+    value: () => DateUtil.getLast30Days(),
   },
   {
     text: '最近1年',
-    value: () => DateUtil.getLast1Year()
-  }
+    value: () => DateUtil.getLast1Year(),
+  },
 ]
 
 /** 会员终端统计图配置 */
@@ -276,11 +286,11 @@ const terminalChartOptions = reactive<EChartsOption>({
   tooltip: {
     trigger: 'item',
     confine: true,
-    formatter: '{a} <br/>{b} : {c} ({d}%)'
+    formatter: '{a} <br/>{b} : {c} ({d}%)',
   },
   legend: {
     orient: 'vertical',
-    left: 'right'
+    left: 'right',
   },
   roseType: 'area',
   series: [
@@ -288,14 +298,14 @@ const terminalChartOptions = reactive<EChartsOption>({
       name: '会员终端',
       type: 'pie',
       label: {
-        show: false
+        show: false,
       },
       labelLine: {
-        show: false
+        show: false,
       },
-      data: []
-    }
-  ]
+      data: [],
+    },
+  ],
 }) as EChartsOption
 
 /** 会员性别统计图配置 */
@@ -303,11 +313,11 @@ const sexChartOptions = reactive<EChartsOption>({
   tooltip: {
     trigger: 'item',
     confine: true,
-    formatter: '{a} <br/>{b} : {c} ({d}%)'
+    formatter: '{a} <br/>{b} : {c} ({d}%)',
   },
   legend: {
     orient: 'vertical',
-    left: 'right'
+    left: 'right',
   },
   roseType: 'area',
   series: [
@@ -315,14 +325,14 @@ const sexChartOptions = reactive<EChartsOption>({
       name: '会员性别',
       type: 'pie',
       label: {
-        show: false
+        show: false,
       },
       labelLine: {
-        show: false
+        show: false,
       },
-      data: []
-    }
-  ]
+      data: [],
+    },
+  ],
 }) as EChartsOption
 
 const areaChartOptions = reactive<EChartsOption>({
@@ -334,7 +344,7 @@ const areaChartOptions = reactive<EChartsOption>({
 订单创建数量：${params?.data?.orderCreateCount || 0}<br/>
 订单支付数量：${params?.data?.orderPayCount || 0}<br/>
 订单支付金额：${fenToYuan(params?.data?.orderPayPrice || 0)}`
-    }
+    },
   },
   visualMap: {
     text: ['高', '低'],
@@ -342,8 +352,8 @@ const areaChartOptions = reactive<EChartsOption>({
     calculable: true,
     top: 'middle',
     inRange: {
-      color: ['#fff', '#3b82f6']
-    }
+      color: ['#fff', '#3b82f6'],
+    },
   },
   series: [
     {
@@ -352,15 +362,16 @@ const areaChartOptions = reactive<EChartsOption>({
       map: 'china',
       roam: false,
       selectedMode: false,
-      data: []
-    }
-  ]
+      data: [],
+    },
+  ],
 }) as EChartsOption
 
 /** 计算环比 */
 const calculateRelativeRate = (value?: number, reference?: number) => {
   // 防止除0
-  if (!reference) return 0
+  if (!reference)
+    return 0
 
   return ((100 * ((value || 0) - reference)) / reference).toFixed(0)
 }
@@ -396,7 +407,7 @@ const getMemberAreaStatisticsList = async () => {
         .replace('壮族自治区', '')
         .replace('回族自治区', '')
         .replace('自治区', '')
-        .replace('省', '')
+        .replace('省', ''),
     }
   })
   let min = 0
@@ -419,7 +430,7 @@ const getMemberSexStatisticsList = async () => {
       ?.userCount
     return {
       name: dictData.label,
-      value: userCount || 0
+      value: userCount || 0,
     }
   })
 }
@@ -430,11 +441,11 @@ const getMemberTerminalStatisticsList = async () => {
   const dictDataList = getIntDictOptions(DICT_TYPE.TERMINAL)
   terminalChartOptions.series![0].data = dictDataList.map((dictData: DictDataType) => {
     const userCount = list.find(
-      (item: MemberTerminalStatisticsRespVO) => item.terminal === dictData.value
+      (item: MemberTerminalStatisticsRespVO) => item.terminal === dictData.value,
     )?.userCount
     return {
       name: dictData.label,
-      value: userCount || 0
+      value: userCount || 0,
     }
   })
 }
@@ -453,7 +464,7 @@ const getMemberAnalyse = async () => {
   analyseLoading.value = false
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(async () => {
   loading.value = true
   await Promise.all([
@@ -461,11 +472,12 @@ onMounted(async () => {
     getMemberTerminalStatisticsList(),
     getMemberAreaStatisticsList(),
     getMemberSexStatisticsList(),
-    handleDateTypeChange()
+    handleDateTypeChange(),
   ])
   loading.value = false
 })
 </script>
+
 <style lang="scss" scoped>
 .summary {
   .el-col {

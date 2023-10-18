@@ -113,8 +113,10 @@
           >
             修改
           </el-button>
-          <router-link :to="'/dict/type/data/' + scope.row.type">
-            <el-button link type="primary">数据</el-button>
+          <router-link :to="`/dict/type/data/${scope.row.type}`">
+            <el-button link type="primary">
+              数据
+            </el-button>
           </router-link>
           <el-button
             v-hasPermi="['system:dict:delete']"
@@ -141,10 +143,10 @@
 </template>
 
 <script lang="ts" setup>
+import DictTypeForm from './DictTypeForm.vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { dateFormatter } from '@/utils/formatTime'
 import * as DictTypeApi from '@/api/system/dict/dict.type'
-import DictTypeForm from './DictTypeForm.vue'
 import download from '@/utils/download'
 
 defineOptions({ name: 'SystemDictType' })
@@ -161,7 +163,7 @@ const queryParams = reactive({
   name: '',
   type: '',
   status: undefined,
-  createTime: []
+  createTime: [],
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
@@ -173,7 +175,8 @@ const getList = async () => {
     const data = await DictTypeApi.getDictTypePage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -206,7 +209,8 @@ const handleDelete = async (id: number) => {
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
 /** 导出按钮操作 */
@@ -218,13 +222,15 @@ const handleExport = async () => {
     exportLoading.value = true
     const data = await DictTypeApi.exportDictType(queryParams)
     download.excel(data, '字典类型.xls')
-  } catch {
-  } finally {
+  }
+  catch {
+  }
+  finally {
     exportLoading.value = false
   }
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

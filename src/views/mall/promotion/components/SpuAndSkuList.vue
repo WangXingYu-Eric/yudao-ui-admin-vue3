@@ -10,7 +10,7 @@
           :rule-config="ruleConfig"
         >
           <template #extension>
-            <slot></slot>
+            <slot />
           </template>
         </SkuList>
       </template>
@@ -31,12 +31,14 @@
     <el-table-column align="center" label="库存" min-width="90" prop="stock" />
   </el-table>
 </template>
+
 <script generic="T extends Spu" lang="ts" setup>
 import { formatToFraction } from '@/utils'
 import { createImageViewer } from '@/components/ImageViewer'
-import { Spu } from '@/api/mall/product/spu'
-import { RuleConfig, SkuList } from '@/views/mall/product/spu/components'
-import { SpuProperty } from '@/views/mall/promotion/components/index'
+import type { Spu } from '@/api/mall/product/spu'
+import type { RuleConfig } from '@/views/mall/product/spu/components'
+import { SkuList } from '@/views/mall/product/spu/components'
+import type { SpuProperty } from '@/views/mall/promotion/components/index'
 
 defineOptions({ name: 'PromotionSpuAndSkuList' })
 
@@ -73,7 +75,7 @@ defineExpose({ getSkuConfigs })
 const imagePreview = (imgUrl: string) => {
   createImageViewer({
     zIndex: 99999999,
-    urlList: [imgUrl]
+    urlList: [imgUrl],
   })
 }
 
@@ -83,13 +85,14 @@ const imagePreview = (imgUrl: string) => {
 watch(
   () => props.spuList,
   (data) => {
-    if (!data) return
+    if (!data)
+      return
     spuData.value = data as Spu[]
   },
   {
     deep: true,
-    immediate: true
-  }
+    immediate: true,
+  },
 )
 /**
  * 将传进来的值赋值给 skuList
@@ -97,16 +100,17 @@ watch(
 watch(
   () => props.spuPropertyListP,
   (data) => {
-    if (!data) return
+    if (!data)
+      return
     spuPropertyList.value = data as SpuProperty<T>[]
     // 解决如果之前选择的是单规格 spu 的话后面选择多规格 sku 多规格属性信息不展示的问题。解决方法：让 SkuList 组件重新渲染（行折叠会干掉包含的组件展开时会重新加载）
     setTimeout(() => {
-      expandRowKeys.value = data.map((item) => item.spuId)
+      expandRowKeys.value = data.map(item => item.spuId)
     }, 200)
   },
   {
     deep: true,
-    immediate: true
-  }
+    immediate: true,
+  },
 )
 </script>

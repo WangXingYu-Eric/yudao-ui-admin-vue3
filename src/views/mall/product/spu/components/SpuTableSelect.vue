@@ -1,5 +1,5 @@
 <template>
-  <Dialog v-model="dialogVisible" :appendToBody="true" title="选择商品" width="70%">
+  <Dialog v-model="dialogVisible" :append-to-body="true" title="选择商品" width="70%">
     <ContentWrap>
       <el-row :gutter="20" class="mb-10px">
         <el-col :span="6">
@@ -44,9 +44,9 @@
           </el-button>
         </el-col>
       </el-row>
-      <el-table v-loading="loading" :data="list" show-overflow-tooltip>
+      <ElTable v-loading="loading" :data="list" show-overflow-tooltip>
         <!-- 多选模式 -->
-        <el-table-column key="2" type="selection" width="55" v-if="multiple">
+        <el-table-column v-if="multiple" key="2" type="selection" width="55">
           <template #header>
             <el-checkbox
               :value="allChecked && checkedPageNos.indexOf(queryParams.pageNo) > -1"
@@ -61,11 +61,11 @@
           </template>
         </el-table-column>
         <!-- 单选模式 -->
-        <el-table-column label="#" width="55" v-else>
+        <el-table-column v-else label="#" width="55">
           <template #default="{ row }">
-            <el-radio :label="row.id" v-model="selectedSpuId" @change="handleSingleSelected(row)"
-              >&nbsp;</el-radio
-            >
+            <el-radio v-model="selectedSpuId" :label="row.id" @change="handleSingleSelected(row)">
+&nbsp;
+            </el-radio>
           </template>
         </el-table-column>
         <el-table-column key="id" align="center" label="商品编号" prop="id" min-width="60" />
@@ -85,7 +85,7 @@
             <span>{{ categoryList?.find((c) => c.id === row.categoryId)?.name }}</span>
           </template>
         </el-table-column>
-      </el-table>
+      </ElTable>
       <!-- 分页 -->
       <Pagination
         v-model:limit="queryParams.pageSize"
@@ -94,9 +94,13 @@
         @pagination="getList"
       />
     </ContentWrap>
-    <template #footer v-if="multiple">
-      <el-button type="primary" @click="handleEmitChange">确 定</el-button>
-      <el-button @click="dialogVisible = false">取 消</el-button>
+    <template v-if="multiple" #footer>
+      <el-button type="primary" @click="handleEmitChange">
+        确 定
+      </el-button>
+      <el-button @click="dialogVisible = false">
+        取 消
+      </el-button>
     </template>
   </Dialog>
 </template>
@@ -115,10 +119,13 @@ defineOptions({ name: 'SpuTableSelect' })
 
 const props = defineProps({
   // 多选
-  multiple: propTypes.bool.def(false)
+  multiple: propTypes.bool.def(false),
 })
 
-const total = ref(0) // 列表的总页数
+/** 确认选择时的触发事件 */
+const emits = defineEmits<{
+  (e: 'change', spu: Spu | Spu[] | any): void
+}>(); const total = ref(0) // 列表的总页数
 const list = ref<Spu[]>([]) // 列表的数据
 const loading = ref(false) // 列表的加载中
 const dialogVisible = ref(false) // 弹窗的是否展示
@@ -128,7 +135,7 @@ const queryParams = ref({
   tabType: 0, // 默认获取上架的商品
   name: '',
   categoryId: null,
-  createTime: []
+  createTime: [],
 }) // 查询参数
 
 const selectedSpuId = ref() // 选中的商品 spuId
@@ -138,8 +145,9 @@ const open = (spus?: Spu[]) => {
   if (spus && spus.length > 0) {
     // todo check-box不显示选中？
     checkedSpus.value = [...spus]
-    checkedSpuIds.value = spus.map((spu) => spu.id)
-  } else {
+    checkedSpuIds.value = spus.map(spu => spu.id)
+  }
+  else {
     checkedSpus.value = []
     checkedSpuIds.value = []
   }
@@ -158,7 +166,8 @@ const getList = async () => {
     const data = await ProductSpuApi.getSpuPage(queryParams.value)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -177,15 +186,15 @@ const resetQuery = () => {
     tabType: 0, // 默认获取上架的商品
     name: '',
     categoryId: null,
-    createTime: []
+    createTime: [],
   }
   getList()
 }
 
-const allChecked = ref(false) //是否全选
-const checkedPageNos = ref<number[]>([]) //选中的页码
-const checkedSpuIds = ref<number[]>([]) //选中的商品ID
-const checkedSpus = ref<Spu[]>([]) //选中的商品
+const allChecked = ref(false) // 是否全选
+const checkedPageNos = ref<number[]>([]) // 选中的页码
+const checkedSpuIds = ref<number[]>([]) // 选中的商品ID
+const checkedSpus = ref<Spu[]>([]) // 选中的商品
 
 /** 单选中时触发 */
 const handleSingleSelected = (row: Spu) => {
@@ -203,11 +212,6 @@ const handleEmitChange = () => {
   emits('change', [...checkedSpus.value])
 }
 
-/** 确认选择时的触发事件 */
-const emits = defineEmits<{
-  (e: 'change', spu: Spu | Spu[] | any): void
-}>()
-
 /** 全选 */
 const handleCheckAll = (checked: boolean) => {
   debugger
@@ -215,11 +219,10 @@ const handleCheckAll = (checked: boolean) => {
   allChecked.value = checked
   const index = checkedPageNos.value.indexOf(queryParams.value.pageNo)
   checkedPageNos.value.push(queryParams.value.pageNo)
-  if (index > -1) {
+  if (index > -1)
     checkedPageNos.value.splice(index, 1)
-  }
 
-  list.value.forEach((item) => handleCheckOne(checked, item))
+  list.value.forEach(item => handleCheckOne(checked, item))
 }
 
 /** 选中一行 */
@@ -230,7 +233,8 @@ const handleCheckOne = (checked: boolean, spu: Spu) => {
       checkedSpuIds.value.push(spu.id)
       checkedSpus.value.push(spu)
     }
-  } else {
+  }
+  else {
     const index = checkedSpuIds.value.indexOf(spu.id)
     if (index > -1) {
       checkedSpuIds.value.splice(index, 1)
@@ -241,7 +245,7 @@ const handleCheckOne = (checked: boolean, spu: Spu) => {
 
 const categoryList = ref() // 分类列表
 const categoryTreeList = ref() // 分类树
-/** 初始化 **/
+/** 初始化 */
 onMounted(async () => {
   await getList()
   // 获得分类树

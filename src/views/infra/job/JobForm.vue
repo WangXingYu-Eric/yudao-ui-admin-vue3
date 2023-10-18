@@ -1,19 +1,19 @@
 <template>
-  <Dialog :title="dialogTitle" v-model="dialogVisible">
+  <Dialog v-model="dialogVisible" :title="dialogTitle">
     <el-form
       ref="formRef"
+      v-loading="formLoading"
       :model="formData"
       :rules="formRules"
       label-width="120px"
-      v-loading="formLoading"
     >
       <el-form-item label="任务名称" prop="name">
         <el-input v-model="formData.name" placeholder="请输入任务名称" />
       </el-form-item>
       <el-form-item label="处理器的名字" prop="handlerName">
         <el-input
-          :readonly="formData.id !== undefined"
           v-model="formData.handlerName"
+          :readonly="formData.id !== undefined"
           placeholder="请输入处理器的名字"
         />
       </el-form-item>
@@ -40,17 +40,25 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button type="primary" @click="submitForm" :loading="formLoading">确 定</el-button>
-      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button type="primary" :loading="formLoading" @click="submitForm">
+        确 定
+      </el-button>
+      <el-button @click="dialogVisible = false">
+        取 消
+      </el-button>
     </template>
   </Dialog>
 </template>
+
 <script lang="ts" setup>
 import * as JobApi from '@/api/infra/job'
 
 defineOptions({ name: 'JobForm' })
 
-const { t } = useI18n() // 国际化
+// 提供 open 方法，用于打开弹窗
+
+/** 提交按钮 */
+const emit = defineEmits(['success']); const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 
 const dialogVisible = ref(false) // 弹窗的是否展示
@@ -62,21 +70,21 @@ const formData = ref({
   name: '',
   handlerName: '',
   handlerParam: '',
-  cronExpression: ''
+  cronExpression: '',
 })
 const formRules = reactive({
   name: [{ required: true, message: '任务名称不能为空', trigger: 'blur' }],
   handlerName: [{ required: true, message: '处理器的名字不能为空', trigger: 'blur' }],
   cronExpression: [{ required: true, message: 'CRON 表达式不能为空', trigger: 'blur' }],
   retryCount: [{ required: true, message: '重试次数不能为空', trigger: 'blur' }],
-  retryInterval: [{ required: true, message: '重试间隔不能为空', trigger: 'blur' }]
+  retryInterval: [{ required: true, message: '重试间隔不能为空', trigger: 'blur' }],
 })
 const formRef = ref() // 表单 Ref
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
   dialogVisible.value = true
-  dialogTitle.value = t('action.' + type)
+  dialogTitle.value = t(`action.${type}`)
   formType.value = type
   resetForm()
   // 修改时，设置数据
@@ -84,20 +92,20 @@ const open = async (type: string, id?: number) => {
     formLoading.value = true
     try {
       formData.value = await JobApi.getJob(id)
-    } finally {
+    }
+    finally {
       formLoading.value = false
     }
   }
 }
-defineExpose({ open }) // 提供 open 方法，用于打开弹窗
-
-/** 提交按钮 */
-const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
+defineExpose({ open }) // 定义 success 事件，用于操作成功后的回调
 const submitForm = async () => {
   // 校验表单
-  if (!formRef) return
+  if (!formRef)
+    return
   const valid = await formRef.value.validate()
-  if (!valid) return
+  if (!valid)
+    return
   // 提交请求
   formLoading.value = true
   try {
@@ -105,14 +113,16 @@ const submitForm = async () => {
     if (formType.value === 'create') {
       await JobApi.createJob(data)
       message.success(t('common.createSuccess'))
-    } else {
+    }
+    else {
       await JobApi.updateJob(data)
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
     // 发送操作成功的事件
     emit('success')
-  } finally {
+  }
+  finally {
     formLoading.value = false
   }
 }
@@ -124,7 +134,7 @@ const resetForm = () => {
     name: '',
     handlerName: '',
     handlerParam: '',
-    cronExpression: ''
+    cronExpression: '',
   }
   formRef.value?.resetFields()
 }

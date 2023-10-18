@@ -1,14 +1,16 @@
+<template>
+  <span :class="prefixCls">
+    {{ displayValue }}
+  </span>
+</template>
+
 <script lang="ts" setup>
-import { PropType } from 'vue'
+import type { PropType } from 'vue'
 import { isNumber } from '@/utils/is'
 import { propTypes } from '@/utils/propTypes'
 import { useDesign } from '@/hooks/web/useDesign'
 
 defineOptions({ name: 'CountTo' })
-
-const { getPrefixCls } = useDesign()
-
-const prefixCls = getPrefixCls('count-to')
 
 const props = defineProps({
   startVal: propTypes.number.def(0), // 开始播放值
@@ -24,12 +26,16 @@ const props = defineProps({
   easingFn: {
     type: Function as PropType<(t: number, b: number, c: number, d: number) => number>,
     default(t: number, b: number, c: number, d: number) {
-      return (c * (-Math.pow(2, (-10 * t) / d) + 1) * 1024) / 1023 + b
-    } // 缓动函数
-  }
+      return (c * (-(2 ** ((-10 * t) / d)) + 1) * 1024) / 1023 + b
+    }, // 缓动函数
+  },
 })
 
 const emit = defineEmits(['mounted', 'callback'])
+
+const { getPrefixCls } = useDesign()
+
+const prefixCls = getPrefixCls('count-to')
 
 const formatNumber = (num: number | string) => {
   const { decimals, decimal, separator, suffix, prefix } = props
@@ -40,9 +46,8 @@ const formatNumber = (num: number | string) => {
   const x2 = x.length > 1 ? decimal + x[1] : ''
   const rgx = /(\d+)(\d{3})/
   if (separator && !isNumber(separator)) {
-    while (rgx.test(x1)) {
-      x1 = x1.replace(rgx, '$1' + separator + '$2')
-    }
+    while (rgx.test(x1))
+      x1 = x1.replace(rgx, `$1${separator}$2`)
   }
   return prefix + x1 + x2 + suffix
 }
@@ -66,15 +71,15 @@ const state = reactive<{
   startTime: null,
   timestamp: null,
   remaining: null,
-  rAF: null
+  rAF: null,
 })
 
 const displayValue = toRef(state, 'displayValue')
 
 onMounted(() => {
-  if (props.autoplay) {
+  if (props.autoplay)
     start()
-  }
+
   emit('mounted')
 })
 
@@ -83,9 +88,8 @@ const getCountDown = computed(() => {
 })
 
 watch([() => props.startVal, () => props.endVal], () => {
-  if (props.autoplay) {
+  if (props.autoplay)
     start()
-  }
 })
 
 const start = () => {
@@ -101,7 +105,8 @@ const pauseResume = () => {
   if (state.paused) {
     resume()
     state.paused = false
-  } else {
+  }
+  else {
     pause()
     state.paused = true
   }
@@ -126,57 +131,54 @@ const reset = () => {
 
 const count = (timestamp: number) => {
   const { useEasing, easingFn, endVal } = props
-  if (!state.startTime) state.startTime = timestamp
+  if (!state.startTime)
+    state.startTime = timestamp
   state.timestamp = timestamp
   const progress = timestamp - state.startTime
   state.remaining = (state.localDuration as number) - progress
   if (useEasing) {
     if (unref(getCountDown)) {
-      state.printVal =
-        state.localStartVal -
-        easingFn(progress, 0, state.localStartVal - endVal, state.localDuration as number)
-    } else {
+      state.printVal
+        = state.localStartVal
+        - easingFn(progress, 0, state.localStartVal - endVal, state.localDuration as number)
+    }
+    else {
       state.printVal = easingFn(
         progress,
         state.localStartVal,
         endVal - state.localStartVal,
-        state.localDuration as number
+        state.localDuration as number,
       )
     }
-  } else {
+  }
+  else {
     if (unref(getCountDown)) {
-      state.printVal =
-        state.localStartVal -
-        (state.localStartVal - endVal) * (progress / (state.localDuration as number))
-    } else {
-      state.printVal =
-        state.localStartVal +
-        (endVal - state.localStartVal) * (progress / (state.localDuration as number))
+      state.printVal
+        = state.localStartVal
+        - (state.localStartVal - endVal) * (progress / (state.localDuration as number))
+    }
+    else {
+      state.printVal
+        = state.localStartVal
+        + (endVal - state.localStartVal) * (progress / (state.localDuration as number))
     }
   }
-  if (unref(getCountDown)) {
+  if (unref(getCountDown))
     state.printVal = state.printVal < endVal ? endVal : state.printVal
-  } else {
+  else
     state.printVal = state.printVal > endVal ? endVal : state.printVal
-  }
+
   state.displayValue = formatNumber(state.printVal!)
-  if (progress < (state.localDuration as number)) {
+  if (progress < (state.localDuration as number))
     state.rAF = requestAnimationFrame(count)
-  } else {
+  else
     emit('callback')
-  }
 }
 
 defineExpose({
   pauseResume,
   reset,
   start,
-  pause
+  pause,
 })
 </script>
-
-<template>
-  <span :class="prefixCls">
-    {{ displayValue }}
-  </span>
-</template>

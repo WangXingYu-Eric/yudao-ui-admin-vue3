@@ -1,6 +1,6 @@
 <template>
   <!-- 情况一：添加/修改 -->
-  <el-table
+  <ElTable
     v-if="!isDetail && !isActivityComponent"
     :data="isBatch ? skuList : formData!.skus!"
     border
@@ -108,10 +108,10 @@
         <el-button v-else link size="small" type="primary" @click="deleteSku(row)">删除</el-button>
       </template>
     </el-table-column>
-  </el-table>
+  </ElTable>
 
   <!-- 情况二：详情 -->
-  <el-table
+  <ElTable
     v-if="isDetail"
     ref="activitySkuListRef"
     :data="formData!.skus!"
@@ -190,10 +190,10 @@
         </template>
       </el-table-column>
     </template>
-  </el-table>
+  </ElTable>
 
   <!-- 情况三：作为活动组件 -->
-  <el-table
+  <ElTable
     v-if="isActivityComponent"
     :data="formData!.skus!"
     border
@@ -250,21 +250,22 @@
     </el-table-column>
     <!--  方便扩展每个活动配置的属性不一样  -->
     <slot name="extension"></slot>
-  </el-table>
+  </ElTable>
 </template>
+
 <script lang="ts" setup>
-import { PropType, Ref } from 'vue'
+import type { PropType, Ref } from 'vue'
+import { PropertyAndValues } from './index'
 import { copyValueToTarget } from '@/utils'
 import { propTypes } from '@/utils/propTypes'
 import { UploadImg } from '@/components/UploadFile'
 import type { Property, Sku, Spu } from '@/api/mall/product/spu'
 import { createImageViewer } from '@/components/ImageViewer'
 import { RuleConfig } from '@/views/mall/product/spu/components/index'
-import { PropertyAndValues } from './index'
 import { ElTable } from 'element-plus'
 
 defineOptions({ name: 'SkuList' })
-const message = useMessage() // 消息弹窗
+// 消息弹窗
 
 const props = defineProps({
   propFormData: {
@@ -283,8 +284,9 @@ const props = defineProps({
   isDetail: propTypes.bool.def(false), // 是否作为 sku 详情组件
   isComponent: propTypes.bool.def(false), // 是否作为 sku 选择组件
   isActivityComponent: propTypes.bool.def(false) // 是否作为 sku 活动配置组件
-})
-const formData: Ref<Spu | undefined> = ref<Spu>() // 表单数据
+}) ;const emit = defineEmits<{
+  (e: 'selectionChange', value: Sku[]): void
+}>() ;const message = useMessage()const formData: Ref<Spu | undefined> = ref<Spu>() // 表单数据
 const skuList = ref<Sku[]>([
   {
     price: 0, // 商品价格
@@ -361,9 +363,6 @@ const getValue = (obj, arg) => {
   return value
 }
 
-const emit = defineEmits<{
-  (e: 'selectionChange', value: Sku[]): void
-}>()
 /**
  * 选择时触发
  * @param Sku 传递过来的选中的 sku 是一个数组
@@ -378,25 +377,26 @@ const handleSelectionChange = (val: Sku[]) => {
 watch(
   () => props.propFormData,
   (data) => {
-    if (!data) return
+    if (!data) 
+return
     formData.value = data
   },
   {
     deep: true,
-    immediate: true
+    immediate: true,
   }
 )
 
 /** 生成表数据 */
 const generateTableData = (propertyList: any[]) => {
   // 构建数据结构
-  const propertyValues = propertyList.map((item) =>
-    item.values.map((v) => ({
+  const propertyValues = propertyList.map(item =>
+    item.values.map(v => ({
       propertyId: item.id,
       propertyName: item.name,
       valueId: v.id,
-      valueName: v.name
-    }))
+      valueName: v.name,
+    })),
   )
   const buildSkuList = build(propertyValues)
   // 如果回显的 sku 属性和添加的属性不一致则重置 skus 列表
@@ -416,15 +416,15 @@ const generateTableData = (propertyList: any[]) => {
       weight: 0,
       volume: 0,
       firstBrokeragePrice: 0,
-      secondBrokeragePrice: 0
+      secondBrokeragePrice: 0,
     }
     // 如果存在属性相同的 sku 则不做处理
     const index = formData.value!.skus!.findIndex(
-      (sku) => JSON.stringify(sku.properties) === JSON.stringify(row.properties)
+      sku => JSON.stringify(sku.properties) === JSON.stringify(row.properties),
     )
-    if (index !== -1) {
+    if (index !== -1) 
       continue
-    }
+    
     formData.value!.skus!.push(row)
   }
 }
@@ -435,16 +435,16 @@ const generateTableData = (propertyList: any[]) => {
 const validateData = (propertyList: any[]) => {
   const skuPropertyIds: number[] = []
   formData.value!.skus!.forEach(
-    (sku) =>
+    sku =>
       sku.properties
-        ?.map((property) => property.propertyId)
+        ?.map(property => property.propertyId)
         ?.forEach((propertyId) => {
-          if (skuPropertyIds.indexOf(propertyId!) === -1) {
+          if (!skuPropertyIds.includes(propertyId!)) 
             skuPropertyIds.push(propertyId!)
-          }
-        })
+          
+        }),
   )
-  const propertyIds = propertyList.map((item) => item.id)
+  const propertyIds = propertyList.map(item => item.id)
   return skuPropertyIds.length === propertyIds.length
 }
 
@@ -452,19 +452,21 @@ const validateData = (propertyList: any[]) => {
 const build = (propertyValuesList: Property[][]) => {
   if (propertyValuesList.length === 0) {
     return []
-  } else if (propertyValuesList.length === 1) {
+  }
+ else if (propertyValuesList.length === 1) {
     return propertyValuesList[0]
-  } else {
+  }
+ else {
     const result: Property[][] = []
     const rest = build(propertyValuesList.slice(1))
     for (let i = 0; i < propertyValuesList[0].length; i++) {
       for (let j = 0; j < rest.length; j++) {
         // 第一次不是数组结构，后面的都是数组结构
-        if (Array.isArray(rest[j])) {
+        if (Array.isArray(rest[j])) 
           result.push([propertyValuesList[0][i], ...rest[j]])
-        } else {
+         else 
           result.push([propertyValuesList[0][i], rest[j]])
-        }
+        
       }
     }
     return result
@@ -476,9 +478,9 @@ watch(
   () => props.propertyList,
   (propertyList: PropertyAndValues[]) => {
     // 如果不是多规格则结束
-    if (!formData.value!.specType) {
+    if (!formData.value!.specType) 
       return
-    }
+    
     // 如果当前组件作为批量添加数据使用，则重置表数据
     if (props.isBatch) {
       skuList.value = [
@@ -492,15 +494,15 @@ watch(
           weight: 0,
           volume: 0,
           firstBrokeragePrice: 0,
-          secondBrokeragePrice: 0
+          secondBrokeragePrice: 0,
         }
       ]
     }
 
     // 判断代理对象是否为空
-    if (JSON.stringify(propertyList) === '[]') {
+    if (JSON.stringify(propertyList) === '[]') 
       return
-    }
+    
     // 重置表头
     tableHeaders.value = []
     // 生成表头
@@ -509,19 +511,19 @@ watch(
       tableHeaders.value.push({ prop: `name${index}`, label: item.name })
     })
     // 如果回显的 sku 属性和添加的属性一致则不处理
-    if (validateData(propertyList)) {
+    if (validateData(propertyList)) 
       return
-    }
+    
     // 添加新属性没有属性值也不做处理
-    if (propertyList.some((item) => item.values!.length === 0)) {
+    if (propertyList.some(item => item.values!.length === 0)) 
       return
-    }
+    
     // 生成 table 数据，即 sku 列表
     generateTableData(propertyList)
   },
   {
     deep: true,
-    immediate: true
+    immediate: true,
   }
 )
 const activitySkuListRef = ref<InstanceType<typeof ElTable>>()

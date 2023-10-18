@@ -65,13 +65,13 @@ export const updateUserPassword = (oldPassword: string, newPassword: string) => 
   return request.put({
     url: '/system/user/profile/update-password',
     data: {
-      oldPassword: oldPassword,
-      newPassword: newPassword
-    }
+      oldPassword,
+      newPassword,
+    },
   })
 }
 
 // 用户头像上传
 export const uploadAvatar = (data) => {
-  return request.upload({ url: '/system/user/profile/update-avatar', data: data })
+  return request.upload({ url: '/system/user/profile/update-avatar', data })
 }

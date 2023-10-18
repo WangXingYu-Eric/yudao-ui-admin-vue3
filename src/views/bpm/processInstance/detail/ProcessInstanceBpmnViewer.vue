@@ -5,15 +5,16 @@
     </template>
     <MyProcessViewer
       key="designer"
-      :activityData="activityList"
+      :activity-data="activityList"
       :prefix="bpmnControlForm.prefix"
-      :processInstanceData="processInstance"
-      :taskData="tasks"
+      :process-instance-data="processInstance"
+      :task-data="tasks"
       :value="bpmnXml"
       v-bind="bpmnControlForm"
     />
   </el-card>
 </template>
+
 <script lang="ts" setup>
 import { propTypes } from '@/utils/propTypes'
 import { MyProcessViewer } from '@/components/bpmnProcessDesigner/package'
@@ -26,11 +27,11 @@ const props = defineProps({
   id: propTypes.string, // 流程实例的编号
   processInstance: propTypes.any, // 流程实例的信息
   tasks: propTypes.array, // 流程任务的数组
-  bpmnXml: propTypes.string // BPMN XML
+  bpmnXml: propTypes.string, // BPMN XML
 })
 
 const bpmnControlForm = ref({
-  prefix: 'flowable'
+  prefix: 'flowable',
 })
 const activityList = ref([]) // 任务列表
 // const bpmnXML = computed(() => { // TODO 芋艿：不晓得为啊哈不能这么搞
@@ -44,11 +45,12 @@ const activityList = ref([]) // 任务列表
 onMounted(async () => {
   if (props.id) {
     activityList.value = await ActivityApi.getActivityList({
-      processInstanceId: props.id
+      processInstanceId: props.id,
     })
   }
 })
 </script>
+
 <style>
 .box-card {
   width: 100%;

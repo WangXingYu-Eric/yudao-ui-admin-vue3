@@ -1,5 +1,5 @@
 import { useCache } from '@/hooks/web/useCache'
-import { TokenType } from '@/api/login/types'
+import type { TokenType } from '@/api/login/types'
 import { decrypt, encrypt } from '@/utils/jsencrypt'
 
 const { wsCache } = useCache()
@@ -32,13 +32,13 @@ export const removeToken = () => {
 
 /** 格式化token（jwt格式） */
 export const formatToken = (token: string): string => {
-  return 'Bearer ' + token
+  return `Bearer ${token}`
 }
 // ========== 账号相关 ==========
 
 const LoginFormKey = 'LOGINFORM'
 
-export type LoginFormType = {
+export interface LoginFormType {
   tenantName: string
   username: string
   password: string
@@ -47,9 +47,9 @@ export type LoginFormType = {
 
 export const getLoginForm = () => {
   const loginForm: LoginFormType = wsCache.get(LoginFormKey)
-  if (loginForm) {
+  if (loginForm)
     loginForm.password = decrypt(loginForm.password) as string
-  }
+
   return loginForm
 }
 

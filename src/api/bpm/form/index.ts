@@ -1,6 +1,6 @@
 import request from '@/config/axios'
 
-export type FormVO = {
+export interface FormVO {
   id: number
   name: string
   conf: string
@@ -14,7 +14,7 @@ export type FormVO = {
 export const createForm = async (data: FormVO) => {
   return await request.post({
     url: '/bpm/form/create',
-    data: data
+    data,
   })
 }
 
@@ -22,21 +22,21 @@ export const createForm = async (data: FormVO) => {
 export const updateForm = async (data: FormVO) => {
   return await request.put({
     url: '/bpm/form/update',
-    data: data
+    data,
   })
 }
 
 // 删除工作流的表单定义
 export const deleteForm = async (id: number) => {
   return await request.delete({
-    url: '/bpm/form/delete?id=' + id
+    url: `/bpm/form/delete?id=${id}`,
   })
 }
 
 // 获得工作流的表单定义
 export const getForm = async (id: number) => {
   return await request.get({
-    url: '/bpm/form/get?id=' + id
+    url: `/bpm/form/get?id=${id}`,
   })
 }
 
@@ -44,13 +44,13 @@ export const getForm = async (id: number) => {
 export const getFormPage = async (params) => {
   return await request.get({
     url: '/bpm/form/page',
-    params
+    params,
   })
 }
 
 // 获得动态表单的精简列表
 export const getSimpleFormList = async () => {
   return await request.get({
-    url: '/bpm/form/list-all-simple'
+    url: '/bpm/form/list-all-simple',
   })
 }

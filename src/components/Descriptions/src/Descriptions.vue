@@ -1,88 +1,17 @@
-<script lang="ts" setup>
-import { PropType } from 'vue'
-import dayjs from 'dayjs'
-import { useDesign } from '@/hooks/web/useDesign'
-import { propTypes } from '@/utils/propTypes'
-import { useAppStore } from '@/store/modules/app'
-import { DescriptionsSchema } from '@/types/descriptions'
-
-defineOptions({ name: 'Descriptions' })
-
-const appStore = useAppStore()
-
-const mobile = computed(() => appStore.getMobile)
-
-const attrs = useAttrs()
-
-const slots = useSlots()
-
-const props = defineProps({
-  title: propTypes.string.def(''),
-  message: propTypes.string.def(''),
-  collapse: propTypes.bool.def(true),
-  columns: propTypes.number.def(1),
-  schema: {
-    type: Array as PropType<DescriptionsSchema[]>,
-    default: () => []
-  },
-  data: {
-    type: Object as PropType<any>,
-    default: () => ({})
-  }
-})
-
-const { getPrefixCls } = useDesign()
-
-const prefixCls = getPrefixCls('descriptions')
-
-const getBindValue = computed(() => {
-  const delArr: string[] = ['title', 'message', 'collapse', 'schema', 'data', 'class']
-  const obj = { ...attrs, ...props }
-  for (const key in obj) {
-    if (delArr.indexOf(key) !== -1) {
-      delete obj[key]
-    }
-  }
-  return obj
-})
-
-const getBindItemValue = (item: DescriptionsSchema) => {
-  const delArr: string[] = ['field']
-  const obj = { ...item }
-  for (const key in obj) {
-    if (delArr.indexOf(key) !== -1) {
-      delete obj[key]
-    }
-  }
-  return obj
-}
-
-// 折叠
-const show = ref(true)
-
-const toggleClick = () => {
-  if (props.collapse) {
-    show.value = !unref(show)
-  }
-}
-</script>
-
 <template>
   <div
-    :class="[
+    class="bg-[var(--el-color-white)] dark:border-1px dark:border-[var(--el-border-color)] dark:bg-[var(--el-bg-color)]" :class="[
       prefixCls,
-      'bg-[var(--el-color-white)] dark:bg-[var(--el-bg-color)] dark:border-[var(--el-border-color)] dark:border-1px'
     ]"
   >
     <div
       v-if="title"
-      :class="[
+      class="h-50px flex cursor-pointer items-center justify-between b-b-1 border-[var(--el-border-color)] border-solid px-10px dark:border-[var(--el-border-color)]" :class="[
         `${prefixCls}-header`,
-        'h-50px flex justify-between items-center b-b-1 border-solid border-[var(--el-border-color)] px-10px cursor-pointer dark:border-[var(--el-border-color)]'
       ]"
       @click="toggleClick"
     >
-      <div :class="[`${prefixCls}-header__title`, 'relative font-18px font-bold ml-10px']">
+      <div class="font-18px relative ml-10px font-bold" :class="[`${prefixCls}-header__title`]">
         <div class="flex items-center">
           {{ title }}
           <ElTooltip v-if="message" :content="message" placement="right">
@@ -94,15 +23,15 @@ const toggleClick = () => {
     </div>
 
     <ElCollapseTransition>
-      <div v-show="show" :class="[`${prefixCls}-content`, 'p-10px']">
+      <div v-show="show" class="p-10px" :class="[`${prefixCls}-content`]">
         <ElDescriptions
           :column="props.columns"
           :direction="mobile ? 'vertical' : 'horizontal'"
           border
           v-bind="getBindValue"
         >
-          <template v-if="slots['extra']" #extra>
-            <slot name="extra"></slot>
+          <template v-if="slots.extra" #extra>
+            <slot name="extra" />
           </template>
           <ElDescriptionsItem
             v-for="item in schema"
@@ -114,9 +43,10 @@ const toggleClick = () => {
               <slot
                 :name="`${item.field}-label`"
                 :row="{
-                  label: item.label
+                  label: item.label,
                 }"
-                >{{ item.label }}
+              >
+                {{ item.label }}
               </slot>
             </template>
 
@@ -127,9 +57,11 @@ const toggleClick = () => {
                 }}
               </slot>
               <slot v-else-if="item.dictType">
-                <DictTag :type="item.dictType" :value="data[item.field] + ''" />
+                <DictTag :type="item.dictType" :value="`${data[item.field]}`" />
               </slot>
-              <slot v-else :name="item.field" :row="data">{{ data[item.field] }}</slot>
+              <slot v-else :name="item.field" :row="data">
+                {{ data[item.field] }}
+              </slot>
             </template>
           </ElDescriptionsItem>
         </ElDescriptions>
@@ -137,6 +69,72 @@ const toggleClick = () => {
     </ElCollapseTransition>
   </div>
 </template>
+
+<script lang="ts" setup>
+import type { PropType } from 'vue'
+import dayjs from 'dayjs'
+import { useDesign } from '@/hooks/web/useDesign'
+import { propTypes } from '@/utils/propTypes'
+import { useAppStore } from '@/store/modules/app'
+import type { DescriptionsSchema } from '@/types/descriptions'
+
+defineOptions({ name: 'Descriptions' })
+
+const props = defineProps({
+  title: propTypes.string.def(''),
+  message: propTypes.string.def(''),
+  collapse: propTypes.bool.def(true),
+  columns: propTypes.number.def(1),
+  schema: {
+    type: Array as PropType<DescriptionsSchema[]>,
+    default: () => [],
+  },
+  data: {
+    type: Object as PropType<any>,
+    default: () => ({}),
+  },
+})
+
+const appStore = useAppStore()
+
+const mobile = computed(() => appStore.getMobile)
+
+const attrs = useAttrs()
+
+const slots = useSlots()
+
+const { getPrefixCls } = useDesign()
+
+const prefixCls = getPrefixCls('descriptions')
+
+const getBindValue = computed(() => {
+  const delArr: string[] = ['title', 'message', 'collapse', 'schema', 'data', 'class']
+  const obj = { ...attrs, ...props }
+  for (const key in obj) {
+    if (delArr.includes(key))
+      delete obj[key]
+  }
+  return obj
+})
+
+const getBindItemValue = (item: DescriptionsSchema) => {
+  const delArr: string[] = ['field']
+  const obj = { ...item }
+  for (const key in obj) {
+    if (delArr.includes(key))
+      delete obj[key]
+  }
+  return obj
+}
+
+// 折叠
+const show = ref(true)
+
+const toggleClick = () => {
+  if (props.collapse)
+    show.value = !unref(show)
+}
+</script>
 
 <style lang="scss" scoped>
 $prefix-cls: #{$namespace}-descriptions;

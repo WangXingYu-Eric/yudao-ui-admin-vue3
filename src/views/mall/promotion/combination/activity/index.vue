@@ -2,9 +2,9 @@
   <ContentWrap>
     <!-- 搜索工作栏 -->
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="68px"
     >
@@ -13,8 +13,8 @@
           v-model="queryParams.name"
           placeholder="请输入活动名称"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="活动状态" prop="status">
@@ -33,13 +33,17 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        <el-button @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" /> 搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon icon="ep:refresh" class="mr-5px" /> 重置
+        </el-button>
         <el-button
+          v-hasPermi="['promotion:combination-activity:create']"
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['promotion:combination-activity:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
@@ -98,28 +102,28 @@
       <el-table-column label="操作" align="center" width="150px" fixed="right">
         <template #default="scope">
           <el-button
+            v-hasPermi="['promotion:combination-activity:update']"
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['promotion:combination-activity:update']"
           >
             编辑
           </el-button>
           <el-button
+            v-if="scope.row.status === 0"
+            v-hasPermi="['promotion:combination-activity:close']"
             link
             type="danger"
             @click="handleClose(scope.row.id)"
-            v-if="scope.row.status === 0"
-            v-hasPermi="['promotion:combination-activity:close']"
           >
             关闭
           </el-button>
           <el-button
+            v-else
+            v-hasPermi="['promotion:combination-activity:delete']"
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
-            v-else
-            v-hasPermi="['promotion:combination-activity:delete']"
           >
             删除
           </el-button>
@@ -128,9 +132,9 @@
     </el-table>
     <!-- 分页 -->
     <Pagination
-      :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
+      :total="total"
       @pagination="getList"
     />
   </ContentWrap>
@@ -140,11 +144,11 @@
 </template>
 
 <script setup lang="ts">
-import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
-import { dateFormatter } from '@/utils/formatTime'
-import * as CombinationActivityApi from '@/api/mall/promotion/combination/combinationActivity'
 import CombinationActivityForm from './CombinationActivityForm.vue'
-import { formatDate } from '@/utils/formatTime'
+import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
+import { dateFormatter, formatDate } from '@/utils/formatTime'
+import * as CombinationActivityApi from '@/api/mall/promotion/combination/combinationActivity'
+
 import { fenToYuanFormat } from '@/utils/formatter'
 import { fenToYuan } from '@/utils'
 
@@ -160,7 +164,7 @@ const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
   name: null,
-  status: null
+  status: null,
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
@@ -172,7 +176,8 @@ const getList = async () => {
     const data = await CombinationActivityApi.getCombinationActivityPage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -206,7 +211,8 @@ const handleClose = async (id: number) => {
     message.success('关闭成功')
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
 /** 删除按钮操作 */
@@ -219,15 +225,16 @@ const handleDelete = async (id: number) => {
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
 const formatCombinationPrice = (products) => {
-  const combinationPrice = Math.min(...products.map((item) => item.combinationPrice))
+  const combinationPrice = Math.min(...products.map(item => item.combinationPrice))
   return `￥${fenToYuan(combinationPrice)}`
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(async () => {
   await getList()
 })

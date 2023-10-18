@@ -1,33 +1,51 @@
+<template>
+  <div :class="[prefixCls, `${prefixCls}--${configGlobal?.size}`]">
+    <ElInput v-model="valueRef" :type="textType" v-bind="$attrs">
+      <template #suffix>
+        <Icon :icon="getIconName" class="el-input__icon cursor-pointer" @click="changeTextType" />
+      </template>
+    </ElInput>
+    <div
+      v-if="strength"
+      :class="`${prefixCls}__bar`"
+      class="relative mb-6px ml-auto mr-auto mt-10px h-6px"
+    >
+      <div :class="`${prefixCls}__bar--fill`" :data-score="getPasswordStrength" />
+    </div>
+  </div>
+</template>
+
 <script lang="ts" setup>
-import { propTypes } from '@/utils/propTypes'
-import { useConfigGlobal } from '@/hooks/web/useConfigGlobal'
 import type { ZxcvbnResult } from '@zxcvbn-ts/core'
 import { zxcvbn } from '@zxcvbn-ts/core'
+import { propTypes } from '@/utils/propTypes'
+import { useConfigGlobal } from '@/hooks/web/useConfigGlobal'
 import { useDesign } from '@/hooks/web/useDesign'
 
 defineOptions({ name: 'InputPassword' })
+
+const props = defineProps({
+  // 是否显示密码强度
+  strength: propTypes.bool.def(false),
+  modelValue: propTypes.string.def(''),
+})
+
+const emit = defineEmits(['update:modelValue'])
 
 const { getPrefixCls } = useDesign()
 
 const prefixCls = getPrefixCls('input-password')
 
-const props = defineProps({
-  // 是否显示密码强度
-  strength: propTypes.bool.def(false),
-  modelValue: propTypes.string.def('')
-})
-
 watch(
   () => props.modelValue,
   (val: string) => {
-    if (val === unref(valueRef)) return
+    if (val === unref(valueRef))
+      return
     valueRef.value = val
-  }
+  },
 )
 
 const { configGlobal } = useConfigGlobal()
-
-const emit = defineEmits(['update:modelValue'])
 
 // 设置input的type属性
 const textType = ref<'password' | 'text'>('password')
@@ -44,7 +62,7 @@ watch(
   () => valueRef.value,
   (val: string) => {
     emit('update:modelValue', val)
-  }
+  },
 )
 
 // 获取密码强度
@@ -56,23 +74,6 @@ const getPasswordStrength = computed(() => {
 
 const getIconName = computed(() => (unref(textType) === 'password' ? 'ep:hide' : 'ep:view'))
 </script>
-
-<template>
-  <div :class="[prefixCls, `${prefixCls}--${configGlobal?.size}`]">
-    <ElInput v-model="valueRef" :type="textType" v-bind="$attrs">
-      <template #suffix>
-        <Icon :icon="getIconName" class="el-input__icon cursor-pointer" @click="changeTextType" />
-      </template>
-    </ElInput>
-    <div
-      v-if="strength"
-      :class="`${prefixCls}__bar`"
-      class="relative mb-6px ml-auto mr-auto mt-10px h-6px"
-    >
-      <div :class="`${prefixCls}__bar--fill`" :data-score="getPasswordStrength"></div>
-    </div>
-  </div>
-</template>
 
 <style lang="scss" scoped>
 $prefix-cls: #{$namespace}-input-password;

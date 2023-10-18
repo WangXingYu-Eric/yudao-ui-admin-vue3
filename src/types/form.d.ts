@@ -1,8 +1,8 @@
 import type { CSSProperties } from 'vue'
-import { ColProps, ComponentProps, ComponentName } from '@/types/components'
 import type { AxiosPromise } from 'axios'
+import type { ColProps, ComponentName, ComponentProps } from '@/types/components'
 
-export type FormSetPropsType = {
+export interface FormSetPropsType {
   field: string
   path: string
   value: any
@@ -10,7 +10,7 @@ export type FormSetPropsType = {
 
 export type FormValueType = string | number | string[] | number[] | boolean | undefined | null
 
-export type FormItemProps = {
+export interface FormItemProps {
   labelWidth?: string | number
   required?: boolean
   rules?: Recordable
@@ -20,7 +20,7 @@ export type FormItemProps = {
   style?: CSSProperties
 }
 
-export type FormSchema = {
+export interface FormSchema {
   // 唯一值
   field: string
   // 标题

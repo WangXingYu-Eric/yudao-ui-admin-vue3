@@ -2,9 +2,9 @@
   <ContentWrap>
     <!-- 搜索工作栏 -->
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="68px"
     >
@@ -44,10 +44,10 @@
           重置
         </el-button>
         <el-button
+          v-hasPermi="['product:comment:create']"
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['product:comment:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" />
           添加虚拟评论
@@ -118,9 +118,9 @@
         <template #default="scope">
           <el-switch
             v-model="scope.row.visible"
+            v-hasPermi="['product:comment:update']"
             :active-value="true"
             :inactive-value="false"
-            v-hasPermi="['product:comment:update']"
             @change="handleVisibleChange(scope.row)"
           />
         </template>
@@ -128,10 +128,10 @@
       <el-table-column label="操作" align="center" min-width="60px" fixed="right">
         <template #default="scope">
           <el-button
+            v-hasPermi="['product:comment:update']"
             link
             type="primary"
             @click="handleReply(scope.row.id)"
-            v-hasPermi="['product:comment:update']"
           >
             回复
           </el-button>
@@ -140,9 +140,9 @@
     </el-table>
     <!-- 分页 -->
     <Pagination
-      :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
+      :total="total"
       @pagination="getList"
     />
   </ContentWrap>
@@ -154,10 +154,10 @@
 </template>
 
 <script setup lang="ts">
-import { dateFormatter } from '@/utils/formatTime'
-import * as CommentApi from '@/api/mall/product/comment'
 import CommentForm from './CommentForm.vue'
 import ReplyForm from './ReplyForm.vue'
+import { dateFormatter } from '@/utils/formatTime'
+import * as CommentApi from '@/api/mall/product/comment'
 
 defineOptions({ name: 'ProductComment' })
 
@@ -174,7 +174,7 @@ const queryParams = reactive({
   spuName: null,
   userNickname: null,
   orderId: null,
-  createTime: []
+  createTime: [],
 })
 const queryFormRef = ref() // 搜索的表单
 
@@ -185,13 +185,13 @@ const getList = async () => {
     const data = await CommentApi.getCommentPage(queryParams)
     // visible 如果为 null，会导致刷新的时候触发 e-switch 的 change 事件
     data.list.forEach((item) => {
-      if (!item.visible) {
+      if (!item.visible)
         item.visible = false
-      }
     })
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -214,28 +214,29 @@ const openForm = (type: string, id?: number) => {
   formRef.value.open(type, id)
 }
 
-/** 回复按钮操作 **/
+/** 回复按钮操作 */
 const replyFormRef = ref()
 const handleReply = (id: number) => {
   replyFormRef.value.open(id)
 }
 
-/** 显示/隐藏 **/
+/** 显示/隐藏 */
 const handleVisibleChange = async (row: CommentApi.CommentVO) => {
-  if (loading.value) {
+  if (loading.value)
     return
-  }
-  let changedValue = row.visible
+
+  const changedValue = row.visible
   try {
     await message.confirm(changedValue ? '是否显示评论？' : '是否隐藏评论？')
     await CommentApi.updateCommentVisible({ id: row.id, visible: changedValue })
     await getList()
-  } catch {
+  }
+  catch {
     row.visible = !changedValue
   }
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

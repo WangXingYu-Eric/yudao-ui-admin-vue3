@@ -22,10 +22,11 @@
     </el-descriptions>
   </Dialog>
 </template>
+
 <script lang="ts" setup>
 import { DICT_TYPE } from '@/utils/dict'
 import { formatDate } from '@/utils/formatTime'
-import * as NotifyMessageApi from '@/api/system/notify/message'
+import type * as NotifyMessageApi from '@/api/system/notify/message'
 
 defineOptions({ name: 'MyNotifyMessageDetailDetail' })
 
@@ -40,7 +41,8 @@ const open = async (data: NotifyMessageApi.NotifyMessageVO) => {
   detailLoading.value = true
   try {
     detailData.value = data
-  } finally {
+  }
+  finally {
     detailLoading.value = false
   }
 }

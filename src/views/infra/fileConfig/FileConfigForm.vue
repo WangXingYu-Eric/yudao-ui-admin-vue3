@@ -66,8 +66,12 @@
       </el-form-item>
       <el-form-item v-if="formData.storage === 11" label="连接模式" prop="config.mode">
         <el-radio-group v-model="formData.config.mode">
-          <el-radio key="Active" label="Active">主动模式</el-radio>
-          <el-radio key="Passive" label="Passive">被动模式</el-radio>
+          <el-radio key="Active" label="Active">
+            主动模式
+          </el-radio>
+          <el-radio key="Passive" label="Passive">
+            被动模式
+          </el-radio>
         </el-radio-group>
       </el-form-item>
       <!-- S3 -->
@@ -93,18 +97,26 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button :disabled="formLoading" type="primary" @click="submitForm">确 定</el-button>
-      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button :disabled="formLoading" type="primary" @click="submitForm">
+        确 定
+      </el-button>
+      <el-button @click="dialogVisible = false">
+        取 消
+      </el-button>
     </template>
   </Dialog>
 </template>
+
 <script lang="ts" setup>
 import { DICT_TYPE, getDictOptions } from '@/utils/dict'
 import * as FileConfigApi from '@/api/infra/fileConfig'
 
 defineOptions({ name: 'InfraFileConfigForm' })
 
-const { t } = useI18n() // 国际化
+// 提供 open 方法，用于打开弹窗
+
+/** 提交表单 */
+const emit = defineEmits(['success']); const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 
 const dialogVisible = ref(false) // 弹窗的是否展示
@@ -116,7 +128,7 @@ const formData = ref({
   name: '',
   storage: 0,
   remark: '',
-  config: {}
+  config: {},
 })
 const formRules = reactive({
   name: [{ required: true, message: '配置名不能为空', trigger: 'blur' }],
@@ -132,15 +144,15 @@ const formRules = reactive({
     bucket: [{ required: true, message: '存储 bucket 不能为空', trigger: 'blur' }],
     accessKey: [{ required: true, message: 'accessKey 不能为空', trigger: 'blur' }],
     accessSecret: [{ required: true, message: 'accessSecret 不能为空', trigger: 'blur' }],
-    domain: [{ required: true, message: '自定义域名不能为空', trigger: 'blur' }]
-  }
+    domain: [{ required: true, message: '自定义域名不能为空', trigger: 'blur' }],
+  },
 })
 const formRef = ref() // 表单 Ref
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
   dialogVisible.value = true
-  dialogTitle.value = t('action.' + type)
+  dialogTitle.value = t(`action.${type}`)
   formType.value = type
   resetForm()
   // 修改时，设置数据
@@ -148,20 +160,20 @@ const open = async (type: string, id?: number) => {
     formLoading.value = true
     try {
       formData.value = await FileConfigApi.getFileConfig(id)
-    } finally {
+    }
+    finally {
       formLoading.value = false
     }
   }
 }
-defineExpose({ open }) // 提供 open 方法，用于打开弹窗
-
-/** 提交表单 */
-const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
+defineExpose({ open }) // 定义 success 事件，用于操作成功后的回调
 const submitForm = async () => {
   // 校验表单
-  if (!formRef) return
+  if (!formRef)
+    return
   const valid = await formRef.value.validate()
-  if (!valid) return
+  if (!valid)
+    return
   // 提交请求
   formLoading.value = true
   try {
@@ -169,14 +181,16 @@ const submitForm = async () => {
     if (formType.value === 'create') {
       await FileConfigApi.createFileConfig(data)
       message.success(t('common.createSuccess'))
-    } else {
+    }
+    else {
       await FileConfigApi.updateFileConfig(data)
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
     // 发送操作成功的事件
     emit('success')
-  } finally {
+  }
+  finally {
     formLoading.value = false
   }
 }
@@ -188,7 +202,7 @@ const resetForm = () => {
     name: '',
     storage: 0,
     remark: '',
-    config: {}
+    config: {},
   }
   formRef.value?.resetFields()
 }

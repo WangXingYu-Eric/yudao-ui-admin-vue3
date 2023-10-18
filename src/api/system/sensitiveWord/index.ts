@@ -1,5 +1,5 @@
-import request from '@/config/axios'
 import qs from 'qs'
+import request from '@/config/axios'
 
 export interface SensitiveWordVO {
   id: number
@@ -22,7 +22,7 @@ export const getSensitiveWordPage = (params: PageParam) => {
 
 // 查询敏感词详情
 export const getSensitiveWord = (id: number) => {
-  return request.get({ url: '/system/sensitive-word/get?id=' + id })
+  return request.get({ url: `/system/sensitive-word/get?id=${id}` })
 }
 
 // 新增敏感词
@@ -37,7 +37,7 @@ export const updateSensitiveWord = (data: SensitiveWordVO) => {
 
 // 删除敏感词
 export const deleteSensitiveWord = (id: number) => {
-  return request.delete({ url: '/system/sensitive-word/delete?id=' + id })
+  return request.delete({ url: `/system/sensitive-word/delete?id=${id}` })
 }
 
 // 导出敏感词
@@ -53,6 +53,6 @@ export const getSensitiveWordTagList = () => {
 // 获得文本所包含的不合法的敏感词数组
 export const validateText = (query: SensitiveWordTestReqVO) => {
   return request.get({
-    url: '/system/sensitive-word/validate-text?' + qs.stringify(query, { arrayFormat: 'repeat' })
+    url: `/system/sensitive-word/validate-text?${qs.stringify(query, { arrayFormat: 'repeat' })}`,
   })
 }

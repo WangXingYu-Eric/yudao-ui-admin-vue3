@@ -73,7 +73,9 @@
           >
             编辑
           </el-button>
-          <el-button link type="primary" @click="goValueList(scope.row.id)">属性值</el-button>
+          <el-button link type="primary" @click="goValueList(scope.row.id)">
+            属性值
+          </el-button>
           <el-button
             v-hasPermi="['product:property:delete']"
             link
@@ -97,14 +99,15 @@
   <!-- 表单弹窗：添加/修改 -->
   <PropertyForm ref="formRef" @success="getList" />
 </template>
+
 <script lang="ts" setup>
+import PropertyForm from './PropertyForm.vue'
 import { dateFormatter } from '@/utils/formatTime'
 import * as PropertyApi from '@/api/mall/product/property'
-import PropertyForm from './PropertyForm.vue'
-
-const { push } = useRouter()
 
 defineOptions({ name: 'ProductProperty' })
+
+const { push } = useRouter()
 
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
@@ -116,7 +119,7 @@ const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
   name: undefined,
-  createTime: []
+  createTime: [],
 })
 const queryFormRef = ref() // 搜索的表单
 
@@ -127,7 +130,8 @@ const getList = async () => {
     const data = await PropertyApi.getPropertyPage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -160,7 +164,8 @@ const handleDelete = async (id: number) => {
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
 /** 跳转商品属性列表 */
@@ -168,7 +173,7 @@ const goValueList = (id: number) => {
   push({ name: 'ProductPropertyValue', params: { propertyId: id } })
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

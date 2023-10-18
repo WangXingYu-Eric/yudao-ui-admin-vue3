@@ -14,7 +14,9 @@
       <!-- tab 1：图片  -->
       <el-tab-pane :name="UploadType.Image">
         <template #label>
-          <el-row align="middle"> <Icon icon="ep:picture" />图片 </el-row>
+          <el-row align="middle">
+            <Icon icon="ep:picture" />图片
+          </el-row>
         </template>
         <UploadFile
           v-hasPermi="['mp:material:upload-permanent']"
@@ -27,9 +29,9 @@
         <ImageTable :loading="loading" :list="list" @delete="handleDelete" />
         <!-- 分页组件 -->
         <Pagination
-          :total="total"
           v-model:page="queryParams.pageNo"
           v-model:limit="queryParams.pageSize"
+          :total="total"
           @pagination="getList"
         />
       </el-tab-pane>
@@ -37,7 +39,9 @@
       <!-- tab 2：语音  -->
       <el-tab-pane :name="UploadType.Voice">
         <template #label>
-          <el-row align="middle"> <Icon icon="ep:microphone" />语音 </el-row>
+          <el-row align="middle">
+            <Icon icon="ep:microphone" />语音
+          </el-row>
         </template>
         <UploadFile
           v-hasPermi="['mp:material:upload-permanent']"
@@ -50,9 +54,9 @@
         <VoiceTable :list="list" :loading="loading" @delete="handleDelete" />
         <!-- 分页组件 -->
         <Pagination
-          :total="total"
           v-model:page="queryParams.pageNo"
           v-model:limit="queryParams.pageSize"
+          :total="total"
           @pagination="getList"
         />
       </el-tab-pane>
@@ -60,39 +64,44 @@
       <!-- tab 3：视频 -->
       <el-tab-pane :name="UploadType.Video">
         <template #label>
-          <el-row align="middle"> <Icon icon="ep:video-play" /> 视频 </el-row>
+          <el-row align="middle">
+            <Icon icon="ep:video-play" /> 视频
+          </el-row>
         </template>
         <el-button
           v-hasPermi="['mp:material:upload-permanent']"
           type="primary"
           plain
           @click="showCreateVideo = true"
-          >新建视频</el-button
         >
+          新建视频
+        </el-button>
         <!-- 新建视频的弹窗 -->
         <UploadVideo v-model="showCreateVideo" />
         <!-- 列表 -->
         <VideoTable :list="list" :loading="loading" @delete="handleDelete" />
         <!-- 分页组件 -->
         <Pagination
-          :total="total"
           v-model:page="queryParams.pageNo"
           v-model:limit="queryParams.pageSize"
+          :total="total"
           @pagination="getList"
         />
       </el-tab-pane>
     </el-tabs>
   </ContentWrap>
 </template>
+
 <script lang="ts" setup name="MpMaterial">
-import WxAccountSelect from '@/views/mp/components/wx-account-select'
 import ImageTable from './components/ImageTable.vue'
 import VoiceTable from './components/VoiceTable.vue'
 import VideoTable from './components/VideoTable.vue'
 import UploadFile from './components/UploadFile.vue'
 import UploadVideo from './components/UploadVideo.vue'
 import { UploadType } from './components/upload'
+import WxAccountSelect from '@/views/mp/components/wx-account-select'
 import * as MpMaterialApi from '@/api/mp/material'
+
 const message = useMessage() // 消息
 
 const type = ref<UploadType>(UploadType.Image) // 素材类型
@@ -104,11 +113,11 @@ const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
   accountId: -1,
-  permanent: true
+  permanent: true,
 })
 const showCreateVideo = ref(false) // 是否新建视频的弹窗
 
-/** 侦听公众号变化 **/
+/** 侦听公众号变化 */
 const onAccountChanged = (id: number) => {
   queryParams.accountId = id
   queryParams.pageNo = 1
@@ -121,11 +130,12 @@ const getList = async () => {
   try {
     const data = await MpMaterialApi.getMaterialPage({
       ...queryParams,
-      type: type.value
+      type: type.value,
     })
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }

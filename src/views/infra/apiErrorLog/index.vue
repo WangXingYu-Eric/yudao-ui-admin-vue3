@@ -4,9 +4,9 @@
   <ContentWrap>
     <!-- 搜索工作栏 -->
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="68px"
     >
@@ -15,8 +15,8 @@
           v-model="queryParams.userId"
           placeholder="请输入用户编号"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="用户类型" prop="userType">
@@ -39,8 +39,8 @@
           v-model="queryParams.applicationName"
           placeholder="请输入应用名"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="异常时间" prop="exceptionTime">
@@ -70,14 +70,18 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        <el-button @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" /> 搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon icon="ep:refresh" class="mr-5px" /> 重置
+        </el-button>
         <el-button
+          v-hasPermi="['infra:api-error-log:export']"
           type="success"
           plain
-          @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['infra:api-error-log:export']"
+          @click="handleExport"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
@@ -117,28 +121,28 @@
       <el-table-column label="操作" align="center" width="200">
         <template #default="scope">
           <el-button
+            v-hasPermi="['infra:api-error-log:query']"
             link
             type="primary"
             @click="openDetail(scope.row)"
-            v-hasPermi="['infra:api-error-log:query']"
           >
             详细
           </el-button>
           <el-button
+            v-if="scope.row.processStatus === InfraApiErrorLogProcessStatusEnum.INIT"
+            v-hasPermi="['infra:api-error-log:update-status']"
             link
             type="primary"
-            v-if="scope.row.processStatus === InfraApiErrorLogProcessStatusEnum.INIT"
             @click="handleProcess(scope.row.id, InfraApiErrorLogProcessStatusEnum.DONE)"
-            v-hasPermi="['infra:api-error-log:update-status']"
           >
             已处理
           </el-button>
           <el-button
+            v-if="scope.row.processStatus === InfraApiErrorLogProcessStatusEnum.INIT"
+            v-hasPermi="['infra:api-error-log:update-status']"
             link
             type="primary"
-            v-if="scope.row.processStatus === InfraApiErrorLogProcessStatusEnum.INIT"
             @click="handleProcess(scope.row.id, InfraApiErrorLogProcessStatusEnum.IGNORE)"
-            v-hasPermi="['infra:api-error-log:update-status']"
           >
             已忽略
           </el-button>
@@ -147,9 +151,9 @@
     </el-table>
     <!-- 分页组件 -->
     <Pagination
-      :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
+      :total="total"
       @pagination="getList"
     />
   </ContentWrap>
@@ -159,11 +163,11 @@
 </template>
 
 <script lang="ts" setup>
+import ApiErrorLogDetail from './ApiErrorLogDetail.vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
 import * as ApiErrorLogApi from '@/api/infra/apiErrorLog'
-import ApiErrorLogDetail from './ApiErrorLogDetail.vue'
 import { InfraApiErrorLogProcessStatusEnum } from '@/utils/constants'
 
 defineOptions({ name: 'InfraApiErrorLog' })
@@ -181,7 +185,7 @@ const queryParams = reactive({
   applicationName: null,
   requestUrl: null,
   processStatus: null,
-  exceptionTime: []
+  exceptionTime: [],
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
@@ -193,7 +197,8 @@ const getList = async () => {
     const data = await ApiErrorLogApi.getApiErrorLogPage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -216,18 +221,19 @@ const openDetail = (data: ApiErrorLogApi.ApiErrorLogVO) => {
   detailRef.value.open(data)
 }
 
-/** 处理已处理 / 已忽略的操作 **/
+/** 处理已处理 / 已忽略的操作 */
 const handleProcess = async (id: number, processStatus: number) => {
   try {
     // 操作的二次确认
     const type = processStatus === InfraApiErrorLogProcessStatusEnum.DONE ? '已处理' : '已忽略'
-    await message.confirm('确认标记为' + type + '?')
+    await message.confirm(`确认标记为${type}?`)
     // 执行操作
     await ApiErrorLogApi.updateApiErrorLogPage(id, processStatus)
     await message.success(type)
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
 /** 导出按钮操作 */
@@ -239,13 +245,15 @@ const handleExport = async () => {
     exportLoading.value = true
     const data = await ApiErrorLogApi.exportApiErrorLog(queryParams)
     download.excel(data, '异常日志.xls')
-  } catch {
-  } finally {
+  }
+  catch {
+  }
+  finally {
     exportLoading.value = false
   }
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

@@ -1,10 +1,11 @@
-import download from '@/utils/download'
-import { Table, TableExpose } from '@/components/Table'
-import { ElMessage, ElMessageBox, ElTable } from 'element-plus'
+import type { ElTable } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { computed, nextTick, reactive, ref, unref, watch } from 'vue'
+import download from '@/utils/download'
+import type { Table, TableExpose } from '@/components/Table'
 import type { TableProps } from '@/components/Table/src/types'
 
-import { TableSetPropsType } from '@/types/table'
+import type { TableSetPropsType } from '@/types/table'
 
 const { t } = useI18n()
 interface ResponseType<T = any> {
@@ -46,21 +47,21 @@ export const useTable = <T = any>(config?: UseTableConfig<T>) => {
     tableList: [],
     // AxiosConfig 配置
     params: {
-      ...(config?.defaultParams || {})
+      ...(config?.defaultParams || {}),
     },
     // 加载中
     loading: true,
     // 导出加载中
     exportLoading: false,
     // 当前行的数据
-    currentRow: null
+    currentRow: null,
   })
 
   const paramsObj = computed(() => {
     return {
       ...tableObject.params,
       pageSize: tableObject.pageSize,
-      pageNo: tableObject.currentPage
+      pageNo: tableObject.currentPage,
     }
   })
 
@@ -68,7 +69,7 @@ export const useTable = <T = any>(config?: UseTableConfig<T>) => {
     () => tableObject.currentPage,
     () => {
       methods.getList()
-    }
+    },
   )
 
   watch(
@@ -77,11 +78,12 @@ export const useTable = <T = any>(config?: UseTableConfig<T>) => {
       // 当前页不为1时，修改页数后会导致多次调用getList方法
       if (tableObject.currentPage === 1) {
         methods.getList()
-      } else {
+      }
+      else {
         tableObject.currentPage = 1
         methods.getList()
       }
-    }
+    },
   )
 
   // Table实例
@@ -98,29 +100,30 @@ export const useTable = <T = any>(config?: UseTableConfig<T>) => {
   const getTable = async () => {
     await nextTick()
     const table = unref(tableRef)
-    if (!table) {
+    if (!table)
       console.error('The table is not registered. Please use the register method to register')
-    }
+
     return table
   }
 
   const delData = async (ids: string | number | string[] | number[]) => {
     let idsLength = 1
-    if (ids instanceof Array) {
+    if (Array.isArray(ids)) {
       idsLength = ids.length
       await Promise.all(
         ids.map(async (id: string | number) => {
           await (config?.delListApi && config?.delListApi(id))
-        })
+        }),
       )
-    } else {
+    }
+    else {
       await (config?.delListApi && config?.delListApi(ids))
     }
     ElMessage.success(t('common.delSuccess'))
 
     // 计算出临界点
-    tableObject.currentPage =
-      tableObject.total % tableObject.pageSize === idsLength || tableObject.pageSize === 1
+    tableObject.currentPage
+      = tableObject.total % tableObject.pageSize === idsLength || tableObject.pageSize === 1
         ? tableObject.currentPage > 1
           ? tableObject.currentPage - 1
           : tableObject.currentPage
@@ -156,20 +159,19 @@ export const useTable = <T = any>(config?: UseTableConfig<T>) => {
       tableObject.params = Object.assign(tableObject.params, {
         pageSize: tableObject.pageSize,
         pageNo: 1,
-        ...data
+        ...data,
       })
       // 页码不等于1时更新页码重新获取数据，页码等于1时重新获取数据
-      if (tableObject.currentPage !== 1) {
+      if (tableObject.currentPage !== 1)
         tableObject.currentPage = 1
-      } else {
+      else
         methods.getList()
-      }
     },
     // 删除数据
     delList: async (
       ids: string | number | string[] | number[],
       multiple: boolean,
-      message = true
+      message = true,
     ) => {
       const tableRef = await getTable()
       if (multiple) {
@@ -182,11 +184,12 @@ export const useTable = <T = any>(config?: UseTableConfig<T>) => {
         ElMessageBox.confirm(t('common.delMessage'), t('common.confirmTitle'), {
           confirmButtonText: t('common.ok'),
           cancelButtonText: t('common.cancel'),
-          type: 'warning'
+          type: 'warning',
         }).then(async () => {
           await delData(ids)
         })
-      } else {
+      }
+      else {
         await delData(ids)
       }
     },
@@ -196,18 +199,17 @@ export const useTable = <T = any>(config?: UseTableConfig<T>) => {
       ElMessageBox.confirm(t('common.exportMessage'), t('common.confirmTitle'), {
         confirmButtonText: t('common.ok'),
         cancelButtonText: t('common.cancel'),
-        type: 'warning'
+        type: 'warning',
       })
         .then(async () => {
           const res = await config?.exportListApi?.(unref(paramsObj) as unknown as T)
-          if (res) {
+          if (res)
             download.excel(res as unknown as Blob, fileName)
-          }
         })
         .finally(() => {
           tableObject.exportLoading = false
         })
-    }
+    },
   }
 
   config?.props && methods.setProps(config.props)
@@ -218,6 +220,6 @@ export const useTable = <T = any>(config?: UseTableConfig<T>) => {
     tableObject,
     methods,
     // add by 芋艿：返回 tableMethods 属性，和 tableObject 更统一
-    tableMethods: methods
+    tableMethods: methods,
   }
 }

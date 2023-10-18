@@ -5,7 +5,7 @@
       :accept="fileType.join(',')"
       :action="updateUrl"
       :before-upload="beforeUpload"
-      :class="['upload', drag ? 'no-border' : '']"
+      class="upload" :class="[drag ? 'no-border' : '']"
       :drag="drag"
       :headers="uploadHeaders"
       :limit="limit"
@@ -22,7 +22,7 @@
         </slot>
       </div>
       <template #file="{ file }">
-        <img :src="file.url" class="upload-image" />
+        <img :src="file.url" class="upload-image">
         <div class="upload-handle" @click.stop>
           <div class="handle-icon" @click="handlePictureCardPreview(file)">
             <Icon icon="ep:zoom-in" />
@@ -36,7 +36,7 @@
       </template>
     </el-upload>
     <div class="el-upload__tip">
-      <slot name="tip"></slot>
+      <slot name="tip" />
     </div>
     <el-image-viewer
       v-if="imgViewVisible"
@@ -45,8 +45,9 @@
     />
   </div>
 </template>
+
 <script lang="ts" setup>
-import { PropType } from 'vue'
+import type { PropType } from 'vue'
 import type { UploadFile, UploadProps, UploadUserFile } from 'element-plus'
 import { ElNotification } from 'element-plus'
 
@@ -55,7 +56,21 @@ import { getAccessToken, getTenantId } from '@/utils/auth'
 
 defineOptions({ name: 'UploadImgs' })
 
-const message = useMessage() // 消息弹窗
+const props = defineProps({
+  modelValue: {
+    type: Array as PropType<UploadUserFile[]>,
+    required: true,
+  },
+  updateUrl: propTypes.string.def(import.meta.env.VITE_UPLOAD_URL),
+  drag: propTypes.bool.def(true), // 是否支持拖拽上传 ==> 非必传（默认为 true）
+  disabled: propTypes.bool.def(false), // 是否禁用上传组件 ==> 非必传（默认为 false）
+  limit: propTypes.number.def(5), // 最大图片上传数 ==> 非必传（默认为 5张）
+  fileSize: propTypes.number.def(5), // 图片大小限制 ==> 非必传（默认为 5M）
+  fileType: propTypes.array.def(['image/jpeg', 'image/png', 'image/gif']), // 图片类型限制 ==> 非必传（默认为 ["image/jpeg", "image/png", "image/gif"]）
+  height: propTypes.string.def('150px'), // 组件高度 ==> 非必传（默认为 150px）
+  width: propTypes.string.def('150px'), // 组件宽度 ==> 非必传（默认为 150px）
+  borderradius: propTypes.string.def('8px'), // 组件边框圆角 ==> 非必传（默认为 8px）
+}); const emit = defineEmits<UploadEmits>(); const message = useMessage() // 消息弹窗
 
 type FileTypes =
   | 'image/apng'
@@ -69,25 +84,9 @@ type FileTypes =
   | 'image/webp'
   | 'image/x-icon'
 
-const props = defineProps({
-  modelValue: {
-    type: Array as PropType<UploadUserFile[]>,
-    required: true
-  },
-  updateUrl: propTypes.string.def(import.meta.env.VITE_UPLOAD_URL),
-  drag: propTypes.bool.def(true), // 是否支持拖拽上传 ==> 非必传（默认为 true）
-  disabled: propTypes.bool.def(false), // 是否禁用上传组件 ==> 非必传（默认为 false）
-  limit: propTypes.number.def(5), // 最大图片上传数 ==> 非必传（默认为 5张）
-  fileSize: propTypes.number.def(5), // 图片大小限制 ==> 非必传（默认为 5M）
-  fileType: propTypes.array.def(['image/jpeg', 'image/png', 'image/gif']), // 图片类型限制 ==> 非必传（默认为 ["image/jpeg", "image/png", "image/gif"]）
-  height: propTypes.string.def('150px'), // 组件高度 ==> 非必传（默认为 150px）
-  width: propTypes.string.def('150px'), // 组件宽度 ==> 非必传（默认为 150px）
-  borderradius: propTypes.string.def('8px') // 组件边框圆角 ==> 非必传（默认为 8px）
-})
-
 const uploadHeaders = ref({
-  Authorization: 'Bearer ' + getAccessToken(),
-  'tenant-id': getTenantId()
+  'Authorization': `Bearer ${getAccessToken()}`,
+  'tenant-id': getTenantId(),
 })
 
 const fileList = ref<UploadUserFile[]>([])
@@ -95,33 +94,36 @@ const fileList = ref<UploadUserFile[]>([])
 watch(
   () => props.modelValue,
   (data) => {
-    if (!data) return
+    if (!data)
+      return
     fileList.value = data
   },
   {
     deep: true,
-    immediate: true
-  }
+    immediate: true,
+  },
 )
 /**
  * @description 文件上传之前判断
  * @param rawFile 上传的文件
- * */
+ */
 const beforeUpload: UploadProps['beforeUpload'] = (rawFile) => {
   const imgSize = rawFile.size / 1024 / 1024 < props.fileSize
   const imgType = props.fileType
-  if (!imgType.includes(rawFile.type as FileTypes))
+  if (!imgType.includes(rawFile.type as FileTypes)) {
     ElNotification({
       title: '温馨提示',
       message: '上传图片不符合所需的格式！',
-      type: 'warning'
+      type: 'warning',
     })
-  if (!imgSize)
+  }
+  if (!imgSize) {
     ElNotification({
       title: '温馨提示',
       message: `上传图片大小不能超过 ${props.fileSize}M！`,
-      type: 'warning'
+      type: 'warning',
     })
+  }
   return imgType.includes(rawFile.type as FileTypes) && imgSize
 }
 
@@ -130,9 +132,9 @@ interface UploadEmits {
   (e: 'update:modelValue', value: UploadUserFile[]): void
 }
 
-const emit = defineEmits<UploadEmits>()
 const uploadSuccess = (response, uploadFile: UploadFile) => {
-  if (!response) return
+  if (!response)
+    return
   // TODO 多图上传组件成功后只是把保存成功后的url替换掉组件选图时的文件路径，所以返回的fileList包含的是一个包含文件信息的对象列表
   uploadFile.url = response.data
   emit('update:modelValue', fileList.value)
@@ -142,7 +144,7 @@ const uploadSuccess = (response, uploadFile: UploadFile) => {
 // 删除图片
 const handleRemove = (uploadFile: UploadFile) => {
   fileList.value = fileList.value.filter(
-    (item) => item.url !== uploadFile.url || item.name !== uploadFile.name
+    item => item.url !== uploadFile.url || item.name !== uploadFile.name,
   )
   emit('update:modelValue', fileList.value)
 }
@@ -152,7 +154,7 @@ const uploadError = () => {
   ElNotification({
     title: '温馨提示',
     message: '图片上传失败，请您重新上传！',
-    type: 'error'
+    type: 'error',
   })
 }
 
@@ -161,7 +163,7 @@ const handleExceed = () => {
   ElNotification({
     title: '温馨提示',
     message: `当前最多只能上传 ${props.limit} 张图片，请移除后上传！`,
-    type: 'warning'
+    type: 'warning',
   })
 }
 

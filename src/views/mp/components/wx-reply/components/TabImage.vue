@@ -1,9 +1,11 @@
 <template>
   <div>
     <!-- 情况一：已经选择好素材、或者上传好图片 -->
-    <div class="select-item" v-if="reply.url">
-      <img class="material-img" :src="reply.url" />
-      <p class="item-name" v-if="reply.name">{{ reply.name }}</p>
+    <div v-if="reply.url" class="select-item">
+      <img class="material-img" :src="reply.url" >
+      <p v-if="reply.name" class="item-name">
+{{ reply.name }}
+</p>
       <el-row class="ope-row" justify="center">
         <el-button type="danger" circle @click="onDelete">
           <Icon icon="ep:delete" />
@@ -18,8 +20,8 @@
           素材库选择 <Icon icon="ep:circle-check" />
         </el-button>
         <el-dialog
-          title="选择图片"
           v-model="showDialog"
+          title="选择图片"
           width="90%"
           append-to-body
           destroy-on-close
@@ -43,7 +45,9 @@
           :before-upload="beforeImageUpload"
           :on-success="onUploadSuccess"
         >
-          <el-button type="primary">上传图片</el-button>
+          <el-button type="primary">
+上传图片
+</el-button>
           <template #tip>
             <span>
               <div class="el-upload__tip">支持 bmp/png/jpeg/jpg/gif 格式，大小不超过 2M</div>
@@ -56,25 +60,28 @@
 </template>
 
 <script lang="ts" setup>
+import type { UploadRawFile } from 'element-plus'
 import WxMaterialSelect from '@/views/mp/components/wx-material-select'
 import { UploadType, useBeforeUpload } from '@/views/mp/hooks/useUpload'
-import type { UploadRawFile } from 'element-plus'
 import { getAccessToken } from '@/utils/auth'
-import { Reply } from './types'
-const message = useMessage()
+import type { Reply } from './types'
 
-const UPLOAD_URL = import.meta.env.VITE_API_BASEPATH + '/admin-api/mp/material/upload-temporary'
-const HEADERS = { Authorization: 'Bearer ' + getAccessToken() } // 设置上传的请求头部
+// 设置上传的请求头部
 
 const props = defineProps<{
   modelValue: Reply
 }>()
+
 const emit = defineEmits<{
   (e: 'update:modelValue', v: Reply)
 }>()
-const reply = computed<Reply>({
+
+const message = useMessage()
+
+const UPLOAD_URL = import.meta.env.VITE_API_BASEPATH + '/admin-api/mp/material/upload-temporary'
+const HEADERS = { Authorization: 'Bearer ' + getAccessToken() }const reply = computed<Reply>({
   get: () => props.modelValue,
-  set: (val) => emit('update:modelValue', val)
+  set: val => emit('update:modelValue', val),
 })
 
 const showDialog = ref(false)
@@ -83,14 +90,14 @@ const uploadData = reactive({
   accountId: reply.value.accountId,
   type: 'image',
   title: '',
-  introduction: ''
+  introduction: '',
 })
 
 const beforeImageUpload = (rawFile: UploadRawFile) => useBeforeUpload(UploadType.Image, 2)(rawFile)
 
 const onUploadSuccess = (res: any) => {
   if (res.code !== 0) {
-    message.error('上传出错：' + res.msg)
+    message.error(`上传出错：${  res.msg}`)
     return false
   }
 

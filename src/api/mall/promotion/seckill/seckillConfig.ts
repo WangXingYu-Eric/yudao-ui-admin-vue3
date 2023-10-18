@@ -16,7 +16,7 @@ export const getSeckillConfigPage = async (params) => {
 
 // 查询秒杀时段配置详情
 export const getSeckillConfig = async (id: number) => {
-  return await request.get({ url: '/promotion/seckill-config/get?id=' + id })
+  return await request.get({ url: `/promotion/seckill-config/get?id=${id}` })
 }
 
 // 获得所有开启状态的秒杀时段精简列表
@@ -38,12 +38,12 @@ export const updateSeckillConfig = async (data: SeckillConfigVO) => {
 export const updateSeckillConfigStatus = (id: number, status: number) => {
   const data = {
     id,
-    status
+    status,
   }
-  return request.put({ url: '/promotion/seckill-config/update-status', data: data })
+  return request.put({ url: '/promotion/seckill-config/update-status', data })
 }
 
 // 删除秒杀时段配置
 export const deleteSeckillConfig = async (id: number) => {
-  return await request.delete({ url: '/promotion/seckill-config/delete?id=' + id })
+  return await request.delete({ url: `/promotion/seckill-config/delete?id=${id}` })
 }

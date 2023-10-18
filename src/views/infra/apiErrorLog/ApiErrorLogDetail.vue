@@ -55,10 +55,11 @@
     </el-descriptions>
   </Dialog>
 </template>
+
 <script lang="ts" setup>
 import { DICT_TYPE } from '@/utils/dict'
 import { formatDate } from '@/utils/formatTime'
-import * as ApiErrorLog from '@/api/infra/apiErrorLog'
+import type * as ApiErrorLog from '@/api/infra/apiErrorLog'
 
 defineOptions({ name: 'ApiErrorLogDetail' })
 
@@ -73,7 +74,8 @@ const open = async (data: ApiErrorLog.ApiErrorLogVO) => {
   detailLoading.value = true
   try {
     detailData.value = data
-  } finally {
+  }
+  finally {
     detailLoading.value = false
   }
 }

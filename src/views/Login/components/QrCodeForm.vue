@@ -8,7 +8,9 @@
         <Qrcode :logo="logoImg" />
       </el-card>
     </el-col>
-    <el-divider class="enter-x">{{ t('login.qrcode') }}</el-divider>
+    <el-divider class="enter-x">
+      {{ t('login.qrcode') }}
+    </el-divider>
     <el-col :span="24" style="padding-right: 10px; padding-left: 10px">
       <div class="mt-15px w-[100%]">
         <XButton :title="t('login.backLogin')" class="w-[100%]" @click="handleBackLogin()" />
@@ -16,11 +18,11 @@
     </el-col>
   </el-row>
 </template>
-<script lang="ts" setup>
-import logoImg from '@/assets/imgs/logo.png'
 
+<script lang="ts" setup>
 import LoginFormTitle from './LoginFormTitle.vue'
 import { LoginStateEnum, useLoginState } from './useLogin'
+import logoImg from '@/assets/imgs/logo.png'
 
 defineOptions({ name: 'QrCodeForm' })
 

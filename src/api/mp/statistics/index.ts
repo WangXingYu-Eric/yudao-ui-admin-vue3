@@ -4,7 +4,7 @@ import request from '@/config/axios'
 export const getUpstreamMessage = (query) => {
   return request.get({
     url: '/mp/statistics/upstream-message',
-    params: query
+    params: query,
   })
 }
 
@@ -12,7 +12,7 @@ export const getUpstreamMessage = (query) => {
 export const getUserSummary = (query) => {
   return request.get({
     url: '/mp/statistics/user-summary',
-    params: query
+    params: query,
   })
 }
 
@@ -20,7 +20,7 @@ export const getUserSummary = (query) => {
 export const getUserCumulate = (query) => {
   return request.get({
     url: '/mp/statistics/user-cumulate',
-    params: query
+    params: query,
   })
 }
 
@@ -28,6 +28,6 @@ export const getUserCumulate = (query) => {
 export const getInterfaceSummary = (query) => {
   return request.get({
     url: '/mp/statistics/interface-summary',
-    params: query
+    params: query,
   })
 }

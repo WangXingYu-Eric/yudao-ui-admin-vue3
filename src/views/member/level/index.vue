@@ -2,9 +2,9 @@
   <ContentWrap>
     <!-- 搜索工作栏 -->
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="68px"
     >
@@ -13,8 +13,8 @@
           v-model="queryParams.name"
           placeholder="请输入等级名称"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="状态" prop="status">
@@ -28,9 +28,13 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
-        <el-button type="primary" @click="openForm('create')" v-hasPermi="['member:level:create']">
+        <el-button @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" /> 搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon icon="ep:refresh" class="mr-5px" /> 重置
+        </el-button>
+        <el-button v-hasPermi="['member:level:create']" type="primary" @click="openForm('create')">
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
       </el-form-item>
@@ -78,18 +82,18 @@
       <el-table-column label="操作" align="center" min-width="110px" fixed="right">
         <template #default="scope">
           <el-button
+            v-hasPermi="['member:level:update']"
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['member:level:update']"
           >
             编辑
           </el-button>
           <el-button
+            v-hasPermi="['member:level:delete']"
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
-            v-hasPermi="['member:level:delete']"
           >
             删除
           </el-button>
@@ -103,12 +107,12 @@
 </template>
 
 <script setup lang="ts">
+import LevelForm from './LevelForm.vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { dateFormatter } from '@/utils/formatTime'
 import * as LevelApi from '@/api/member/level'
-import LevelForm from './LevelForm.vue'
 
-/** 会员等级管理 **/
+/** 会员等级管理 */
 defineOptions({ name: 'MemberLevel' })
 
 const message = useMessage() // 消息弹窗
@@ -118,7 +122,7 @@ const loading = ref(true) // 列表的加载中
 const list = ref([]) // 列表的数据
 const queryParams = reactive({
   name: null,
-  status: null
+  status: null,
 })
 const queryFormRef = ref() // 搜索的表单
 
@@ -127,7 +131,8 @@ const getList = async () => {
   loading.value = true
   try {
     list.value = await LevelApi.getLevelList(queryParams)
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -159,10 +164,11 @@ const handleDelete = async (id: number) => {
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

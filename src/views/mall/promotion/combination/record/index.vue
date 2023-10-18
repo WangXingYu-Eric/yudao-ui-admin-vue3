@@ -11,7 +11,9 @@
             <Icon :size="23" icon="fa:user-times" />
           </div>
           <div class="ml-[20px]">
-            <div class="mb-8px text-14px text-gray-400">参与人数(个)</div>
+            <div class="mb-8px text-14px text-gray-400">
+              参与人数(个)
+            </div>
             <CountTo
               :duration="2600"
               :end-val="recordSummary.userCount"
@@ -32,7 +34,9 @@
             <Icon :size="23" icon="fa:user-plus" />
           </div>
           <div class="ml-[20px]">
-            <div class="mb-8px text-14px text-gray-400">成团数量(个)</div>
+            <div class="mb-8px text-14px text-gray-400">
+              成团数量(个)
+            </div>
             <CountTo
               :duration="2600"
               :end-val="recordSummary.successCount"
@@ -53,7 +57,9 @@
             <Icon :size="23" icon="fa:user-plus" />
           </div>
           <div class="ml-[20px]">
-            <div class="mb-8px text-14px text-gray-400">虚拟成团(个)</div>
+            <div class="mb-8px text-14px text-gray-400">
+              虚拟成团(个)
+            </div>
             <CountTo
               :duration="2600"
               :end-val="recordSummary.virtualGroupCount"
@@ -90,7 +96,7 @@
         <el-select v-model="queryParams.status" class="!w-240px" clearable placeholder="全部">
           <el-option
             v-for="(dict, index) in getIntDictOptions(
-              DICT_TYPE.PROMOTION_COMBINATION_RECORD_STATUS
+              DICT_TYPE.PROMOTION_COMBINATION_RECORD_STATUS,
             )"
             :key="index"
             :label="dict.label"
@@ -200,6 +206,7 @@
   <!-- 表单弹窗 -->
   <CombinationRecordListDialog ref="combinationRecordListRef" />
 </template>
+
 <script lang="ts" setup>
 import CombinationRecordListDialog from './CombinationRecordListDialog.vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
@@ -213,7 +220,7 @@ const queryParams = ref({
   status: undefined, // 拼团状态
   createTime: undefined, // 创建时间
   pageSize: 10,
-  pageNo: 1
+  pageNo: 1,
 })
 const queryFormRef = ref() // 搜索的表单
 const combinationRecordListRef = ref() // 查询表单 Ref
@@ -227,7 +234,8 @@ const getList = async () => {
     const data = await CombinationRecordApi.getCombinationRecordPage(queryParams.value)
     pageList.value = data.list as CombinationRecordApi.CombinationRecordVO[]
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -235,7 +243,7 @@ const getList = async () => {
 const recordSummary = ref({
   successCount: 0,
   userCount: 0,
-  virtualGroupCount: 0
+  virtualGroupCount: 0,
 })
 /** 获得拼团记录统计信息 */
 const getSummary = async () => {
@@ -260,11 +268,11 @@ const resetQuery = () => {
 /** 商品图预览 */
 const imagePreview = (imgUrl: string) => {
   createImageViewer({
-    urlList: [imgUrl]
+    urlList: [imgUrl],
   })
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(async () => {
   await getSummary()
   await getList()

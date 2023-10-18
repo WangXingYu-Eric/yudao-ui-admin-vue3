@@ -7,14 +7,14 @@ interface TreeHelperConfig {
 const DEFAULT_CONFIG: TreeHelperConfig = {
   id: 'id',
   children: 'children',
-  pid: 'pid'
+  pid: 'pid',
 }
 export const defaultProps = {
   children: 'children',
   label: 'name',
   value: 'id',
   isLeaf: 'leaf',
-  emitPath: false // 用于 cascader 组件：在选中节点改变时，是否返回由该节点所在的各级菜单的值所组成的数组，若设置 false，则只返回该节点的值
+  emitPath: false, // 用于 cascader 组件：在选中节点改变时，是否返回由该节点所在的各级菜单的值所组成的数组，若设置 false，则只返回该节点的值
 }
 
 const getConfig = (config: Partial<TreeHelperConfig>) => Object.assign({}, DEFAULT_CONFIG, config)
@@ -42,7 +42,8 @@ export const treeToList = <T = any>(tree: any, config: Partial<TreeHelperConfig>
   const { children } = config
   const result: any = [...tree]
   for (let i = 0; i < result.length; i++) {
-    if (!result[i][children!]) continue
+    if (!result[i][children!])
+      continue
     result.splice(i + 1, 0, ...result[i][children!])
   }
   return result
@@ -51,13 +52,14 @@ export const treeToList = <T = any>(tree: any, config: Partial<TreeHelperConfig>
 export const findNode = <T = any>(
   tree: any,
   func: Fn,
-  config: Partial<TreeHelperConfig> = {}
+  config: Partial<TreeHelperConfig> = {},
 ): T | null => {
   config = getConfig(config)
   const { children } = config
   const list = [...tree]
   for (const node of list) {
-    if (func(node)) return node
+    if (func(node))
+      return node
     node[children!] && list.push(...node[children!])
   }
   return null
@@ -66,7 +68,7 @@ export const findNode = <T = any>(
 export const findNodeAll = <T = any>(
   tree: any,
   func: Fn,
-  config: Partial<TreeHelperConfig> = {}
+  config: Partial<TreeHelperConfig> = {},
 ): T[] => {
   config = getConfig(config)
   const { children } = config
@@ -82,7 +84,7 @@ export const findNodeAll = <T = any>(
 export const findPath = <T = any>(
   tree: any,
   func: Fn,
-  config: Partial<TreeHelperConfig> = {}
+  config: Partial<TreeHelperConfig> = {},
 ): T | T[] | null => {
   config = getConfig(config)
   const path: T[] = []
@@ -94,13 +96,13 @@ export const findPath = <T = any>(
     if (visitedSet.has(node)) {
       path.pop()
       list.shift()
-    } else {
+    }
+    else {
       visitedSet.add(node)
       node[children!] && list.unshift(...node[children!])
       path.push(node)
-      if (func(node)) {
+      if (func(node))
         return path
-      }
     }
   }
   return null
@@ -111,14 +113,15 @@ export const findPathAll = (tree: any, func: Fn, config: Partial<TreeHelperConfi
   const path: any[] = []
   const list = [...tree]
   const result: any[] = []
-  const visitedSet = new Set(),
-    { children } = config
+  const visitedSet = new Set()
+  const { children } = config
   while (list.length) {
     const node = list[0]
     if (visitedSet.has(node)) {
       path.pop()
       list.shift()
-    } else {
+    }
+    else {
       visitedSet.add(node)
       node[children!] && list.unshift(...node[children!])
       path.push(node)
@@ -131,7 +134,7 @@ export const findPathAll = (tree: any, func: Fn, config: Partial<TreeHelperConfi
 export const filter = <T = any>(
   tree: T[],
   func: (n: T) => boolean,
-  config: Partial<TreeHelperConfig> = {}
+  config: Partial<TreeHelperConfig> = {},
 ): T[] => {
   config = getConfig(config)
   const children = config.children as string
@@ -151,16 +154,16 @@ export const filter = <T = any>(
 export const forEach = <T = any>(
   tree: T[],
   func: (n: T) => any,
-  config: Partial<TreeHelperConfig> = {}
+  config: Partial<TreeHelperConfig> = {},
 ): void => {
   config = getConfig(config)
   const list: any[] = [...tree]
   const { children } = config
   for (let i = 0; i < list.length; i++) {
     // func 返回true就终止遍历，避免大量节点场景下无意义循环，引起浏览器卡顿
-    if (func(list[i])) {
+    if (func(list[i]))
       return
-    }
+
     children && list[i][children] && list.splice(i + 1, 0, ...list[i][children])
   }
 }
@@ -170,9 +173,9 @@ export const forEach = <T = any>(
  */
 export const treeMap = <T = any>(
   treeData: T[],
-  opt: { children?: string; conversion: Fn }
+  opt: { children?: string; conversion: Fn },
 ): T[] => {
-  return treeData.map((item) => treeMapEach(item, opt))
+  return treeData.map(item => treeMapEach(item, opt))
 }
 
 /**
@@ -180,7 +183,7 @@ export const treeMap = <T = any>(
  */
 export const treeMapEach = (
   data: any,
-  { children = 'children', conversion }: { children?: string; conversion: Fn }
+  { children = 'children', conversion }: { children?: string; conversion: Fn },
 ) => {
   const haveChildren = Array.isArray(data[children]) && data[children].length > 0
   const conversionData = conversion(data) || {}
@@ -190,13 +193,14 @@ export const treeMapEach = (
       [children]: data[children].map((i: number) =>
         treeMapEach(i, {
           children,
-          conversion
-        })
-      )
+          conversion,
+        }),
+      ),
     }
-  } else {
+  }
+  else {
     return {
-      ...conversionData
+      ...conversionData,
     }
   }
 }
@@ -210,9 +214,8 @@ export const treeMapEach = (
 export const eachTree = (treeDatas: any[], callBack: Fn, parentNode = {}) => {
   treeDatas.forEach((element) => {
     const newNode = callBack(element, parentNode) || element
-    if (element.children) {
+    if (element.children)
       eachTree(element.children, callBack, newNode)
-    }
   })
 }
 
@@ -231,7 +234,7 @@ export const handleTree = (data: any[], id?: string, parentId?: string, children
   const config = {
     id: id || 'id',
     parentId: parentId || 'parentId',
-    childrenList: children || 'children'
+    childrenList: children || 'children',
   }
 
   const childrenListMap = {}
@@ -240,32 +243,29 @@ export const handleTree = (data: any[], id?: string, parentId?: string, children
 
   for (const d of data) {
     const parentId = d[config.parentId]
-    if (childrenListMap[parentId] == null) {
+    if (childrenListMap[parentId] == null)
       childrenListMap[parentId] = []
-    }
+
     nodeIds[d[config.id]] = d
     childrenListMap[parentId].push(d)
   }
 
   for (const d of data) {
     const parentId = d[config.parentId]
-    if (nodeIds[parentId] == null) {
+    if (nodeIds[parentId] == null)
       tree.push(d)
-    }
   }
 
-  for (const t of tree) {
+  for (const t of tree)
     adaptToChildrenList(t)
-  }
 
   function adaptToChildrenList(o) {
-    if (childrenListMap[o[config.id]] !== null) {
+    if (childrenListMap[o[config.id]] !== null)
       o[config.childrenList] = childrenListMap[o[config.id]]
-    }
+
     if (o[config.childrenList]) {
-      for (const c of o[config.childrenList]) {
+      for (const c of o[config.childrenList])
         adaptToChildrenList(c)
-      }
     }
   }
 
@@ -280,19 +280,19 @@ export const handleTree = (data: any[], id?: string, parentId?: string, children
  * @param {*} children 孩子节点字段 默认 'children'
  * @param {*} rootId 根Id 默认 0
  */
-// @ts-ignore
+// @ts-expect-error
 export const handleTree2 = (data, id, parentId, children, rootId) => {
   id = id || 'id'
   parentId = parentId || 'parentId'
   // children = children || 'children'
-  rootId =
-    rootId ||
-    Math.min(
+  rootId
+    = rootId
+    || Math.min(
       ...data.map((item) => {
         return item[parentId]
-      })
-    ) ||
-    0
+      }),
+    )
+    || 0
   // 对源数据深度克隆
   const cloneData = JSON.parse(JSON.stringify(data))
   // 循环所有项
@@ -323,9 +323,8 @@ export const checkSelectedNode = (tree: any[], nodeId: any, level = 2): boolean 
   }
 
   // 校验是否是一级节点
-  if (tree.some((item) => item.id === nodeId)) {
+  if (tree.some(item => item.id === nodeId))
     return false
-  }
 
   // 递归计数
   let count = 1
@@ -336,10 +335,10 @@ export const checkSelectedNode = (tree: any[], nodeId: any, level = 2): boolean 
     for (const item of arr) {
       if (item.id === nodeId) {
         return true
-      } else if (typeof item.children !== 'undefined' && item.children.length !== 0) {
-        if (performAThoroughValidation(item.children)) {
+      }
+      else if (typeof item.children !== 'undefined' && item.children.length !== 0) {
+        if (performAThoroughValidation(item.children))
           return true
-        }
       }
     }
     return false
@@ -349,9 +348,8 @@ export const checkSelectedNode = (tree: any[], nodeId: any, level = 2): boolean 
     count = 1
     if (performAThoroughValidation(item.children)) {
       // 找到后对比是否是期望的层级
-      if (count >= level) {
+      if (count >= level)
         return true
-      }
     }
   }
 
@@ -369,10 +367,10 @@ export const treeToString = (tree: any[], nodeId) => {
     return ''
   }
   // 校验是否是一级节点
-  const node = tree.find((item) => item.id === nodeId)
-  if (typeof node !== 'undefined') {
+  const node = tree.find(item => item.id === nodeId)
+  if (typeof node !== 'undefined')
     return node.name
-  }
+
   let str = ''
 
   function performAThoroughValidation(arr) {
@@ -380,11 +378,11 @@ export const treeToString = (tree: any[], nodeId) => {
       if (item.id === nodeId) {
         str += ` / ${item.name}`
         return true
-      } else if (typeof item.children !== 'undefined' && item.children.length !== 0) {
+      }
+      else if (typeof item.children !== 'undefined' && item.children.length !== 0) {
         str += ` / ${item.name}`
-        if (performAThoroughValidation(item.children)) {
+        if (performAThoroughValidation(item.children))
           return true
-        }
       }
     }
     return false
@@ -392,9 +390,8 @@ export const treeToString = (tree: any[], nodeId) => {
 
   for (const item of tree) {
     str = `${item.name}`
-    if (performAThoroughValidation(item.children)) {
+    if (performAThoroughValidation(item.children))
       break
-    }
   }
   return str
 }

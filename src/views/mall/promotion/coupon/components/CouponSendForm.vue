@@ -1,5 +1,5 @@
 <template>
-  <Dialog v-model="dialogVisible" :appendToBody="true" title="发送优惠券" width="70%">
+  <Dialog v-model="dialogVisible" :append-to-body="true" title="发送优惠券" width="70%">
     <!-- 搜索工作栏 -->
     <el-form
       ref="queryFormRef"
@@ -62,12 +62,12 @@
       <el-table-column label="操作" align="center" min-width="60px" fixed="right">
         <template #default="scope">
           <el-button
+            v-hasPermi="['member:level:update']"
             link
             type="primary"
             :disabled="sendLoading"
             :loading="sendLoading"
             @click="handleSendCoupon(scope.row.id)"
-            v-hasPermi="['member:level:update']"
           >
             发送
           </el-button>
@@ -81,9 +81,10 @@
       :total="total"
       @pagination="getList"
     />
-    <div class="clear-both"></div>
+    <div class="clear-both" />
   </Dialog>
 </template>
+
 <script lang="ts" setup>
 import * as CouponTemplateApi from '@/api/mall/promotion/coupon/couponTemplate'
 import * as CouponApi from '@/api/mall/promotion/coupon/coupon'
@@ -91,7 +92,7 @@ import {
   discountFormat,
   remainedCountFormat,
   usePriceFormat,
-  validityTypeFormat
+  validityTypeFormat,
 } from '@/views/mall/promotion/coupon/formatter'
 import { CouponTemplateTakeTypeEnum } from '@/utils/constants'
 
@@ -107,7 +108,7 @@ const queryParams = ref({
   pageNo: 1,
   pageSize: 10,
   name: null,
-  canTakeTypes: [CouponTemplateTakeTypeEnum.ADMIN.type]
+  canTakeTypes: [CouponTemplateTakeTypeEnum.ADMIN.type],
 }) // 查询参数
 const queryFormRef = ref() // 搜索的表单
 // 领取人的编号列表
@@ -130,7 +131,8 @@ const getList = async () => {
     const data = await CouponTemplateApi.getCouponTemplatePage(queryParams.value)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -147,7 +149,7 @@ const resetQuery = () => {
   handleQuery()
 }
 
-/** 发送操作 **/
+/** 发送操作 */
 const handleSendCoupon = async (templateId: number) => {
   try {
     sendLoading.value = true
@@ -155,7 +157,8 @@ const handleSendCoupon = async (templateId: number) => {
     // 提示
     message.success('发送成功')
     dialogVisible.value = false
-  } finally {
+  }
+  finally {
     sendLoading.value = false
   }
 }

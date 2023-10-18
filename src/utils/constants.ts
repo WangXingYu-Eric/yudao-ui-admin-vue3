@@ -8,13 +8,13 @@
 // 全局通用状态枚举
 export const CommonStatusEnum = {
   ENABLE: 0, // 开启
-  DISABLE: 1 // 禁用
+  DISABLE: 1, // 禁用
 }
 
 // 全局用户类型枚举
 export const UserTypeEnum = {
   MEMBER: 1, // 会员
-  ADMIN: 2 // 管理员
+  ADMIN: 2, // 管理员
 }
 
 // ========== SYSTEM 模块 ==========
@@ -24,7 +24,7 @@ export const UserTypeEnum = {
 export const SystemMenuTypeEnum = {
   DIR: 1, // 目录
   MENU: 2, // 菜单
-  BUTTON: 3 // 按钮
+  BUTTON: 3, // 按钮
 }
 
 /**
@@ -32,7 +32,7 @@ export const SystemMenuTypeEnum = {
  */
 export const SystemRoleTypeEnum = {
   SYSTEM: 1, // 内置角色
-  CUSTOM: 2 // 自定义角色
+  CUSTOM: 2, // 自定义角色
 }
 
 /**
@@ -43,7 +43,7 @@ export const SystemDataScopeEnum = {
   DEPT_CUSTOM: 2, // 指定部门数据权限
   DEPT_ONLY: 3, // 部门数据权限
   DEPT_AND_CHILD: 4, // 部门及以下数据权限
-  DEPT_SELF: 5 // 仅本人数据权限
+  DEPT_SELF: 5, // 仅本人数据权限
 }
 
 /**
@@ -54,14 +54,14 @@ export const SystemUserSocialTypeEnum = {
     title: '钉钉',
     type: 20,
     source: 'dingtalk',
-    img: 'https://s1.ax1x.com/2022/05/22/OzMDRs.png'
+    img: 'https://s1.ax1x.com/2022/05/22/OzMDRs.png',
   },
   WECHAT_ENTERPRISE: {
     title: '企业微信',
     type: 30,
     source: 'wechat_enterprise',
-    img: 'https://s1.ax1x.com/2022/05/22/OzMrzn.png'
-  }
+    img: 'https://s1.ax1x.com/2022/05/22/OzMrzn.png',
+  },
 }
 
 // ========== INFRA 模块 ==========
@@ -71,7 +71,7 @@ export const SystemUserSocialTypeEnum = {
 export const InfraCodegenTemplateTypeEnum = {
   CRUD: 1, // 基础 CRUD
   TREE: 2, // 树形 CRUD
-  SUB: 3 // 主子表 CRUD
+  SUB: 3, // 主子表 CRUD
 }
 
 /**
@@ -80,7 +80,7 @@ export const InfraCodegenTemplateTypeEnum = {
 export const InfraJobStatusEnum = {
   INIT: 0, // 初始化中
   NORMAL: 1, // 运行中
-  STOP: 2 // 暂停运行
+  STOP: 2, // 暂停运行
 }
 
 /**
@@ -89,7 +89,7 @@ export const InfraJobStatusEnum = {
 export const InfraApiErrorLogProcessStatusEnum = {
   INIT: 0, // 未处理
   DONE: 1, // 已处理
-  IGNORE: 2 // 已忽略
+  IGNORE: 2, // 已忽略
 }
 
 // ========== PAY 模块 ==========
@@ -99,44 +99,44 @@ export const InfraApiErrorLogProcessStatusEnum = {
 export const PayChannelEnum = {
   WX_PUB: {
     code: 'wx_pub',
-    name: '微信 JSAPI 支付'
+    name: '微信 JSAPI 支付',
   },
   WX_LITE: {
     code: 'wx_lite',
-    name: '微信小程序支付'
+    name: '微信小程序支付',
   },
   WX_APP: {
     code: 'wx_app',
-    name: '微信 APP 支付'
+    name: '微信 APP 支付',
   },
   WX_BAR: {
     code: 'wx_bar',
-    name: '微信条码支付'
+    name: '微信条码支付',
   },
   ALIPAY_PC: {
     code: 'alipay_pc',
-    name: '支付宝 PC 网站支付'
+    name: '支付宝 PC 网站支付',
   },
   ALIPAY_WAP: {
     code: 'alipay_wap',
-    name: '支付宝 WAP 网站支付'
+    name: '支付宝 WAP 网站支付',
   },
   ALIPAY_APP: {
     code: 'alipay_app',
-    name: '支付宝 APP 支付'
+    name: '支付宝 APP 支付',
   },
   ALIPAY_QR: {
     code: 'alipay_qr',
-    name: '支付宝扫码支付'
+    name: '支付宝扫码支付',
   },
   ALIPAY_BAR: {
     code: 'alipay_bar',
-    name: '支付宝条码支付'
+    name: '支付宝条码支付',
   },
   MOCK: {
     code: 'mock',
-    name: '模拟支付'
-  }
+    name: '模拟支付',
+  },
 }
 
 /**
@@ -144,20 +144,20 @@ export const PayChannelEnum = {
  */
 export const PayDisplayModeEnum = {
   URL: {
-    mode: 'url'
+    mode: 'url',
   },
   IFRAME: {
-    mode: 'iframe'
+    mode: 'iframe',
   },
   FORM: {
-    mode: 'form'
+    mode: 'form',
   },
   QR_CODE: {
-    mode: 'qr_code'
+    mode: 'qr_code',
   },
   APP: {
-    mode: 'app'
-  }
+    mode: 'app',
+  },
 }
 
 /**
@@ -166,7 +166,7 @@ export const PayDisplayModeEnum = {
 export const PayType = {
   WECHAT: 'WECHAT',
   ALIPAY: 'ALIPAY',
-  MOCK: 'MOCK'
+  MOCK: 'MOCK',
 }
 
 /**
@@ -175,16 +175,16 @@ export const PayType = {
 export const PayOrderStatusEnum = {
   WAITING: {
     status: 0,
-    name: '未支付'
+    name: '未支付',
   },
   SUCCESS: {
     status: 10,
-    name: '已支付'
+    name: '已支付',
   },
   CLOSED: {
     status: 20,
-    name: '未支付'
-  }
+    name: '未支付',
+  },
 }
 
 // ========== MALL - 商品模块 ==========
@@ -194,16 +194,16 @@ export const PayOrderStatusEnum = {
 export const ProductSpuStatusEnum = {
   RECYCLE: {
     status: -1,
-    name: '回收站'
+    name: '回收站',
   },
   DISABLE: {
     status: 0,
-    name: '下架'
+    name: '下架',
   },
   ENABLE: {
     status: 1,
-    name: '上架'
-  }
+    name: '上架',
+  },
 }
 
 // ========== MALL - 营销模块 ==========
@@ -213,12 +213,12 @@ export const ProductSpuStatusEnum = {
 export const CouponTemplateValidityTypeEnum = {
   DATE: {
     type: 1,
-    name: '固定日期可用'
+    name: '固定日期可用',
   },
   TERM: {
     type: 2,
-    name: '领取之后可用'
-  }
+    name: '领取之后可用',
+  },
 }
 
 /**
@@ -227,16 +227,16 @@ export const CouponTemplateValidityTypeEnum = {
 export const CouponTemplateTakeTypeEnum = {
   USER: {
     type: 1,
-    name: '直接领取'
+    name: '直接领取',
   },
   ADMIN: {
     type: 2,
-    name: '指定发放'
+    name: '指定发放',
   },
   REGISTER: {
     type: 3,
-    name: '新人券'
-  }
+    name: '新人券',
+  },
 }
 
 /**
@@ -245,16 +245,16 @@ export const CouponTemplateTakeTypeEnum = {
 export const PromotionProductScopeEnum = {
   ALL: {
     scope: 1,
-    name: '通用劵'
+    name: '通用劵',
   },
   SPU: {
     scope: 2,
-    name: '商品劵'
+    name: '商品劵',
   },
   CATEGORY: {
     scope: 3,
-    name: '品类劵'
-  }
+    name: '品类劵',
+  },
 }
 
 /**
@@ -263,12 +263,12 @@ export const PromotionProductScopeEnum = {
 export const PromotionConditionTypeEnum = {
   PRICE: {
     type: 10,
-    name: '满 N 元'
+    name: '满 N 元',
   },
   COUNT: {
     type: 20,
-    name: '满 N 件'
-  }
+    name: '满 N 件',
+  },
 }
 
 /**
@@ -277,12 +277,12 @@ export const PromotionConditionTypeEnum = {
 export const PromotionDiscountTypeEnum = {
   PRICE: {
     type: 1,
-    name: '满减'
+    name: '满减',
   },
   PERCENT: {
     type: 2,
-    name: '折扣'
-  }
+    name: '折扣',
+  },
 }
 
 // ========== MALL - 交易模块 ==========
@@ -292,16 +292,16 @@ export const PromotionDiscountTypeEnum = {
 export const BrokerageBindModeEnum = {
   ANYTIME: {
     mode: 1,
-    name: '首次绑定'
+    name: '首次绑定',
   },
   REGISTER: {
     mode: 2,
-    name: '注册绑定'
+    name: '注册绑定',
   },
   OVERRIDE: {
     mode: 3,
-    name: '覆盖绑定'
-  }
+    name: '覆盖绑定',
+  },
 }
 /**
  * 分佣模式枚举
@@ -309,12 +309,12 @@ export const BrokerageBindModeEnum = {
 export const BrokerageEnabledConditionEnum = {
   ALL: {
     condition: 1,
-    name: '人人分销'
+    name: '人人分销',
   },
   ADMIN: {
     condition: 2,
-    name: '指定分销'
-  }
+    name: '指定分销',
+  },
 }
 /**
  * 佣金记录业务类型枚举
@@ -322,12 +322,12 @@ export const BrokerageEnabledConditionEnum = {
 export const BrokerageRecordBizTypeEnum = {
   ORDER: {
     type: 1,
-    name: '获得推广佣金'
+    name: '获得推广佣金',
   },
   WITHDRAW: {
     type: 2,
-    name: '提现申请'
-  }
+    name: '提现申请',
+  },
 }
 /**
  * 佣金提现状态枚举
@@ -335,24 +335,24 @@ export const BrokerageRecordBizTypeEnum = {
 export const BrokerageWithdrawStatusEnum = {
   AUDITING: {
     status: 0,
-    name: '审核中'
+    name: '审核中',
   },
   AUDIT_SUCCESS: {
     status: 10,
-    name: '审核通过'
+    name: '审核通过',
   },
   AUDIT_FAIL: {
     status: 20,
-    name: '审核不通过'
+    name: '审核不通过',
   },
   WITHDRAW_SUCCESS: {
     status: 11,
-    name: '提现成功'
+    name: '提现成功',
   },
   WITHDRAW_FAIL: {
     status: 21,
-    name: '提现失败'
-  }
+    name: '提现失败',
+  },
 }
 /**
  * 佣金提现类型枚举
@@ -360,20 +360,20 @@ export const BrokerageWithdrawStatusEnum = {
 export const BrokerageWithdrawTypeEnum = {
   WALLET: {
     type: 1,
-    name: '钱包'
+    name: '钱包',
   },
   BANK: {
     type: 2,
-    name: '银行卡'
+    name: '银行卡',
   },
   WECHAT: {
     type: 3,
-    name: '微信'
+    name: '微信',
   },
   ALIPAY: {
     type: 4,
-    name: '支付宝'
-  }
+    name: '支付宝',
+  },
 }
 
 /**
@@ -382,12 +382,12 @@ export const BrokerageWithdrawTypeEnum = {
 export const DeliveryTypeEnum = {
   EXPRESS: {
     type: 1,
-    name: '快递发货'
+    name: '快递发货',
   },
   PICK_UP: {
     type: 2,
-    name: '到店自提'
-  }
+    name: '到店自提',
+  },
 }
 /**
  * 交易订单 - 状态
@@ -395,22 +395,22 @@ export const DeliveryTypeEnum = {
 export const TradeOrderStatusEnum = {
   UNPAID: {
     status: 0,
-    name: '待支付'
+    name: '待支付',
   },
   UNDELIVERED: {
     status: 10,
-    name: '待发货'
+    name: '待发货',
   },
   DELIVERED: {
     status: 20,
-    name: '已发货'
+    name: '已发货',
   },
   COMPLETED: {
     status: 30,
-    name: '已完成'
+    name: '已完成',
   },
   CANCELED: {
     status: 40,
-    name: '已取消'
-  }
+    name: '已取消',
+  },
 }

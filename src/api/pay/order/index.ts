@@ -85,12 +85,12 @@ export const getOrderPage = async (params: OrderPageReqVO) => {
 
 // 查询详情支付订单
 export const getOrder = async (id: number) => {
-  return await request.get({ url: '/pay/order/get?id=' + id })
+  return await request.get({ url: `/pay/order/get?id=${id}` })
 }
 
 // 获得支付订单的明细
 export const getOrderDetail = async (id: number) => {
-  return await request.get({ url: '/pay/order/get-detail?id=' + id })
+  return await request.get({ url: `/pay/order/get-detail?id=${id}` })
 }
 
 // 提交支付订单

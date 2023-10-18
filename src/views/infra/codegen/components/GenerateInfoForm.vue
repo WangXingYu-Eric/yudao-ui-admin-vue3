@@ -59,17 +59,17 @@
         </el-form-item>
       </el-col>
 
-      <!--      <el-col :span="12">-->
-      <!--        <el-form-item prop="packageName">-->
-      <!--          <span slot="label">-->
-      <!--            生成包路径-->
-      <!--            <el-tooltip content="生成在哪个java包下，例如 com.ruoyi.system" placement="top">-->
-      <!--              <i class="el-icon-question"></i>-->
-      <!--            </el-tooltip>-->
-      <!--          </span>-->
-      <!--          <el-input v-model="formData.packageName" />-->
-      <!--        </el-form-item>-->
-      <!--      </el-col>-->
+      <!--      <el-col :span="12"> -->
+      <!--        <el-form-item prop="packageName"> -->
+      <!--          <span slot="label"> -->
+      <!--            生成包路径 -->
+      <!--            <el-tooltip content="生成在哪个java包下，例如 com.ruoyi.system" placement="top"> -->
+      <!--              <i class="el-icon-question"></i> -->
+      <!--            </el-tooltip> -->
+      <!--          </span> -->
+      <!--          <el-input v-model="formData.packageName" /> -->
+      <!--        </el-form-item> -->
+      <!--      </el-col> -->
 
       <el-col :span="12">
         <el-form-item prop="moduleName">
@@ -105,17 +105,17 @@
         </el-form-item>
       </el-col>
 
-      <!--      <el-col :span="12">-->
-      <!--        <el-form-item prop="businessPackage">-->
-      <!--          <span slot="label">-->
-      <!--            业务包-->
-      <!--            <el-tooltip content="业务包，自定义二级目录。例如说，我们希望将 dictType 和 dictData 归类成 dict 业务" placement="top">-->
-      <!--              <i class="el-icon-question"></i>-->
-      <!--            </el-tooltip>-->
-      <!--          </span>-->
-      <!--          <el-input v-model="formData.businessPackage" />-->
-      <!--        </el-form-item>-->
-      <!--      </el-col>-->
+      <!--      <el-col :span="12"> -->
+      <!--        <el-form-item prop="businessPackage"> -->
+      <!--          <span slot="label"> -->
+      <!--            业务包 -->
+      <!--            <el-tooltip content="业务包，自定义二级目录。例如说，我们希望将 dictType 和 dictData 归类成 dict 业务" placement="top"> -->
+      <!--              <i class="el-icon-question"></i> -->
+      <!--            </el-tooltip> -->
+      <!--          </span> -->
+      <!--          <el-input v-model="formData.businessPackage" /> -->
+      <!--        </el-form-item> -->
+      <!--      </el-col> -->
 
       <el-col :span="12">
         <el-form-item prop="className">
@@ -166,7 +166,7 @@
               <el-dropdown>
                 <el-button type="primary">
                   最近路径快速选择
-                  <i class="el-icon-arrow-down el-icon--right"></i>
+                  <i class="el-icon-arrow-down el-icon--right"/>
                 </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
@@ -183,7 +183,9 @@
     </el-row>
 
     <el-row v-show="formData.tplCategory === 'tree'">
-      <h4 class="form-header">其他信息</h4>
+      <h4 class="form-header">
+其他信息
+</h4>
       <el-col :span="12">
         <el-form-item>
           <template #label>
@@ -198,7 +200,7 @@
             <el-option
               v-for="(column, index) in formData.columns"
               :key="index"
-              :label="column.columnName + '：' + column.columnComment"
+              :label="`${column.columnName  }：${  column.columnComment}`"
               :value="column.columnName"
             />
           </el-select>
@@ -218,7 +220,7 @@
             <el-option
               v-for="(column, index) in formData.columns"
               :key="index"
-              :label="column.columnName + '：' + column.columnComment"
+              :label="`${column.columnName  }：${  column.columnComment}`"
               :value="column.columnName"
             />
           </el-select>
@@ -239,7 +241,7 @@
             <el-option
               v-for="(column, index) in formData.columns"
               :key="index"
-              :label="column.columnName + '：' + column.columnComment"
+              :label="`${column.columnName  }：${  column.columnComment}`"
               :value="column.columnName"
             />
           </el-select>
@@ -247,7 +249,9 @@
       </el-col>
     </el-row>
     <el-row v-show="formData.tplCategory === 'sub'">
-      <h4 class="form-header">关联信息</h4>
+      <h4 class="form-header">
+关联信息
+</h4>
       <el-col :span="12">
         <el-form-item>
           <template #label>
@@ -262,7 +266,7 @@
             <el-option
               v-for="(table0, index) in tables"
               :key="index"
-              :label="table0.tableName + '：' + table0.tableComment"
+              :label="`${table0.tableName  }：${  table0.tableComment}`"
               :value="table0.tableName"
             />
           </el-select>
@@ -282,7 +286,7 @@
             <el-option
               v-for="(column, index) in subColumns"
               :key="index"
-              :label="column.columnName + '：' + column.columnComment"
+              :label="`${column.columnName  }：${  column.columnComment}`"
               :value="column.columnName"
             />
           </el-select>
@@ -291,24 +295,23 @@
     </el-row>
   </el-form>
 </template>
+
 <script lang="ts" setup>
+import { PropType } from 'vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { handleTree } from '@/utils/tree'
 import * as CodegenApi from '@/api/infra/codegen'
 import * as MenuApi from '@/api/system/menu'
-import { PropType } from 'vue'
 
 defineOptions({ name: 'InfraCodegenGenerateInfoForm' })
 
-const message = useMessage() // 消息弹窗
+// 消息弹窗
 const props = defineProps({
   table: {
     type: Object as PropType<Nullable<CodegenApi.CodegenTableVO>>,
     default: () => null
   }
-})
-
-const formRef = ref()
+}) ;const message = useMessage()const formRef = ref()
 const formData = ref({
   templateType: null,
   frontType: null,
@@ -325,7 +328,7 @@ const formData = ref({
   tplCategory: '',
   subTableName: '',
   subTableFkName: '',
-  genType: ''
+  genType: '',
 })
 
 const rules = reactive({
@@ -336,14 +339,14 @@ const rules = reactive({
   businessName: [required],
   businessPackage: [required],
   className: [required],
-  classComment: [required]
+  classComment: [required],
 })
 
 const tables = ref([])
 const subColumns = ref([])
 const menus = ref<any[]>([])
 const menuTreeProps = {
-  label: 'name'
+  label: 'name',
 }
 
 /** 选择子表名触发 */
@@ -356,7 +359,7 @@ const tplSelectChange = (value) => {
   if (value !== 1) {
     // TODO 芋艿：暂时不考虑支持树形结构
     message.error(
-      '暂时不考虑支持【树形】和【主子表】的代码生成。原因是：导致 vm 模板过于复杂，不利于胖友二次开发'
+      '暂时不考虑支持【树形】和【主子表】的代码生成。原因是：导致 vm 模板过于复杂，不利于胖友二次开发',
     )
     return false
   }
@@ -369,12 +372,13 @@ const tplSelectChange = (value) => {
 watch(
   () => props.table,
   (table) => {
-    if (!table) return
+    if (!table) 
+return
     formData.value = table as any
   },
   {
     deep: true,
-    immediate: true
+    immediate: true,
   }
 )
 
@@ -382,10 +386,11 @@ onMounted(async () => {
   try {
     const resp = await MenuApi.getSimpleMenusList()
     menus.value = handleTree(resp)
-  } catch {}
+  }
+ catch {}
 })
 
 defineExpose({
-  validate: async () => unref(formRef)?.validate()
+  validate: async () => unref(formRef)?.validate(),
 })
 </script>

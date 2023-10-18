@@ -2,9 +2,9 @@
   <ContentWrap>
     <!-- 搜索工作栏 -->
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="68px"
     >
@@ -13,8 +13,8 @@
           v-model="queryParams.nickname"
           placeholder="请输入用户昵称"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="手机号" prop="mobile">
@@ -22,8 +22,8 @@
           v-model="queryParams.mobile"
           placeholder="请输入手机号"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="注册时间" prop="createTime">
@@ -58,9 +58,15 @@
         <MemberGroupSelect v-model="queryParams.groupId" />
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
-        <el-button @click="openCoupon" v-hasPermi="['promotion:coupon:send']">发送优惠券</el-button>
+        <el-button @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" /> 搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon icon="ep:refresh" class="mr-5px" /> 重置
+        </el-button>
+        <el-button v-hasPermi="['promotion:coupon:send']" @click="openCoupon">
+          发送优惠券
+        </el-button>
       </el-form-item>
     </el-form>
   </ContentWrap>
@@ -78,7 +84,7 @@
       <el-table-column label="用户编号" align="center" prop="id" width="120px" />
       <el-table-column label="头像" align="center" prop="avatar" width="80px">
         <template #default="scope">
-          <img :src="scope.row.avatar" style="width: 40px" />
+          <img :src="scope.row.avatar" style="width: 40px">
         </template>
       </el-table-column>
       <el-table-column label="手机号" align="center" prop="mobile" width="120px" />
@@ -126,40 +132,44 @@
       >
         <template #default="scope">
           <div class="flex items-center justify-center">
-            <el-button link type="primary" @click="openDetail(scope.row.id)">详情</el-button>
+            <el-button link type="primary" @click="openDetail(scope.row.id)">
+              详情
+            </el-button>
             <el-dropdown
-              @command="(command) => handleCommand(command, scope.row)"
               v-hasPermi="[
                 'member:user:update',
                 'member:user:update-level',
                 'member:user:update-point',
-                'member:user:update-balance'
+                'member:user:update-balance',
               ]"
+              @command="(command) => handleCommand(command, scope.row)"
             >
-              <el-button type="primary" link><Icon icon="ep:d-arrow-right" /> 更多</el-button>
+              <el-button type="primary" link>
+                <Icon icon="ep:d-arrow-right" /> 更多
+              </el-button>
               <template #dropdown>
                 <el-dropdown-menu>
                   <el-dropdown-item
-                    command="handleUpdate"
                     v-if="checkPermi(['member:user:update'])"
+                    command="handleUpdate"
                   >
                     编辑
                   </el-dropdown-item>
                   <el-dropdown-item
-                    command="handleUpdateLevel"
                     v-if="checkPermi(['member:user:update-level'])"
+                    command="handleUpdateLevel"
                   >
                     修改等级
                   </el-dropdown-item>
                   <el-dropdown-item
-                    command="handleUpdatePoint"
                     v-if="checkPermi(['member:user:update-point'])"
+                    command="handleUpdatePoint"
                   >
                     修改积分
                   </el-dropdown-item>
                   <el-dropdown-item
-                    command="handleUpdateBlance"
                     v-if="checkPermi(['member:user:update-balance'])"
+                    command="handleUpdateBlance"
                   >
                     修改余额(WIP)
                   </el-dropdown-item>
@@ -172,9 +182,9 @@
     </el-table>
     <!-- 分页 -->
     <Pagination
-      :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
+      :total="total"
       @pagination="getList"
     />
   </ContentWrap>
@@ -188,16 +198,17 @@
   <!-- 发送优惠券弹窗 -->
   <CouponSendForm ref="couponSendFormRef" />
 </template>
+
 <script setup lang="ts">
+import UserForm from './UserForm.vue'
+import UserLevelUpdateForm from './UserLevelUpdateForm.vue'
+import UserPointUpdateForm from './UserPointUpdateForm.vue'
 import { dateFormatter } from '@/utils/formatTime'
 import * as UserApi from '@/api/member/user'
 import { DICT_TYPE } from '@/utils/dict'
-import UserForm from './UserForm.vue'
 import MemberTagSelect from '@/views/member/tag/components/MemberTagSelect.vue'
 import MemberLevelSelect from '@/views/member/level/components/MemberLevelSelect.vue'
 import MemberGroupSelect from '@/views/member/group/components/MemberGroupSelect.vue'
-import UserLevelUpdateForm from './UserLevelUpdateForm.vue'
-import UserPointUpdateForm from './UserPointUpdateForm.vue'
 import CouponSendForm from '@/views/mall/promotion/coupon/components/CouponSendForm.vue'
 import { checkPermi } from '@/utils/permission'
 
@@ -217,7 +228,7 @@ const queryParams = reactive({
   createTime: [],
   tagIds: [],
   levelId: null,
-  groupId: null
+  groupId: null,
 })
 const queryFormRef = ref() // 搜索的表单
 const updateLevelFormRef = ref() // 修改会员等级表单
@@ -231,7 +242,8 @@ const getList = async () => {
     const data = await UserApi.getUserPage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -262,7 +274,7 @@ const openForm = (type: string, id?: number) => {
 
 /** 表格选中事件 */
 const handleSelectionChange = (rows: UserApi.UserVO[]) => {
-  selectedIds.value = rows.map((row) => row.id)
+  selectedIds.value = rows.map(row => row.id)
 }
 
 /** 发送优惠券 */
@@ -295,7 +307,7 @@ const handleCommand = (command: string, row: UserApi.UserVO) => {
   }
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

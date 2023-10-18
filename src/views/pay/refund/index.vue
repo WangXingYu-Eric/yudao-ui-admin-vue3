@@ -4,9 +4,9 @@
   <!-- 搜索工作栏 -->
   <ContentWrap>
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="120px"
     >
@@ -40,8 +40,8 @@
           v-model="queryParams.merchantOrderId"
           placeholder="请输入商户支付单号"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="商户退款单号" prop="merchantRefundId">
@@ -49,8 +49,8 @@
           v-model="queryParams.merchantRefundId"
           placeholder="请输入商户退款单号"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="渠道支付单号" prop="channelOrderNo">
@@ -58,8 +58,8 @@
           v-model="queryParams.channelOrderNo"
           placeholder="请输入渠道支付单号"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="渠道退款单号" prop="channelRefundNo">
@@ -67,8 +67,8 @@
           v-model="queryParams.channelRefundNo"
           placeholder="请输入渠道退款单号"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="退款状态" prop="status">
@@ -98,14 +98,18 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery"> <Icon icon="ep:search" class="mr-5px" /> 搜索 </el-button>
-        <el-button @click="resetQuery"> <Icon icon="ep:refresh" class="mr-5px" /> 重置 </el-button>
+        <el-button @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" /> 搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon icon="ep:refresh" class="mr-5px" /> 重置
+        </el-button>
         <el-button
+          v-hasPermi="['system:tenant:export']"
           type="success"
           plain
-          @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['system:tenant:export']"
+          @click="handleExport"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
@@ -137,23 +141,33 @@
       <el-table-column label="退款订单号" align="left" width="300">
         <template #default="scope">
           <p class="order-font">
-            <el-tag size="small">商户</el-tag> {{ scope.row.merchantRefundId }}
+            <el-tag size="small">
+              商户
+            </el-tag> {{ scope.row.merchantRefundId }}
           </p>
           <p class="order-font">
-            <el-tag size="small" type="warning">退款</el-tag> {{ scope.row.no }}
+            <el-tag size="small" type="warning">
+              退款
+            </el-tag> {{ scope.row.no }}
           </p>
-          <p class="order-font" v-if="scope.row.channelRefundNo">
-            <el-tag size="small" type="success">渠道</el-tag> {{ scope.row.channelRefundNo }}
+          <p v-if="scope.row.channelRefundNo" class="order-font">
+            <el-tag size="small" type="success">
+              渠道
+            </el-tag> {{ scope.row.channelRefundNo }}
           </p>
         </template>
       </el-table-column>
       <el-table-column label="支付订单号" align="left" width="300">
         <template #default="scope">
           <p class="order-font">
-            <el-tag size="small">商户</el-tag> {{ scope.row.merchantOrderId }}
+            <el-tag size="small">
+              商户
+            </el-tag> {{ scope.row.merchantOrderId }}
           </p>
           <p class="order-font">
-            <el-tag size="small" type="success">渠道</el-tag> {{ scope.row.channelOrderNo }}
+            <el-tag size="small" type="success">
+              渠道
+            </el-tag> {{ scope.row.channelOrderNo }}
           </p>
         </template>
       </el-table-column>
@@ -182,10 +196,10 @@
       <el-table-column label="操作" align="center" fixed="right">
         <template #default="scope">
           <el-button
+            v-hasPermi="['pay:order:query']"
             type="primary"
             link
             @click="openDetail(scope.row.id)"
-            v-hasPermi="['pay:order:query']"
           >
             详情
           </el-button>
@@ -194,9 +208,9 @@
     </el-table>
     <!-- 分页 -->
     <Pagination
-      :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
+      :total="total"
       @pagination="getList"
     />
   </ContentWrap>
@@ -204,12 +218,13 @@
   <!-- 表单弹窗：预览 -->
   <RefundDetail ref="detailRef" @success="getList" />
 </template>
+
 <script lang="ts" setup>
+import RefundDetail from './RefundDetail.vue'
 import { DICT_TYPE, getIntDictOptions, getStrDictOptions } from '@/utils/dict'
 import { dateFormatter } from '@/utils/formatTime'
 import * as RefundApi from '@/api/pay/refund'
 import * as AppApi from '@/api/pay/app'
-import RefundDetail from './RefundDetail.vue'
 import download from '@/utils/download'
 
 defineOptions({ name: 'PayRefund' })
@@ -233,7 +248,7 @@ const queryParams = reactive({
   channelOrderNo: undefined,
   channelRefundNo: undefined,
   createTime: [],
-  successTime: []
+  successTime: [],
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出等待
@@ -252,7 +267,8 @@ const getList = async () => {
     const data = await RefundApi.getRefundPage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -272,8 +288,10 @@ const handleExport = async () => {
     exportLoading.value = true
     const data = await RefundApi.exportRefund(queryParams)
     download.excel(data, '支付订单.xls')
-  } catch {
-  } finally {
+  }
+  catch {
+  }
+  finally {
     exportLoading.value = false
   }
 }
@@ -284,12 +302,13 @@ const openDetail = (id: number) => {
   detailRef.value.open(id)
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(async () => {
   await getList()
   appList.value = await AppApi.getAppList()
 })
 </script>
+
 <style>
 .order-font {
   padding: 2px 0;

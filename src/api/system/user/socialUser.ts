@@ -7,8 +7,8 @@ export const socialBind = (type, code, state) => {
     data: {
       type,
       code,
-      state
-    }
+      state,
+    },
   })
 }
 
@@ -18,14 +18,14 @@ export const socialUnbind = (type, openid) => {
     url: '/system/social-user/unbind',
     data: {
       type,
-      openid
-    }
+      openid,
+    },
   })
 }
 
 // 社交授权的跳转
 export const socialAuthRedirect = (type, redirectUri) => {
   return request.get({
-    url: '/system/auth/social-auth-redirect?type=' + type + '&redirectUri=' + redirectUri
+    url: `/system/auth/social-auth-redirect?type=${type}&redirectUri=${redirectUri}`,
   })
 }

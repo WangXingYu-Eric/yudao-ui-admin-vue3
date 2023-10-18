@@ -14,9 +14,9 @@
       <!-- 搜索 -->
       <ContentWrap>
         <el-form
+          ref="queryFormRef"
           class="-mb-15px"
           :model="queryParams"
-          ref="queryFormRef"
           :inline="true"
           label-width="68px"
         >
@@ -25,8 +25,8 @@
               v-model="queryParams.username"
               placeholder="请输入用户名称"
               clearable
-              @keyup.enter="handleQuery"
               class="!w-240px"
+              @keyup.enter="handleQuery"
             />
           </el-form-item>
           <el-form-item label="手机号码" prop="mobile">
@@ -34,8 +34,8 @@
               v-model="queryParams.mobile"
               placeholder="请输入手机号码"
               clearable
-              @keyup.enter="handleQuery"
               class="!w-240px"
+              @keyup.enter="handleQuery"
             />
           </el-form-item>
           <el-form-item label="状态" prop="status">
@@ -64,30 +64,34 @@
             />
           </el-form-item>
           <el-form-item>
-            <el-button @click="handleQuery"><Icon icon="ep:search" />搜索</el-button>
-            <el-button @click="resetQuery"><Icon icon="ep:refresh" />重置</el-button>
+            <el-button @click="handleQuery">
+              <Icon icon="ep:search" />搜索
+            </el-button>
+            <el-button @click="resetQuery">
+              <Icon icon="ep:refresh" />重置
+            </el-button>
             <el-button
+              v-hasPermi="['system:user:create']"
               type="primary"
               plain
               @click="openForm('create')"
-              v-hasPermi="['system:user:create']"
             >
               <Icon icon="ep:plus" /> 新增
             </el-button>
             <el-button
+              v-hasPermi="['system:user:import']"
               type="warning"
               plain
               @click="handleImport"
-              v-hasPermi="['system:user:import']"
             >
               <Icon icon="ep:upload" /> 导入
             </el-button>
             <el-button
+              v-hasPermi="['system:user:export']"
               type="success"
               plain
-              @click="handleExport"
               :loading="exportLoading"
-              v-hasPermi="['system:user:export']"
+              @click="handleExport"
             >
               <Icon icon="ep:download" />导出
             </el-button>
@@ -96,7 +100,7 @@
       </ContentWrap>
       <ContentWrap>
         <el-table v-loading="loading" :data="list">
-          <el-table-column label="用户编号" align="center" key="id" prop="id" />
+          <el-table-column key="id" label="用户编号" align="center" prop="id" />
           <el-table-column
             label="用户名称"
             align="center"
@@ -110,14 +114,14 @@
             :show-overflow-tooltip="true"
           />
           <el-table-column
+            key="deptName"
             label="部门"
             align="center"
-            key="deptName"
             prop="dept.name"
             :show-overflow-tooltip="true"
           />
           <el-table-column label="手机号码" align="center" prop="mobile" width="120" />
-          <el-table-column label="状态" key="status">
+          <el-table-column key="status" label="状态">
             <template #default="scope">
               <el-switch
                 v-model="scope.row.status"
@@ -138,39 +142,41 @@
             <template #default="scope">
               <div class="flex items-center justify-center">
                 <el-button
+                  v-hasPermi="['system:user:update']"
                   type="primary"
                   link
                   @click="openForm('update', scope.row.id)"
-                  v-hasPermi="['system:user:update']"
                 >
                   <Icon icon="ep:edit" />修改
                 </el-button>
                 <el-dropdown
-                  @command="(command) => handleCommand(command, scope.row)"
                   v-hasPermi="[
                     'system:user:delete',
                     'system:user:update-password',
-                    'system:permission:assign-user-role'
+                    'system:permission:assign-user-role',
                   ]"
+                  @command="(command) => handleCommand(command, scope.row)"
                 >
-                  <el-button type="primary" link><Icon icon="ep:d-arrow-right" /> 更多</el-button>
+                  <el-button type="primary" link>
+                    <Icon icon="ep:d-arrow-right" /> 更多
+                  </el-button>
                   <template #dropdown>
                     <el-dropdown-menu>
                       <el-dropdown-item
-                        command="handleDelete"
                         v-if="checkPermi(['system:user:delete'])"
+                        command="handleDelete"
                       >
                         <Icon icon="ep:delete" />删除
                       </el-dropdown-item>
                       <el-dropdown-item
-                        command="handleResetPwd"
                         v-if="checkPermi(['system:user:update-password'])"
+                        command="handleResetPwd"
                       >
                         <Icon icon="ep:key" />重置密码
                       </el-dropdown-item>
                       <el-dropdown-item
-                        command="handleRole"
                         v-if="checkPermi(['system:permission:assign-user-role'])"
+                        command="handleRole"
                       >
                         <Icon icon="ep:circle-check" />分配角色
                       </el-dropdown-item>
@@ -182,9 +188,9 @@
           </el-table-column>
         </el-table>
         <Pagination
-          :total="total"
           v-model:page="queryParams.pageNo"
           v-model:limit="queryParams.pageSize"
+          :total="total"
           @pagination="getList"
         />
       </ContentWrap>
@@ -198,17 +204,18 @@
   <!-- 分配角色 -->
   <UserAssignRoleForm ref="assignRoleFormRef" @success="getList" />
 </template>
+
 <script lang="ts" setup>
+import UserForm from './UserForm.vue'
+import UserImportForm from './UserImportForm.vue'
+import UserAssignRoleForm from './UserAssignRoleForm.vue'
+import DeptTree from './DeptTree.vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { checkPermi } from '@/utils/permission'
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
 import { CommonStatusEnum } from '@/utils/constants'
 import * as UserApi from '@/api/system/user'
-import UserForm from './UserForm.vue'
-import UserImportForm from './UserImportForm.vue'
-import UserAssignRoleForm from './UserAssignRoleForm.vue'
-import DeptTree from './DeptTree.vue'
 
 defineOptions({ name: 'SystemUser' })
 
@@ -225,7 +232,7 @@ const queryParams = reactive({
   mobile: undefined,
   status: undefined,
   deptId: undefined,
-  createTime: []
+  createTime: [],
 })
 const queryFormRef = ref() // 搜索的表单
 
@@ -236,7 +243,8 @@ const getList = async () => {
     const data = await UserApi.getUserPage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -276,15 +284,16 @@ const handleStatusChange = async (row: UserApi.UserVO) => {
   try {
     // 修改状态的二次确认
     const text = row.status === CommonStatusEnum.ENABLE ? '启用' : '停用'
-    await message.confirm('确认要"' + text + '""' + row.username + '"用户吗?')
+    await message.confirm(`确认要"${text}""${row.username}"用户吗?`)
     // 发起修改状态
     await UserApi.updateUserStatus(row.id, row.status)
     // 刷新列表
     await getList()
-  } catch {
+  }
+  catch {
     // 取消后，进行恢复按钮
-    row.status =
-      row.status === CommonStatusEnum.ENABLE ? CommonStatusEnum.DISABLE : CommonStatusEnum.ENABLE
+    row.status
+      = row.status === CommonStatusEnum.ENABLE ? CommonStatusEnum.DISABLE : CommonStatusEnum.ENABLE
   }
 }
 
@@ -298,8 +307,10 @@ const handleExport = async () => {
     exportLoading.value = true
     const data = await UserApi.exportUser(queryParams)
     download.excel(data, '用户数据.xls')
-  } catch {
-  } finally {
+  }
+  catch {
+  }
+  finally {
     exportLoading.value = false
   }
 }
@@ -331,7 +342,8 @@ const handleDelete = async (id: number) => {
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
 /** 重置密码 */
@@ -339,14 +351,15 @@ const handleResetPwd = async (row: UserApi.UserVO) => {
   try {
     // 重置的二次确认
     const result = await message.prompt(
-      '请输入"' + row.username + '"的新密码',
-      t('common.reminder')
+      `请输入"${row.username}"的新密码`,
+      t('common.reminder'),
     )
     const password = result.value
     // 发起重置
     await UserApi.resetUserPwd(row.id, password)
-    message.success('修改成功，新密码是：' + password)
-  } catch {}
+    message.success(`修改成功，新密码是：${password}`)
+  }
+  catch {}
 }
 
 /** 分配角色 */

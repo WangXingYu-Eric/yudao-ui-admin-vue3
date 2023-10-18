@@ -19,10 +19,10 @@ export const getChannelPage = (params: PageParam) => {
 // 查询详情支付渠道
 export const getChannel = (appId: string, code: string) => {
   const params = {
-    appId: appId,
-    code: code
+    appId,
+    code,
   }
-  return request.get({ url: '/pay/channel/get', params: params })
+  return request.get({ url: '/pay/channel/get', params })
 }
 
 // 新增支付渠道
@@ -37,7 +37,7 @@ export const updateChannel = (data: ChannelVO) => {
 
 // 删除支付渠道
 export const deleteChannel = (id: number) => {
-  return request.delete({ url: '/pay/channel/delete?id=' + id })
+  return request.delete({ url: `/pay/channel/delete?id=${id}` })
 }
 
 // 导出支付渠道

@@ -18,5 +18,5 @@ export const getAccessTokenPage = (params: PageParam) => {
 
 // 删除 token
 export const deleteAccessToken = (accessToken: string) => {
-  return request.delete({ url: '/system/oauth2-token/delete?accessToken=' + accessToken })
+  return request.delete({ url: `/system/oauth2-token/delete?accessToken=${accessToken}` })
 }

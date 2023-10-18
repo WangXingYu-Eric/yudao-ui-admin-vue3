@@ -5,6 +5,10 @@ import '@/plugins/unocss'
 import '@/plugins/svgIcon'
 
 // 初始化多语言
+import { createApp } from 'vue'
+
+import VueDOMPurifyHTML from 'vue-dompurify-html' // 解决v-html 的安全隐患
+import App from './App.vue'
 import { setupI18n } from '@/plugins/vueI18n'
 
 // 引入状态管理
@@ -31,16 +35,10 @@ import router, { setupRouter } from '@/router'
 // 权限
 import { setupAuth } from '@/directives'
 
-import { createApp } from 'vue'
-
-import App from './App.vue'
-
 import './permission'
 
 import '@/plugins/tongji' // 百度统计
 import Logger from '@/utils/Logger'
-
-import VueDOMPurifyHTML from 'vue-dompurify-html' // 解决v-html 的安全隐患
 
 // 创建实例
 const setupAll = async () => {

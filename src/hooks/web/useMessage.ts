@@ -1,5 +1,6 @@
 import { ElMessage, ElMessageBox, ElNotification } from 'element-plus'
 import { useI18n } from './useI18n'
+
 export const useMessage = () => {
   const { t } = useI18n()
   return {
@@ -53,34 +54,34 @@ export const useMessage = () => {
     },
     // 确认窗体
     confirm(content: string, tip?: string) {
-      return ElMessageBox.confirm(content, tip ? tip : t('common.confirmTitle'), {
+      return ElMessageBox.confirm(content, tip || t('common.confirmTitle'), {
         confirmButtonText: t('common.ok'),
         cancelButtonText: t('common.cancel'),
-        type: 'warning'
+        type: 'warning',
       })
     },
     // 删除窗体
     delConfirm(content?: string, tip?: string) {
       return ElMessageBox.confirm(
-        content ? content : t('common.delMessage'),
-        tip ? tip : t('common.confirmTitle'),
+        content || t('common.delMessage'),
+        tip || t('common.confirmTitle'),
         {
           confirmButtonText: t('common.ok'),
           cancelButtonText: t('common.cancel'),
-          type: 'warning'
-        }
+          type: 'warning',
+        },
       )
     },
     // 导出窗体
     exportConfirm(content?: string, tip?: string) {
       return ElMessageBox.confirm(
-        content ? content : t('common.exportMessage'),
-        tip ? tip : t('common.confirmTitle'),
+        content || t('common.exportMessage'),
+        tip || t('common.confirmTitle'),
         {
           confirmButtonText: t('common.ok'),
           cancelButtonText: t('common.cancel'),
-          type: 'warning'
-        }
+          type: 'warning',
+        },
       )
     },
     // 提交内容
@@ -88,8 +89,8 @@ export const useMessage = () => {
       return ElMessageBox.prompt(content, tip, {
         confirmButtonText: t('common.ok'),
         cancelButtonText: t('common.cancel'),
-        type: 'warning'
+        type: 'warning',
       })
-    }
+    },
   }
 }

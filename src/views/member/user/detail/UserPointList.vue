@@ -2,9 +2,9 @@
   <ContentWrap>
     <!-- 搜索工作栏 -->
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="68px"
     >
@@ -28,8 +28,8 @@
           v-model="queryParams.title"
           placeholder="请输入积分标题"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="获得时间" prop="createDate">
@@ -72,7 +72,9 @@
           <el-tag v-if="scope.row.point > 0" class="ml-2" type="success" effect="dark">
             +{{ scope.row.point }}
           </el-tag>
-          <el-tag v-else class="ml-2" type="danger" effect="dark"> {{ scope.row.point }} </el-tag>
+          <el-tag v-else class="ml-2" type="danger" effect="dark">
+            {{ scope.row.point }}
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column label="总积分" align="center" prop="totalPoint" width="100" />
@@ -87,9 +89,9 @@
     </el-table>
     <!-- 分页 -->
     <Pagination
-      :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
+      :total="total"
       @pagination="getList"
     />
   </ContentWrap>
@@ -100,7 +102,12 @@ import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { dateFormatter } from '@/utils/formatTime'
 import * as RecordApi from '@/api//member/point/record'
 
-const loading = ref(true) // 列表的加载中
+const { userId } = defineProps({
+  userId: {
+    type: Number,
+    required: true,
+  },
+}); const loading = ref(true) // 列表的加载中
 const total = ref(0) // 列表的总页数
 const list = ref([]) // 列表的数据
 const queryParams = reactive({
@@ -109,7 +116,7 @@ const queryParams = reactive({
   bizType: undefined,
   title: null,
   createDate: [],
-  userId: NaN
+  userId: Number.NaN,
 })
 const queryFormRef = ref() // 搜索的表单
 
@@ -120,7 +127,8 @@ const getList = async () => {
     const data = await RecordApi.getRecordPage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -137,14 +145,7 @@ const resetQuery = () => {
   handleQuery()
 }
 
-const { userId } = defineProps({
-  userId: {
-    type: Number,
-    required: true
-  }
-})
-
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   queryParams.userId = userId
   getList()

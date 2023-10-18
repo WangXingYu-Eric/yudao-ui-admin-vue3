@@ -4,7 +4,7 @@ import request from '@/config/axios'
 export const getMessagePage = (query: PageParam) => {
   return request.get({
     url: '/mp/message/page',
-    params: query
+    params: query,
   })
 }
 
@@ -12,6 +12,6 @@ export const getMessagePage = (query: PageParam) => {
 export const sendMessage = (data) => {
   return request.post({
     url: '/mp/message/send',
-    data: data
+    data,
   })
 }

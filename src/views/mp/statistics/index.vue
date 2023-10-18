@@ -1,9 +1,9 @@
 <template>
   <!-- 搜索工作栏 -->
   <ContentWrap>
-    <el-form class="-mb-15px" ref="queryForm" :inline="true" label-width="68px">
+    <el-form ref="queryForm" class="-mb-15px" :inline="true" label-width="68px">
       <el-form-item label="公众号" prop="accountId">
-        <el-select v-model="accountId" @change="getSummary" class="!w-240px">
+        <el-select v-model="accountId" class="!w-240px" @change="getSummary">
           <el-option
             v-for="item in accountList"
             :key="item.id"
@@ -19,8 +19,8 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
           :default-time="[new Date('1 00:00:00'), new Date('1 23:59:59')]"
-          @change="getSummary"
           class="!w-240px"
+          @change="getSummary"
         />
       </el-form-item>
     </el-form>
@@ -74,7 +74,7 @@
 </template>
 
 <script lang="ts" setup>
-import { formatDate, addTime, betweenDay, beginOfDay, endOfDay } from '@/utils/formatTime'
+import { addTime, beginOfDay, betweenDay, endOfDay, formatDate } from '@/utils/formatTime'
 import * as StatisticsApi from '@/api/mp/statistics'
 import * as MpAccountApi from '@/api/mp/account'
 
@@ -85,7 +85,7 @@ const message = useMessage() // 消息弹窗
 // 默认开始时间是当前日期-7，结束时间是当前日期-1
 const dateRange = ref([
   beginOfDay(new Date(new Date().getTime() - 3600 * 1000 * 24 * 7)),
-  endOfDay(new Date(new Date().getTime() - 3600 * 1000 * 24))
+  endOfDay(new Date(new Date().getTime() - 3600 * 1000 * 24)),
 ])
 const accountId = ref(-1) // 选中的公众号编号
 const accountList = ref<MpAccountApi.AccountVO[]>([]) // 公众号账号列表
@@ -95,46 +95,46 @@ const xAxisDate = ref([] as any[]) // X 轴的日期范围
 const userSummaryOption = reactive({
   color: ['#67C23A', '#E5323E'],
   legend: {
-    data: ['新增用户', '取消关注的用户']
+    data: ['新增用户', '取消关注的用户'],
   },
   tooltip: {},
   xAxis: {
-    data: [] as any[] // X 轴的日期范围
+    data: [] as any[], // X 轴的日期范围
   },
   yAxis: {
-    minInterval: 1
+    minInterval: 1,
   },
   series: [
     {
       name: '新增用户',
       type: 'bar',
       label: {
-        show: true
+        show: true,
       },
       barGap: 0,
-      data: [] as any[] // 新增用户的数据
+      data: [] as any[], // 新增用户的数据
     },
     {
       name: '取消关注的用户',
       type: 'bar',
       label: {
-        show: true
+        show: true,
       },
-      data: [] as any[] // 取消关注的用户的数据
-    }
-  ]
+      data: [] as any[], // 取消关注的用户的数据
+    },
+  ],
 })
 // 累计用户数据图表配置项
 const userCumulateOption = reactive({
   legend: {
-    data: ['累计用户量']
+    data: ['累计用户量'],
   },
   xAxis: {
     type: 'category',
-    data: [] as any[]
+    data: [] as any[],
   },
   yAxis: {
-    minInterval: 1
+    minInterval: 1,
   },
   series: [
     {
@@ -143,23 +143,23 @@ const userCumulateOption = reactive({
       type: 'line',
       smooth: true,
       label: {
-        show: true
-      }
-    }
-  ]
+        show: true,
+      },
+    },
+  ],
 })
 // 消息发送概况数据图表配置项
 const upstreamMessageOption = reactive({
   color: ['#67C23A', '#E5323E'],
   legend: {
-    data: ['用户发送人数', '用户发送条数']
+    data: ['用户发送人数', '用户发送条数'],
   },
   tooltip: {},
   xAxis: {
-    data: [] as any[] // X 轴的日期范围
+    data: [] as any[], // X 轴的日期范围
   },
   yAxis: {
-    minInterval: 1
+    minInterval: 1,
   },
   series: [
     {
@@ -167,30 +167,30 @@ const upstreamMessageOption = reactive({
       type: 'line',
       smooth: true,
       label: {
-        show: true
+        show: true,
       },
-      data: [] as any[] // 用户发送人数的数据
+      data: [] as any[], // 用户发送人数的数据
     },
     {
       name: '用户发送条数',
       type: 'line',
       smooth: true,
       label: {
-        show: true
+        show: true,
       },
-      data: [] as any[] // 用户发送条数的数据
-    }
-  ]
+      data: [] as any[], // 用户发送条数的数据
+    },
+  ],
 })
 // 接口分析况数据图表配置项
 const interfaceSummaryOption = reactive({
   color: ['#67C23A', '#E5323E', '#E6A23C', '#409EFF'],
   legend: {
-    data: ['被动回复用户消息的次数', '失败次数', '最大耗时', '总耗时']
+    data: ['被动回复用户消息的次数', '失败次数', '最大耗时', '总耗时'],
   },
   tooltip: {},
   xAxis: {
-    data: [] as any[] // X 轴的日期范围
+    data: [] as any[], // X 轴的日期范围
   },
   yAxis: {},
   series: [
@@ -198,45 +198,44 @@ const interfaceSummaryOption = reactive({
       name: '被动回复用户消息的次数',
       type: 'bar',
       label: {
-        show: true
+        show: true,
       },
       barGap: 0,
-      data: [] as any[] // 被动回复用户消息的次数的数据
+      data: [] as any[], // 被动回复用户消息的次数的数据
     },
     {
       name: '失败次数',
       type: 'bar',
       label: {
-        show: true
+        show: true,
       },
-      data: [] as any[] // 失败次数的数据
+      data: [] as any[], // 失败次数的数据
     },
     {
       name: '最大耗时',
       type: 'bar',
       label: {
-        show: true
+        show: true,
       },
-      data: [] as any[] // 最大耗时的数据
+      data: [] as any[], // 最大耗时的数据
     },
     {
       name: '总耗时',
       type: 'bar',
       label: {
-        show: true
+        show: true,
       },
-      data: [] as any[] // 总耗时的数据
-    }
-  ]
+      data: [] as any[], // 总耗时的数据
+    },
+  ],
 })
 
 /** 加载公众号账号的列表 */
 const getAccountList = async () => {
   accountList.value = await MpAccountApi.getSimpleAccountList()
   // 默认选中第一个
-  if (accountList.value.length > 0) {
+  if (accountList.value.length > 0)
     accountId.value = accountList.value[0].id!
-  }
 }
 
 /** 加载数据 */
@@ -257,7 +256,7 @@ const getSummary = () => {
   const days = betweenDay(dateRange.value[0], dateRange.value[1]) // 相差天数
   for (let i = 0; i <= days; i++) {
     xAxisDate.value.push(
-      formatDate(addTime(dateRange.value[0], 3600 * 1000 * 24 * i), 'YYYY-MM-DD')
+      formatDate(addTime(dateRange.value[0], 3600 * 1000 * 24 * i), 'YYYY-MM-DD'),
     )
   }
   // 初始化图表
@@ -276,7 +275,7 @@ const initUserSummaryChart = async () => {
     // 用户增减数据
     const data = await StatisticsApi.getUserSummary({
       accountId: accountId.value,
-      date: [formatDate(dateRange.value[0]), formatDate(dateRange.value[1])]
+      date: [formatDate(dateRange.value[0]), formatDate(dateRange.value[1])],
     })
     // 横坐标
     userSummaryOption.xAxis.data = xAxisDate.value
@@ -285,15 +284,16 @@ const initUserSummaryChart = async () => {
       data.forEach((item) => {
         // 匹配日期
         const refDate = formatDate(new Date(item.refDate), 'YYYY-MM-DD')
-        if (refDate.indexOf(date) === -1) {
+        if (!refDate.includes(date))
           return
-        }
+
         // 设置数据到对应的位置
         userSummaryOption.series[0].data[index] = item.newUser
         userSummaryOption.series[1].data[index] = item.cancelUser
       })
     })
-  } catch {}
+  }
+  catch {}
 }
 
 /** 累计用户数据 */
@@ -304,14 +304,15 @@ const initUserCumulateChart = async () => {
   try {
     const data = await StatisticsApi.getUserCumulate({
       accountId: accountId.value,
-      date: [formatDate(dateRange.value[0]), formatDate(dateRange.value[1])]
+      date: [formatDate(dateRange.value[0]), formatDate(dateRange.value[1])],
     })
     userCumulateOption.xAxis.data = xAxisDate.value
     // 处理数据
     data.forEach((item, index) => {
       userCumulateOption.series[0].data[index] = item.cumulateUser
     })
-  } catch {}
+  }
+  catch {}
 }
 
 /** 消息概况数据 */
@@ -323,7 +324,7 @@ const initUpstreamMessageChart = async () => {
   try {
     const data = await StatisticsApi.getUpstreamMessage({
       accountId: accountId.value,
-      date: [formatDate(dateRange.value[0]), formatDate(dateRange.value[1])]
+      date: [formatDate(dateRange.value[0]), formatDate(dateRange.value[1])],
     })
     upstreamMessageOption.xAxis.data = xAxisDate.value
     // 处理数据
@@ -331,7 +332,8 @@ const initUpstreamMessageChart = async () => {
       upstreamMessageOption.series[0].data[index] = item.messageUser
       upstreamMessageOption.series[1].data[index] = item.messageCount
     })
-  } catch {}
+  }
+  catch {}
 }
 
 /** 接口分析数据 */
@@ -345,7 +347,7 @@ const interfaceSummaryChart = async () => {
   try {
     const data = await StatisticsApi.getInterfaceSummary({
       accountId: accountId.value,
-      date: [formatDate(dateRange.value[0]), formatDate(dateRange.value[1])]
+      date: [formatDate(dateRange.value[0]), formatDate(dateRange.value[1])],
     })
     interfaceSummaryOption.xAxis.data = xAxisDate.value
     // 处理数据
@@ -355,7 +357,8 @@ const interfaceSummaryChart = async () => {
       interfaceSummaryOption.series[2].data[index] = item.maxTimeCost
       interfaceSummaryOption.series[3].data[index] = item.totalTimeCost
     })
-  } catch {}
+  }
+  catch {}
 }
 
 /** 初始化 */

@@ -149,13 +149,14 @@
   <!-- 弹窗：预览代码 -->
   <PreviewCode ref="previewRef" />
 </template>
+
 <script lang="ts" setup>
+import ImportTable from './ImportTable.vue'
+import PreviewCode from './PreviewCode.vue'
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
 import * as CodegenApi from '@/api/infra/codegen'
 import * as DataSourceConfigApi from '@/api/infra/dataSourceConfig'
-import ImportTable from './ImportTable.vue'
-import PreviewCode from './PreviewCode.vue'
 
 defineOptions({ name: 'InfraCodegen' })
 
@@ -171,7 +172,7 @@ const queryParams = reactive({
   pageSize: 10,
   tableName: undefined,
   tableComment: undefined,
-  createTime: []
+  createTime: [],
 })
 const queryFormRef = ref() // 搜索的表单
 const dataSourceConfigList = ref<DataSourceConfigApi.DataSourceConfigVO[]>([]) // 数据源列表
@@ -183,7 +184,8 @@ const getList = async () => {
     const data = await CodegenApi.getCodegenTablePage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -208,7 +210,7 @@ const openImportTable = () => {
 
 /** 编辑操作 */
 const handleUpdate = (id: number) => {
-  push('/codegen/edit?id=' + id)
+  push(`/codegen/edit?id=${id}`)
 }
 
 /** 预览操作 */
@@ -227,7 +229,8 @@ const handleDelete = async (id: number) => {
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
 /** 同步操作  */
@@ -235,19 +238,20 @@ const handleSyncDB = async (row: CodegenApi.CodegenTableVO) => {
   // 基于 DB 同步
   const tableName = row.tableName
   try {
-    await message.confirm('确认要强制同步' + tableName + '表结构吗?', t('common.reminder'))
+    await message.confirm(`确认要强制同步${tableName}表结构吗?`, t('common.reminder'))
     await CodegenApi.syncCodegenFromDB(row.id)
     message.success('同步成功')
-  } catch {}
+  }
+  catch {}
 }
 
 /** 生成代码操作 */
 const handleGenTable = async (row: CodegenApi.CodegenTableVO) => {
   const res = await CodegenApi.downloadCodegen(row.id)
-  download.zip(res, 'codegen-' + row.className + '.zip')
+  download.zip(res, `codegen-${row.className}.zip`)
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(async () => {
   await getList()
   // 加载数据源列表

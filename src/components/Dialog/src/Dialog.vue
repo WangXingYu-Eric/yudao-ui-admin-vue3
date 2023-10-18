@@ -1,62 +1,3 @@
-<script lang="ts" setup>
-import { propTypes } from '@/utils/propTypes'
-import { isNumber } from '@/utils/is'
-defineOptions({ name: 'Dialog' })
-
-const slots = useSlots()
-
-const props = defineProps({
-  modelValue: propTypes.bool.def(false),
-  title: propTypes.string.def('Dialog'),
-  fullscreen: propTypes.bool.def(true),
-  width: propTypes.oneOfType([String, Number]).def('40%'),
-  scroll: propTypes.bool.def(false), // 是否开启滚动条。如果是的话，按照 maxHeight 设置最大高度
-  maxHeight: propTypes.oneOfType([String, Number]).def('400px')
-})
-
-const getBindValue = computed(() => {
-  const delArr: string[] = ['fullscreen', 'title', 'maxHeight', 'appendToBody']
-  const attrs = useAttrs()
-  const obj = { ...attrs, ...props }
-  for (const key in obj) {
-    if (delArr.indexOf(key) !== -1) {
-      delete obj[key]
-    }
-  }
-  return obj
-})
-
-const isFullscreen = ref(false)
-
-const toggleFull = () => {
-  isFullscreen.value = !unref(isFullscreen)
-}
-
-const dialogHeight = ref(isNumber(props.maxHeight) ? `${props.maxHeight}px` : props.maxHeight)
-
-watch(
-  () => isFullscreen.value,
-  async (val: boolean) => {
-    await nextTick()
-    if (val) {
-      const windowHeight = document.documentElement.offsetHeight
-      dialogHeight.value = `${windowHeight - 55 - 60 - (slots.footer ? 63 : 0)}px`
-    } else {
-      dialogHeight.value = isNumber(props.maxHeight) ? `${props.maxHeight}px` : props.maxHeight
-    }
-  },
-  {
-    immediate: true
-  }
-)
-
-const dialogStyle = computed(() => {
-  return {
-    height: unref(dialogHeight)
-  }
-})
-</script>
-
 <template>
   <ElDialog
     v-bind="getBindValue"
@@ -97,14 +38,74 @@ const dialogStyle = computed(() => {
     </template>
 
     <ElScrollbar v-if="scroll" :style="dialogStyle">
-      <slot></slot>
+      <slot />
     </ElScrollbar>
-    <slot v-else></slot>
+    <slot v-else />
     <template v-if="slots.footer" #footer>
-      <slot name="footer"></slot>
+      <slot name="footer" />
     </template>
   </ElDialog>
 </template>
+
+<script lang="ts" setup>
+import { propTypes } from '@/utils/propTypes'
+import { isNumber } from '@/utils/is'
+
+defineOptions({ name: 'Dialog' })
+
+const props = defineProps({
+  modelValue: propTypes.bool.def(false),
+  title: propTypes.string.def('Dialog'),
+  fullscreen: propTypes.bool.def(true),
+  width: propTypes.oneOfType([String, Number]).def('40%'),
+  scroll: propTypes.bool.def(false), // 是否开启滚动条。如果是的话，按照 maxHeight 设置最大高度
+  maxHeight: propTypes.oneOfType([String, Number]).def('400px'),
+})
+
+const slots = useSlots()
+
+const getBindValue = computed(() => {
+  const delArr: string[] = ['fullscreen', 'title', 'maxHeight', 'appendToBody']
+  const attrs = useAttrs()
+  const obj = { ...attrs, ...props }
+  for (const key in obj) {
+    if (delArr.includes(key))
+      delete obj[key]
+  }
+  return obj
+})
+
+const isFullscreen = ref(false)
+
+const toggleFull = () => {
+  isFullscreen.value = !unref(isFullscreen)
+}
+
+const dialogHeight = ref(isNumber(props.maxHeight) ? `${props.maxHeight}px` : props.maxHeight)
+
+watch(
+  () => isFullscreen.value,
+  async (val: boolean) => {
+    await nextTick()
+    if (val) {
+      const windowHeight = document.documentElement.offsetHeight
+      dialogHeight.value = `${windowHeight - 55 - 60 - (slots.footer ? 63 : 0)}px`
+    }
+    else {
+      dialogHeight.value = isNumber(props.maxHeight) ? `${props.maxHeight}px` : props.maxHeight
+    }
+  },
+  {
+    immediate: true,
+  },
+)
+
+const dialogStyle = computed(() => {
+  return {
+    height: unref(dialogHeight),
+  }
+})
+</script>
 
 <style lang="scss">
 .com-dialog {

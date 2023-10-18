@@ -3,9 +3,15 @@
     <el-row>
       <el-col>
         <div class="float-right mb-2">
-          <el-button size="small" type="primary" @click="showJson">生成 JSON</el-button>
-          <el-button size="small" type="success" @click="showOption">生成 Options</el-button>
-          <el-button size="small" type="danger" @click="showTemplate">生成组件</el-button>
+          <el-button size="small" type="primary" @click="showJson">
+            生成 JSON
+          </el-button>
+          <el-button size="small" type="success" @click="showOption">
+            生成 Options
+          </el-button>
+          <el-button size="small" type="danger" @click="showTemplate">
+            生成组件
+          </el-button>
         </div>
       </el-col>
       <!-- 表单设计器 -->
@@ -23,23 +29,27 @@
       </el-button>
       <el-scrollbar height="580">
         <div>
-          <pre><code class="hljs" v-dompurify-html="highlightedCode(formData)"></code></pre>
+          <pre><code v-dompurify-html="highlightedCode(formData)" class="hljs" /></pre>
         </div>
       </el-scrollbar>
     </div>
   </Dialog>
 </template>
+
 <script lang="ts" setup>
-defineOptions({ name: 'InfraBuild' })
 import FcDesigner from '@form-create/designer'
 import { useClipboard } from '@vueuse/core'
 import { isString } from '@/utils/is'
 
-import hljs from 'highlight.js' // 导入代码高亮文件
+import hljs from 'highlight.js'
+
+// 导入代码高亮文件
 import 'highlight.js/styles/github.css' // 导入代码高亮样式
 import xml from 'highlight.js/lib/languages/java'
 import json from 'highlight.js/lib/languages/json'
 import formCreate from '@form-create/element-ui'
+
+defineOptions({ name: 'InfraBuild' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息
@@ -104,16 +114,16 @@ const makeTemplate = () => {
   <\/script>`
 }
 
-/** 复制 **/
+/** 复制 */
 const copy = async (text: string) => {
   const { copy, copied, isSupported } = useClipboard({ source: text })
   if (!isSupported) {
     message.error(t('common.copyError'))
-  } else {
+  }
+  else {
     await copy()
-    if (unref(copied)) {
+    if (unref(copied))
       message.success(t('common.copySuccess'))
-    }
   }
 }
 
@@ -123,18 +133,18 @@ const copy = async (text: string) => {
 const highlightedCode = (code) => {
   // 处理语言和代码
   let language = 'json'
-  if (formType.value === 2) {
+  if (formType.value === 2)
     language = 'xml'
-  }
-  if (!isString(code)) {
+
+  if (!isString(code))
     code = JSON.stringify(code)
-  }
+
   // 高亮
   const result = hljs.highlight(language, code, true)
   return result.value || '&nbsp;'
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(async () => {
   // 注册代码高亮的各种语言
   hljs.registerLanguage('xml', xml)

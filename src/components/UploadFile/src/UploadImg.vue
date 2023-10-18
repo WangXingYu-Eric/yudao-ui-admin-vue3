@@ -1,9 +1,9 @@
 <template>
   <div class="upload-box">
     <el-upload
-      :action="updateUrl"
       :id="uuid"
-      :class="['upload', drag ? 'no-border' : '']"
+      :action="updateUrl"
+      class="upload" :class="[drag ? 'no-border' : '']"
       :multiple="false"
       :show-file-list="false"
       :headers="uploadHeaders"
@@ -14,7 +14,7 @@
       :accept="fileType.join(',')"
     >
       <template v-if="modelValue">
-        <img :src="modelValue" class="upload-image" />
+        <img :src="modelValue" class="upload-image">
         <div class="upload-handle" @click.stop>
           <div class="handle-icon" @click="editImg">
             <Icon icon="ep:edit" />
@@ -40,12 +40,12 @@
       </template>
     </el-upload>
     <div class="el-upload__tip">
-      <slot name="tip"></slot>
+      <slot name="tip" />
     </div>
     <el-image-viewer
       v-if="imgViewVisible"
-      @close="imgViewVisible = false"
       :url-list="[modelValue]"
+      @close="imgViewVisible = false"
     />
   </div>
 </template>
@@ -59,6 +59,21 @@ import { getAccessToken, getTenantId } from '@/utils/auth'
 
 defineOptions({ name: 'UploadImg' })
 
+// 接受父组件参数
+const props = defineProps({
+  modelValue: propTypes.string.def(''),
+  updateUrl: propTypes.string.def(import.meta.env.VITE_UPLOAD_URL),
+  drag: propTypes.bool.def(true), // 是否支持拖拽上传 ==> 非必传（默认为 true）
+  disabled: propTypes.bool.def(false), // 是否禁用上传组件 ==> 非必传（默认为 false）
+  fileSize: propTypes.number.def(5), // 图片大小限制 ==> 非必传（默认为 5M）
+  fileType: propTypes.array.def(['image/jpeg', 'image/png', 'image/gif']), // 图片类型限制 ==> 非必传（默认为 ["image/jpeg", "image/png", "image/gif"]）
+  height: propTypes.string.def('150px'), // 组件高度 ==> 非必传（默认为 150px）
+  width: propTypes.string.def('150px'), // 组件宽度 ==> 非必传（默认为 150px）
+  borderradius: propTypes.string.def('8px'), // 组件边框圆角 ==> 非必传（默认为 8px）
+})
+
+const emit = defineEmits(['update:modelValue'])
+
 type FileTypes =
   | 'image/apng'
   | 'image/bmp'
@@ -71,34 +86,20 @@ type FileTypes =
   | 'image/webp'
   | 'image/x-icon'
 
-// 接受父组件参数
-const props = defineProps({
-  modelValue: propTypes.string.def(''),
-  updateUrl: propTypes.string.def(import.meta.env.VITE_UPLOAD_URL),
-  drag: propTypes.bool.def(true), // 是否支持拖拽上传 ==> 非必传（默认为 true）
-  disabled: propTypes.bool.def(false), // 是否禁用上传组件 ==> 非必传（默认为 false）
-  fileSize: propTypes.number.def(5), // 图片大小限制 ==> 非必传（默认为 5M）
-  fileType: propTypes.array.def(['image/jpeg', 'image/png', 'image/gif']), // 图片类型限制 ==> 非必传（默认为 ["image/jpeg", "image/png", "image/gif"]）
-  height: propTypes.string.def('150px'), // 组件高度 ==> 非必传（默认为 150px）
-  width: propTypes.string.def('150px'), // 组件宽度 ==> 非必传（默认为 150px）
-  borderradius: propTypes.string.def('8px') // 组件边框圆角 ==> 非必传（默认为 8px）
-})
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 // 生成组件唯一id
-const uuid = ref('id-' + generateUUID())
+const uuid = ref(`id-${generateUUID()}`)
 // 查看图片
 const imgViewVisible = ref(false)
-
-const emit = defineEmits(['update:modelValue'])
 
 const deleteImg = () => {
   emit('update:modelValue', '')
 }
 
 const uploadHeaders = ref({
-  Authorization: 'Bearer ' + getAccessToken(),
-  'tenant-id': getTenantId()
+  'Authorization': `Bearer ${getAccessToken()}`,
+  'tenant-id': getTenantId(),
 })
 
 const editImg = () => {
@@ -111,7 +112,8 @@ const beforeUpload: UploadProps['beforeUpload'] = (rawFile) => {
   const imgType = props.fileType
   if (!imgType.includes(rawFile.type as FileTypes))
     message.notifyWarning('上传图片不符合所需的格式！')
-  if (!imgSize) message.notifyWarning(`上传图片大小不能超过 ${props.fileSize}M！`)
+  if (!imgSize)
+    message.notifyWarning(`上传图片大小不能超过 ${props.fileSize}M！`)
   return imgType.includes(rawFile.type as FileTypes) && imgSize
 }
 
@@ -126,6 +128,7 @@ const uploadError = () => {
   message.notifyError('图片上传失败，请您重新上传！')
 }
 </script>
+
 <style scoped lang="scss">
 .is-error {
   .upload {

@@ -7,15 +7,15 @@ const { default_headers } = config
 const request = (option: any) => {
   const { url, method, params, data, headersType, responseType, ...config } = option
   return service({
-    url: url,
+    url,
     method,
     params,
     data,
     ...config,
-    responseType: responseType,
+    responseType,
     headers: {
-      'Content-Type': headersType || default_headers
-    }
+      'Content-Type': headersType || default_headers,
+    },
   })
 }
 export default {
@@ -47,5 +47,5 @@ export default {
     option.headersType = 'multipart/form-data'
     const res = await request({ method: 'POST', ...option })
     return res as unknown as Promise<T>
-  }
+  },
 }

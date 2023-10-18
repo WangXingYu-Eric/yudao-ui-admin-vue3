@@ -39,14 +39,15 @@ Logger.print = function (type = 'default', text: any, back = false) {
     // 如果是打印帶背景圖的
     console.log(
       `%c ${text} `,
-      `background:${Logger.typeColor(type)}; padding: 2px; border-radius: 4px; color: #fff;`
+      `background:${Logger.typeColor(type)}; padding: 2px; border-radius: 4px; color: #fff;`,
     )
-  } else {
+  }
+  else {
     console.log(
       `%c ${text} `,
       `border: 1px solid ${Logger.typeColor(type)};
         padding: 2px; border-radius: 4px;
-        color: ${Logger.typeColor(type)};`
+        color: ${Logger.typeColor(type)};`,
     )
   }
 }
@@ -61,7 +62,7 @@ Logger.pretty = function (type = 'primary', title, text) {
     console.log(
       `%c ${title}`,
       `background:${Logger.typeColor(type)};border:1px solid ${Logger.typeColor(type)};
-        padding: 1px; border-radius: 4px; color: #fff;`
+        padding: 1px; border-radius: 4px; color: #fff;`,
     )
     isArray(text) ? console.table(text) : console.dir(text)
     console.groupEnd()
@@ -73,28 +74,28 @@ Logger.pretty = function (type = 'primary', title, text) {
       padding: 1px; border-radius: 4px 0 0 4px; color: #fff;`,
     `border:1px solid ${Logger.typeColor(type)};
       padding: 1px; border-radius: 0 4px 4px 0; color: ${Logger.typeColor(type)};`,
-    'background:transparent'
+    'background:transparent',
   )
 }
 
 Logger.prettyPrimary = function (title, ...text) {
-  text.forEach((t) => this.pretty('primary', title, t))
+  text.forEach(t => this.pretty('primary', title, t))
 }
 
 Logger.prettySuccess = function (title, ...text) {
-  text.forEach((t) => this.pretty('success', title, t))
+  text.forEach(t => this.pretty('success', title, t))
 }
 
 Logger.prettyWarn = function (title, ...text) {
-  text.forEach((t) => this.pretty('warn', title, t))
+  text.forEach(t => this.pretty('warn', title, t))
 }
 
 Logger.prettyError = function (title, ...text) {
-  text.forEach((t) => this.pretty('error', title, t))
+  text.forEach(t => this.pretty('error', title, t))
 }
 
 Logger.prettyInfo = function (title, ...text) {
-  text.forEach((t) => this.pretty('info', title, t))
+  text.forEach(t => this.pretty('info', title, t))
 }
 
 export default Logger

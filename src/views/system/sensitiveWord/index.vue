@@ -152,13 +152,14 @@
   <!-- 表单弹窗：测试敏感词 -->
   <SensitiveWordTestForm ref="testFormRef" />
 </template>
+
 <script lang="ts" setup>
+import SensitiveWordForm from './SensitiveWordForm.vue'
+import SensitiveWordTestForm from './SensitiveWordTestForm.vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
 import * as SensitiveWordApi from '@/api/system/sensitiveWord'
-import SensitiveWordForm from './SensitiveWordForm.vue'
-import SensitiveWordTestForm from './SensitiveWordTestForm.vue'
 
 defineOptions({ name: 'SystemSensitiveWord' })
 
@@ -174,7 +175,7 @@ const queryParams = reactive({
   name: undefined,
   tag: undefined,
   status: undefined,
-  createTime: []
+  createTime: [],
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
@@ -187,7 +188,8 @@ const getList = async () => {
     const data = await SensitiveWordApi.getSensitiveWordPage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -226,7 +228,8 @@ const handleDelete = async (id: number) => {
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
 /** 导出按钮操作 */
@@ -238,13 +241,15 @@ const handleExport = async () => {
     exportLoading.value = true
     const data = await SensitiveWordApi.exportSensitiveWord(queryParams)
     download.excel(data, '敏感词.xls')
-  } catch {
-  } finally {
+  }
+  catch {
+  }
+  finally {
     exportLoading.value = false
   }
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(async () => {
   await getList()
   // 获得 Tag 标签列表

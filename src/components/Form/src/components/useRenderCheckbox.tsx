@@ -1,6 +1,6 @@
-import { FormSchema } from '@/types/form'
 import { ElCheckbox, ElCheckboxButton } from 'element-plus'
-import { defineComponent } from 'vue'
+import type { defineComponent } from 'vue'
+import type { FormSchema } from '@/types/form'
 
 export const useRenderCheckbox = () => {
   const renderCheckboxOptions = (item: FormSchema) => {
@@ -21,6 +21,6 @@ export const useRenderCheckbox = () => {
   }
 
   return {
-    renderCheckboxOptions
+    renderCheckboxOptions,
   }
 }

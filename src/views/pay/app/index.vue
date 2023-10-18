@@ -3,9 +3,9 @@
   <!-- 搜索 -->
   <ContentWrap>
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="68px"
     >
@@ -14,8 +14,8 @@
           v-model="queryParams.name"
           placeholder="请输入应用名"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="开启状态" prop="status">
@@ -45,9 +45,13 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery"> <Icon icon="ep:search" class="mr-5px" />搜索 </el-button>
-        <el-button @click="resetQuery"> <Icon icon="ep:refresh" class="mr-5px" />重置 </el-button>
-        <el-button type="primary" plain @click="openForm('create')" v-hasPermi="['pay:app:create']">
+        <el-button @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" />搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon icon="ep:refresh" class="mr-5px" />重置
+        </el-button>
+        <el-button v-hasPermi="['pay:app:create']" type="primary" plain @click="openForm('create')">
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
       </el-form-item>
@@ -73,10 +77,10 @@
         <el-table-column :label="PayChannelEnum.ALIPAY_APP.name" align="center">
           <template #default="scope">
             <el-button
-              type="success"
               v-if="isChannelExists(scope.row.channelCodes, PayChannelEnum.ALIPAY_APP.code)"
-              @click="openChannelForm(scope.row, PayChannelEnum.ALIPAY_APP.code)"
+              type="success"
               circle
+              @click="openChannelForm(scope.row, PayChannelEnum.ALIPAY_APP.code)"
             >
               <Icon icon="ep:check" />
             </el-button>
@@ -93,9 +97,9 @@
         <el-table-column :label="PayChannelEnum.ALIPAY_PC.name" align="center">
           <template #default="scope">
             <el-button
+              v-if="isChannelExists(scope.row.channelCodes, PayChannelEnum.ALIPAY_PC.code)"
               type="success"
               circle
-              v-if="isChannelExists(scope.row.channelCodes, PayChannelEnum.ALIPAY_PC.code)"
               @click="openChannelForm(scope.row, PayChannelEnum.ALIPAY_PC.code)"
             >
               <Icon icon="ep:check" />
@@ -113,9 +117,9 @@
         <el-table-column :label="PayChannelEnum.ALIPAY_WAP.name" align="center">
           <template #default="scope">
             <el-button
+              v-if="isChannelExists(scope.row.channelCodes, PayChannelEnum.ALIPAY_WAP.code)"
               type="success"
               circle
-              v-if="isChannelExists(scope.row.channelCodes, PayChannelEnum.ALIPAY_WAP.code)"
               @click="openChannelForm(scope.row, PayChannelEnum.ALIPAY_WAP.code)"
             >
               <Icon icon="ep:check" />
@@ -133,9 +137,9 @@
         <el-table-column :label="PayChannelEnum.ALIPAY_QR.name" align="center">
           <template #default="scope">
             <el-button
+              v-if="isChannelExists(scope.row.channelCodes, PayChannelEnum.ALIPAY_QR.code)"
               type="success"
               circle
-              v-if="isChannelExists(scope.row.channelCodes, PayChannelEnum.ALIPAY_QR.code)"
               @click="openChannelForm(scope.row, PayChannelEnum.ALIPAY_QR.code)"
             >
               <Icon icon="ep:check" />
@@ -153,9 +157,9 @@
         <el-table-column :label="PayChannelEnum.ALIPAY_BAR.name" align="center">
           <template #default="scope">
             <el-button
+              v-if="isChannelExists(scope.row.channelCodes, PayChannelEnum.ALIPAY_BAR.code)"
               type="success"
               circle
-              v-if="isChannelExists(scope.row.channelCodes, PayChannelEnum.ALIPAY_BAR.code)"
               @click="openChannelForm(scope.row, PayChannelEnum.ALIPAY_BAR.code)"
             >
               <Icon icon="ep:check" />
@@ -175,9 +179,9 @@
         <el-table-column :label="PayChannelEnum.WX_LITE.name" align="center">
           <template #default="scope">
             <el-button
+              v-if="isChannelExists(scope.row.channelCodes, PayChannelEnum.WX_LITE.code)"
               type="success"
               circle
-              v-if="isChannelExists(scope.row.channelCodes, PayChannelEnum.WX_LITE.code)"
               @click="openChannelForm(scope.row, PayChannelEnum.WX_LITE.code)"
             >
               <Icon icon="ep:check" />
@@ -195,9 +199,9 @@
         <el-table-column :label="PayChannelEnum.WX_PUB.name" align="center">
           <template #default="scope">
             <el-button
+              v-if="isChannelExists(scope.row.channelCodes, PayChannelEnum.WX_PUB.code)"
               type="success"
               circle
-              v-if="isChannelExists(scope.row.channelCodes, PayChannelEnum.WX_PUB.code)"
               @click="openChannelForm(scope.row, PayChannelEnum.WX_PUB.code)"
             >
               <Icon icon="ep:check" />
@@ -215,9 +219,9 @@
         <el-table-column :label="PayChannelEnum.WX_APP.name" align="center">
           <template #default="scope">
             <el-button
+              v-if="isChannelExists(scope.row.channelCodes, PayChannelEnum.WX_APP.code)"
               type="success"
               circle
-              v-if="isChannelExists(scope.row.channelCodes, PayChannelEnum.WX_APP.code)"
               @click="openChannelForm(scope.row, PayChannelEnum.WX_APP.code)"
             >
               <Icon icon="ep:check" />
@@ -237,9 +241,9 @@
         <el-table-column :label="PayChannelEnum.MOCK.name" align="center">
           <template #default="scope">
             <el-button
+              v-if="isChannelExists(scope.row.channelCodes, PayChannelEnum.MOCK.code)"
               type="success"
               circle
-              v-if="isChannelExists(scope.row.channelCodes, PayChannelEnum.MOCK.code)"
               @click="openChannelForm(scope.row, PayChannelEnum.MOCK.code)"
             >
               <Icon icon="ep:check" />
@@ -258,18 +262,18 @@
       <el-table-column label="操作" align="center" min-width="110" fixed="right">
         <template #default="scope">
           <el-button
+            v-hasPermi="['pay:app:update']"
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['pay:app:update']"
           >
             编辑
           </el-button>
           <el-button
+            v-hasPermi="['pay:app:delete']"
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
-            v-hasPermi="['pay:app:delete']"
           >
             删除
           </el-button>
@@ -278,9 +282,9 @@
     </el-table>
     <!-- 分页 -->
     <Pagination
-      :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
+      :total="total"
       @pagination="getList"
     />
   </ContentWrap>
@@ -291,16 +295,15 @@
   <WeixinChannelForm ref="weixinFormRef" @success="getList" />
   <MockChannelForm ref="mockFormRef" @success="getList" />
 </template>
+
 <script lang="ts" setup>
-import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
-import download from '@/utils/download'
-import * as AppApi from '@/api/pay/app'
 import AppForm from './components/AppForm.vue'
-import { PayChannelEnum, PayType } from '@/utils/constants'
 import AlipayChannelForm from './components/channel/AlipayChannelForm.vue'
 import WeixinChannelForm from './components/channel/WeixinChannelForm.vue'
 import MockChannelForm from './components/channel/MockChannelForm.vue'
-import { CommonStatusEnum } from '@/utils/constants'
+import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
+import * as AppApi from '@/api/pay/app'
+import { CommonStatusEnum, PayChannelEnum } from '@/utils/constants'
 
 defineOptions({ name: 'PayApp' })
 
@@ -318,7 +321,7 @@ const queryParams = reactive({
   remark: undefined,
   payNotifyUrl: undefined,
   refundNotifyUrl: undefined,
-  createTime: []
+  createTime: [],
 })
 const queryFormRef = ref() // 搜索的表单
 
@@ -329,7 +332,8 @@ const getList = async () => {
     const data = await AppApi.getAppPage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -348,14 +352,15 @@ const resetQuery = () => {
 
 /** 应用状态修改 */
 const handleStatusChange = async (row: any) => {
-  let text = row.status === CommonStatusEnum.ENABLE ? '启用' : '停用'
+  const text = row.status === CommonStatusEnum.ENABLE ? '启用' : '停用'
   try {
-    await message.confirm('确认要"' + text + '""' + row.name + '"应用吗?')
+    await message.confirm(`确认要"${text}""${row.name}"应用吗?`)
     await AppApi.changeAppStatus({ id: row.id, status: row.status })
-    message.success(text + '成功')
-  } catch {
-    row.status =
-      row.status === CommonStatusEnum.ENABLE ? CommonStatusEnum.DISABLE : CommonStatusEnum.ENABLE
+    message.success(`${text}成功`)
+  }
+  catch {
+    row.status
+      = row.status === CommonStatusEnum.ENABLE ? CommonStatusEnum.DISABLE : CommonStatusEnum.ENABLE
   }
 }
 
@@ -375,7 +380,8 @@ const handleDelete = async (id: number) => {
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
 /**
@@ -385,10 +391,10 @@ const handleDelete = async (id: number) => {
  * @param channelCode 渠道编码
  */
 const isChannelExists = (channels, channelCode) => {
-  if (!channels) {
+  if (!channels)
     return false
-  }
-  return channels.indexOf(channelCode) !== -1
+
+  return channels.includes(channelCode)
 }
 
 /**
@@ -399,7 +405,7 @@ const weixinFormRef = ref()
 const mockFormRef = ref()
 const channelParam = reactive({
   appId: null, // 应用 ID
-  payCode: null // 渠道编码
+  payCode: null, // 渠道编码
 })
 const openChannelForm = async (row, payCode) => {
   channelParam.appId = row.id
@@ -412,12 +418,11 @@ const openChannelForm = async (row, payCode) => {
     weixinFormRef.value.open(row.id, payCode)
     return
   }
-  if (payCode.indexOf('mock') === 0) {
+  if (payCode.indexOf('mock') === 0)
     mockFormRef.value.open(row.id, payCode)
-  }
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(async () => {
   await getList()
 })

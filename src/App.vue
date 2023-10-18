@@ -1,3 +1,10 @@
+<template>
+  <ConfigGlobal :size="currentSize">
+    <RouterView :class="greyMode ? `${prefixCls}-grey-mode` : ''" />
+    <routerSearch />
+  </ConfigGlobal>
+</template>
+
 <script lang="ts" setup>
 import { isDark } from '@/utils/is'
 import { useAppStore } from '@/store/modules/app'
@@ -17,19 +24,14 @@ const { wsCache } = useCache()
 // 根据浏览器当前主题设置系统主题色
 const setDefaultTheme = () => {
   let isDarkTheme = wsCache.get(CACHE_KEY.IS_DARK)
-  if (isDarkTheme === null) {
+  if (isDarkTheme === null)
     isDarkTheme = isDark()
-  }
+
   appStore.setIsDark(isDarkTheme)
 }
 setDefaultTheme()
 </script>
-<template>
-  <ConfigGlobal :size="currentSize">
-    <RouterView :class="greyMode ? `${prefixCls}-grey-mode` : ''" />
-    <routerSearch />
-  </ConfigGlobal>
-</template>
+
 <style lang="scss">
 $prefix-cls: #{$namespace}-app;
 

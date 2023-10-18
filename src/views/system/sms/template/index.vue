@@ -4,9 +4,9 @@
   <ContentWrap>
     <!-- 搜索工作栏 -->
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="150px"
     >
@@ -45,8 +45,8 @@
           v-model="queryParams.code"
           placeholder="请输入模板编码"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="短信 API 的模板编号" prop="apiTemplateId">
@@ -54,8 +54,8 @@
           v-model="queryParams.apiTemplateId"
           placeholder="请输入短信 API 的模板编号"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="短信渠道" prop="channelId">
@@ -70,8 +70,8 @@
             :key="channel.id"
             :value="channel.id"
             :label="
-              channel.signature +
-              `【 ${getDictLabel(DICT_TYPE.SYSTEM_SMS_CHANNEL_CODE, channel.code)}】`
+              `${channel.signature
+              }【 ${getDictLabel(DICT_TYPE.SYSTEM_SMS_CHANNEL_CODE, channel.code)}】`
             "
           />
         </el-select>
@@ -88,22 +88,26 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        <el-button @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" /> 搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon icon="ep:refresh" class="mr-5px" /> 重置
+        </el-button>
         <el-button
+          v-hasPermi="['system:sms-template:create']"
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['system:sms-template:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" />新增
         </el-button>
         <el-button
+          v-hasPermi="['system:sms-template:export']"
           type="success"
           plain
-          @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['system:sms-template:export']"
+          @click="handleExport"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
@@ -171,26 +175,26 @@
       <el-table-column label="操作" align="center" width="210" fixed="right">
         <template #default="scope">
           <el-button
+            v-hasPermi="['system:sms-template:update']"
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['system:sms-template:update']"
           >
             修改
           </el-button>
           <el-button
+            v-hasPermi="['system:sms-template:send-sms']"
             link
             type="primary"
             @click="openSendForm(scope.row.id)"
-            v-hasPermi="['system:sms-template:send-sms']"
           >
             测试
           </el-button>
           <el-button
+            v-hasPermi="['system:sms-template:delete']"
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
-            v-hasPermi="['system:sms-template:delete']"
           >
             删除
           </el-button>
@@ -199,9 +203,9 @@
     </el-table>
     <!-- 分页 -->
     <Pagination
-      :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
+      :total="total"
       @pagination="getList"
     />
   </ContentWrap>
@@ -211,14 +215,15 @@
   <!-- 表单弹窗：测试发送 -->
   <SmsTemplateSendForm ref="sendFormRef" />
 </template>
+
 <script lang="ts" setup>
-import { DICT_TYPE, getIntDictOptions, getDictLabel } from '@/utils/dict'
+import SmsTemplateForm from './SmsTemplateForm.vue'
+import SmsTemplateSendForm from './SmsTemplateSendForm.vue'
+import { DICT_TYPE, getDictLabel, getIntDictOptions } from '@/utils/dict'
 import { dateFormatter } from '@/utils/formatTime'
 import * as SmsTemplateApi from '@/api/system/sms/smsTemplate'
 import * as SmsChannelApi from '@/api/system/sms/smsChannel'
 import download from '@/utils/download'
-import SmsTemplateForm from './SmsTemplateForm.vue'
-import SmsTemplateSendForm from './SmsTemplateSendForm.vue'
 
 defineOptions({ name: 'SystemSmsTemplate' })
 
@@ -238,7 +243,7 @@ const queryParams = reactive({
   content: '',
   apiTemplateId: '',
   channelId: null,
-  createTime: []
+  createTime: [],
 })
 const exportLoading = ref(false) // 导出的加载中
 const channelList = ref<SmsChannelApi.SmsChannelVO[]>([]) // 短信渠道列表
@@ -250,7 +255,8 @@ const getList = async () => {
     const data = await SmsTemplateApi.getSmsTemplatePage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -289,7 +295,8 @@ const handleDelete = async (id: number) => {
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
 /** 导出按钮操作 */
@@ -301,13 +308,15 @@ const handleExport = async () => {
     exportLoading.value = true
     const data = await SmsTemplateApi.exportSmsTemplate(queryParams)
     download.excel(data, '短信模板.xls')
-  } catch {
-  } finally {
+  }
+  catch {
+  }
+  finally {
     exportLoading.value = false
   }
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(async () => {
   await getList()
   // 加载渠道列表

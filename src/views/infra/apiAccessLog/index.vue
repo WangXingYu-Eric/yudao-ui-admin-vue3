@@ -4,9 +4,9 @@
   <ContentWrap>
     <!-- 搜索工作栏 -->
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="68px"
     >
@@ -15,8 +15,8 @@
           v-model="queryParams.userId"
           placeholder="请输入用户编号"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="用户类型" prop="userType">
@@ -39,8 +39,8 @@
           v-model="queryParams.applicationName"
           placeholder="请输入应用名"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="请求时间" prop="beginTime">
@@ -59,8 +59,8 @@
           v-model="queryParams.duration"
           placeholder="请输入执行时长"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="结果码" prop="resultCode">
@@ -68,19 +68,23 @@
           v-model="queryParams.resultCode"
           placeholder="请输入结果码"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        <el-button @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" /> 搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon icon="ep:refresh" class="mr-5px" /> 重置
+        </el-button>
         <el-button
+          v-hasPermi="['infra:api-error-log:export']"
           type="success"
           plain
-          @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['infra:api-error-log:export']"
+          @click="handleExport"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
@@ -107,20 +111,22 @@
         </template>
       </el-table-column>
       <el-table-column label="执行时长" align="center" prop="duration" width="180">
-        <template #default="scope"> {{ scope.row.duration }} ms </template>
+        <template #default="scope">
+          {{ scope.row.duration }} ms
+        </template>
       </el-table-column>
       <el-table-column label="操作结果" align="center" prop="status">
         <template #default="scope">
-          {{ scope.row.resultCode === 0 ? '成功' : '失败(' + scope.row.resultMsg + ')' }}
+          {{ scope.row.resultCode === 0 ? '成功' : `失败(${scope.row.resultMsg})` }}
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center">
         <template #default="scope">
           <el-button
+            v-hasPermi="['infra:api-access-log:query']"
             link
             type="primary"
             @click="openDetail(scope.row)"
-            v-hasPermi="['infra:api-access-log:query']"
           >
             详细
           </el-button>
@@ -129,9 +135,9 @@
     </el-table>
     <!-- 分页组件 -->
     <Pagination
-      :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
+      :total="total"
       @pagination="getList"
     />
   </ContentWrap>
@@ -139,12 +145,13 @@
   <!-- 表单弹窗：详情 -->
   <ApiAccessLogDetail ref="detailRef" />
 </template>
+
 <script lang="ts" setup>
+import ApiAccessLogDetail from './ApiAccessLogDetail.vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import download from '@/utils/download'
 import { formatDate } from '@/utils/formatTime'
 import * as ApiAccessLogApi from '@/api/infra/apiAccessLog'
-import ApiAccessLogDetail from './ApiAccessLogDetail.vue'
 
 defineOptions({ name: 'InfraApiAccessLog' })
 
@@ -162,7 +169,7 @@ const queryParams = reactive({
   requestUrl: null,
   duration: null,
   resultCode: null,
-  beginTime: []
+  beginTime: [],
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
@@ -174,7 +181,8 @@ const getList = async () => {
     const data = await ApiAccessLogApi.getApiAccessLogPage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -206,13 +214,15 @@ const handleExport = async () => {
     exportLoading.value = true
     const data = await ApiAccessLogApi.exportApiAccessLog(queryParams)
     download.excel(data, 'API 访问日志.xls')
-  } catch {
-  } finally {
+  }
+  catch {
+  }
+  finally {
     exportLoading.value = false
   }
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

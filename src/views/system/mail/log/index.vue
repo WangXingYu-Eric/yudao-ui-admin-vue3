@@ -9,21 +9,21 @@
   <!-- 列表 -->
   <ContentWrap>
     <Table
+      v-model:pageSize="tableObject.pageSize"
+      v-model:currentPage="tableObject.currentPage"
       :columns="allSchemas.tableColumns"
       :data="tableObject.tableList"
       :loading="tableObject.loading"
       :pagination="{
-        total: tableObject.total
+        total: tableObject.total,
       }"
-      v-model:pageSize="tableObject.pageSize"
-      v-model:currentPage="tableObject.currentPage"
     >
       <template #action="{ row }">
         <el-button
+          v-hasPermi="['system:mail-log:query']"
           link
           type="primary"
           @click="openDetail(row.id)"
-          v-hasPermi="['system:mail-log:query']"
         >
           详情
         </el-button>
@@ -32,12 +32,13 @@
   </ContentWrap>
 
   <!-- 表单弹窗：详情 -->
-  <mail-log-detail ref="detailRef" />
+  <MailLogDetail ref="detailRef" />
 </template>
+
 <script lang="ts" setup>
 import { allSchemas } from './log.data'
-import * as MailLogApi from '@/api/system/mail/log'
 import MailLogDetail from './MailLogDetail.vue'
+import * as MailLogApi from '@/api/system/mail/log'
 
 defineOptions({ name: 'SystemMailLog' })
 
@@ -45,7 +46,7 @@ defineOptions({ name: 'SystemMailLog' })
 // tableMethods：表格的操作对象，可进行获得分页、删除记录等操作
 // 详细可见：https://doc.iocoder.cn/vue3/crud-schema/
 const { tableObject, tableMethods } = useTable({
-  getListApi: MailLogApi.getMailLogPage // 分页接口
+  getListApi: MailLogApi.getMailLogPage, // 分页接口
 })
 // 获得表格的各种操作
 const { getList, setSearchParams } = tableMethods
@@ -56,7 +57,7 @@ const openDetail = (id: number) => {
   detailRef.value.open(id)
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

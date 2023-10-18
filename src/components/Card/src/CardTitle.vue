@@ -1,19 +1,19 @@
-<script lang="ts" setup>
-defineComponent({
-  name: 'CardTitle'
-})
-
-const { title } = defineProps({
-  title: {
-    type: String,
-    required: true
-  }
-})
-</script>
-
 <template>
   <span class="card-title">{{ title }}</span>
 </template>
+
+<script lang="ts" setup>
+const { title } = defineProps({
+  title: {
+    type: String,
+    required: true,
+  },
+})
+
+defineComponent({
+  name: 'CardTitle',
+})
+</script>
 
 <style scoped lang="scss">
 .card-title {

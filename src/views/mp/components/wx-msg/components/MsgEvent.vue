@@ -1,10 +1,14 @@
 <template>
   <div>
     <div v-if="item.event === 'subscribe'">
-      <el-tag type="success">关注</el-tag>
+      <el-tag type="success">
+        关注
+      </el-tag>
     </div>
     <div v-else-if="item.event === 'unsubscribe'">
-      <el-tag type="danger">取消关注</el-tag>
+      <el-tag type="danger">
+        取消关注
+      </el-tag>
     </div>
     <div v-else-if="item.event === 'CLICK'">
       <el-tag>点击菜单</el-tag>
@@ -35,7 +39,9 @@
       <el-tag>选择地理位置</el-tag>
     </div>
     <div v-else>
-      <el-tag type="danger">未知事件类型</el-tag>
+      <el-tag type="danger">
+        未知事件类型
+      </el-tag>
     </div>
   </div>
 </template>

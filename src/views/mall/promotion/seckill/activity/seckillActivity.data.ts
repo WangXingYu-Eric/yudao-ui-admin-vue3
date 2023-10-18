@@ -1,5 +1,5 @@
 import type { CrudSchema } from '@/hooks/web/useCrudSchemas'
-import { dateFormatter, dateFormatter2 } from '@/utils/formatTime'
+import { dateFormatter2 } from '@/utils/formatTime'
 import { getSimpleSeckillConfigList } from '@/api/mall/promotion/seckill/seckillConfig'
 
 // 表单校验
@@ -12,7 +12,7 @@ export const rules = reactive({
   configIds: [required],
   totalLimitCount: [required],
   singleLimitCount: [required],
-  totalStock: [required]
+  totalStock: [required],
 })
 
 // CrudSchema https://doc.iocoder.cn/vue3/crud-schema/
@@ -23,12 +23,12 @@ const crudSchemas = reactive<CrudSchema[]>([
     isSearch: true,
     form: {
       colProps: {
-        span: 24
-      }
+        span: 24,
+      },
     },
     table: {
-      width: 120
-    }
+      width: 120,
+    },
   },
   {
     label: '活动开始时间',
@@ -39,19 +39,19 @@ const crudSchemas = reactive<CrudSchema[]>([
       component: 'DatePicker',
       componentProps: {
         valueFormat: 'YYYY-MM-DD',
-        type: 'daterange'
-      }
+        type: 'daterange',
+      },
     },
     form: {
       component: 'DatePicker',
       componentProps: {
         type: 'date',
-        valueFormat: 'x'
-      }
+        valueFormat: 'x',
+      },
     },
     table: {
-      width: 120
-    }
+      width: 120,
+    },
   },
   {
     label: '活动结束时间',
@@ -62,19 +62,19 @@ const crudSchemas = reactive<CrudSchema[]>([
       component: 'DatePicker',
       componentProps: {
         valueFormat: 'YYYY-MM-DD',
-        type: 'daterange'
-      }
+        type: 'daterange',
+      },
     },
     form: {
       component: 'DatePicker',
       componentProps: {
         type: 'date',
-        valueFormat: 'x'
-      }
+        valueFormat: 'x',
+      },
     },
     table: {
-      width: 120
-    }
+      width: 120,
+    },
   },
   {
     label: '秒杀时段',
@@ -85,47 +85,47 @@ const crudSchemas = reactive<CrudSchema[]>([
         multiple: true,
         optionsAlias: {
           labelField: 'name',
-          valueField: 'id'
-        }
+          valueField: 'id',
+        },
       },
-      api: getSimpleSeckillConfigList
+      api: getSimpleSeckillConfigList,
     },
     table: {
-      width: 300
-    }
+      width: 300,
+    },
   },
   {
     label: '总限购数量',
     field: 'totalLimitCount',
     form: {
       component: 'InputNumber',
-      value: 0
+      value: 0,
     },
     table: {
-      width: 120
-    }
+      width: 120,
+    },
   },
   {
     label: '单次限够数量',
     field: 'singleLimitCount',
     form: {
       component: 'InputNumber',
-      value: 0
+      value: 0,
     },
     table: {
-      width: 120
-    }
+      width: 120,
+    },
   },
   {
     label: '排序',
     field: 'sort',
     form: {
       component: 'InputNumber',
-      value: 0
+      value: 0,
     },
     table: {
-      width: 80
-    }
+      width: 80,
+    },
   },
   {
     label: '秒杀活动商品',
@@ -134,12 +134,12 @@ const crudSchemas = reactive<CrudSchema[]>([
     isSearch: false,
     form: {
       colProps: {
-        span: 24
-      }
+        span: 24,
+      },
     },
     table: {
-      width: 300
-    }
+      width: 300,
+    },
   },
   {
     label: '备注',
@@ -149,15 +149,15 @@ const crudSchemas = reactive<CrudSchema[]>([
       component: 'Input',
       componentProps: {
         type: 'textarea',
-        rows: 4
+        rows: 4,
       },
       colProps: {
-        span: 24
-      }
+        span: 24,
+      },
     },
     table: {
-      width: 300
-    }
-  }
+      width: 300,
+    },
+  },
 ])
 export const { allSchemas } = useCrudSchemas(crudSchemas)

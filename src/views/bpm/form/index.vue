@@ -108,7 +108,7 @@ const list = ref([]) // 列表的数据
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
-  name: null
+  name: null,
 })
 const queryFormRef = ref() // 搜索的表单
 
@@ -119,7 +119,8 @@ const getList = async () => {
     const data = await FormApi.getFormPage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -139,12 +140,12 @@ const resetQuery = () => {
 /** 添加/修改操作 */
 const openForm = (id?: number) => {
   const toRouter: { name: string; query?: { id: number } } = {
-    name: 'BpmFormEditor'
+    name: 'BpmFormEditor',
   }
   // 表单新建的时候id传的是event需要排除
   if (typeof id === 'number') {
     toRouter.query = {
-      id
+      id,
     }
   }
   push(toRouter)
@@ -160,14 +161,15 @@ const handleDelete = async (id: number) => {
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
-  } catch {}
+  }
+  catch {}
 }
 
 /** 详情操作 */
 const detailVisible = ref(false)
 const detailData = ref({
   rule: [],
-  option: {}
+  option: {},
 })
 const openDetail = async (rowId: number) => {
   // 设置表单
@@ -176,17 +178,17 @@ const openDetail = async (rowId: number) => {
   // 弹窗打开
   detailVisible.value = true
 }
-/**表单保存返回后重新加载列表 */
+/** 表单保存返回后重新加载列表 */
 watch(
   () => currentRoute.value,
   () => {
     getList()
   },
   {
-    immediate: true
-  }
+    immediate: true,
+  },
 )
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

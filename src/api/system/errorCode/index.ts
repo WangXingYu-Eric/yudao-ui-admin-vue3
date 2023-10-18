@@ -17,7 +17,7 @@ export const getErrorCodePage = (params: PageParam) => {
 
 // 查询错误码详情
 export const getErrorCode = (id: number) => {
-  return request.get({ url: '/system/error-code/get?id=' + id })
+  return request.get({ url: `/system/error-code/get?id=${id}` })
 }
 
 // 新增错误码
@@ -32,7 +32,7 @@ export const updateErrorCode = (data: ErrorCodeVO) => {
 
 // 删除错误码
 export const deleteErrorCode = (id: number) => {
-  return request.delete({ url: '/system/error-code/delete?id=' + id })
+  return request.delete({ url: `/system/error-code/delete?id=${id}` })
 }
 // 导出错误码
 export const excelErrorCode = (params) => {

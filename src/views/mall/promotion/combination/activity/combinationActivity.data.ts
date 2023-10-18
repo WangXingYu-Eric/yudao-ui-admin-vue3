@@ -10,7 +10,7 @@ export const rules = reactive({
   endTime: [required],
   userSize: [required],
   limitDuration: [required],
-  virtualGroup: [required]
+  virtualGroup: [required],
 })
 
 // CrudSchema https://doc.iocoder.cn/vue3/crud-schema/
@@ -22,9 +22,9 @@ const crudSchemas = reactive<CrudSchema[]>([
     isTable: false,
     form: {
       colProps: {
-        span: 24
-      }
-    }
+        span: 24,
+      },
+    },
   },
   {
     label: '活动开始时间',
@@ -35,19 +35,19 @@ const crudSchemas = reactive<CrudSchema[]>([
       component: 'DatePicker',
       componentProps: {
         valueFormat: 'YYYY-MM-DD',
-        type: 'daterange'
-      }
+        type: 'daterange',
+      },
     },
     form: {
       component: 'DatePicker',
       componentProps: {
         type: 'date',
-        valueFormat: 'x'
-      }
+        valueFormat: 'x',
+      },
     },
     table: {
-      width: 120
-    }
+      width: 120,
+    },
   },
   {
     label: '活动结束时间',
@@ -58,19 +58,19 @@ const crudSchemas = reactive<CrudSchema[]>([
       component: 'DatePicker',
       componentProps: {
         valueFormat: 'YYYY-MM-DD',
-        type: 'daterange'
-      }
+        type: 'daterange',
+      },
     },
     form: {
       component: 'DatePicker',
       componentProps: {
         type: 'date',
-        valueFormat: 'x'
-      }
+        valueFormat: 'x',
+      },
     },
     table: {
-      width: 120
-    }
+      width: 120,
+    },
   },
   {
     label: '参与人数',
@@ -79,8 +79,8 @@ const crudSchemas = reactive<CrudSchema[]>([
     form: {
       component: 'InputNumber',
       labelMessage: '参与人数不能少于两人',
-      value: 2
-    }
+      value: 2,
+    },
   },
   {
     label: '限制时长',
@@ -91,9 +91,9 @@ const crudSchemas = reactive<CrudSchema[]>([
       component: 'InputNumber',
       labelMessage: '限制时长(小时)',
       componentProps: {
-        placeholder: '请输入限制时长(小时)'
-      }
-    }
+        placeholder: '请输入限制时长(小时)',
+      },
+    },
   },
   {
     label: '总限购数量',
@@ -102,8 +102,8 @@ const crudSchemas = reactive<CrudSchema[]>([
     isTable: false,
     form: {
       component: 'InputNumber',
-      value: 0
-    }
+      value: 0,
+    },
   },
   {
     label: '单次限购数量',
@@ -112,8 +112,8 @@ const crudSchemas = reactive<CrudSchema[]>([
     isTable: false,
     form: {
       component: 'InputNumber',
-      value: 0
-    }
+      value: 0,
+    },
   },
   {
     label: '虚拟成团',
@@ -123,8 +123,8 @@ const crudSchemas = reactive<CrudSchema[]>([
     isSearch: true,
     form: {
       component: 'Radio',
-      value: false
-    }
+      value: false,
+    },
   },
   {
     label: '拼团商品',
@@ -132,9 +132,9 @@ const crudSchemas = reactive<CrudSchema[]>([
     isSearch: false,
     form: {
       colProps: {
-        span: 24
-      }
-    }
-  }
+        span: 24,
+      },
+    },
+  },
 ])
 export const { allSchemas } = useCrudSchemas(crudSchemas)

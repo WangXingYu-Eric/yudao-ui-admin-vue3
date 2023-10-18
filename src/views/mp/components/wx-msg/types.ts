@@ -7,7 +7,7 @@ export enum MsgType {
   Link = 'link',
   Location = 'location',
   Music = 'music',
-  News = 'news'
+  News = 'news',
 }
 
 export interface User {

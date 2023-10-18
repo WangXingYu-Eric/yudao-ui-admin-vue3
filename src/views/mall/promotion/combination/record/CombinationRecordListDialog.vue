@@ -66,7 +66,7 @@ const list = ref([]) // 列表的数据
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
-  headId: undefined
+  headId: undefined,
 })
 
 /** 打开弹窗 */
@@ -85,14 +85,15 @@ const getList = async () => {
     const data = await CombinationRecordApi.getCombinationRecordPageByHeadId(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
 /** 商品图预览 */
 const imagePreview = (imgUrl: string) => {
   createImageViewer({
-    urlList: [imgUrl]
+    urlList: [imgUrl],
   })
 }
 </script>

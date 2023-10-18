@@ -7,7 +7,7 @@ export const rules = reactive({
   startTime: [required],
   endTime: [required],
   picUrl: [required],
-  status: [required]
+  status: [required],
 })
 
 // CrudSchema https://doc.iocoder.cn/vue3/crud-schema/
@@ -15,46 +15,46 @@ const crudSchemas = reactive<CrudSchema[]>([
   {
     label: '秒杀时段名称',
     field: 'name',
-    isSearch: true
+    isSearch: true,
   },
   {
     label: '开始时间点',
     field: 'startTime',
     isSearch: false,
     search: {
-      component: 'TimePicker'
+      component: 'TimePicker',
     },
     form: {
       component: 'TimePicker',
       componentProps: {
-        valueFormat: 'HH:mm:ss'
-      }
-    }
+        valueFormat: 'HH:mm:ss',
+      },
+    },
   },
   {
     label: '结束时间点',
     field: 'endTime',
     isSearch: false,
     search: {
-      component: 'TimePicker'
+      component: 'TimePicker',
     },
     form: {
       component: 'TimePicker',
       componentProps: {
-        valueFormat: 'HH:mm:ss'
-      }
-    }
+        valueFormat: 'HH:mm:ss',
+      },
+    },
   },
   {
     label: '秒杀轮播图',
     field: 'sliderPicUrls',
     isSearch: false,
     form: {
-      component: 'UploadImgs'
+      component: 'UploadImgs',
     },
     table: {
-      width: 300
-    }
+      width: 300,
+    },
   },
   {
     label: '状态',
@@ -63,20 +63,20 @@ const crudSchemas = reactive<CrudSchema[]>([
     dictClass: 'number',
     isSearch: true,
     form: {
-      component: 'Radio'
-    }
+      component: 'Radio',
+    },
   },
   {
     label: '创建时间',
     field: 'createTime',
     isForm: false,
     isSearch: false,
-    formatter: dateFormatter
+    formatter: dateFormatter,
   },
   {
     label: '操作',
     field: 'action',
-    isForm: false
-  }
+    isForm: false,
+  },
 ])
 export const { allSchemas } = useCrudSchemas(crudSchemas)

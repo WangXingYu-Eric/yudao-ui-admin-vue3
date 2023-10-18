@@ -29,7 +29,7 @@ export const getContractPage = async (params) => {
 
 // 查询合同详情
 export const getContract = async (id: number) => {
-  return await request.get({ url: `/crm/contract/get?id=` + id })
+  return await request.get({ url: `/crm/contract/get?id=${id}` })
 }
 
 // 新增合同
@@ -44,7 +44,7 @@ export const updateContract = async (data: ContractVO) => {
 
 // 删除合同
 export const deleteContract = async (id: number) => {
-  return await request.delete({ url: `/crm/contract/delete?id=` + id })
+  return await request.delete({ url: `/crm/contract/delete?id=${id}` })
 }
 
 // 导出合同 Excel

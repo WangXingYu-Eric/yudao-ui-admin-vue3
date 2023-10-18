@@ -1,11 +1,11 @@
 <template>
-  <Dialog :title="dialogTitle" v-model="dialogVisible">
+  <Dialog v-model="dialogVisible" :title="dialogTitle">
     <el-form
       ref="formRef"
+      v-loading="formLoading"
       :model="formData"
       :rules="formRules"
       label-width="100px"
-      v-loading="formLoading"
     >
       <el-form-item label="手机号" prop="mobile">
         <el-input v-model="formData.mobile" placeholder="请输入手机号" />
@@ -64,15 +64,20 @@
         <MemberGroupSelect v-model="formData.groupId" />
       </el-form-item>
       <el-form-item label="会员备注" prop="mark">
-        <el-input type="textarea" v-model="formData.mark" placeholder="请输入会员备注" />
+        <el-input v-model="formData.mark" type="textarea" placeholder="请输入会员备注" />
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button @click="submitForm" type="primary" :disabled="formLoading">确 定</el-button>
-      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button type="primary" :disabled="formLoading" @click="submitForm">
+        确 定
+      </el-button>
+      <el-button @click="dialogVisible = false">
+        取 消
+      </el-button>
     </template>
   </Dialog>
 </template>
+
 <script setup lang="ts">
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import * as UserApi from '@/api/member/user'
@@ -81,7 +86,10 @@ import { defaultProps } from '@/utils/tree'
 import MemberTagSelect from '@/views/member/tag/components/MemberTagSelect.vue'
 import MemberGroupSelect from '@/views/member/group/components/MemberGroupSelect.vue'
 
-const { t } = useI18n() // 国际化
+// 提供 open 方法，用于打开弹窗
+
+/** 提交表单 */
+const emit = defineEmits(['success']); const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 
 const dialogVisible = ref(false) // 弹窗的是否展示
@@ -101,11 +109,11 @@ const formData = ref({
   birthday: undefined,
   mark: undefined,
   tagIds: [],
-  groupId: undefined
+  groupId: undefined,
 })
 const formRules = reactive({
   mobile: [{ required: true, message: '手机号不能为空', trigger: 'blur' }],
-  status: [{ required: true, message: '状态不能为空', trigger: 'blur' }]
+  status: [{ required: true, message: '状态不能为空', trigger: 'blur' }],
 })
 const formRef = ref() // 表单 Ref
 const areaList = ref([]) // 地区列表
@@ -113,7 +121,7 @@ const areaList = ref([]) // 地区列表
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
   dialogVisible.value = true
-  dialogTitle.value = t('action.' + type)
+  dialogTitle.value = t(`action.${type}`)
   formType.value = type
   resetForm()
   // 修改时，设置数据
@@ -121,22 +129,22 @@ const open = async (type: string, id?: number) => {
     formLoading.value = true
     try {
       formData.value = await UserApi.getUser(id)
-    } finally {
+    }
+    finally {
       formLoading.value = false
     }
   }
   // 获得地区列表
   areaList.value = await AreaApi.getAreaTree()
 }
-defineExpose({ open }) // 提供 open 方法，用于打开弹窗
-
-/** 提交表单 */
-const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
+defineExpose({ open }) // 定义 success 事件，用于操作成功后的回调
 const submitForm = async () => {
   // 校验表单
-  if (!formRef) return
+  if (!formRef)
+    return
   const valid = await formRef.value.validate()
-  if (!valid) return
+  if (!valid)
+    return
   // 提交请求
   formLoading.value = true
   try {
@@ -145,14 +153,16 @@ const submitForm = async () => {
       // 说明：目前暂时没有新增操作。如果自己业务需要，可以进行扩展
       // await UserApi.createUser(data)
       message.success(t('common.createSuccess'))
-    } else {
+    }
+    else {
       await UserApi.updateUser(data)
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
     // 发送操作成功的事件
     emit('success')
-  } finally {
+  }
+  finally {
     formLoading.value = false
   }
 }
@@ -172,7 +182,7 @@ const resetForm = () => {
     birthday: undefined,
     mark: undefined,
     tagIds: [],
-    groupId: undefined
+    groupId: undefined,
   }
   formRef.value?.resetFields()
 }

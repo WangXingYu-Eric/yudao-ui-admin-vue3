@@ -2,7 +2,9 @@
   <ContentWrap>
     <!-- 订单信息 -->
     <el-descriptions title="订单信息">
-      <el-descriptions-item label="订单号: ">{{ formData.orderNo }}</el-descriptions-item>
+      <el-descriptions-item label="订单号: ">
+        {{ formData.orderNo }}
+      </el-descriptions-item>
       <el-descriptions-item label="配送方式: ">
         <dict-tag :type="DICT_TYPE.TRADE_DELIVERY_TYPE" :value="formData.order.deliveryType" />
       </el-descriptions-item>
@@ -21,19 +23,25 @@
       <el-descriptions-item label="联系电话: ">
         {{ formData.order.receiverMobile }}
       </el-descriptions-item>
-      <el-descriptions-item label="商家备注: ">{{ formData.order.remark }}</el-descriptions-item>
+      <el-descriptions-item label="商家备注: ">
+        {{ formData.order.remark }}
+      </el-descriptions-item>
       <el-descriptions-item label="支付单号: ">
         {{ formData.order.payOrderId }}
       </el-descriptions-item>
       <el-descriptions-item label="付款方式: ">
         <dict-tag :type="DICT_TYPE.PAY_CHANNEL_CODE" :value="formData.order.payChannelCode" />
       </el-descriptions-item>
-      <el-descriptions-item label="买家: ">{{ formData?.user?.nickname }}</el-descriptions-item>
+      <el-descriptions-item label="买家: ">
+        {{ formData?.user?.nickname }}
+      </el-descriptions-item>
     </el-descriptions>
 
     <!-- 售后信息 -->
     <el-descriptions title="售后信息">
-      <el-descriptions-item label="退款编号: ">{{ formData.no }}</el-descriptions-item>
+      <el-descriptions-item label="退款编号: ">
+        {{ formData.no }}
+      </el-descriptions-item>
       <el-descriptions-item label="申请时间: ">
         {{ formatDate(formData.auditTime) }}
       </el-descriptions-item>
@@ -46,7 +54,9 @@
       <el-descriptions-item label="退款金额: ">
         {{ fenToYuan(formData.refundPrice) }}
       </el-descriptions-item>
-      <el-descriptions-item label="退款原因: ">{{ formData.applyReason }}</el-descriptions-item>
+      <el-descriptions-item label="退款原因: ">
+        {{ formData.applyReason }}
+      </el-descriptions-item>
       <el-descriptions-item label="补充描述: ">
         {{ formData.applyDescription }}
       </el-descriptions-item>
@@ -67,27 +77,35 @@
         <dict-tag :type="DICT_TYPE.TRADE_AFTER_SALE_STATUS" :value="formData.status" />
       </el-descriptions-item>
       <el-descriptions-item label-class-name="no-colon">
-        <el-button v-if="formData.status === 10" type="primary" @click="agree">同意售后</el-button>
+        <el-button v-if="formData.status === 10" type="primary" @click="agree">
+          同意售后
+        </el-button>
         <el-button v-if="formData.status === 10" type="primary" @click="disagree">
           拒绝售后
         </el-button>
         <el-button v-if="formData.status === 30" type="primary" @click="receive">
           确认收货
         </el-button>
-        <el-button v-if="formData.status === 30" type="primary" @click="refuse">拒绝收货</el-button>
-        <el-button v-if="formData.status === 40" type="primary" @click="refund">确认退款</el-button>
+        <el-button v-if="formData.status === 30" type="primary" @click="refuse">
+          拒绝收货
+        </el-button>
+        <el-button v-if="formData.status === 40" type="primary" @click="refund">
+          确认退款
+        </el-button>
       </el-descriptions-item>
       <el-descriptions-item>
-        <template #label><span style="color: red">提醒: </span></template>
-        如果未发货，请点击同意退款给买家。<br />
-        如果实际已发货，请主动与买家联系。<br />
+        <template #label>
+          <span style="color: red">提醒: </span>
+        </template>
+        如果未发货，请点击同意退款给买家。<br>
+        如果实际已发货，请主动与买家联系。<br>
         如果订单整体退款后，优惠券和余额会退还给买家.
       </el-descriptions-item>
     </el-descriptions>
 
     <!-- 商品信息 -->
     <el-descriptions title="商品信息">
-      <el-descriptions-item labelClassName="no-colon">
+      <el-descriptions-item label-class-name="no-colon">
         <el-row :gutter="20">
           <el-col :span="15">
             <el-table :data="[formData.orderItem]" border>
@@ -100,11 +118,15 @@
                 </template>
               </el-table-column>
               <el-table-column label="商品原价" prop="price" width="150">
-                <template #default="{ row }">{{ fenToYuan(row.price) }} 元</template>
+                <template #default="{ row }">
+                  {{ fenToYuan(row.price) }} 元
+                </template>
               </el-table-column>
               <el-table-column label="数量" prop="count" width="100" />
               <el-table-column label="合计" prop="payPrice" width="150">
-                <template #default="{ row }">{{ fenToYuan(row.payPrice) }} 元</template>
+                <template #default="{ row }">
+                  {{ fenToYuan(row.payPrice) }} 元
+                </template>
               </el-table-column>
             </el-table>
           </el-col>
@@ -115,7 +137,7 @@
 
     <!-- 操作日志 -->
     <el-descriptions title="售后日志">
-      <el-descriptions-item labelClassName="no-colon">
+      <el-descriptions-item label-class-name="no-colon">
         <el-timeline>
           <el-timeline-item
             v-for="saleLog in formData.logs"
@@ -143,6 +165,7 @@
   <!-- 各种操作的弹窗 -->
   <UpdateAuditReasonForm ref="updateAuditReasonFormRef" @success="getDetail" />
 </template>
+
 <script lang="ts" setup>
 import * as AfterSaleApi from '@/api/mall/trade/afterSale/index'
 import { fenToYuan } from '@/utils'
@@ -161,7 +184,7 @@ const { params } = useRoute() // 查询参数
 const { push, currentRoute } = useRouter() // 路由
 const formData = ref({
   order: {},
-  logs: []
+  logs: [],
 })
 const updateAuditReasonFormRef = ref() // 拒绝售后表单 Ref
 
@@ -204,7 +227,8 @@ const agree = async () => {
     // 提示成功
     message.success(t('common.success'))
     await getDetail()
-  } catch {}
+  }
+  catch {}
 }
 
 /** 拒绝售后 */
@@ -221,7 +245,8 @@ const receive = async () => {
     // 提示成功
     message.success(t('common.success'))
     await getDetail()
-  } catch {}
+  }
+  catch {}
 }
 
 /** 拒绝收货 */
@@ -233,7 +258,8 @@ const refuse = async () => {
     // 提示成功
     message.success(t('common.success'))
     await getDetail()
-  } catch {}
+  }
+  catch {}
 }
 
 /** 确认退款 */
@@ -245,7 +271,8 @@ const refund = async () => {
     // 提示成功
     message.success(t('common.success'))
     await getDetail()
-  } catch {}
+  }
+  catch {}
 }
 
 /** 图片预览 */
@@ -255,11 +282,12 @@ const imagePreview = (args) => {
     args.forEach((item) => {
       urlList.push(item.url)
     })
-  } else {
+  }
+  else {
     urlList.push(args)
   }
   createImageViewer({
-    urlList
+    urlList,
   })
 }
 const { delView } = useTagsViewStore() // 视图操作
@@ -272,6 +300,7 @@ onMounted(async () => {
   await getDetail()
 })
 </script>
+
 <style lang="scss" scoped>
 :deep(.el-descriptions) {
   &:not(:nth-child(1)) {

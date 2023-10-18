@@ -156,7 +156,9 @@
       </el-table-column>
       <el-table-column align="center" fixed="right" label="操作" width="160">
         <template #default="{ row }">
-          <el-button link type="primary" @click="openAfterSaleDetail(row.id)">处理退款</el-button>
+          <el-button link type="primary" @click="openAfterSaleDetail(row.id)">
+            处理退款
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -169,13 +171,14 @@
     />
   </ContentWrap>
 </template>
+
 <script lang="ts" setup>
+import type { TabsPaneContext } from 'element-plus'
+import { cloneDeep } from 'lodash-es'
 import * as AfterSaleApi from '@/api/mall/trade/afterSale/index'
 import { DICT_TYPE, getDictOptions } from '@/utils/dict'
 import { formatDate } from '@/utils/formatTime'
 import { createImageViewer } from '@/components/ImageViewer'
-import { TabsPaneContext } from 'element-plus'
-import { cloneDeep } from 'lodash-es'
 import { fenToYuan } from '@/utils'
 
 defineOptions({ name: 'TradeAfterSale' })
@@ -188,8 +191,8 @@ const list = ref<AfterSaleApi.TradeAfterSaleVO[]>([]) // 列表的数据
 const statusTabs = ref([
   {
     label: '全部',
-    value: '0'
-  }
+    value: '0',
+  },
 ])
 const queryFormRef = ref() // 搜索的表单
 // 查询参数
@@ -202,7 +205,7 @@ const queryParams = reactive({
   spuName: null,
   createTime: [],
   way: null,
-  type: null
+  type: null,
 })
 /** 查询列表 */
 const getList = async () => {
@@ -210,14 +213,15 @@ const getList = async () => {
   try {
     const data = cloneDeep(queryParams)
     // 处理掉全部的状态，不传就是全部
-    if (data.status === '0') {
+    if (data.status === '0')
       delete data.status
-    }
+
     // 执行查询
     const res = (await AfterSaleApi.getAfterSalePage(data)) as AfterSaleApi.TradeAfterSaleVO[]
     list.value = res.list
     total.value = res.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -250,7 +254,7 @@ const openOrderDetail = (id: number) => {
 /** 商品图预览 */
 const imagePreview = (imgUrl: string) => {
   createImageViewer({
-    urlList: [imgUrl]
+    urlList: [imgUrl],
   })
 }
 
@@ -260,7 +264,7 @@ onMounted(async () => {
   for (const dict of getDictOptions(DICT_TYPE.TRADE_AFTER_SALE_STATUS)) {
     statusTabs.value.push({
       label: dict.label,
-      value: dict.value
+      value: dict.value,
     })
   }
 })

@@ -4,7 +4,7 @@ import request from '@/config/axios'
 export const createAutoReply = (data) => {
   return request.post({
     url: '/mp/auto-reply/create',
-    data: data
+    data,
   })
 }
 
@@ -12,21 +12,21 @@ export const createAutoReply = (data) => {
 export const updateAutoReply = (data) => {
   return request.put({
     url: '/mp/auto-reply/update',
-    data: data
+    data,
   })
 }
 
 // 删除公众号的自动回复
 export const deleteAutoReply = (id) => {
   return request.delete({
-    url: '/mp/auto-reply/delete?id=' + id
+    url: `/mp/auto-reply/delete?id=${id}`,
   })
 }
 
 // 获得公众号的自动回复
 export const getAutoReply = (id) => {
   return request.get({
-    url: '/mp/auto-reply/get?id=' + id
+    url: `/mp/auto-reply/get?id=${id}`,
   })
 }
 
@@ -34,6 +34,6 @@ export const getAutoReply = (id) => {
 export const getAutoReplyPage = (query) => {
   return request.get({
     url: '/mp/auto-reply/page',
-    params: query
+    params: query,
   })
 }

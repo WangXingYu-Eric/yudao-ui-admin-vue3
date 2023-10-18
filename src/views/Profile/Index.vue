@@ -30,12 +30,15 @@
     </el-card>
   </div>
 </template>
+
 <script setup lang="ts" name="Profile">
 import { BasicInfo, ProfileUser, ResetPwd, UserSocial } from './components/'
+
 const { t } = useI18n()
 
 const activeName = ref('basicInfo')
 </script>
+
 <style scoped>
 .user {
   max-height: 960px;

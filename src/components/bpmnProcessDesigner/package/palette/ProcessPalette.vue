@@ -1,7 +1,11 @@
 <template>
   <div class="my-process-palette">
-    <div class="test-button" @click="addTask" @mousedown="addTask">测试任务</div>
-    <div class="test-container" id="palette-container">1</div>
+    <div class="test-button" @click="addTask" @mousedown="addTask">
+      测试任务
+    </div>
+    <div id="palette-container" class="test-container">
+      1
+    </div>
   </div>
 </template>
 
@@ -19,9 +23,8 @@ const addTask = (event, options: any = {}) => {
 
   const shape = ElementFactory.createShape(assign({ type: 'bpmn:UserTask' }, options))
 
-  if (options) {
+  if (options)
     shape.businessObject.di.isExpanded = options.isExpanded
-  }
 
   console.log(event, 'event')
   console.log(shape, 'shape')

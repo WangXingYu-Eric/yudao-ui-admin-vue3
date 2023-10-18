@@ -2,9 +2,9 @@
   <ContentWrap>
     <!-- 搜索工作栏 -->
     <el-form
+      ref="queryFormRef"
       class="-mb-15px"
       :model="queryParams"
-      ref="queryFormRef"
       :inline="true"
       label-width="68px"
     >
@@ -13,8 +13,8 @@
           v-model="queryParams.name"
           placeholder="请输入流程名称"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="所属流程" prop="processDefinitionId">
@@ -22,8 +22,8 @@
           v-model="queryParams.processDefinitionId"
           placeholder="请输入流程定义的编号"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
+          @keyup.enter="handleQuery"
         />
       </el-form-item>
       <el-form-item label="流程分类" prop="category">
@@ -73,12 +73,16 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        <el-button @click="handleQuery">
+          <Icon icon="ep:search" class="mr-5px" /> 搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon icon="ep:refresh" class="mr-5px" /> 重置
+        </el-button>
         <el-button
+          v-hasPermi="['bpm:process-instance:query']"
           type="primary"
           plain
-          v-hasPermi="['bpm:process-instance:query']"
           @click="handleCreate"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 发起流程
@@ -99,7 +103,7 @@
       </el-table-column>
       <el-table-column label="当前审批任务" align="center" prop="tasks">
         <template #default="scope">
-          <el-button type="primary" v-for="task in scope.row.tasks" :key="task.id" link>
+          <el-button v-for="task in scope.row.tasks" :key="task.id" type="primary" link>
             <span>{{ task.name }}</span>
           </el-button>
         </template>
@@ -131,18 +135,18 @@
       <el-table-column label="操作" align="center">
         <template #default="scope">
           <el-button
+            v-hasPermi="['bpm:process-instance:cancel']"
             link
             type="primary"
-            v-hasPermi="['bpm:process-instance:cancel']"
             @click="handleDetail(scope.row)"
           >
             详情
           </el-button>
           <el-button
-            link
-            type="primary"
             v-if="scope.row.result === 1"
             v-hasPermi="['bpm:process-instance:query']"
+            link
+            type="primary"
             @click="handleCancel(scope.row)"
           >
             取消
@@ -152,17 +156,18 @@
     </el-table>
     <!-- 分页 -->
     <Pagination
-      :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
+      :total="total"
       @pagination="getList"
     />
   </ContentWrap>
 </template>
+
 <script lang="ts" setup>
+import { ElMessageBox } from 'element-plus'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { dateFormatter } from '@/utils/formatTime'
-import { ElMessageBox } from 'element-plus'
 import * as ProcessInstanceApi from '@/api/bpm/processInstance'
 
 defineOptions({ name: 'BpmProcessInstance' })
@@ -182,7 +187,7 @@ const queryParams = reactive({
   category: undefined,
   status: undefined,
   result: undefined,
-  createTime: []
+  createTime: [],
 })
 const queryFormRef = ref() // 搜索的表单
 
@@ -193,7 +198,8 @@ const getList = async () => {
     const data = await ProcessInstanceApi.getMyProcessInstancePage(queryParams)
     list.value = data.list
     total.value = data.total
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
@@ -210,10 +216,10 @@ const resetQuery = () => {
   handleQuery()
 }
 
-/** 发起流程操作 **/
+/** 发起流程操作 */
 const handleCreate = () => {
   router.push({
-    name: 'BpmProcessInstanceCreate'
+    name: 'BpmProcessInstanceCreate',
   })
 }
 
@@ -222,8 +228,8 @@ const handleDetail = (row) => {
   router.push({
     name: 'BpmProcessInstanceDetail',
     query: {
-      id: row.id
-    }
+      id: row.id,
+    },
   })
 }
 
@@ -234,7 +240,7 @@ const handleCancel = async (row) => {
     confirmButtonText: t('common.ok'),
     cancelButtonText: t('common.cancel'),
     inputPattern: /^[\s\S]*.*\S[\s\S]*$/, // 判断非空，且非空格
-    inputErrorMessage: '取消原因不能为空'
+    inputErrorMessage: '取消原因不能为空',
   })
   // 发起取消
   await ProcessInstanceApi.cancelProcessInstance(row.id, value)
@@ -243,7 +249,7 @@ const handleCancel = async (row) => {
   await getList()
 }
 
-/** 初始化 **/
+/** 初始化 */
 onMounted(() => {
   getList()
 })

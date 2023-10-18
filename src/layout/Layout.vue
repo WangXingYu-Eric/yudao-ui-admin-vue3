@@ -1,9 +1,9 @@
 <script lang="tsx">
 import { computed, defineComponent, unref } from 'vue'
+import { useRenderLayout } from './components/useRenderLayout'
 import { useAppStore } from '@/store/modules/app'
 import { Backtop } from '@/components/Backtop'
 import { Setting } from '@/layout/components/Setting'
-import { useRenderLayout } from './components/useRenderLayout'
 import { useDesign } from '@/hooks/web/useDesign'
 
 const { getPrefixCls } = useDesign()
@@ -48,12 +48,15 @@ export default defineComponent({
   setup() {
     return () => (
       <section class={[prefixCls, `${prefixCls}__${layout.value}`, 'w-[100%] h-[100%] relative']}>
-        {mobile.value && !collapse.value ? (
-          <div
-            class="absolute left-0 top-0 z-99 h-full w-full bg-[var(--el-color-black)] opacity-30"
-            onClick={handleClickOutside}
-          ></div>
-        ) : undefined}
+        {mobile.value && !collapse.value
+          ? (
+            <div
+              class="absolute left-0 top-0 z-99 h-full w-full bg-[var(--el-color-black)] opacity-30"
+              onClick={handleClickOutside}
+            >
+            </div>
+            )
+          : undefined}
 
         {renderLayout()}
 
@@ -62,7 +65,7 @@ export default defineComponent({
         <Setting></Setting>
       </section>
     )
-  }
+  },
 })
 </script>
 
