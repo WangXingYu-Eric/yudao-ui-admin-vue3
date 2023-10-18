@@ -19,9 +19,11 @@
     "**/.idea": true,
     "**/.vscode": false,
     "**/yarn.lock": true,
+    "pnpm-lock.yaml": true,
     "**/tmp": true,
     "out": true,
     "dist": true,
+    "public": true,
     "node_modules": true,
     "CHANGELOG.md": true,
     "examples": true,
@@ -58,6 +60,36 @@
   "path-intellisense.mappings": {
     "@/": "${workspaceRoot}/src"
   },
+  "eslint.experimental.useFlatConfig": true,
+  "prettier.enable": false,
+  "editor.formatOnSave": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit",
+    "source.organizeImports": "never"
+  },
+  "eslint.rules.customizations": [
+    { "rule": "style/*", "severity": "off" },
+    { "rule": "*-indent", "severity": "off" },
+    { "rule": "*-spacing", "severity": "off" },
+    { "rule": "*-spaces", "severity": "off" },
+    { "rule": "*-order", "severity": "off" },
+    { "rule": "*-dangle", "severity": "off" },
+    { "rule": "*-newline", "severity": "off" },
+    { "rule": "*quotes", "severity": "off" },
+    { "rule": "*semi", "severity": "off" }
+  ],
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "vue",
+    "html",
+    "markdown",
+    "json",
+    "jsonc",
+    "yaml"
+  ],
   "[javascriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -65,13 +97,13 @@
     "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
   },
   "[typescriptreact]": {
-    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[html]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[css]": {
-    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[less]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -82,12 +114,10 @@
   "[markdown]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
-  },
   "[vue]": {
     "editor.codeActionsOnSave": {
       "source.fixAll.eslint": true,
+      "source.organizeImports": false,
       "source.fixAll.stylelint": true
     }
   },
@@ -100,6 +130,7 @@
   "i18n-ally.displayLanguage": "zh-CN",
   "i18n-ally.enabledFrameworks": ["vue", "react"],
   "cSpell.words": [
+    "antfu",
     "brotli",
     "browserslist",
     "codemirror",
@@ -124,9 +155,11 @@
     "unref",
     "videojs",
     "vitejs",
+    "vuedraggable",
     "vueuse",
     "wangeditor",
     "xingyu",
+    "xingyuv",
     "yudao",
     "zxcvbn"
   ],
@@ -137,7 +170,10 @@
     "*.ts": "$(capture).test.ts, $(capture).test.tsx",
     "*.tsx": "$(capture).test.ts, $(capture).test.tsx",
     "*.env": "$(capture).env.*",
-    "package.json": "pnpm-lock.yaml,yarn.lock,LICENSE,README*,CHANGELOG*,CNAME,.gitattributes,.eslintrc-auto-import.json,.gitignore,prettier.config.js,stylelint.config.js,commitlint.config.js,.stylelintignore,.prettierignore,.gitpod.yml,.eslintrc.js,.eslintignore"
+    "package.json": ".hintrc,pnpm-lock.yaml,yarn.lock,LICENSE,README*,CHANGELOG*,CNAME,.gitattributes,.gitignore,stylelint.config.js,eslint.config.js,commitlint.config.js,.stylelintignore,.prettierignore,.gitpod.yml,.eslintrc.js,.eslintignore"
+  },
+  "eslint.codeAction.showDocumentation": {
+    "enable": true
   },
   "terminal.integrated.scrollback": 10000,
   "nuxt.isNuxtApp": false
